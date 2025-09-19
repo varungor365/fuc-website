@@ -234,36 +234,35 @@ className="bg-primary-900/75 backdrop-blur-md border border-white/10"
 
 ### **Deployment Configuration**
 ```json
-// vercel.json - Proper Next.js build configuration
+// vercel.json - Correct Next.js subdirectory configuration
 {
-  "rootDirectory": "fashun-store",
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next"
+  "buildCommand": "cd fashun-store && npm install && npm run build",
+  "outputDirectory": "fashun-store/.next",
+  "framework": "nextjs"
 }
 ```
 
 ### **Vercel Setup Instructions**
 1. **Import Repository:** Connect GitHub repository to Vercel
-2. **Root Directory:** Set to `fashun-store` in project settings
-3. **Framework:** Will auto-detect as Next.js
-4. **Build Command:** `npm run build` (auto-configured)
-5. **Install Command:** `npm install` (auto-configured)
+2. **Framework Detection:** Will auto-detect as Next.js from subdirectory
+3. **Build Settings:** Custom build command handles subdirectory navigation
+4. **Output Directory:** Points to `fashun-store/.next` for deployment
+5. **No Manual Configuration:** Everything automated via vercel.json
 
 ### **Build Scripts**
 ```bash
 # Local development
 npm run dev
 
-# Production build
+# Production build (with subdirectory handling)
 npm run build
 
 # Deploy script
 ./deploy.ps1    # Windows
 ./deploy.sh     # Linux/Mac
 
-# Vercel CLI deployment (alternative)
-vercel --prod
+# Vercel CLI deployment
+cd fashun-store && vercel --prod
 ```
 
 ### **Testing & Quality Assurance**
