@@ -1,204 +1,163 @@
-import { notFound } from 'next/navigation'
-import ProductClient from './ProductClient'
-import strapiService from '@/lib/strapi'
+import { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-// Helper function to get product data from Strapi
+interface Props {
+  params: { id: string }
+}
+
 async function getProduct(id: string) {
   try {
-    const productId = parseInt(id, 10);
-    if (isNaN(productId)) return null;
-    
-    const response = await strapiService.getProduct(productId);
-    if (!response.data) return null;
-    
-    return strapiService.transformProduct(response.data);
+    const res = await fetch(`${process.env.STRAPI_URL || 'http://localhost:1337'}/api/products/${id}?populate=images,category`, { 
+      next: { revalidate: 300 }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.data;
   } catch (error) {
-    console.error('Error fetching product:', error);
-    
-    // Return fallback product during build if Strapi is unavailable
-    if (process.env.NODE_ENV === 'production' || process.env.NEXT_PHASE === 'phase-production-build') {
-      return getFallbackProduct(id);
-    }
-    
+    console.error('Failed to fetch product:', error);
     return null;
   }
 }
 
-// Generate static params for all products
-export async function generateStaticParams() {
-  try {
-    const response = await strapiService.getProducts({
-      pagination: { page: 1, pageSize: 100 },
-      populate: ['slug']
-    });
-    
-    return response.data?.map((product: any) => ({
-      id: product.attributes.slug || product.id.toString(),
-    })) || [];
-  } catch (error) {
-    console.error('Error generating static params:', error);
-    
-    // Return fallback product IDs when Strapi is unavailable
-    return [
-      { id: 'oversized-graphic-hoodie' },
-      { id: 'minimalist-t-shirt' },
-      { id: 'classic-denim-jacket' },
-      { id: 'distressed-denim-jeans' },
-      { id: 'platform-sneakers' },
-      { id: 'designer-leather-jacket' },
-      { id: 'vintage-band-tee' },
-      { id: 'streetwear-joggers' }
-    ];
-  }
-}
-
-const sizeGuide = {
-  hoodies: [
-    { size: 'S', chest: '44"', length: '25"', sleeve: '22"' },
-    { size: 'M', chest: '46"', length: '26"', sleeve: '23"' },
-    { size: 'L', chest: '48"', length: '27"', sleeve: '24"' },
-    { size: 'XL', chest: '50"', length: '28"', sleeve: '25"' },
-    { size: 'XXL', chest: '52"', length: '29"', sleeve: '26"' }
-  ],
-  tshirts: [
-    { size: 'S', chest: '38"', length: '26"', sleeve: '8"' },
-    { size: 'M', chest: '40"', length: '27"', sleeve: '8.5"' },
-    { size: 'L', chest: '42"', length: '28"', sleeve: '9"' },
-    { size: 'XL', chest: '44"', length: '29"', sleeve: '9.5"' },
-    { size: 'XXL', chest: '46"', length: '30"', sleeve: '10"' }
-  ],
-  default: [
-    { size: 'S', chest: '38-40"', length: '26-27"' },
-    { size: 'M', chest: '40-42"', length: '27-28"' },
-    { size: 'L', chest: '42-44"', length: '28-29"' },
-    { size: 'XL', chest: '44-46"', length: '29-30"' },
-    { size: 'XXL', chest: '46-48"', length: '30-31"' }
-  ]
-}
-
-// Server component for data fetching
-export default async function ProductPage({ params }: { params: { id: string } }) {
-  const { id } = params
-
-  // Try to fetch by slug first, then by ID
-  let product = await getProduct(id);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const product = await getProduct(params.id);
   
   if (!product) {
-    // Try fetching by slug
-    try {
-      const response = await strapiService.getProductBySlug(id);
-      if (response.data?.[0]) {
-        product = strapiService.transformProduct(response.data[0]);
-      }
-    } catch (error) {
-      console.error('Error fetching product by slug:', error);
-      
-      // Use fallback product data if Strapi is unavailable during build
-      if (process.env.NODE_ENV === 'production' || process.env.NEXT_PHASE === 'phase-production-build') {
-        product = getFallbackProduct(id);
-      }
-    }
+    return {
+      title: 'Product Not Found - FASHUN.CO',
+    };
   }
 
-  // Handle product not found
-  if (!product) {
-    notFound()
-  }
-
-  // Get related products from same category
-  let relatedProducts: any[] = [];
-  try {
-    const response = await strapiService.getProductsByCategory(product.categorySlug, {
-      pagination: { page: 1, pageSize: 4 },
-      filters: { id: { $ne: product.id } }
-    });
-    relatedProducts = strapiService.transformProducts(response).map((p: any) => ({
-      id: p.id,
-      name: p.name,
-      price: p.price,
-      image: p.images?.[0]?.url
-    }));
-  } catch (error) {
-    console.error('Error fetching related products:', error);
-    // Use empty array as fallback for related products
-    relatedProducts = [];
-  }
-
-  // Pass data to client component for interactivity
-  return (
-    <ProductClient 
-      product={product} 
-      sizeGuide={sizeGuide} 
-      relatedProducts={relatedProducts} 
-    />
-  )
-}
-
-// Fallback product data for when Strapi is unavailable
-function getFallbackProduct(id: string) {
-  const fallbackProducts = {
-    'oversized-graphic-hoodie': {
-      id: 1,
-      name: 'Oversized Graphic Hoodie',
-      slug: 'oversized-graphic-hoodie',
-      description: 'Comfortable oversized hoodie with unique graphic design perfect for street style.',
-      price: 2999,
-      discountedPrice: null,
-      categorySlug: 'hoodies',
-      category: 'Hoodies',
-      variants: [
-        { id: '1-s', size: 'S', color: 'Black', stock: 10, sku: 'OGH-BLK-S' },
-        { id: '1-m', size: 'M', color: 'Black', stock: 15, sku: 'OGH-BLK-M' },
-        { id: '1-l', size: 'L', color: 'Black', stock: 12, sku: 'OGH-BLK-L' }
-      ],
-      images: [
-        { url: '/api/placeholder/600/800', alt: 'Oversized Graphic Hoodie - Black' }
-      ],
-      inStock: true,
-      isPopular: true,
-      createdAt: new Date().toISOString()
-    },
-    'minimalist-t-shirt': {
-      id: 2,
-      name: 'Minimalist T-Shirt',
-      slug: 'minimalist-t-shirt',
-      description: 'Clean, minimalist design t-shirt made from premium cotton.',
-      price: 1299,
-      discountedPrice: null,
-      categorySlug: 'tshirts',
-      category: 'T-Shirts',
-      variants: [
-        { id: '2-s', size: 'S', color: 'White', stock: 20, sku: 'MT-WHT-S' },
-        { id: '2-m', size: 'M', color: 'White', stock: 25, sku: 'MT-WHT-M' }
-      ],
-      images: [
-        { url: '/api/placeholder/600/800', alt: 'Minimalist T-Shirt - White' }
-      ],
-      inStock: true,
-      isPopular: false,
-      createdAt: new Date().toISOString()
-    },
-    'classic-denim-jacket': {
-      id: 3,
-      name: 'Classic Denim Jacket',
-      slug: 'classic-denim-jacket',
-      description: 'Timeless denim jacket with modern fit and premium materials.',
-      price: 3999,
-      discountedPrice: null,
-      categorySlug: 'jackets',
-      category: 'Jackets',
-      variants: [
-        { id: '3-m', size: 'M', color: 'Blue', stock: 8, sku: 'CDJ-BLU-M' },
-        { id: '3-l', size: 'L', color: 'Blue', stock: 10, sku: 'CDJ-BLU-L' }
-      ],
-      images: [
-        { url: '/api/placeholder/600/800', alt: 'Classic Denim Jacket - Blue' }
-      ],
-      inStock: true,
-      isPopular: true,
-      createdAt: new Date().toISOString()
-    }
+  return {
+    title: `${product.attributes.name} - FASHUN.CO`,
+    description: product.attributes.description || 'Premium streetwear product from FASHUN.CO',
   };
-
-  return fallbackProducts[id as keyof typeof fallbackProducts] || null;
 }
+
+export default async function ProductPage({ params }: Props) {
+  const product = await getProduct(params.id);
+
+  if (!product) {
+    notFound();
+  }
+
+  return (
+    <main className="min-h-screen bg-primary-900 py-24">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Product Images */}
+          <div className="space-y-4">
+            <div className="aspect-square relative bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl overflow-hidden">
+              {product.attributes.images?.data?.[0] && (
+                <Image
+                  src={product.attributes.images.data[0].attributes.url}
+                  alt={product.attributes.name}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              )}
+            </div>
+            {/* Thumbnail Grid */}
+            {product.attributes.images?.data && product.attributes.images.data.length > 1 && (
+              <div className="grid grid-cols-4 gap-2">
+                {product.attributes.images.data.slice(1, 5).map((image: any, index: number) => (
+                  <div key={index} className="aspect-square relative bg-white/5 backdrop-blur-sm border border-white/20 rounded-lg overflow-hidden">
+                    <Image
+                      src={image.attributes.url}
+                      alt={`${product.attributes.name} ${index + 2}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Product Info */}
+          <div className="space-y-6">
+            <div>
+              <h1 className="font-montserrat text-4xl font-bold text-white mb-4">
+                {product.attributes.name}
+              </h1>
+              <p className="text-3xl font-bold text-green-400 mb-6">
+                ${product.attributes.price}
+              </p>
+              {product.attributes.category?.data && (
+                <p className="text-white/60 text-lg mb-4">
+                  Category: {product.attributes.category.data.attributes.name}
+                </p>
+              )}
+            </div>
+
+            {/* Stock Status */}
+            <div className="flex items-center space-x-2">
+              <div className={`w-3 h-3 rounded-full ${product.attributes.stock > 0 ? 'bg-green-400' : 'bg-red-400'}`} />
+              <span className="text-white">
+                {product.attributes.stock > 0 ? `${product.attributes.stock} in stock` : 'Out of stock'}
+              </span>
+            </div>
+
+            {/* Description */}
+            {product.attributes.description && (
+              <div className="prose prose-invert max-w-none">
+                <div className="text-white/80 leading-relaxed">
+                  {typeof product.attributes.description === 'string' 
+                    ? product.attributes.description 
+                    : 'Premium streetwear product crafted with attention to detail.'}
+                </div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="space-y-4">
+              <button 
+                disabled={product.attributes.stock === 0}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-montserrat font-bold py-4 px-8 rounded-xl transition-all duration-300"
+              >
+                {product.attributes.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+              </button>
+              
+              {product.attributes.customizable && (
+                <Link
+                  href={`/designer?product=${product.id}`}
+                  className="block w-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white font-montserrat font-bold py-4 px-8 rounded-xl transition-all duration-300 text-center"
+                >
+                  Customize This Product
+                </Link>
+              )}
+            </div>
+
+            {/* Additional Info */}
+            <div className="bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl p-6">
+              <h3 className="font-montserrat text-lg font-bold text-white mb-4">Product Details</h3>
+              <ul className="space-y-2 text-white/80">
+                <li>• Premium quality materials</li>
+                <li>• Comfortable fit</li>
+                <li>• Durable construction</li>
+                <li>• Easy care instructions</li>
+                {product.attributes.sku && (
+                  <li>• SKU: {product.attributes.sku}</li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Back to Collections */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/collections"
+            className="inline-flex items-center text-white/60 hover:text-white transition-colors"
+          >
+            ← Back to Collections
+          </Link>
+        </div>
+      </div>
+    </main>
+  );
+}
+

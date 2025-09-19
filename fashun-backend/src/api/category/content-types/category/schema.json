@@ -1,69 +1,59 @@
-{
-  "kind": "collectionType",
-  "collectionName": "categories",
-  "info": {
-    "singularName": "category",
-    "pluralName": "categories",
-    "displayName": "Category",
-    "description": "Product categories for organizing clothing items"
-  },
-  "options": {
-    "draftAndPublish": true
-  },
-  "pluginOptions": {},
-  "attributes": {
-    "name": {
-      "type": "string",
-      "required": true,
-      "maxLength": 255
-    },
-    "description": {
-      "type": "text"
-    },
-    "slug": {
-      "type": "uid",
-      "targetField": "name",
-      "required": true
-    },
-    "image": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": ["images"]
-    },
-    "products": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::product.product",
-      "mappedBy": "category"
-    },
-    "parent": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::category.category",
-      "inversedBy": "children"
-    },
-    "children": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::category.category",
-      "mappedBy": "parent"
-    },
-    "isActive": {
-      "type": "boolean",
-      "default": true
-    },
-    "sortOrder": {
-      "type": "integer",
-      "default": 0
-    },
-    "metaTitle": {
-      "type": "string",
-      "maxLength": 160
-    },
-    "metaDescription": {
-      "type": "text",
-      "maxLength": 320
-    }
-  }
-}
+{{
+
+  "kind": "collectionType",  "kind": "collectionType",
+
+  "collectionName": "categories",  "collectionName": "categories",
+
+  "info": {  "info": {
+
+    "singularName": "category",    "singularName": "category",
+
+    "pluralName": "categories",    "pluralName": "categories",
+
+    "displayName": "Category",    "displayName": "Category",
+
+    "description": "Essential category schema for FASHUN.CO"    "description": "Essential category schema for FASHUN.CO"
+
+  },  },
+
+  "options": {  "options": {
+
+    "draftAndPublish": false    "draftAndPublish": false
+
+  },  },
+
+  "pluginOptions": {},  "pluginOptions": {},
+
+  "attributes": {  "attributes": {
+
+    "name": {    "name": {
+
+      "type": "string",      "type": "string",
+
+      "required": true,      "required": true,
+
+      "unique": true      "unique": true
+
+    },    },
+
+    "description": {    "description": {
+
+      "type": "text"      "type": "text"
+
+    },    },
+
+    "products": {    "products": {
+
+      "type": "relation",      "type": "relation",
+
+      "relation": "oneToMany",      "relation": "oneToMany",
+
+      "target": "api::product.product",      "target": "api::product.product",
+
+      "mappedBy": "category"      "mappedBy": "category"
+
+    }    }
+
+  }  }
+
+}}

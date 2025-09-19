@@ -5,7 +5,7 @@
     "singularName": "order",
     "pluralName": "orders",
     "displayName": "Order",
-    "description": "Customer orders and transaction management"
+    "description": "Essential order schema for FASHUN.CO"
   },
   "options": {
     "draftAndPublish": false
@@ -15,126 +15,42 @@
     "orderNumber": {
       "type": "string",
       "required": true,
-      "unique": true,
-      "maxLength": 100
+      "unique": true
     },
     "customer": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
+      "target": "api::customer.customer",
       "inversedBy": "orders"
     },
     "customerEmail": {
       "type": "email",
       "required": true
     },
-    "customerPhone": {
-      "type": "string",
-      "maxLength": 20
+    "products": {
+      "type": "json",
+      "required": true
     },
-    "orderItems": {
-      "type": "component",
-      "repeatable": true,
-      "component": "order.order-item",
+    "total": {
+      "type": "decimal",
       "required": true
     },
     "status": {
       "type": "enumeration",
       "enum": [
         "pending",
-        "confirmed",
-        "processing",
+        "paid",
         "shipped",
         "delivered",
-        "cancelled",
-        "refunded"
+        "cancelled"
       ],
-      "default": "pending",
-      "required": true
-    },
-    "paymentStatus": {
-      "type": "enumeration",
-      "enum": [
-        "pending",
-        "paid",
-        "failed",
-        "refunded",
-        "partially_refunded"
-      ],
-      "default": "pending",
-      "required": true
-    },
-    "paymentMethod": {
-      "type": "string",
-      "maxLength": 100
-    },
-    "paymentId": {
-      "type": "string",
-      "maxLength": 255
-    },
-    "subtotal": {
-      "type": "decimal",
-      "required": true,
-      "min": 0
-    },
-    "tax": {
-      "type": "decimal",
-      "default": 0,
-      "min": 0
-    },
-    "shipping": {
-      "type": "decimal",
-      "default": 0,
-      "min": 0
-    },
-    "discount": {
-      "type": "decimal",
-      "default": 0,
-      "min": 0
-    },
-    "total": {
-      "type": "decimal",
-      "required": true,
-      "min": 0
-    },
-    "currency": {
-      "type": "string",
-      "default": "INR",
-      "maxLength": 3
+      "default": "pending"
     },
     "shippingAddress": {
-      "type": "component",
-      "repeatable": false,
-      "component": "order.address",
-      "required": true
+      "type": "json"
     },
-    "billingAddress": {
-      "type": "component",
-      "repeatable": false,
-      "component": "order.address"
-    },
-    "trackingNumber": {
-      "type": "string",
-      "maxLength": 255
-    },
-    "shippedAt": {
-      "type": "datetime"
-    },
-    "deliveredAt": {
-      "type": "datetime"
-    },
-    "notes": {
-      "type": "text"
-    },
-    "couponCode": {
-      "type": "string",
-      "maxLength": 100
-    },
-    "payments": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::payment.payment",
-      "mappedBy": "order"
+    "paymentId": {
+      "type": "string"
     }
   }
 }
