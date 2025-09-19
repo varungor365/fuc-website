@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "buildCommand": "cd fashun-store && npm run build",
+  "devCommand": "cd fashun-store && npm run dev",
+  "installCommand": "cd fashun-store && npm install",
+  "framework": "nextjs",
+  "outputDirectory": "fashun-store/.next",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "fashun-store/$1"
+    }
+  ],
+  "functions": {
+    "fashun-store/app/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/fashun-store/$1"
+    }
+  ]
+}

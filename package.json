@@ -1,0 +1,34 @@
+{
+  "name": "fuc-website",
+  "version": "1.0.0",
+  "description": "FASHUN.CO - Premium Streetwear Platform with Advanced SEO Optimization",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd fashun-store && npm run dev",
+    "build": "cd fashun-store && npm run build",
+    "start": "cd fashun-store && npm run start",
+    "lint": "cd fashun-store && npm run lint",
+    "vercel-build": "cd fashun-store && npm install && npm run build",
+    "install-all": "cd fashun-store && npm install && cd ../fashun-backend && npm install && cd ../ai-mockup-service && npm install",
+    "start-platform": "powershell -ExecutionPolicy Bypass -File start-platform.ps1"
+  },
+  "keywords": [
+    "streetwear",
+    "ecommerce",
+    "nextjs",
+    "seo",
+    "performance",
+    "fashion"
+  ],
+  "author": "FASHUN.CO",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/varungor365/fuc-website.git"
+  },
+  "homepage": "https://fashun.co.in"
+}
