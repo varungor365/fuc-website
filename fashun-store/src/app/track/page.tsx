@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import OrderTracking from '@/components/OrderTracking'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 
-export default function TrackOrderPage() {
+function TrackOrderContent() {
   const searchParams = useSearchParams()
   const [trackingInput, setTrackingInput] = useState('')
   const [showTracking, setShowTracking] = useState(false)
@@ -150,5 +150,15 @@ export default function TrackOrderPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function TrackOrderPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-black">
+      <div className="text-white">Loading order tracking...</div>
+    </div>}>
+      <TrackOrderContent />
+    </Suspense>
   )
 }

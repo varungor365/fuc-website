@@ -1,0 +1,66 @@
+{
+  "collectionName": "components_user_affiliate_profiles",
+  "info": {
+    "displayName": "Affiliate Profile",
+    "description": "Affiliate and influencer profile information"
+  },
+  "options": {},
+  "attributes": {
+    "isActive": {
+      "type": "boolean",
+      "default": false
+    },
+    "commissionRate": {
+      "type": "decimal",
+      "default": 0.05,
+      "min": 0,
+      "max": 1
+    },
+    "trackingCode": {
+      "type": "string",
+      "unique": true,
+      "maxLength": 50
+    },
+    "socialMediaHandle": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "platform": {
+      "type": "enumeration",
+      "enum": ["instagram", "youtube", "tiktok", "twitter", "facebook", "other"]
+    },
+    "followersCount": {
+      "type": "integer",
+      "min": 0
+    },
+    "totalEarnings": {
+      "type": "decimal",
+      "default": 0,
+      "min": 0
+    },
+    "pendingEarnings": {
+      "type": "decimal",
+      "default": 0,
+      "min": 0
+    },
+    "totalClicks": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "totalConversions": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "bankDetails": {
+      "type": "json"
+    },
+    "approvedAt": {
+      "type": "datetime"
+    },
+    "lastPayoutAt": {
+      "type": "datetime"
+    }
+  }
+}

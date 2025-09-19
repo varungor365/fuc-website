@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_subscription_preferences",
+  "info": {
+    "displayName": "Subscription Preferences",
+    "description": "Customer preferences for subscription boxes"
+  },
+  "options": {},
+  "attributes": {
+    "sizes": {
+      "type": "json"
+    },
+    "colors": {
+      "type": "json"
+    },
+    "categories": {
+      "type": "json"
+    },
+    "priceRange": {
+      "type": "json"
+    },
+    "stylePreference": {
+      "type": "enumeration",
+      "enum": ["streetwear", "casual", "minimalist", "bold", "vintage"],
+      "default": "streetwear"
+    },
+    "excludeCategories": {
+      "type": "json"
+    },
+    "allergens": {
+      "type": "json"
+    },
+    "specialInstructions": {
+      "type": "text"
+    }
+  }
+}

@@ -105,36 +105,20 @@ const nextConfig = {
   },
   // Webpack optimization for bundle size
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Analyze bundle size in development
-    if (!dev && !isServer) {
-      config.plugins.push(
-        new webpack.optimize.LimitChunkCountPlugin({
-          maxChunks: 5,
-        })
-      );
-    }
-
-    // Simplified optimization - let Next.js handle tree shaking
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-            priority: 10,
-          },
-        },
-      },
-    };
-
     // Optimize imports
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': require('path').resolve(__dirname, 'src'),
     };
+
+    // Ensure proper externals for server builds to prevent "self is not defined" errors
+    if (isServer) {
+      config.externals = config.externals || [];
+      // Externalize client-only packages
+      config.externals.push('fabric');
+      config.externals.push('konva');
+      config.externals.push('canvas');
+    }
 
     return config;
   },
