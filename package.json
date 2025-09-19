@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "FASHUN.CO - Premium Streetwear Platform with Advanced SEO Optimization",
   "main": "index.js",
+  "workspaces": ["fashun-store", "fashun-backend", "ai-mockup-service"],
   "scripts": {
     "dev": "cd fashun-store && npm run dev",
     "build": "cd fashun-store && npm run build",
@@ -11,6 +12,17 @@
     "vercel-build": "cd fashun-store && npm install && npm run build",
     "install-all": "cd fashun-store && npm install && cd ../fashun-backend && npm install && cd ../ai-mockup-service && npm install",
     "start-platform": "powershell -ExecutionPolicy Bypass -File start-platform.ps1"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
   },
   "keywords": [
     "streetwear",
