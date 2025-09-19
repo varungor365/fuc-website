@@ -1,0 +1,98 @@
+{
+  "kind": "collectionType",
+  "collectionName": "subscriptions",
+  "info": {
+    "singularName": "subscription",
+    "pluralName": "subscriptions",
+    "displayName": "Subscription",
+    "description": "Customer subscription management for quarterly boxes"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "subscriptionId": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 100
+    },
+    "customer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "subscriptions"
+    },
+    "plan": {
+      "type": "enumeration",
+      "enum": ["basic", "premium", "luxury"],
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["active", "paused", "cancelled", "expired"],
+      "default": "active",
+      "required": true
+    },
+    "frequency": {
+      "type": "enumeration",
+      "enum": ["monthly", "quarterly", "yearly"],
+      "default": "quarterly",
+      "required": true
+    },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "currency": {
+      "type": "string",
+      "default": "INR",
+      "maxLength": 3
+    },
+    "nextBillingDate": {
+      "type": "date",
+      "required": true
+    },
+    "startDate": {
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "type": "date"
+    },
+    "preferences": {
+      "type": "component",
+      "repeatable": false,
+      "component": "subscription.preferences"
+    },
+    "paymentMethod": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "stripeSubscriptionId": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "totalBoxesSent": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "totalValue": {
+      "type": "decimal",
+      "default": 0,
+      "min": 0
+    },
+    "shippingAddress": {
+      "type": "component",
+      "repeatable": false,
+      "component": "order.address",
+      "required": true
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product",
+    "description": "Product catalog for the clothing store"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "shortDescription": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "compareAtPrice": {
+      "type": "decimal",
+      "min": 0
+    },
+    "sku": {
+      "type": "string",
+      "unique": true,
+      "maxLength": 100
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "products"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "mappedBy": "products"
+    },
+    "variants": {
+      "type": "component",
+      "repeatable": true,
+      "component": "product.variant"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false
+    },
+    "metaTitle": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "metaDescription": {
+      "type": "text",
+      "maxLength": 320
+    },
+    "weight": {
+      "type": "decimal",
+      "min": 0
+    },
+    "dimensions": {
+      "type": "component",
+      "repeatable": false,
+      "component": "product.dimensions"
+    },
+    "inventory": {
+      "type": "component",
+      "repeatable": false,
+      "component": "product.inventory"
+    },
+    "customizable": {
+      "type": "boolean",
+      "default": false
+    },
+    "customizationOptions": {
+      "type": "json"
+    },
+    "releaseDate": {
+      "type": "datetime"
+    },
+    "isDrop": {
+      "type": "boolean",
+      "default": false
+    },
+    "isExclusive": {
+      "type": "boolean",
+      "default": false
+    },
+    "warehouseInventory": {
+      "type": "json"
+    },
+    "preOrderEnabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "maxPreOrders": {
+      "type": "integer",
+      "min": 0
+    },
+    "currentPreOrders": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "estimatedShipDate": {
+      "type": "date"
+    },
+    "nftCertificate": {
+      "type": "json"
+    },
+    "sizingChart": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "careInstructions": {
+      "type": "text"
+    },
+    "materials": {
+      "type": "json"
+    },
+    "sustainability": {
+      "type": "component",
+      "repeatable": false,
+      "component": "product.sustainability"
+    }
+  }
+}

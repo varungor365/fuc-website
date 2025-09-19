@@ -1,0 +1,435 @@
+{
+  "name": "Social Media Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-product-webhook",
+        "options": {}
+      },
+      "id": "product-webhook",
+      "name": "New Product Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract product data\nconst productData = items[0].json;\n\n// Create social media content variations\nconst product = {\n  id: productData.id,\n  name: productData.name,\n  description: productData.description,\n  price: productData.price,\n  images: productData.images,\n  category: productData.category,\n  tags: productData.tags || []\n};\n\n// Generate caption variations\nconst captions = {\n  instagram: `🔥 NEW DROP ALERT 🔥\\n\\n${product.name}\\n\\n${product.description}\\n\\n💰 ₹${product.price}\\n\\nLink in bio to cop yours! 🛒\\n\\n#FASHUNCO #Streetwear #NewDrop #Fashion #Style #Premium #${product.category}`,\n  \n  twitter: `🔥 NEW: ${product.name}\\n\\n${product.description.substring(0, 100)}...\\n\\n₹${product.price}\\n\\nShop now: fashun.co.in\\n\\n#Streetwear #Fashion #NewDrop`,\n  \n  tiktok: `New ${product.category} just dropped! 🔥\\n\\n${product.name} - ₹${product.price}\\n\\nWhat do you think? Fire or nah? 🤔\\n\\n#FASHUNCO #Streetwear #Fashion #NewDrop #OOTD`\n};\n\n// Generate hashtag sets\nconst hashtagSets = {\n  trending: '#Viral #Trending #Fashion #Streetwear #Style #OOTD #Aesthetic #Drip',\n  streetwear: '#Streetwear #Urban #Hypebeast #Fashion #Style #Clothing #Brand #Premium',\n  community: '#FashionCommunity #StreetStyle #StyleInspo #FashionBlogger #WIWT #Outfit'\n};\n\nproduct.captions = captions;\nproduct.hashtags = hashtagSets;\n\nreturn [{ json: product }];"
+      },
+      "id": "generate-content",
+      "name": "Generate Social Content",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.ai_service_url}}/generate-mockup",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "product",
+              "value": "={{JSON.stringify($json)}}"
+            },
+            {
+              "name": "style",
+              "value": "lifestyle"
+            },
+            {
+              "name": "background",
+              "value": "urban"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-mockup",
+      "name": "Generate Product Mockup",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "caption": "={{$json.captions.instagram}}",
+        "additionalFields": {
+          "locationId": "your_location_id"
+        }
+      },
+      "id": "post-instagram",
+      "name": "Post to Instagram",
+      "type": "n8n-nodes-base.instagram",
+      "typeVersion": 1,
+      "position": [
+        850,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth1",
+        "text": "={{$json.captions.twitter}}",
+        "additionalFields": {
+          "attachments": "={{$json.mockup_url}}"
+        }
+      },
+      "id": "post-twitter",
+      "name": "Post to Twitter",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "videoUrl": "={{$json.video_url}}",
+        "description": "={{$json.captions.tiktok}}",
+        "additionalFields": {
+          "privacy": "public"
+        }
+      },
+      "id": "post-tiktok",
+      "name": "Post to TikTok",
+      "type": "n8n-nodes-base.tiktok",
+      "typeVersion": 1,
+      "position": [
+        850,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "delay": 3600000,
+        "unit": "ms"
+      },
+      "id": "wait-1-hour",
+      "name": "Wait 1 Hour",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Create Instagram Story content\nconst productData = items[0].json;\n\nconst storyContent = {\n  type: 'story',\n  content: [\n    {\n      type: 'image',\n      url: productData.mockup_url,\n      text: `NEW DROP\\n${productData.name}`,\n      style: {\n        fontSize: 24,\n        color: '#E4C590',\n        background: 'rgba(15, 15, 16, 0.8)'\n      }\n    },\n    {\n      type: 'poll',\n      question: 'Cop or Drop?',\n      options: ['🔥 COP', '❌ DROP']\n    },\n    {\n      type: 'swipe_up',\n      text: 'Swipe up to shop',\n      url: `https://fashun.co.in/products/${productData.id}`\n    }\n  ]\n};\n\nreturn [{ json: storyContent }];"
+      },
+      "id": "create-story-content",
+      "name": "Create Story Content",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "mediaType": "story",
+        "caption": "NEW DROP! Swipe up to shop 🛒",
+        "additionalFields": {
+          "story_controls": {
+            "poll": {
+              "question": "Cop or Drop?",
+              "options": ["🔥 COP", "❌ DROP"]
+            }
+          }
+        }
+      },
+      "id": "post-instagram-story",
+      "name": "Post Instagram Story",
+      "type": "n8n-nodes-base.instagram",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "delay": 86400000,
+        "unit": "ms"
+      },
+      "id": "wait-24-hours",
+      "name": "Wait 24 Hours",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        1650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Create follow-up content\nconst productData = items[0].json;\n\nconst followUpContent = {\n  type: 'carousel',\n  images: [\n    productData.mockup_url,\n    productData.detail_images[0],\n    productData.detail_images[1]\n  ],\n  caption: `Still thinking about the ${productData.name}? 🤔\\n\\nHere's what makes it special:\\n\\n✨ Premium materials\\n🎨 Unique design\\n🔥 Limited edition\\n💯 Street-ready\\n\\nOnly ${productData.stock_count} left in stock!\\n\\nDon't sleep on this one 💤\\n\\n#FASHUNCO #LastChance #LimitedStock`,\n  cta: 'Shop Now'\n};\n\nreturn [{ json: followUpContent }];"
+      },
+      "id": "create-followup",
+      "name": "Create Follow-up Post",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "mediaType": "carousel",
+        "caption": "={{$json.caption}}",
+        "images": "={{$json.images}}",
+        "additionalFields": {
+          "action_button": {
+            "type": "shop_now",
+            "url": "https://fashun.co.in/products/{{$json.product_id}}"
+          }
+        }
+      },
+      "id": "post-followup-instagram",
+      "name": "Post Follow-up to Instagram",
+      "type": "n8n-nodes-base.instagram",
+      "typeVersion": 1,
+      "position": [
+        2050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "cron": "0 9 * * *",
+        "timezone": "Asia/Kolkata"
+      },
+      "id": "daily-engagement",
+      "name": "Daily Engagement Schedule",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Generate daily engagement content\nconst engagementTypes = [\n  {\n    type: 'outfit_inspiration',\n    content: 'Style inspiration for today 💫\\n\\nHow would you style this piece?\\n\\nTag us in your OOTD! 📸',\n    hashtags: '#StyleInspiration #OOTD #FASHUNCO #StreetStyle'\n  },\n  {\n    type: 'behind_scenes',\n    content: 'Behind the scenes at FASHUN.CO 🎬\\n\\nThe making of greatness ✨\\n\\nWhat would you like to see more of?',\n    hashtags: '#BehindTheScenes #FASHUNCO #Process #Quality'\n  },\n  {\n    type: 'community_spotlight',\n    content: 'Community spotlight! 🌟\\n\\nShowing love to our amazing customers\\n\\nTag a friend who has great style! 👥',\n    hashtags: '#Community #CustomerLove #FASHUNCO #Streetwear'\n  },\n  {\n    type: 'style_tips',\n    content: 'Style tip of the day 💡\\n\\nLayering is key to streetwear\\n\\nWhat\\'s your go-to layering piece?',\n    hashtags: '#StyleTips #Streetwear #Fashion #FASHUNCO'\n  }\n];\n\n// Select random engagement type\nconst todaysContent = engagementTypes[Math.floor(Math.random() * engagementTypes.length)];\n\nreturn [{ json: todaysContent }];"
+      },
+      "id": "generate-daily-content",
+      "name": "Generate Daily Content",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        450,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "caption": "={{$json.content}}\\n\\n{{$json.hashtags}}",
+        "mediaType": "photo"
+      },
+      "id": "post-daily-instagram",
+      "name": "Post Daily to Instagram",
+      "type": "n8n-nodes-base.instagram",
+      "typeVersion": 1,
+      "position": [
+        650,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.strapi_url}}/api/social-media-analytics",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "platform",
+              "value": "instagram"
+            },
+            {
+              "name": "post_id",
+              "value": "={{$json.post_id}}"
+            },
+            {
+              "name": "content_type",
+              "value": "={{$json.type}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "track-analytics",
+      "name": "Track Analytics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        850,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "New Product Webhook": {
+      "main": [
+        [
+          {
+            "node": "Generate Social Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Social Content": {
+      "main": [
+        [
+          {
+            "node": "Generate Product Mockup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Product Mockup": {
+      "main": [
+        [
+          {
+            "node": "Post to Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to TikTok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Instagram": {
+      "main": [
+        [
+          {
+            "node": "Wait 1 Hour",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1 Hour": {
+      "main": [
+        [
+          {
+            "node": "Create Story Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Story Content": {
+      "main": [
+        [
+          {
+            "node": "Post Instagram Story",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Instagram Story": {
+      "main": [
+        [
+          {
+            "node": "Wait 24 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 24 Hours": {
+      "main": [
+        [
+          {
+            "node": "Create Follow-up Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Follow-up Post": {
+      "main": [
+        [
+          {
+            "node": "Post Follow-up to Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Engagement Schedule": {
+      "main": [
+        [
+          {
+            "node": "Generate Daily Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Daily Content": {
+      "main": [
+        [
+          {
+            "node": "Post Daily to Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post Daily to Instagram": {
+      "main": [
+        [
+          {
+            "node": "Track Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1.0"
+}

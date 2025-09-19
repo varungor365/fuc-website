@@ -1,0 +1,622 @@
+FASHUN.CO.IN - TROUBLESHOOTING & FEATURE MANAGEMENT GUIDE
+========================================================
+
+This guide provides step-by-step instructions for troubleshooting issues and managing features in FASHUN.CO.IN.
+
+===========================================
+🚨 EMERGENCY TROUBLESHOOTING
+===========================================
+
+BUILD FAILURES:
+If the build fails, follow these steps:
+
+1. Check Build Errors:
+   ```powershell
+   cd "g:\fuc website\fashun-store"
+   npm run build
+   ```
+
+2. Common Build Issues & Solutions:
+   
+   a) TypeScript Errors:
+      - Check for missing imports
+      - Verify component prop types
+      - Run: `npm run type-check`
+   
+   b) Lint Errors:
+      - Run: `npm run lint`
+      - Fix or disable specific rules in .eslintrc.json
+   
+   c) Missing Dependencies:
+      - Run: `npm install`
+      - Check package.json for version conflicts
+   
+   d) Import Path Issues:
+      - Verify @/ path alias in tsconfig.json
+      - Check file extensions (.tsx, .ts, .js)
+
+3. Clean Build (if persistent issues):
+   ```powershell
+   cd "g:\fuc website\fashun-store"
+   Remove-Item .next -Recurse -Force
+   Remove-Item node_modules -Recurse -Force
+   npm install
+   npm run build
+   ```
+
+DEVELOPMENT SERVER ISSUES:
+1. Kill existing processes:
+   ```powershell
+   taskkill /f /im node.exe
+   Start-Sleep -Seconds 2
+   ```
+
+2. Start development server:
+   ```powershell
+   cd "g:\fuc website\fashun-store"
+   npm run dev
+   ```
+
+3. If port is occupied:
+   ```powershell
+   netstat -ano | findstr :3000
+   taskkill /PID [PID_NUMBER] /F
+   ```
+
+===========================================
+🤖 AI FEATURES TROUBLESHOOTING
+===========================================
+
+1. AI PRODUCT RECOMMENDATIONS NOT SHOWING:
+
+   Problem: Recommendations not appearing on homepage/product pages
+   
+   Debugging Steps:
+   a) Check component import:
+      File: src/app/page.tsx
+      Look for: import ProductRecommendations from '@/components/ai/ProductRecommendations'
+   
+   b) Check component rendering:
+      File: src/app/page.tsx
+      Look for: <ProductRecommendations userId={...} />
+   
+   c) Verify data flow:
+      - Check if userId prop is passed correctly
+      - Verify products array is populated
+      - Check console for JavaScript errors
+   
+   Quick Fix:
+   ```powershell
+   # Navigate to component
+   cd "g:\fuc website\fashun-store\src\components\ai"
+   # Check if file exists
+   Get-ChildItem ProductRecommendations.tsx
+   ```
+
+2. STYLE ASSISTANT CHAT NOT RESPONDING:
+
+   Problem: Chat widget not opening or responding
+   
+   Debugging Steps:
+   a) Check floating chat button:
+      File: src/components/ai/StyleAssistant.tsx
+      Verify isOpen state management
+   
+   b) Check event handlers:
+      Look for onClick handlers on chat toggle
+   
+   c) Console errors:
+      Press F12 → Console tab → Look for JavaScript errors
+   
+   Quick Fix:
+   - Refresh page
+   - Clear browser cache (Ctrl+Shift+R)
+   - Check if component is imported in layout
+
+3. SEARCH FEATURES NOT WORKING:
+
+   Problem: AI search, filters, or visual search not functioning
+   
+   Components to Check:
+   a) IntelligentSearch.tsx
+   b) SmartFilters.tsx  
+   c) VisualSearch.tsx
+   
+   Debugging Steps:
+   a) Check search page:
+      File: src/app/search/page.tsx
+      Verify all AI components are imported and rendered
+   
+   b) Check state management:
+      - searchQuery state
+      - filters state
+      - showFilters, showVisualSearch states
+   
+   c) Check event handlers:
+      - handleSearch function
+      - onFiltersChange callback
+      - onSearchResults callback
+   
+   Quick Fix:
+   ```powershell
+   # Check if search components exist
+   cd "g:\fuc website\fashun-store\src\components\ai"
+   Get-ChildItem IntelligentSearch.tsx, SmartFilters.tsx, VisualSearch.tsx
+   ```
+
+4. SIZE RECOMMENDATIONS NOT APPEARING:
+
+   Problem: Size recommendation component not showing on product pages
+   
+   Debugging Steps:
+   a) Check product page:
+      File: src/app/products/[id]/page.tsx
+      Look for: <SizeRecommendation />
+   
+   b) Check product data:
+      Verify product has size information
+   
+   c) Check component state:
+      Ensure showSizeGuide state works correctly
+
+5. OUTFIT BUILDER ISSUES:
+
+   Problem: Outfit builder not loading or drag-drop not working
+   
+   Debugging Steps:
+   a) Check if dedicated page exists:
+      File: src/app/outfit-builder/page.tsx (if created)
+   
+   b) Check component functionality:
+      File: src/components/ai/OutfitBuilder.tsx
+      Verify drag-drop handlers
+   
+   c) Check dependencies:
+      Ensure framer-motion is installed for animations
+
+===========================================
+🔧 FEATURE ACTIVATION/DEACTIVATION GUIDE
+===========================================
+
+HOW TO DISABLE AI FEATURES:
+
+1. Disable Product Recommendations:
+   
+   Step 1: Open homepage
+   File: src/app/page.tsx
+   
+   Step 2: Comment out or remove:
+   ```tsx
+   // <ProductRecommendations userId="user-123" />
+   ```
+   
+   Step 3: Rebuild:
+   ```powershell
+   npm run build
+   ```
+
+2. Disable Style Assistant Chat:
+   
+   Step 1: Find layout file or page where it's included
+   File: src/app/layout.tsx or individual pages
+   
+   Step 2: Comment out:
+   ```tsx
+   // <StyleAssistant />
+   ```
+   
+   Alternative: Add feature flag:
+   ```tsx
+   {process.env.ENABLE_STYLE_ASSISTANT === 'true' && <StyleAssistant />}
+   ```
+
+3. Disable AI Search Features:
+   
+   Step 1: Open search page
+   File: src/app/search/page.tsx
+   
+   Step 2: Replace AI components with basic components:
+   ```tsx
+   // Replace IntelligentSearch with basic input
+   <input 
+     type="text"
+     value={searchQuery}
+     onChange={(e) => setSearchQuery(e.target.value)}
+     placeholder="Search products..."
+   />
+   
+   // Comment out AI components
+   // <SmartFilters />
+   // <VisualSearch />
+   ```
+
+4. Disable Size Recommendations:
+   
+   Step 1: Open product page
+   File: src/app/products/[id]/page.tsx
+   
+   Step 2: Comment out:
+   ```tsx
+   // <SizeRecommendation productId={product.id} />
+   ```
+
+5. Disable Personalized Homepage:
+   
+   Step 1: Create static sections instead of AI-curated ones
+   File: src/app/page.tsx
+   
+   Step 2: Replace dynamic content with static content
+
+HOW TO ENABLE AI FEATURES:
+
+1. Enable All AI Features:
+   
+   Step 1: Ensure all AI components exist:
+   ```powershell
+   cd "g:\fuc website\fashun-store\src\components\ai"
+   Get-ChildItem *.tsx
+   ```
+   
+   Step 2: Import in relevant pages:
+   ```tsx
+   import ProductRecommendations from '@/components/ai/ProductRecommendations'
+   import StyleAssistant from '@/components/ai/StyleAssistant'
+   import IntelligentSearch from '@/components/ai/IntelligentSearch'
+   import SmartFilters from '@/components/ai/SmartFilters'
+   import VisualSearch from '@/components/ai/VisualSearch'
+   import SizeRecommendation from '@/components/ai/SizeRecommendation'
+   import OutfitBuilder from '@/components/ai/OutfitBuilder'
+   ```
+   
+   Step 3: Add to JSX:
+   ```tsx
+   <ProductRecommendations userId="user-123" />
+   <StyleAssistant />
+   <SizeRecommendation productId={productId} />
+   ```
+
+2. Feature Flag System (Recommended):
+   
+   Step 1: Create environment variables
+   File: .env.local
+   ```
+   ENABLE_AI_RECOMMENDATIONS=true
+   ENABLE_STYLE_ASSISTANT=true
+   ENABLE_AI_SEARCH=true
+   ENABLE_SIZE_RECOMMENDATIONS=true
+   ENABLE_OUTFIT_BUILDER=true
+   ENABLE_PERSONALIZED_HOMEPAGE=true
+   ```
+   
+   Step 2: Use in components:
+   ```tsx
+   {process.env.ENABLE_AI_RECOMMENDATIONS === 'true' && (
+     <ProductRecommendations userId={userId} />
+   )}
+   ```
+
+===========================================
+📱 RESPONSIVE DESIGN TROUBLESHOOTING
+===========================================
+
+MOBILE LAYOUT ISSUES:
+
+1. Check Tailwind CSS classes:
+   - Use mobile-first approach: `sm:`, `md:`, `lg:`, `xl:`
+   - Verify responsive grid: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
+
+2. Test on different screen sizes:
+   - Open DevTools (F12)
+   - Toggle device toolbar (Ctrl+Shift+M)
+   - Test on various device presets
+
+3. Common responsive fixes:
+   ```tsx
+   // Mobile-first grid
+   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+   
+   // Responsive padding
+   <div className="px-4 sm:px-6 lg:px-8">
+   
+   // Responsive text
+   <h1 className="text-2xl sm:text-3xl lg:text-4xl">
+   ```
+
+===========================================
+🎨 STYLING & THEME TROUBLESHOOTING
+===========================================
+
+DARK THEME ISSUES:
+
+1. Check Tailwind config:
+   File: tailwind.config.js
+   Ensure dark mode is configured
+
+2. Verify color scheme:
+   - Background: `bg-gray-950`
+   - Text: `text-white`
+   - Accents: `text-purple-400`, `bg-purple-600`
+
+3. Inconsistent colors:
+   - Use design system colors consistently
+   - Check for hardcoded colors in CSS
+
+ANIMATION ISSUES:
+
+1. Check Framer Motion:
+   ```powershell
+   npm list framer-motion
+   ```
+
+2. Verify import:
+   ```tsx
+   import { motion, AnimatePresence } from 'framer-motion'
+   ```
+
+3. Check animation props:
+   ```tsx
+   <motion.div
+     initial={{ opacity: 0, y: 20 }}
+     animate={{ opacity: 1, y: 0 }}
+     transition={{ duration: 0.3 }}
+   >
+   ```
+
+===========================================
+🔍 PERFORMANCE TROUBLESHOOTING
+===========================================
+
+SLOW PAGE LOADS:
+
+1. Check image optimization:
+   - Use Next.js Image component
+   - Verify image formats (WebP, AVIF)
+   - Check image sizes
+
+2. Bundle analysis:
+   ```powershell
+   npm run analyze
+   ```
+
+3. Check for large dependencies:
+   ```powershell
+   npm list --depth=0
+   ```
+
+MEMORY ISSUES:
+
+1. Check for memory leaks:
+   - UseEffect cleanup functions
+   - Event listener removal
+   - Timer cleanup
+
+2. Optimize re-renders:
+   - Use React.memo for expensive components
+   - Optimize useEffect dependencies
+   - Use useMemo for expensive calculations
+
+===========================================
+🗄️ DATABASE & API TROUBLESHOOTING
+===========================================
+
+API ROUTES NOT WORKING:
+
+1. Check API route files:
+   ```powershell
+   cd "g:\fuc website\fashun-store\src\app\api"
+   Get-ChildItem -Recurse *.ts
+   ```
+
+2. Verify route structure:
+   - File naming convention
+   - Export default function
+   - HTTP method handling
+
+3. Check network requests:
+   - Open DevTools → Network tab
+   - Look for failed requests
+   - Check response status codes
+
+DATA NOT LOADING:
+
+1. Check data fetching:
+   - Verify fetch URLs
+   - Check for CORS issues
+   - Verify JSON parsing
+
+2. Check loading states:
+   - Add loading indicators
+   - Handle error states
+   - Implement proper fallbacks
+
+===========================================
+🚀 DEPLOYMENT TROUBLESHOOTING
+===========================================
+
+BUILD FOR PRODUCTION:
+
+1. Environment variables:
+   File: .env.production
+   Ensure all required variables are set
+
+2. Check production build:
+   ```powershell
+   npm run build
+   npm start
+   ```
+
+3. Verify static generation:
+   Check .next/static folder for generated files
+
+DEPLOYMENT ISSUES:
+
+1. Check package.json scripts:
+   ```json
+   {
+     "scripts": {
+       "build": "next build",
+       "start": "next start",
+       "dev": "next dev"
+     }
+   }
+   ```
+
+2. Check dependencies:
+   Ensure all dependencies are in package.json
+
+3. Environment-specific configs:
+   Verify configurations for target environment
+
+===========================================
+📞 SUPPORT & MAINTENANCE
+===========================================
+
+REGULAR MAINTENANCE TASKS:
+
+1. Weekly:
+   - Update dependencies: `npm update`
+   - Run security audit: `npm audit`
+   - Check for TypeScript errors: `npm run type-check`
+
+2. Monthly:
+   - Update Next.js: `npm install next@latest`
+   - Review and update packages
+   - Performance monitoring
+
+3. Before major releases:
+   - Full test suite run
+   - Security scan
+   - Performance audit
+   - Accessibility check
+
+BACKUP PROCEDURES:
+
+1. Code backup:
+   ```powershell
+   git add .
+   git commit -m "Backup before changes"
+   git push origin main
+   ```
+
+2. Database backup (if applicable):
+   - Export user data
+   - Export product data
+   - Export configuration
+
+ROLLBACK PROCEDURES:
+
+1. Git rollback:
+   ```powershell
+   git log --oneline
+   git reset --hard [commit-hash]
+   git push --force-with-lease origin main
+   ```
+
+2. Feature rollback:
+   - Use feature flags to disable features
+   - Revert specific commits
+   - Deploy previous stable version
+
+===========================================
+📚 USEFUL COMMANDS REFERENCE
+===========================================
+
+DEVELOPMENT:
+```powershell
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
+
+# Fix lint issues
+npm run lint:fix
+```
+
+GIT COMMANDS:
+```powershell
+# Check status
+git status
+
+# Add all changes
+git add .
+
+# Commit changes
+git commit -m "Your message"
+
+# Push to main
+git push origin main
+
+# Pull latest changes
+git pull origin main
+```
+
+FILE OPERATIONS:
+```powershell
+# Find files
+Get-ChildItem -Recurse -Name "*.tsx"
+
+# Search in files
+Select-String "searchterm" -Path "*.tsx" -Recurse
+
+# Copy files
+Copy-Item source destination
+
+# Remove files/folders
+Remove-Item path -Recurse -Force
+```
+
+===========================================
+🎯 FEATURE-SPECIFIC GUIDES
+===========================================
+
+AI SEARCH CUSTOMIZATION:
+
+1. Modify search suggestions:
+   File: src/components/ai/IntelligentSearch.tsx
+   Edit suggestions array
+
+2. Change filter categories:
+   File: src/components/ai/SmartFilters.tsx
+   Modify filterCategories array
+
+3. Adjust AI scoring:
+   File: src/app/search/page.tsx
+   Edit calculateRelevanceScore function
+
+STYLE ASSISTANT CUSTOMIZATION:
+
+1. Modify chat responses:
+   File: src/components/ai/StyleAssistant.tsx
+   Edit generateResponse function
+
+2. Add new style categories:
+   Edit styleCategories array
+
+3. Customize chat UI:
+   Modify chat bubble styles and animations
+
+RECOMMENDATION ALGORITHM:
+
+1. Adjust recommendation logic:
+   File: src/components/ai/ProductRecommendations.tsx
+   Edit recommendation calculation
+
+2. Change recommendation count:
+   Modify maxRecommendations variable
+
+3. Add new recommendation types:
+   Extend recommendation categories
+
+Remember: Always test changes in development environment before deploying to production!
+
+Happy coding! 🚀
