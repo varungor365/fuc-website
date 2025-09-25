@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { ProductService } from '@/services/productService';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Collections - FASHUN.CO',
   description: 'Browse our premium streetwear collections. Find the perfect pieces for your style.',

@@ -144,3 +144,4 @@ ai-mockup-service/output/
 # Build artifacts
 *.tgz
 *.tar.gz
+.vercel

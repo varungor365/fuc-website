@@ -1,11 +1,7 @@
-import { Metadata } from 'next';
+'use client';
+
 import Link from 'next/link';
 import { MockupEditor } from '@/components/designer/MockupEditor';
-
-export const metadata: Metadata = {
-  title: 'Design Studio - FASHUN.CO',
-  description: 'Create custom streetwear with premium mockups from Unblast, high-quality images from Lummi AI, and professional design tools',
-};
 
 export default function DesignerPage() {
   const handleDesignSave = (designData: any) => {
