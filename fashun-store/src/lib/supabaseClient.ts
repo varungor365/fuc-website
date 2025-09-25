@@ -1,13 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/types/database'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+// Only create client if environment variables are properly set
+export const supabase = (supabaseUrl && supabaseAnonKey && !supabaseUrl.includes('placeholder'))
+  ? createClient<Database>(supabaseUrl, supabaseAnonKey)
+  : null
 
 // Helper functions for common operations
-export const supabaseAdmin = createClient<Database>(
-  supabaseUrl,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey
-)
+export const supabaseAdmin = (supabase && process.env.SUPABASE_SERVICE_ROLE_KEY)
+  ? createClient<Database>(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY)
+  : supabase
