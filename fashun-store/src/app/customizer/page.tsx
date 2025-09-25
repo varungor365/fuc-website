@@ -1,5 +1,5 @@
-import SimpleTShirtCustomizer from '@/components/customizer/SimpleTShirtCustomizer';
+import SimpleTShirtCustomizerWrapper from '@/components/customizer/SimpleTShirtCustomizerWrapper';
 
 export default function CustomizerPage() {
-  return <SimpleTShirtCustomizer />;
+  return <SimpleTShirtCustomizerWrapper />;
 }

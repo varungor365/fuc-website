@@ -1,19 +1,15 @@
 {
   "version": 2,
-  "buildCommand": "cd fashun-store && npm install && npm run build",
-  "outputDirectory": "fashun-store/.next",
-  "installCommand": "cd fashun-store && npm install",
-  "framework": "nextjs",
-  "redirects": [
+  "builds": [
     {
-      "source": "/shop",
-      "destination": "/collections/all",
-      "permanent": true
-    },
+      "src": "fashun-store/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
     {
-      "source": "/privacy",
-      "destination": "/privacy-policy", 
-      "permanent": true
+      "src": "/(.*)",
+      "dest": "fashun-store/$1"
     }
   ]
 }

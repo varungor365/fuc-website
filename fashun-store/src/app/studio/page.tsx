@@ -12,7 +12,7 @@ import {
   CameraIcon,
   SwatchIcon
 } from '@heroicons/react/24/outline';
-import SimpleTShirtCustomizer from '@/components/customizer/SimpleTShirtCustomizer';
+import SimpleTShirtCustomizerWrapper from '@/components/customizer/SimpleTShirtCustomizerWrapper';
 import AvatarCreator from '@/components/avatar/AvatarCreator';
 
 const StudioPage: React.FC = () => {
@@ -137,7 +137,7 @@ const StudioPage: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 50 }}
             >
-              <SimpleTShirtCustomizer onDesignChange={handleDesignChange} />
+              <SimpleTShirtCustomizerWrapper onDesignChange={handleDesignChange} />
             </motion.div>
           )}
 
