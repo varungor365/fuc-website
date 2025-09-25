@@ -1,8 +1,9 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { 
   ArrowRightIcon,
   StarIcon,
@@ -10,22 +11,45 @@ import {
   ShieldCheckIcon,
   HeartIcon,
   SparklesIcon,
-  CubeIcon
+  CubeIcon,
+  ShoppingBagIcon,
+  UserIcon
 } from '@heroicons/react/24/outline'
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid'
 import PersonalizedSections from '@/components/ai/PersonalizedSections'
-import RecommendationEngine from '@/components/ai/RecommendationEngine'
+import RecommendationEngine, { RECOMMENDATION_REASONS } from '@/components/ai/RecommendationEngine'
 import StyleAssistantButton from '@/components/ai/StyleAssistantButton'
 import OutfitBuilderButton from '@/components/ai/OutfitBuilderButton'
+import InstagramFeed from '@/components/social/InstagramFeed'
+import CartDrawer from '@/components/cart/CartDrawer'
+import LoginModal from '@/components/auth/LoginModal'
+import PremiumPricing, { PricingDisplay } from '@/components/pricing/PremiumPricing'
+import { pagefonts } from '@/lib/simpleFonts'
+import { mockupData, getAllMockups } from '@/lib/mockupData'
 
 // Hero Section Component
-const HeroSection = () => {
+const HeroSection = ({ onOpenCart, onOpenLogin }: { onOpenCart: () => void; onOpenLogin: () => void }) => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-500/20 rounded-full filter blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-400/20 rounded-full filter blur-3xl animate-pulse delay-1000" />
+        {/* Logo Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="grid grid-cols-8 gap-8 h-full">
+            {Array.from({ length: 64 }).map((_, i) => (
+              <div key={i} className="relative w-8 h-8">
+                <Image
+                  src="/logo.png"
+                  alt=""
+                  fill
+                  className="object-contain opacity-20"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

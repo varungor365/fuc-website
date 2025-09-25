@@ -1,11 +1,17 @@
 import { Metadata } from 'next'
-import HomePage from '@/components/pages/HomePage'
+import TestShowcasePage from '@/components/ui/TestShowcasePage'
 
 export const metadata: Metadata = {
-  title: 'FASHUN.CO - Premium Streetwear Redefined',
-  description: 'Elevating streetwear culture with premium designs that speak to the modern generation. Every piece tells a story.',
+  title: 'FASHUN.CO - Premium Website Showcase',
+  description: 'Complete premium website upgrade with logo integration, Instagram feed, premium cart, advanced login, stunning fonts, and comprehensive mockup system.',
+  keywords: 'streetwear, AI fashion, premium clothing, style recommendations, urban fashion, trendy clothes, website showcase',
+  openGraph: {
+    title: 'FASHUN.CO - Premium Website Showcase',
+    description: 'Complete premium website upgrade with all features integrated.',
+    images: ['/logo.png'],
+  }
 }
 
 export default function Home() {
-  return <HomePage />
+  return <TestShowcasePage />
 }

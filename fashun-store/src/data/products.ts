@@ -1,5 +1,5 @@
-// Comprehensive Product Database for FashUn.Co.in
-// Industry-grade product catalog with stock images and complete information
+// FASHUN Product Database - Focused Collection
+// Hoodies, T-Shirts, Oversized T-Shirts, Sweatshirts, Polo Shirts, and Anime Accessories
 
 export interface Product {
   id: string;
@@ -21,43 +21,32 @@ export interface Product {
   sku: string;
   material?: string;
   fit?: string;
-  care?: string[];
   rating?: number;
   reviews?: number;
-  seoTitle?: string;
-  seoDescription?: string;
-  weight?: string;
-  dimensions?: string;
 }
 
-// Categories configuration for maximum flexibility
+// Categories configuration
 export const categories = {
   hoodies: {
     name: "Hoodies",
     slug: "hoodies",
     description: "Premium hoodies for ultimate comfort and style",
     image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=600&fit=crop&auto=format",
-    subcategories: ["pullover", "zip-up", "oversized", "cropped"],
-    seoTitle: "Premium Hoodies & Sweatshirts | FashUn.Co.in",
-    seoDescription: "Shop premium hoodies and sweatshirts at FashUn.Co.in. Oversized fits, premium materials, and streetwear designs."
+    subcategories: ["pullover", "zip-up", "oversized"],
   },
   tshirts: {
     name: "T-Shirts",
     slug: "tshirts", 
-    description: "Graphic tees and essentials for everyday wear",
+    description: "Graphic tees and essential t-shirts",
     image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=600&fit=crop&auto=format",
-    subcategories: ["graphic", "plain", "oversized", "crop"],
-    seoTitle: "Graphic T-Shirts & Essential Tees | FashUn.Co.in",
-    seoDescription: "Explore our collection of graphic t-shirts and essential tees. Premium cotton, bold designs, perfect fit."
+    subcategories: ["graphic", "basic", "anime"],
   },
-  polos: {
-    name: "Polo Shirts",
-    slug: "polos",
-    description: "Smart casual polos with streetwear edge", 
-    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&h=600&fit=crop&auto=format",
-    subcategories: ["classic", "oversized", "embroidered"],
-    seoTitle: "Polo Shirts & Smart Casual Wear | FashUn.Co.in",
-    seoDescription: "Premium polo shirts with modern streetwear edge. Classic and oversized fits available."
+  oversized_tshirts: {
+    name: "Oversized T-Shirts",
+    slug: "oversized-tshirts",
+    description: "Oversized tees for streetwear style",
+    image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&h=600&fit=crop&auto=format",
+    subcategories: ["graphic", "plain", "anime"],
   },
   sweatshirts: {
     name: "Sweatshirts",
@@ -65,858 +54,625 @@ export const categories = {
     description: "Cozy sweatshirts for casual comfort",
     image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format",
     subcategories: ["crew-neck", "oversized", "vintage"],
-    seoTitle: "Sweatshirts & Casual Wear | FashUn.Co.in",
-    seoDescription: "Comfortable sweatshirts and casual wear. Premium materials, perfect for layering."
   },
-  jackets: {
-    name: "Jackets",
-    slug: "jackets", 
-    description: "Statement jackets for layering",
-    image: "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&h=600&fit=crop&auto=format",
-    subcategories: ["bomber", "denim", "windbreaker", "varsity"],
-    seoTitle: "Jackets & Outerwear | FashUn.Co.in",
-    seoDescription: "Premium jackets and outerwear. Bomber jackets, denim pieces, and statement outerwear."
+  polos: {
+    name: "Polo Shirts",
+    slug: "polos",
+    description: "Smart casual polos with streetwear edge", 
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&h=600&fit=crop&auto=format",
+    subcategories: ["classic", "oversized", "embroidered"],
   },
-  pants: {
-    name: "Pants",
-    slug: "pants",
-    description: "Comfortable pants and joggers",
-    image: "https://images.unsplash.com/photo-1506629905057-f39a2c35b5a5?w=800&h=600&fit=crop&auto=format", 
-    subcategories: ["joggers", "cargo", "straight", "wide"],
-    seoTitle: "Pants & Bottoms | FashUn.Co.in",
-    seoDescription: "Comfortable pants, joggers, and bottoms. Modern fits and premium materials."
-  },
-  shorts: {
-    name: "Shorts", 
-    slug: "shorts",
-    description: "Summer essentials and athletic shorts",
-    image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800&h=600&fit=crop&auto=format",
-    subcategories: ["athletic", "cargo", "denim", "swim"],
-    seoTitle: "Shorts & Summer Wear | FashUn.Co.in",
-    seoDescription: "Summer shorts and athletic wear. Comfortable fits for active lifestyle."
-  },
-  accessories: {
-    name: "Accessories",
-    slug: "accessories",
-    description: "Complete your look with premium accessories",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=600&fit=crop&auto=format",
-    subcategories: ["caps", "beanies", "bags", "socks", "jewelry"],
-    seoTitle: "Accessories & Streetwear Gear | FashUn.Co.in",
-    seoDescription: "Complete your streetwear look with our premium accessories. Caps, bags, jewelry, and more."
+  anime_accessories: {
+    name: "Anime Accessories",
+    slug: "anime-accessories",
+    description: "Anime-inspired accessories and collectibles",
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format",
+    subcategories: ["pins", "patches", "bags", "keychains", "figures"],
   }
 };
 
-// Comprehensive product catalog with stock images
+// Product Database
 export const products: Product[] = [
-  // HOODIES COLLECTION
+  // HOODIES (8 products)
   {
-    id: "hod-001",
-    name: "Essential Oversized Hoodie",
-    description: "Our signature oversized hoodie crafted from premium 100% organic cotton. Features a relaxed fit, kangaroo pocket, and embroidered logo detail. Perfect for layering and streetwear styling.",
-    price: 2499,
-    originalPrice: 3499,
+    id: 'hoodie-001',
+    name: 'Essential Oversized Hoodie',
+    category: 'hoodies',
+    subcategory: 'oversized',
+    price: 79.99,
+    description: 'Ultra-comfortable oversized hoodie in premium heavyweight cotton. Perfect for layering with adjustable drawstring hood.',
     images: [
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&h=800&fit=crop&auto=format"
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&h=600&fit=crop&crop=center'
     ],
-    category: "hoodies",
-    subcategory: "oversized",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "White", "Stone Grey", "Navy", "Forest Green"],
-    tags: ["oversized", "organic cotton", "signature", "premium", "streetwear"],
-    isNew: true,
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Charcoal', 'Cream', 'Forest Green', 'Burgundy'],
+    tags: ['oversized', 'heavyweight', 'basic', 'comfortable'],
     isFeatured: true,
-    inStock: true,
-    stockCount: 45,
-    sku: "FUC-HOD-001",
-    material: "100% Organic Cotton (450 GSM)",
-    fit: "Oversized",
-    care: ["Machine wash cold", "Do not bleach", "Tumble dry low", "Iron inside out"],
-    rating: 4.8,
-    reviews: 127,
-    seoTitle: "Essential Oversized Hoodie - Premium Cotton | FashUn.Co.in",
-    seoDescription: "Shop our signature oversized hoodie made from 100% organic cotton. Perfect streetwear piece with premium quality.",
-    weight: "650g",
-    dimensions: "Length: 70cm, Chest: 65cm (Size L)"
-  },
-  {
-    id: "hod-002", 
-    name: "Zip-Up Tech Hoodie",
-    description: "Technical hoodie with moisture-wicking fabric and modern fit. Features premium YKK zipper, thumb holes, and reflective details. Perfect for active lifestyle with premium finishes.",
-    price: 3299,
-    images: [
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "hoodies",
-    subcategory: "zip-up", 
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "Charcoal", "Forest Green", "Navy"],
-    tags: ["tech fabric", "moisture-wicking", "active", "reflective", "YKK zipper"],
-    isNew: false,
-    isFeatured: true,
-    inStock: true,
-    stockCount: 32,
-    sku: "FUC-HOD-002",
-    material: "Polyester Blend Tech Fabric (380 GSM)",
-    fit: "Regular Athletic",
-    care: ["Machine wash cold", "Hang dry", "Do not iron prints"],
-    rating: 4.6,
-    reviews: 89,
-    seoTitle: "Tech Zip-Up Hoodie - Moisture Wicking | FashUn.Co.in",
-    seoDescription: "Premium tech hoodie with moisture-wicking fabric. Perfect for active lifestyle and streetwear.",
-    weight: "580g"
-  },
-  {
-    id: "hod-003",
-    name: "Vintage Washed Hoodie",
-    description: "Pre-washed vintage look hoodie with distressed details and premium aging process for authentic worn-in feel. Features vintage-inspired graphics and relaxed fit.",
-    price: 2799,
-    originalPrice: 3599,
-    images: [
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "hoodies",
-    subcategory: "pullover",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Washed Black", "Vintage Blue", "Faded Pink", "Stone Grey"],
-    tags: ["vintage", "washed", "distressed", "retro"],
-    isNew: false,
-    isFeatured: false,
-    inStock: true,
-    stockCount: 28,
-    sku: "FUC-HOD-003",
-    material: "Cotton Blend (420 GSM)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Tumble dry low", "Do not bleach"],
-    rating: 4.5,
-    reviews: 63,
-    seoTitle: "Vintage Washed Hoodie - Distressed Look | FashUn.Co.in",
-    seoDescription: "Authentic vintage washed hoodie with distressed details. Premium aging process for worn-in feel.",
-    weight: "620g"
-  },
-  {
-    id: "hod-004",
-    name: "Cropped Hoodie",
-    description: "Contemporary cropped hoodie with modern silhouette. Features dropped shoulders, raw hem details, and minimalist branding. Perfect for layering and trend-forward styling.",
-    price: 2299,
-    images: [
-      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "hoodies",
-    subcategory: "cropped",
-    sizes: ["XS", "S", "M", "L", "XL"],
-    colors: ["Black", "Cream", "Sage Green", "Lavender"],
-    tags: ["cropped", "contemporary", "minimalist", "trendy"],
     isNew: true,
-    isFeatured: false,
     inStock: true,
     stockCount: 38,
-    sku: "FUC-HOD-004",
-    material: "Cotton Fleece (380 GSM)",
-    fit: "Cropped Regular",
-    care: ["Machine wash cold", "Tumble dry low"],
-    rating: 4.7,
-    reviews: 54,
-    seoTitle: "Cropped Hoodie - Contemporary Streetwear | FashUn.Co.in",
-    seoDescription: "Modern cropped hoodie with contemporary silhouette. Perfect for trendy streetwear styling.",
-    weight: "480g"
+    sku: 'FASH-HOD-001',
+    material: 'Premium Cotton Blend',
+    fit: 'Oversized',
+    rating: 4.8,
+    reviews: 156
   },
-
-  // T-SHIRTS COLLECTION
   {
-    id: "tee-001",
-    name: "Graphic Statement Tee",
-    description: "Bold graphic print on premium cotton tee. Features unique FashUn.Co.in artwork with high-quality screen printing. Soft hand feel with superior wash durability.",
-    price: 1299,
-    originalPrice: 1799,
+    id: 'hoodie-002',
+    name: 'Graffiti Print Hoodie',
+    category: 'hoodies',
+    subcategory: 'pullover',
+    price: 89.99,
+    originalPrice: 109.99,
+    description: 'Street art inspired hoodie with all-over graffiti print. Features kangaroo pocket and ribbed cuffs.',
     images: [
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1583743814966-8936f37f8fc6?w=800&h=800&fit=crop&auto=format"
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center'
     ],
-    category: "tshirts",
-    subcategory: "graphic",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "White", "Navy", "Forest Green", "Burgundy"],
-    tags: ["graphic", "statement", "premium cotton", "screen print"],
-    isNew: true,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Multi-Black', 'Multi-White', 'Multi-Gray'],
+    tags: ['graffiti', 'street-art', 'print', 'urban'],
     isFeatured: true,
     inStock: true,
-    stockCount: 67,
-    sku: "FUC-TEE-001",
-    material: "100% Premium Cotton (180 GSM)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Do not bleach", "Iron inside out", "Tumble dry low"],
-    rating: 4.7,
-    reviews: 156,
-    seoTitle: "Graphic Statement T-Shirt - Premium Cotton | FashUn.Co.in",
-    seoDescription: "Bold graphic t-shirt with unique artwork. Premium cotton construction with superior print quality.",
-    weight: "200g"
+    stockCount: 22,
+    sku: 'FASH-HOD-002',
+    material: 'Cotton Fleece',
+    fit: 'Regular',
+    rating: 4.6,
+    reviews: 94
   },
   {
-    id: "tee-002",
-    name: "Essential Plain Tee",
-    description: "Minimalist essential tee in premium cotton. Perfect base layer for any outfit with superior comfort and durability. Pre-shrunk and colorfast for lasting quality.",
-    price: 999,
+    id: 'hoodie-003',
+    name: 'Zip-Up Hoodie',
+    category: 'hoodies',
+    subcategory: 'zip-up',
+    price: 69.99,
+    description: 'Classic zip-up hoodie with full-length zipper and dual side pockets. Versatile layering piece.',
     images: [
-      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1583743814966-8936f37f8fc6?w=800&h=800&fit=crop&auto=format"
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center'
     ],
-    category: "tshirts",
-    subcategory: "plain",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "White", "Grey", "Navy", "Beige", "Olive"],
-    tags: ["essential", "basic", "minimalist", "premium cotton"],
-    isNew: false,
-    isFeatured: false,
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'Navy', 'Heather Gray', 'Olive'],
+    tags: ['zip-up', 'classic', 'versatile', 'layering'],
+    inStock: true,
+    stockCount: 47,
+    sku: 'FASH-HOD-003',
+    material: 'Cotton Blend',
+    fit: 'Regular',
+    rating: 4.5,
+    reviews: 112
+  },
+  {
+    id: 'hoodie-004',
+    name: 'Anime Character Hoodie',
+    category: 'hoodies',
+    subcategory: 'pullover',
+    price: 94.99,
+    description: 'Premium hoodie featuring popular anime character designs. High-quality print with vibrant colors.',
+    images: [
+      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Black/Multi', 'White/Multi', 'Navy/Multi'],
+    tags: ['anime', 'character', 'premium', 'vibrant'],
+    isFeatured: true,
+    isNew: true,
+    inStock: true,
+    stockCount: 29,
+    sku: 'FASH-HOD-004',
+    material: 'Premium Cotton',
+    fit: 'Regular',
+    rating: 4.9,
+    reviews: 71
+  },
+  {
+    id: 'hoodie-005',
+    name: 'Minimalist Logo Hoodie',
+    category: 'hoodies',
+    subcategory: 'pullover',
+    price: 74.99,
+    description: 'Clean minimal design with subtle FASHUN logo placement. Perfect for everyday wear.',
+    images: [
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'White', 'Gray', 'Navy', 'Burgundy'],
+    tags: ['minimalist', 'logo', 'basic', 'everyday'],
+    inStock: true,
+    stockCount: 65,
+    sku: 'FASH-HOD-005',
+    material: 'Organic Cotton',
+    fit: 'Regular',
+    rating: 4.7,
+    reviews: 143
+  },
+
+  // T-SHIRTS (8 products)
+  {
+    id: 'tshirt-001',
+    name: 'Urban Graphic Tee',
+    category: 'tshirts',
+    subcategory: 'graphic',
+    price: 29.99,
+    originalPrice: 39.99,
+    description: 'Bold streetwear graphic tee with premium cotton blend. Features unique FASHUN artwork.',
+    images: [
+      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1562157873-818bc0726f68?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'White', 'Gray', 'Navy'],
+    tags: ['graphic', 'cotton', 'streetwear', 'urban'],
+    isFeatured: true,
+    isNew: true,
+    inStock: true,
+    stockCount: 45,
+    sku: 'FASH-TEE-001',
+    material: 'Cotton Blend',
+    fit: 'Regular',
+    rating: 4.8,
+    reviews: 124
+  },
+  {
+    id: 'tshirt-002',
+    name: 'Anime Character Tee',
+    category: 'tshirts',
+    subcategory: 'anime',
+    price: 34.99,
+    description: 'High-quality anime character print on premium cotton. Perfect for anime enthusiasts.',
+    images: [
+      'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black/Multi', 'White/Multi', 'Navy/Multi'],
+    tags: ['anime', 'character', 'premium', 'cotton'],
+    isFeatured: true,
+    isNew: true,
+    inStock: true,
+    stockCount: 62,
+    sku: 'FASH-TEE-002',
+    material: 'Premium Cotton',
+    fit: 'Regular',
+    rating: 4.6,
+    reviews: 89
+  },
+  {
+    id: 'tshirt-003',
+    name: 'Basic Essential Tee',
+    category: 'tshirts',
+    subcategory: 'basic',
+    price: 24.99,
+    description: 'Essential basic t-shirt in premium organic cotton. Perfect wardrobe staple.',
+    images: [
+      'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1588117472013-59bb13edafec?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['White', 'Black', 'Gray', 'Navy', 'Olive'],
+    tags: ['basic', 'essential', 'organic', 'staple'],
+    inStock: true,
+    stockCount: 128,
+    sku: 'FASH-TEE-003',
+    material: 'Organic Cotton',
+    fit: 'Regular',
+    rating: 4.5,
+    reviews: 67
+  },
+  {
+    id: 'tshirt-004',
+    name: 'Typography Art Tee',
+    category: 'tshirts',
+    subcategory: 'graphic',
+    price: 31.99,
+    description: 'Bold typography design with street art aesthetic. High-quality screen print.',
+    images: [
+      'https://images.unsplash.com/photo-1583743814966-8936f37f4042?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Black', 'White', 'Red', 'Navy'],
+    tags: ['typography', 'art', 'screen-print', 'street'],
+    inStock: true,
+    stockCount: 33,
+    sku: 'FASH-TEE-004',
+    material: 'Cotton',
+    fit: 'Regular',
+    rating: 4.4,
+    reviews: 52
+  },
+  {
+    id: 'tshirt-005',
+    name: 'Vintage Band Tee',
+    category: 'tshirts',
+    subcategory: 'graphic',
+    price: 36.99,
+    description: 'Vintage-inspired band t-shirt with distressed print and soft cotton feel.',
+    images: [
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1622445275576-721325763eda?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Vintage Black', 'Faded White', 'Worn Gray'],
+    tags: ['vintage', 'band', 'distressed', 'soft'],
+    inStock: true,
+    stockCount: 41,
+    sku: 'FASH-TEE-005',
+    material: 'Soft Cotton',
+    fit: 'Regular',
+    rating: 4.7,
+    reviews: 78
+  },
+
+  // OVERSIZED T-SHIRTS (6 products)
+  {
+    id: 'oversized-001',
+    name: 'Oversized Graphic Tee',
+    category: 'oversized_tshirts',
+    subcategory: 'graphic',
+    price: 39.99,
+    description: 'Oversized fit graphic tee with bold streetwear design. Premium heavyweight cotton.',
+    images: [
+      'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'White', 'Gray', 'Beige'],
+    tags: ['oversized', 'graphic', 'heavyweight', 'streetwear'],
+    isFeatured: true,
+    isNew: true,
+    inStock: true,
+    stockCount: 54,
+    sku: 'FASH-OVR-001',
+    material: 'Heavyweight Cotton',
+    fit: 'Oversized',
+    rating: 4.8,
+    reviews: 91
+  },
+  {
+    id: 'oversized-002',
+    name: 'Oversized Anime Tee',
+    category: 'oversized_tshirts',
+    subcategory: 'anime',
+    price: 44.99,
+    description: 'Oversized anime character tee with premium print quality. Perfect for anime fans.',
+    images: [
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Black/Multi', 'White/Multi', 'Gray/Multi'],
+    tags: ['oversized', 'anime', 'premium', 'character'],
+    isFeatured: true,
+    isNew: true,
+    inStock: true,
+    stockCount: 37,
+    sku: 'FASH-OVR-002',
+    material: 'Premium Cotton',
+    fit: 'Oversized',
+    rating: 4.9,
+    reviews: 76
+  },
+  {
+    id: 'oversized-003',
+    name: 'Oversized Plain Tee',
+    category: 'oversized_tshirts',
+    subcategory: 'plain',
+    price: 34.99,
+    description: 'Simple oversized plain tee in premium cotton. Essential wardrobe piece.',
+    images: [
+      'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'White', 'Gray', 'Beige', 'Navy'],
+    tags: ['oversized', 'plain', 'essential', 'premium'],
     inStock: true,
     stockCount: 89,
-    sku: "FUC-TEE-002",
-    material: "100% Cotton (160 GSM)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Tumble dry low"],
+    sku: 'FASH-OVR-003',
+    material: 'Premium Cotton',
+    fit: 'Oversized',
     rating: 4.6,
-    reviews: 203,
-    seoTitle: "Essential Plain T-Shirt - Premium Cotton | FashUn.Co.in",
-    seoDescription: "Classic plain t-shirt in premium cotton. Perfect base layer for any outfit.",
-    weight: "180g"
-  },
-  {
-    id: "tee-003",
-    name: "Oversized Graphic Tee",
-    description: "Oversized fit graphic tee with exclusive artwork. Contemporary streetwear style with premium construction. Features dropped shoulders and longer length.",
-    price: 1599,
-    images: [
-      "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1583743814966-8936f37f8fc6?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "tshirts",
-    subcategory: "oversized",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Black", "Sand", "Olive", "White"],
-    tags: ["oversized", "graphic", "streetwear", "contemporary"],
-    isNew: true,
-    isFeatured: false,
-    inStock: true,
-    stockCount: 43,
-    sku: "FUC-TEE-003",
-    material: "Cotton Blend (200 GSM)",
-    fit: "Oversized",
-    care: ["Machine wash cold", "Hang dry", "Iron inside out"],
-    rating: 4.8,
-    reviews: 91,
-    seoTitle: "Oversized Graphic T-Shirt - Streetwear Style | FashUn.Co.in",
-    seoDescription: "Contemporary oversized graphic tee with exclusive artwork. Perfect streetwear piece.",
-    weight: "220g"
-  },
-  {
-    id: "tee-004",
-    name: "Vintage Band Tee",
-    description: "Vintage-inspired band tee with authentic wash treatment. Features classic band graphics and lived-in feel. Perfect for casual streetwear styling.",
-    price: 1799,
-    images: [
-      "https://images.unsplash.com/photo-1583743814966-8936f37f8fc6?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "tshirts",
-    subcategory: "graphic",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Vintage Black", "Washed Grey", "Faded Blue"],
-    tags: ["vintage", "band", "washed", "retro"],
-    isNew: false,
-    isFeatured: true,
-    inStock: true,
-    stockCount: 35,
-    sku: "FUC-TEE-004",
-    material: "Cotton Blend (170 GSM)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Tumble dry low"],
-    rating: 4.5,
-    reviews: 78,
-    seoTitle: "Vintage Band T-Shirt - Authentic Wash | FashUn.Co.in",
-    seoDescription: "Vintage-inspired band tee with authentic wash treatment. Classic streetwear styling.",
-    weight: "190g"
+    reviews: 134
   },
 
-  // POLO SHIRTS COLLECTION
+  // SWEATSHIRTS (6 products)
   {
-    id: "pol-001",
-    name: "Classic Pique Polo",
-    description: "Timeless polo shirt in premium pique cotton. Elevated with modern fit and subtle branding for versatile styling. Perfect for smart casual occasions.",
-    price: 1899,
+    id: 'sweat-001',
+    name: 'Crew Neck Sweatshirt',
+    category: 'sweatshirts',
+    subcategory: 'crew-neck',
+    price: 64.99,
+    description: 'Classic crew neck sweatshirt in premium cotton fleece. Perfect for casual wear.',
     images: [
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=800&h=800&fit=crop&auto=format"
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center'
     ],
-    category: "polos",
-    subcategory: "classic",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["White", "Navy", "Black", "Forest Green", "Burgundy", "Sky Blue"],
-    tags: ["classic", "pique", "versatile", "smart casual"],
-    isNew: false,
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Charcoal', 'Navy', 'Burgundy', 'Forest Green'],
+    tags: ['crew-neck', 'classic', 'fleece', 'casual'],
     isFeatured: true,
     inStock: true,
     stockCount: 56,
-    sku: "FUC-POL-001",
-    material: "100% Pique Cotton (220 GSM)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Iron if needed", "Do not bleach"],
-    rating: 4.5,
-    reviews: 78,
-    seoTitle: "Classic Pique Polo Shirt - Premium Cotton | FashUn.Co.in",
-    seoDescription: "Timeless polo shirt in premium pique cotton. Perfect for smart casual styling.",
-    weight: "250g"
-  },
-  {
-    id: "pol-002",
-    name: "Oversized Polo Shirt",
-    description: "Contemporary oversized polo with premium cotton construction. Modern streetwear take on classic polo styling with dropped shoulders and relaxed fit.",
-    price: 2199,
-    images: [
-      "https://images.unsplash.com/photo-1618886614638-80e3c103d31a?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "polos",
-    subcategory: "oversized",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Black", "Cream", "Sage Green", "Stone Grey"],
-    tags: ["oversized", "contemporary", "streetwear", "relaxed"],
-    isNew: true,
-    isFeatured: false,
-    inStock: true,
-    stockCount: 34,
-    sku: "FUC-POL-002",
-    material: "Premium Cotton (240 GSM)",
-    fit: "Oversized",
-    care: ["Machine wash cold", "Tumble dry low"],
+    sku: 'FASH-SWT-001',
+    material: 'Cotton Fleece',
+    fit: 'Regular',
     rating: 4.7,
-    reviews: 45,
-    seoTitle: "Oversized Polo Shirt - Contemporary Fit | FashUn.Co.in",
-    seoDescription: "Modern oversized polo with streetwear styling. Contemporary take on classic polo.",
-    weight: "280g"
+    reviews: 98
   },
   {
-    id: "pol-003",
-    name: "Embroidered Logo Polo",
-    description: "Premium polo with subtle embroidered logo. Features clean lines, quality construction, and attention to detail. Perfect for elevated casual wear.",
-    price: 2399,
+    id: 'sweat-002',
+    name: 'Oversized Sweatshirt',
+    category: 'sweatshirts',
+    subcategory: 'oversized',
+    price: 74.99,
+    description: 'Oversized sweatshirt with dropped shoulders and relaxed fit. Ultra comfortable.',
     images: [
-      "https://images.unsplash.com/photo-1607345366928-199ea26cfe3e?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&h=800&fit=crop&auto=format"
+      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center'
     ],
-    category: "polos",
-    subcategory: "embroidered",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Navy", "White", "Black", "Charcoal"],
-    tags: ["embroidered", "logo", "premium", "elevated"],
-    isNew: false,
-    isFeatured: false,
-    inStock: true,
-    stockCount: 42,
-    sku: "FUC-POL-003",
-    material: "Premium Pique Cotton (230 GSM)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Iron carefully around embroidery"],
-    rating: 4.6,
-    reviews: 67,
-    seoTitle: "Embroidered Logo Polo - Premium Quality | FashUn.Co.in",
-    seoDescription: "Premium polo with subtle embroidered logo. Quality construction for elevated casual wear.",
-    weight: "260g"
-  },
-
-  // SWEATSHIRTS COLLECTION
-  {
-    id: "swe-001",
-    name: "Classic Crew Sweatshirt",
-    description: "Essential crew neck sweatshirt in heavyweight cotton blend. Perfect for layering with classic fit and comfort. Features ribbed cuffs and hem.",
-    price: 2199,
-    images: [
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "sweatshirts",
-    subcategory: "crew-neck",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Grey Heather", "Navy", "Black", "Cream", "Forest Green"],
-    tags: ["crew neck", "heavyweight", "classic", "comfortable"],
-    isNew: false,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Cream', 'Sage Green', 'Dusty Pink', 'Light Gray'],
+    tags: ['oversized', 'relaxed', 'comfortable', 'trendy'],
     isFeatured: true,
-    inStock: true,
-    stockCount: 62,
-    sku: "FUC-SWE-001",
-    material: "Cotton Poly Blend (320 GSM)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Tumble dry low"],
-    rating: 4.6,
-    reviews: 112,
-    seoTitle: "Classic Crew Sweatshirt - Heavyweight Cotton | FashUn.Co.in",
-    seoDescription: "Essential crew neck sweatshirt in heavyweight cotton blend. Perfect for layering.",
-    weight: "450g"
-  },
-  {
-    id: "swe-002",
-    name: "Vintage Washed Sweatshirt",
-    description: "Vintage-inspired sweatshirt with authentic wash treatment. Features relaxed fit and lived-in feel. Perfect for casual comfort with retro styling.",
-    price: 2599,
-    images: [
-      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "sweatshirts",
-    subcategory: "vintage",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Washed Grey", "Vintage Black", "Faded Navy"],
-    tags: ["vintage", "washed", "relaxed", "retro"],
     isNew: true,
-    isFeatured: false,
     inStock: true,
-    stockCount: 38,
-    sku: "FUC-SWE-002",
-    material: "Cotton Blend (350 GSM)",
-    fit: "Relaxed",
-    care: ["Machine wash cold", "Tumble dry low"],
-    rating: 4.7,
-    reviews: 84,
-    seoTitle: "Vintage Washed Sweatshirt - Authentic Feel | FashUn.Co.in",
-    seoDescription: "Vintage-inspired sweatshirt with authentic wash treatment. Relaxed fit and retro styling.",
-    weight: "480g"
-  },
-
-  // JACKETS COLLECTION
-  {
-    id: "jac-001",
-    name: "Classic Bomber Jacket",
-    description: "Classic bomber jacket with modern updates. Features premium materials, interior pockets, and signature details. Water-resistant finish for versatile wear.",
-    price: 4299,
-    images: [
-      "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "jackets",
-    subcategory: "bomber",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "Olive", "Navy", "Charcoal"],
-    tags: ["bomber", "classic", "premium", "water-resistant"],
-    isNew: true,
-    isFeatured: true,
-    inStock: true,
-    stockCount: 23,
-    sku: "FUC-JAC-001",
-    material: "Nylon Shell with Polyester Lining",
-    fit: "Regular",
-    care: ["Dry clean only", "Do not machine wash"],
+    stockCount: 43,
+    sku: 'FASH-SWT-002',
+    material: 'Cotton Blend',
+    fit: 'Oversized',
     rating: 4.8,
-    reviews: 67,
-    seoTitle: "Classic Bomber Jacket - Premium Outerwear | FashUn.Co.in",
-    seoDescription: "Premium bomber jacket with modern updates. Water-resistant finish and classic styling.",
-    weight: "750g"
+    reviews: 112
   },
   {
-    id: "jac-002",
-    name: "Denim Jacket",
-    description: "Classic denim jacket in premium indigo denim. Features authentic wash treatment, button closure, and chest pockets. Perfect layering piece for streetwear styling.",
-    price: 3799,
+    id: 'sweat-003',
+    name: 'Vintage Wash Sweatshirt',
+    category: 'sweatshirts',
+    subcategory: 'vintage',
+    price: 69.99,
+    description: 'Vintage-style sweatshirt with washed finish and retro feel.',
     images: [
-      "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&h=800&fit=crop&auto=format"
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=500&h=600&fit=crop&crop=center'
     ],
-    category: "jackets",
-    subcategory: "denim",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Indigo", "Black Denim", "Light Wash"],
-    tags: ["denim", "classic", "versatile", "layering"],
-    isNew: false,
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Faded Black', 'Vintage Gray', 'Washed Blue'],
+    tags: ['vintage', 'washed', 'retro', 'unique'],
+    inStock: true,
+    stockCount: 32,
+    sku: 'FASH-SWT-003',
+    material: 'Cotton',
+    fit: 'Regular',
+    rating: 4.6,
+    reviews: 87
+  },
+
+  // POLO SHIRTS (5 products)
+  {
+    id: 'polo-001',
+    name: 'Classic Polo Shirt',
+    category: 'polos',
+    subcategory: 'classic',
+    price: 49.99,
+    description: 'Classic polo shirt with modern streetwear edge. Premium pique cotton construction.',
+    images: [
+      'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Navy', 'White', 'Black', 'Forest Green'],
+    tags: ['classic', 'polo', 'pique', 'smart-casual'],
     isFeatured: true,
     inStock: true,
-    stockCount: 31,
-    sku: "FUC-JAC-002",
-    material: "100% Cotton Denim (12 oz)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Tumble dry low"],
-    rating: 4.6,
-    reviews: 92,
-    seoTitle: "Denim Jacket - Classic Indigo | FashUn.Co.in",
-    seoDescription: "Classic denim jacket in premium indigo denim. Perfect layering piece for streetwear.",
-    weight: "680g"
+    stockCount: 67,
+    sku: 'FASH-POL-001',
+    material: 'Pique Cotton',
+    fit: 'Regular',
+    rating: 4.5,
+    reviews: 143
   },
   {
-    id: "jac-003",
-    name: "Windbreaker Jacket",
-    description: "Lightweight windbreaker with packable design. Features water-resistant coating, adjustable hood, and zippered pockets. Perfect for active lifestyle.",
-    price: 2999,
+    id: 'polo-002',
+    name: 'Oversized Polo Shirt',
+    category: 'polos',
+    subcategory: 'oversized',
+    price: 54.99,
+    description: 'Oversized polo with relaxed fit and modern streetwear styling.',
     images: [
-      "https://images.unsplash.com/photo-1520975954732-35dd22299614?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&h=800&fit=crop&auto=format"
+      'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=600&fit=crop&crop=center'
     ],
-    category: "jackets",
-    subcategory: "windbreaker",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Black", "Navy", "Forest Green", "Orange"],
-    tags: ["windbreaker", "packable", "water-resistant", "active"],
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['Sage Green', 'Cream', 'Charcoal', 'Dusty Blue'],
+    tags: ['oversized', 'relaxed', 'modern', 'streetwear'],
     isNew: true,
-    isFeatured: false,
     inStock: true,
     stockCount: 45,
-    sku: "FUC-JAC-003",
-    material: "Nylon Ripstop with DWR Coating",
-    fit: "Regular Athletic",
-    care: ["Machine wash cold", "Hang dry", "Do not iron"],
-    rating: 4.5,
-    reviews: 56,
-    seoTitle: "Windbreaker Jacket - Packable Design | FashUn.Co.in",
-    seoDescription: "Lightweight windbreaker with water-resistant coating. Perfect for active lifestyle.",
-    weight: "320g"
-  },
-
-  // PANTS COLLECTION
-  {
-    id: "pan-001",
-    name: "Essential Joggers",
-    description: "Premium joggers with tapered fit and comfortable elastic waistband. Features side pockets, back pocket, and ribbed cuffs. Perfect for casual wear and active lifestyle.",
-    price: 2799,
-    images: [
-      "https://images.unsplash.com/photo-1506629905057-f39a2c35b5a5?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "pants",
-    subcategory: "joggers",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "Grey", "Navy", "Khaki", "Forest Green"],
-    tags: ["joggers", "comfortable", "tapered", "casual"],
-    isNew: false,
-    isFeatured: false,
-    inStock: true,
-    stockCount: 48,
-    sku: "FUC-PAN-001",
-    material: "Cotton Fleece (300 GSM)",
-    fit: "Tapered",
-    care: ["Machine wash cold", "Tumble dry low"],
-    rating: 4.5,
-    reviews: 89,
-    seoTitle: "Essential Joggers - Comfortable Fit | FashUn.Co.in",
-    seoDescription: "Premium joggers with tapered fit. Perfect for casual wear and active lifestyle.",
-    weight: "520g"
-  },
-  {
-    id: "pan-002",
-    name: "Cargo Pants",
-    description: "Modern cargo pants with functional pockets and contemporary fit. Features adjustable waist, multiple cargo pockets, and durable construction for urban adventures.",
-    price: 3299,
-    images: [
-      "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "pants",
-    subcategory: "cargo",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "Olive", "Khaki", "Charcoal"],
-    tags: ["cargo", "functional", "urban", "durable"],
-    isNew: true,
-    isFeatured: true,
-    inStock: true,
-    stockCount: 36,
-    sku: "FUC-PAN-002",
-    material: "Cotton Canvas (280 GSM)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Iron if needed"],
+    sku: 'FASH-POL-002',
+    material: 'Cotton Blend',
+    fit: 'Oversized',
     rating: 4.7,
-    reviews: 73,
-    seoTitle: "Cargo Pants - Functional Design | FashUn.Co.in",
-    seoDescription: "Modern cargo pants with functional pockets. Durable construction for urban adventures.",
-    weight: "580g"
-  },
-  {
-    id: "pan-003",
-    name: "Wide Leg Pants",
-    description: "Contemporary wide leg pants with relaxed fit. Features clean lines, minimalist design, and comfortable construction. Perfect for modern streetwear styling.",
-    price: 2999,
-    images: [
-      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1506629905057-f39a2c35b5a5?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "pants",
-    subcategory: "wide",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Black", "Cream", "Navy", "Stone Grey"],
-    tags: ["wide leg", "contemporary", "relaxed", "minimalist"],
-    isNew: true,
-    isFeatured: false,
-    inStock: true,
-    stockCount: 29,
-    sku: "FUC-PAN-003",
-    material: "Cotton Twill (250 GSM)",
-    fit: "Wide Leg",
-    care: ["Machine wash cold", "Hang dry"],
-    rating: 4.6,
-    reviews: 41,
-    seoTitle: "Wide Leg Pants - Contemporary Fit | FashUn.Co.in",
-    seoDescription: "Contemporary wide leg pants with relaxed fit. Perfect for modern streetwear styling.",
-    weight: "480g"
+    reviews: 89
   },
 
-  // SHORTS COLLECTION
+  // ANIME ACCESSORIES (10 products)
   {
-    id: "sho-001",
-    name: "Athletic Shorts",
-    description: "Performance shorts with moisture-wicking fabric and comfortable fit. Features elastic waistband, side pockets, and mesh lining. Perfect for workouts and casual wear.",
-    price: 1599,
+    id: 'anime-acc-001',
+    name: 'Anime Enamel Pin Set',
+    category: 'anime_accessories',
+    subcategory: 'pins',
+    price: 19.99,
+    description: 'Set of 5 high-quality enamel pins featuring popular anime characters.',
     images: [
-      "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1506629905057-f39a2c35b5a5?w=800&h=800&fit=crop&auto=format"
+      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=500&h=600&fit=crop&crop=center'
     ],
-    category: "shorts",
-    subcategory: "athletic",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Black", "Navy", "Grey", "Olive", "Orange"],
-    tags: ["athletic", "performance", "moisture-wicking", "comfortable"],
-    isNew: false,
-    isFeatured: false,
-    inStock: true,
-    stockCount: 71,
-    sku: "FUC-SHO-001",
-    material: "Polyester Blend with Moisture-Wicking",
-    fit: "Regular Athletic",
-    care: ["Machine wash cold", "Hang dry"],
-    rating: 4.4,
-    reviews: 134,
-    seoTitle: "Athletic Shorts - Moisture Wicking | FashUn.Co.in",
-    seoDescription: "Performance athletic shorts with moisture-wicking fabric. Perfect for workouts and casual wear.",
-    weight: "180g"
-  },
-  {
-    id: "sho-002",
-    name: "Cargo Shorts",
-    description: "Functional cargo shorts with multiple pockets and comfortable fit. Features durable construction, adjustable waist, and classic cargo styling for summer adventures.",
-    price: 1999,
-    images: [
-      "https://images.unsplash.com/photo-1506629905057-f39a2c35b5a5?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "shorts",
-    subcategory: "cargo",
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    colors: ["Khaki", "Black", "Olive", "Navy"],
-    tags: ["cargo", "functional", "durable", "summer"],
-    isNew: false,
+    sizes: ['One Size'],
+    colors: ['Multi-Color Set'],
+    tags: ['anime', 'pins', 'enamel', 'collectible'],
     isFeatured: true,
-    inStock: true,
-    stockCount: 53,
-    sku: "FUC-SHO-002",
-    material: "Cotton Canvas (220 GSM)",
-    fit: "Regular",
-    care: ["Machine wash cold", "Tumble dry low"],
-    rating: 4.5,
-    reviews: 98,
-    seoTitle: "Cargo Shorts - Functional Design | FashUn.Co.in",
-    seoDescription: "Functional cargo shorts with multiple pockets. Durable construction for summer adventures.",
-    weight: "280g"
-  },
-
-  // ACCESSORIES COLLECTION
-  {
-    id: "acc-001",
-    name: "Signature Snapback Cap",
-    description: "Premium snapback cap with embroidered logo. Features structured crown, curved brim, and adjustable snap closure. Quality construction with attention to detail.",
-    price: 1299,
-    images: [
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1575428652377-a2d80ddaca1d?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "accessories",
-    subcategory: "caps",
-    sizes: ["One Size"],
-    colors: ["Black", "Navy", "White", "Khaki", "Forest Green"],
-    tags: ["snapback", "embroidered", "signature", "structured"],
-    isNew: false,
-    isFeatured: true,
-    inStock: true,
-    stockCount: 95,
-    sku: "FUC-ACC-001",
-    material: "Cotton Twill with Mesh Back",
-    fit: "Adjustable",
-    care: ["Spot clean only", "Do not machine wash"],
-    rating: 4.6,
-    reviews: 78,
-    seoTitle: "Signature Snapback Cap - Embroidered Logo | FashUn.Co.in",
-    seoDescription: "Premium snapback cap with embroidered logo. Quality construction and adjustable fit.",
-    weight: "120g"
-  },
-  {
-    id: "acc-002",
-    name: "Beanie Hat",
-    description: "Soft knit beanie with fold-over cuff. Features ribbed construction and embroidered logo patch. Perfect for cold weather and streetwear styling.",
-    price: 999,
-    images: [
-      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1575428652377-a2d80ddaca1d?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "accessories",
-    subcategory: "beanies",
-    sizes: ["One Size"],
-    colors: ["Black", "Grey", "Navy", "Cream", "Forest Green"],
-    tags: ["beanie", "knit", "fold-over", "winter"],
-    isNew: false,
-    isFeatured: false,
-    inStock: true,
-    stockCount: 87,
-    sku: "FUC-ACC-002",
-    material: "Acrylic Knit",
-    fit: "One Size",
-    care: ["Hand wash cold", "Lay flat to dry"],
-    rating: 4.4,
-    reviews: 92,
-    seoTitle: "Beanie Hat - Soft Knit | FashUn.Co.in",
-    seoDescription: "Soft knit beanie with fold-over cuff. Perfect for cold weather and streetwear styling.",
-    weight: "80g"
-  },
-  {
-    id: "acc-003",
-    name: "Canvas Tote Bag",
-    description: "Durable canvas tote bag with reinforced handles. Features spacious interior, interior pocket, and embroidered logo. Perfect for everyday carry and streetwear styling.",
-    price: 1799,
-    images: [
-      "https://images.unsplash.com/photo-1575428652377-a2d80ddaca1d?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&h=800&fit=crop&auto=format"
-    ],
-    category: "accessories",
-    subcategory: "bags",
-    sizes: ["One Size"],
-    colors: ["Natural", "Black", "Navy"],
-    tags: ["tote", "canvas", "durable", "everyday"],
     isNew: true,
-    isFeatured: false,
     inStock: true,
-    stockCount: 64,
-    sku: "FUC-ACC-003",
-    material: "Heavy Canvas (12 oz)",
-    fit: "One Size",
-    care: ["Spot clean only", "Air dry"],
+    stockCount: 89,
+    sku: 'FASH-ANM-001',
+    material: 'Metal Enamel',
+    rating: 4.8,
+    reviews: 156
+  },
+  {
+    id: 'anime-acc-002',
+    name: 'Anime Patch Collection',
+    category: 'anime_accessories',
+    subcategory: 'patches',
+    price: 14.99,
+    description: 'Iron-on patches featuring iconic anime symbols and characters.',
+    images: [
+      'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['One Size'],
+    colors: ['Multi-Color Set'],
+    tags: ['anime', 'patches', 'iron-on', 'symbols'],
+    inStock: true,
+    stockCount: 112,
+    sku: 'FASH-ANM-002',
+    material: 'Embroidered Fabric',
+    rating: 4.6,
+    reviews: 92
+  },
+  {
+    id: 'anime-acc-003',
+    name: 'Anime Crossbody Bag',
+    category: 'anime_accessories',
+    subcategory: 'bags',
+    price: 39.99,
+    description: 'Crossbody bag with anime character prints and multiple compartments.',
+    images: [
+      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['One Size'],
+    colors: ['Black/Multi', 'Navy/Multi', 'White/Multi'],
+    tags: ['anime', 'bag', 'crossbody', 'print'],
+    isFeatured: true,
+    inStock: true,
+    stockCount: 34,
+    sku: 'FASH-ANM-003',
+    material: 'Canvas',
     rating: 4.7,
-    reviews: 45,
-    seoTitle: "Canvas Tote Bag - Durable Construction | FashUn.Co.in",
-    seoDescription: "Durable canvas tote bag with reinforced handles. Perfect for everyday carry.",
-    weight: "320g",
-    dimensions: "40cm x 35cm x 12cm"
+    reviews: 67
   },
   {
-    id: "acc-004",
-    name: "Crew Socks Pack",
-    description: "Premium crew socks in 3-pack. Features cushioned sole, reinforced heel and toe, and moisture-wicking fabric. Comfortable fit with seamless toe construction.",
-    price: 899,
+    id: 'anime-acc-004',
+    name: 'Anime Keychain Set',
+    category: 'anime_accessories',
+    subcategory: 'keychains',
+    price: 12.99,
+    description: 'Set of 3 premium anime character keychains with metal construction.',
     images: [
-      "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=800&h=800&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&h=800&fit=crop&auto=format"
+      'https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=500&h=600&fit=crop&crop=center'
     ],
-    category: "accessories",
-    subcategory: "socks",
-    sizes: ["S (6-8)", "M (8-10)", "L (10-12)"],
-    colors: ["Black Pack", "White Pack", "Mixed Pack"],
-    tags: ["crew socks", "3-pack", "cushioned", "moisture-wicking"],
-    isNew: false,
-    isFeatured: false,
+    sizes: ['One Size'],
+    colors: ['Multi-Color Set'],
+    tags: ['anime', 'keychain', 'metal', 'character'],
+    isNew: true,
     inStock: true,
-    stockCount: 156,
-    sku: "FUC-ACC-004",
-    material: "Cotton Blend with Moisture-Wicking",
-    fit: "Crew Length",
-    care: ["Machine wash warm", "Tumble dry low"],
+    stockCount: 145,
+    sku: 'FASH-ANM-004',
+    material: 'Metal/PVC',
     rating: 4.5,
-    reviews: 187,
-    seoTitle: "Crew Socks 3-Pack - Premium Comfort | FashUn.Co.in",
-    seoDescription: "Premium crew socks with cushioned sole and moisture-wicking fabric. 3-pack value.",
-    weight: "150g"
+    reviews: 189
+  },
+  {
+    id: 'anime-acc-005',
+    name: 'Mini Anime Figure',
+    category: 'anime_accessories',
+    subcategory: 'figures',
+    price: 24.99,
+    description: 'High-quality mini anime figure with detailed sculpting and paint.',
+    images: [
+      'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=500&h=600&fit=crop&crop=center',
+      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=500&h=600&fit=crop&crop=center'
+    ],
+    sizes: ['One Size'],
+    colors: ['As Shown'],
+    tags: ['anime', 'figure', 'collectible', 'detailed'],
+    isFeatured: true,
+    inStock: true,
+    stockCount: 56,
+    sku: 'FASH-ANM-005',
+    material: 'PVC',
+    rating: 4.9,
+    reviews: 78
   }
 ];
 
-// Featured collections for homepage
-export const featuredCollections = [
-  {
-    id: "new-arrivals",
-    name: "New Arrivals",
-    description: "Fresh drops and latest designs",
-    image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&h=600&fit=crop&auto=format",
-    products: products.filter(p => p.isNew).slice(0, 8)
-  },
-  {
-    id: "bestsellers",
-    name: "Bestsellers",
-    description: "Most loved by our community",
-    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=600&fit=crop&auto=format",
-    products: products.filter(p => p.isFeatured).slice(0, 8)
-  },
-  {
-    id: "essential-basics",
-    name: "Essential Basics",
-    description: "Wardrobe staples you need",
-    image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=600&fit=crop&auto=format",
-    products: products.filter(p => p.tags.includes("essential") || p.tags.includes("basic")).slice(0, 6)
-  }
-];
-
-// Size guide information
-export const sizeGuide = {
-  clothing: {
-    tops: {
-      S: { chest: "36-38", length: "26", shoulder: "17" },
-      M: { chest: "40-42", length: "27", shoulder: "18" },
-      L: { chest: "44-46", length: "28", shoulder: "19" },
-      XL: { chest: "48-50", length: "29", shoulder: "20" },
-      XXL: { chest: "52-54", length: "30", shoulder: "21" }
-    },
-    bottoms: {
-      S: { waist: "28-30", length: "40", hip: "36-38" },
-      M: { waist: "32-34", length: "41", hip: "40-42" },
-      L: { waist: "36-38", length: "42", hip: "44-46" },
-      XL: { waist: "40-42", length: "43", hip: "48-50" },
-      XXL: { waist: "44-46", length: "44", hip: "52-54" }
-    }
-  }
+// Helper functions
+export const getProductById = (id: string): Product | undefined => {
+  return products.find(product => product.id === id);
 };
 
-// Color swatches for consistent display
-export const colorSwatches = {
-  "Black": "#000000",
-  "White": "#FFFFFF",
-  "Grey": "#808080",
-  "Navy": "#1B2951",
-  "Forest Green": "#2D5016",
-  "Burgundy": "#722F37",
-  "Stone Grey": "#8B8680",
-  "Charcoal": "#36454F",
-  "Olive": "#708238",
-  "Cream": "#F5F5DC",
-  "Sage Green": "#9CAF88",
-  "Sand": "#C2B280",
-  "Khaki": "#8FBC8F",
-  "Beige": "#F5F5DC",
-  "Sky Blue": "#87CEEB",
-  "Orange": "#FF8C00",
-  "Lavender": "#E6E6FA",
-  "Indigo": "#4B0082",
-  "Faded Pink": "#F8BBD9",
-  "Vintage Blue": "#4F628E",
-  "Washed Black": "#2C2C2C",
-  "Washed Grey": "#A9A9A9",
-  "Faded Blue": "#6A8CAF",
-  "Vintage Black": "#1C1C1C",
-  "Faded Navy": "#2F4F4F",
-  "Light Wash": "#B0C4DE",
-  "Black Denim": "#1E1E1E",
-  "Natural": "#F5F5DC"
+export const getProductsByCategory = (category: string): Product[] => {
+  if (category === 'all') return products;
+  return products.filter(product => product.category === category);
 };
 
-export default products;
+export const getFeaturedProducts = (): Product[] => {
+  return products.filter(product => product.isFeatured);
+};
+
+export const getNewProducts = (): Product[] => {
+  return products.filter(product => product.isNew);
+};
+
+export const searchProducts = (query: string): Product[] => {
+  const lowercaseQuery = query.toLowerCase();
+  return products.filter(product => 
+    product.name.toLowerCase().includes(lowercaseQuery) ||
+    product.description.toLowerCase().includes(lowercaseQuery) ||
+    product.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+  );
+};
+
+// Legacy compatibility
+export const mockProducts = products.slice(0, 3).map(product => ({
+  id: product.id,
+  name: product.name,
+  price: product.price,
+  image: product.images[0],
+  category: product.category,
+  sizes: product.sizes,
+  colors: product.colors,
+  rating: product.rating || 4.5,
+  reviews: product.reviews || 0,
+  description: product.description,
+  inStock: product.inStock
+}));

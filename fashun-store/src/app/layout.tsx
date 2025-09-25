@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Providers } from './providers'
+import { inter, poppins, getAllFontVariables, pagefonts } from '@/lib/simpleFonts'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'FASHUN.CO.IN - Premium Streetwear',
@@ -13,17 +15,22 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <head>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-      </head>
-      <body className="font-sans bg-black text-white min-h-screen">
+    <html lang="en" className={getAllFontVariables()}>
+      <body className={`${inter.variable} ${poppins.variable} font-sans bg-black text-white min-h-screen antialiased`}>
         <Providers>
         <nav className="bg-gray-900 border-b border-gray-800 px-6 py-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-                FASHUN.CO.IN
+            <div className="flex items-center space-x-3">
+              <div className="relative w-10 h-10">
+                <Image
+                  src="/logo.png"
+                  alt="FASHUN.CO Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <h1 className={`${pagefonts.headers.primary.className} text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent`}>
+                FASHUN.CO
               </h1>
             </div>
             <div className="hidden md:flex space-x-8">

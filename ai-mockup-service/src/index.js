@@ -4,6 +4,7 @@ const multer = require('multer');
 const sharp = require('sharp');
 const axios = require('axios');
 const Jimp = require('jimp');
+const qrcode = require('qrcode');
 const path = require('path');
 const fs = require('fs').promises;
 // const { createCanvas, loadImage, registerFont } = require('canvas'); // Temporarily disabled
@@ -87,6 +88,132 @@ app.post('/generate-mockup', upload.single('design'), async (req, res) => {
   } catch (error) {
     console.error('Mockup generation error:', error);
     res.status(500).json({ error: 'Failed to generate mockup' });
+  }
+});
+
+// QR Code mockup generation endpoint (Enhanced)
+app.get('/api/create-mockup', async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    const template = req.query.template || 'tshirt-front';
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    // Generate user profile URL for QR code
+    const userProfileUrl = `https://fashun.co.in/profile/${userId}`;
+
+    // Define template positions for better QR placement
+    const templatePositions = {
+      'tshirt-front': { x: 325, y: 200, width: 250, height: 250 },
+      'tshirt-back': { x: 325, y: 200, width: 250, height: 250 },
+      'hoodie-front': { x: 350, y: 220, width: 200, height: 200 },
+      'hoodie-back': { x: 350, y: 220, width: 200, height: 200 }
+    };
+
+    const position = templatePositions[template] || templatePositions['tshirt-front'];
+
+    // 1. Generate the QR code image as a buffer
+    const qrCodeBuffer = await qrcode.toBuffer(userProfileUrl, {
+      width: position.width,
+      margin: 1,
+      color: {
+        dark: '#000000',  // QR code color
+        light: '#FFFFFF' // Background color
+      }
+    });
+
+    // 2. Check for template in multiple locations
+    let templatePath;
+    const possiblePaths = [
+      path.join(templatesDir, `${template}.png`),
+      path.join(__dirname, '../../fashun-store/public/templates', `${template}.png`),
+      path.join(templatesDir, 'tshirt-template.png') // fallback
+    ];
+
+    let templateExists = false;
+    for (const possiblePath of possiblePaths) {
+      try {
+        await fs.access(possiblePath);
+        templatePath = possiblePath;
+        templateExists = true;
+        break;
+      } catch (error) {
+        continue;
+      }
+    }
+
+    let finalMockupBuffer;
+
+    if (templateExists && templatePath) {
+      // 3. Use Sharp to composite QR code onto the template
+      finalMockupBuffer = await sharp(templatePath)
+        .composite([
+          {
+            input: qrCodeBuffer,
+            top: parseInt(req.query.top) || position.y,
+            left: parseInt(req.query.left) || position.x,
+          },
+        ])
+        .png()
+        .toBuffer();
+    } else {
+      // Create a professional mockup with FASHUN branding
+      const width = 800;
+      const height = 600;
+      const backgroundColor = req.query.bgColor || '#1a1a2e';
+      
+      // Create SVG mockup template
+      const mockupSvg = `
+        <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+              <stop offset="50%" style="stop-color:#16213e;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#0f3460;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          
+          <!-- Background -->
+          <rect width="100%" height="100%" fill="url(#bgGradient)"/>
+          
+          <!-- T-shirt silhouette -->
+          <path d="M 200 150 L 600 150 L 600 120 L 650 120 L 650 200 L 600 200 L 600 550 L 200 550 L 200 200 L 150 200 L 150 120 L 200 120 Z" 
+                fill="#4a90e2" stroke="#357abd" stroke-width="2" opacity="0.8"/>
+          
+          <!-- Neck opening -->
+          <ellipse cx="400" cy="150" rx="50" ry="30" fill="#f8f9fa" opacity="0.9"/>
+          
+          <!-- FASHUN branding -->
+          <text x="400" y="580" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">FASHUN.CO</text>
+        </svg>
+      `;
+      
+      const backgroundBuffer = await sharp(Buffer.from(mockupSvg))
+        .png()
+        .toBuffer();
+      
+      finalMockupBuffer = await sharp(backgroundBuffer)
+        .composite([
+          {
+            input: qrCodeBuffer,
+            top: position.y,
+            left: position.x,
+          },
+        ])
+        .png()
+        .toBuffer();
+    }
+
+    // 4. Send the final image as the API response
+    res.set('Content-Type', 'image/png');
+    res.set('Cache-Control', 'public, max-age=31536000');
+    res.send(finalMockupBuffer);
+
+  } catch (error) {
+    console.error('QR Code mockup generation error:', error);
+    res.status(500).json({ error: 'Failed to create QR code mockup' });
   }
 });
 

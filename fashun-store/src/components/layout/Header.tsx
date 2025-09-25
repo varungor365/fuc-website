@@ -58,12 +58,13 @@ export default function Header() {
             <Link href="/collections/hoodies" className="text-white/80 hover:text-white font-medium">
               Hoodies
             </Link>
+            <Link href="/studio" className="text-purple-400 hover:text-purple-300 font-medium flex items-center">
+              <SparklesIcon className="w-4 h-4 mr-1" />
+              Design Studio
+            </Link>
             <Link href="/outfit-builder" className="text-accent-400 hover:text-accent-300 font-medium flex items-center">
               <SparklesIcon className="w-4 h-4 mr-1" />
               AI Assistant
-            </Link>
-            <Link href="/search" className="text-white/80 hover:text-white font-medium">
-              Search
             </Link>
             <Link href="/collections/sale" className="text-accent-400 font-accent text-sm font-medium">
               Sale
