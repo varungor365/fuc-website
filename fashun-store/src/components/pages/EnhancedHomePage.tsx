@@ -118,7 +118,7 @@ const EnhancedHomePage = () => {
         {/* Hero Background with Stock Image */}
         <div className="absolute inset-0">
           <Image
-            src="/stock/hero-background.jpg"
+            src="/stock/hero-background.svg"
             alt="Premium Streetwear Collection Background"
             fill
             className="object-cover opacity-30"
