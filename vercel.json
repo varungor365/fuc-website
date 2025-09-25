@@ -1,15 +1,13 @@
 ﻿{
   "version": 2,
+  "name": "fashun-store",
   "builds": [
     {
       "src": "fashun-store/package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "fashun-store/$1"
+      "use": "@vercel/next",
+      "config": {
+        "distDir": ".next"
+      }
     }
   ]
 }
