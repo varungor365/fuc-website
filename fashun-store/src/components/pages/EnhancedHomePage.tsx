@@ -115,8 +115,15 @@ const EnhancedHomePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900">
       {/* Hero Section with Enhanced Design */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background */}
+        {/* Hero Background with Stock Image */}
         <div className="absolute inset-0">
+          <Image
+            src="/stock/hero-background.jpg"
+            alt="Premium Streetwear Collection Background"
+            fill
+            className="object-cover opacity-30"
+            priority
+          />
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full filter blur-3xl animate-pulse" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-pink-500/20 to-orange-500/20 rounded-full filter blur-3xl animate-pulse delay-1000" />
           

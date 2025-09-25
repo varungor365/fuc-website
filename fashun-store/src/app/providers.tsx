@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 // import { motion, AnimatePresence } from 'framer-motion' // Removed for now
 import { AuthProvider } from '@/components/auth/AuthProvider'
+import SuperTokensProvider from '@/components/auth/SuperTokensProvider'
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -82,12 +83,14 @@ function PageTransitionProvider({ children }: ProvidersProps) {
 // Combined Providers
 export function Providers({ children }: ProvidersProps) {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <PageTransitionProvider>
-          {children}
-        </PageTransitionProvider>
-      </ThemeProvider>
-    </AuthProvider>
+    <SuperTokensProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <PageTransitionProvider>
+            {children}
+          </PageTransitionProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </SuperTokensProvider>
   )
 }
