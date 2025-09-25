@@ -11,16 +11,27 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.17",
+    "@headlessui/react": "^2.2.8",
+    "@heroicons/react": "^2.2.0",
+    "@hookform/resolvers": "^5.2.2",
+    "@supabase/supabase-js": "^2.57.4",
     "axios": "^1.12.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "fabric": "^6.7.1",
+    "framer-motion": "^12.23.21",
     "lucide-react": "^0.294.0",
     "next": "^14.0.0",
-    "next-seo": "^6.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.63.0",
     "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.5.0",
     "sharp": "^0.32.6",
-    "stripe": "^14.9.0"
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.1.11",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",

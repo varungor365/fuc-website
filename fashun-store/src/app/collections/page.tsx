@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { ProductService } from '@/services/productService';
 
 export const metadata: Metadata = {
   title: 'Collections - FASHUN.CO',
@@ -10,12 +11,55 @@ export const metadata: Metadata = {
 
 async function getProducts() {
   try {
-    const res = await fetch(`${process.env.STRAPI_URL || 'http://localhost:1337'}/api/products?populate=images,category`, {
-      next: { revalidate: 300 }
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.data || [];
+    // Try to get products from Supabase, fallback to mock data if tables don't exist yet
+    const products = await ProductService.getAllProducts();
+    
+    // If Supabase returns empty array, use mock data
+    if (products.length === 0) {
+      return [
+      {
+        id: '1',
+        name: 'Urban Streetwear Hoodie',
+        description: 'Premium cotton hoodie with modern street aesthetics',
+        price: 89.99,
+        image: '/api/placeholder/400/500',
+        category: 'Hoodies',
+        brand: 'FashUn',
+        sizes: ['S', 'M', 'L', 'XL'],
+        colors: ['Black', 'White', 'Gray'],
+        stock: 25,
+        featured: true
+      },
+      {
+        id: '2',
+        name: 'Designer Track Pants',
+        description: 'Comfortable track pants with street-ready style',
+        price: 79.99,
+        image: '/api/placeholder/400/500',
+        category: 'Pants',
+        brand: 'FashUn',
+        sizes: ['S', 'M', 'L', 'XL'],
+        colors: ['Black', 'Navy', 'Gray'],
+        stock: 20,
+        featured: true
+      },
+      {
+        id: '3',
+        name: 'Street Style Sneakers',
+        description: 'High-quality sneakers for urban adventures',
+        price: 129.99,
+        image: '/api/placeholder/400/500',
+        category: 'Shoes',
+        brand: 'FashUn',
+        sizes: ['7', '8', '9', '10', '11'],
+        colors: ['White', 'Black', 'Red'],
+        stock: 15,
+        featured: false
+      }
+    ];
+    }
+    
+    return products;
   } catch (error) {
     console.error('Failed to fetch products:', error);
     return [];
@@ -24,12 +68,13 @@ async function getProducts() {
 
 async function getCategories() {
   try {
-    const res = await fetch(`${process.env.STRAPI_URL || 'http://localhost:1337'}/api/categories`, { 
-      next: { revalidate: 300 }
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.data || [];
+    // For now, return mock categories
+    return [
+      { id: '1', name: 'Hoodies', slug: 'hoodies' },
+      { id: '2', name: 'Pants', slug: 'pants' },
+      { id: '3', name: 'Shoes', slug: 'shoes' },
+      { id: '4', name: 'Accessories', slug: 'accessories' }
+    ];
   } catch (error) {
     console.error('Failed to fetch categories:', error);
     return [];
@@ -70,28 +115,24 @@ async function ProductGrid() {
               href={`/products/${product.id}`}
               className="group bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl overflow-hidden hover:bg-white/10 transition-all duration-300"
             >
-              <div className="aspect-square relative">
-                {product.attributes.images?.data?.[0] && (
-                  <Image
-                    src={product.attributes.images.data[0].attributes.url}
-                    alt={product.attributes.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                )}
+              <div className="aspect-square relative bg-white/5">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
               <div className="p-4">
                 <h3 className="font-montserrat text-lg font-bold text-white mb-2 truncate">
-                  {product.attributes.name}
+                  {product.name}
                 </h3>
                 <p className="text-green-400 font-bold text-lg">
-                  ${product.attributes.price}
+                  ${product.price}
                 </p>
-                {product.attributes.category?.data && (
-                  <p className="text-white/60 text-sm mt-1">
-                    {product.attributes.category.data.attributes.name}
-                  </p>
-                )}
+                <p className="text-white/60 text-sm mt-1">
+                  {product.category}
+                </p>
               </div>
             </Link>
           ))

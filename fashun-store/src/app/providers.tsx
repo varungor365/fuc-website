@@ -1,7 +1,8 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+// import { motion, AnimatePresence } from 'framer-motion' // Removed for now
+import { AuthProvider } from '@/components/auth/AuthProvider'
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -71,20 +72,9 @@ function PageTransitionProvider({ children }: ProvidersProps) {
 
   return (
     <PageTransitionContext.Provider value={{ isTransitioning, startTransition }}>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key="page-content"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ 
-            duration: 0.3, 
-            ease: [0.22, 1, 0.36, 1] // Custom easing for smooth transitions
-          }}
-        >
-          {children}
-        </motion.div>
-      </AnimatePresence>
+      <div className="transition-opacity duration-300 ease-in-out">
+        {children}
+      </div>
     </PageTransitionContext.Provider>
   )
 }
@@ -92,10 +82,12 @@ function PageTransitionProvider({ children }: ProvidersProps) {
 // Combined Providers
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider>
-      <PageTransitionProvider>
-        {children}
-      </PageTransitionProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <PageTransitionProvider>
+          {children}
+        </PageTransitionProvider>
+      </ThemeProvider>
+    </AuthProvider>
   )
 }

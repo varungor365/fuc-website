@@ -11,7 +11,7 @@ import {
   PaintBrushIcon,
   AdjustmentsHorizontalIcon
 } from '@heroicons/react/24/outline'
-import { fabric } from 'fabric'
+import * as fabric from 'fabric'
 
 const garmentTypes = [
   { id: 'hoodie', name: 'Hoodie', price: 2499, printAreas: ['front', 'back'] },
@@ -77,7 +77,7 @@ export function ProductDesigner() {
       })
       
       fabricCanvas.add(garmentOutline)
-      fabricCanvas.sendToBack(garmentOutline)
+      fabricCanvas.sendObjectToBack(garmentOutline)
       
       setCanvas(fabricCanvas)
 
@@ -90,7 +90,7 @@ export function ProductDesigner() {
   // Update garment color when color changes
   useEffect(() => {
     if (canvas) {
-      const garmentOutline = canvas.getObjects().find(obj => 
+      const garmentOutline = canvas.getObjects().find((obj: any) =>
         obj.type === 'rect' && !obj.strokeDashArray
       )
       if (garmentOutline) {
@@ -146,7 +146,7 @@ export function ProductDesigner() {
     if (!canvas) return
     
     const activeObjects = canvas.getActiveObjects()
-    activeObjects.forEach(obj => {
+    activeObjects.forEach((obj: any) => {
       // Don't delete garment outline or print area guidelines
       if (!obj.strokeDashArray && obj.type !== 'rect') {
         canvas.remove(obj)
@@ -381,7 +381,7 @@ export function ProductDesigner() {
                 </div>
                 <div className="flex justify-between">
                   <span>Elements:</span>
-                  <span className="text-primary-100">{canvas?.getObjects().filter(obj => obj.type !== 'rect').length || 0}</span>
+                  <span className="text-primary-100">{canvas?.getObjects().filter((obj: any) => obj.type !== 'rect').length || 0}</span>
                 </div>
               </div>
             </div>
