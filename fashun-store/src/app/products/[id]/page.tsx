@@ -2,23 +2,16 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { getProductById, Product } from '@/data/mockProducts';
+import { Star, Heart, ShoppingCart, Truck, RotateCcw, Shield, Zap } from 'lucide-react';
 
 interface Props {
   params: { id: string }
 }
 
-async function getProduct(id: string) {
-  try {
-    const res = await fetch(`${process.env.STRAPI_URL || 'http://localhost:1337'}/api/products/${id}?populate=images,category`, { 
-      next: { revalidate: 300 }
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.data;
-  } catch (error) {
-    console.error('Failed to fetch product:', error);
-    return null;
-  }
+function getProduct(id: string): Product | null {
+  const product = getProductById(id);
+  return product || null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -13,138 +13,37 @@ import {
   StarIcon,
   AdjustmentsHorizontalIcon
 } from '@heroicons/react/24/outline';
+import { mockProducts, categories } from '@/data/mockProducts';
 
-// Mock products data for stable testing - More like Bewakoof/TSS
-const mockProducts = [
-  {
-    id: '1',
-    name: 'Oversized Graphic Tee - Neon Dreams',
-    price: 899,
-    originalPrice: 1299,
-    discount: 31,
-    description: 'Premium cotton oversized fit with vibrant neon graphics',
-    image: '/api/placeholder/400/500',
-    category: 'T-Shirts',
-    badge: 'BESTSELLER',
-    rating: 4.8,
-    reviews: 2847,
-    colors: ['Black', 'White', 'Navy'],
-    sizes: ['S', 'M', 'L', 'XL', 'XXL']
-  },
-  {
-    id: '2',
-    name: 'Urban Street Hoodie - Tokyo Vibes',
-    price: 1899,
-    originalPrice: 2499,
-    discount: 24,
-    description: 'Comfortable oversized hoodie with Japanese street art',
-    image: '/api/placeholder/400/500',
-    category: 'Hoodies',
-    badge: 'NEW',
-    rating: 4.6,
-    reviews: 1523,
-    colors: ['Black', 'Gray', 'Maroon'],
-    sizes: ['M', 'L', 'XL', 'XXL']
-  },
-  {
-    id: '3',
-    name: 'Vintage Band Tee - Classic Rock',
-    price: 799,
-    originalPrice: 1199,
-    discount: 33,
-    description: 'Retro band merchandise with distressed finish',
-    image: '/api/placeholder/400/500',
-    category: 'T-Shirts',
-    badge: 'TRENDING',
-    rating: 4.7,
-    reviews: 987,
-    colors: ['Black', 'Gray'],
-    sizes: ['S', 'M', 'L', 'XL']
-  },
-  {
-    id: '4',
-    name: 'Cargo Joggers - Street Edition',
-    price: 1599,
-    originalPrice: 2199,
-    discount: 27,
-    description: 'Comfortable cargo joggers with multiple pockets',
-    image: '/api/placeholder/400/500',
-    category: 'Pants',
-    badge: 'LIMITED',
-    rating: 4.5,
-    reviews: 756,
-    colors: ['Black', 'Olive', 'Gray'],
-    sizes: ['28', '30', '32', '34', '36']
-  },
-  {
-    id: '5',
-    name: 'Anime Print Oversized Shirt',
-    price: 1299,
-    originalPrice: 1799,
-    discount: 28,
-    description: 'Trendy anime-inspired graphic print shirt',
-    image: '/api/placeholder/400/500',
-    category: 'Shirts',
-    badge: 'HOT',
-    rating: 4.9,
-    reviews: 634,
-    colors: ['White', 'Black'],
-    sizes: ['S', 'M', 'L', 'XL', 'XXL']
-  },
-  {
-    id: '6',
-    name: 'Denim Bomber Jacket - Vintage Wash',
-    price: 2999,
-    originalPrice: 3999,
-    discount: 25,
-    description: 'Premium denim bomber with vintage stone wash',
-    image: '/api/placeholder/400/500',
-    category: 'Jackets',
-    badge: 'EXCLUSIVE',
-    rating: 4.8,
-    reviews: 445,
-    colors: ['Blue', 'Black'],
-    sizes: ['M', 'L', 'XL']
-  },
-  {
-    id: '7',
-    name: 'Minimalist Logo Tee',
-    price: 699,
-    originalPrice: 999,
-    discount: 30,
-    description: 'Clean minimal design with small logo placement',
-    image: '/api/placeholder/400/500',
-    category: 'T-Shirts',
-    badge: 'EVERYDAY',
-    rating: 4.4,
-    reviews: 1876,
-    colors: ['Black', 'White', 'Gray', 'Navy'],
-    sizes: ['S', 'M', 'L', 'XL', 'XXL']
-  },
-  {
-    id: '8',
-    name: 'Streetwear Zip Hoodie - Graffiti',
-    price: 2199,
-    originalPrice: 2799,
-    discount: 21,
-    description: 'Full-zip hoodie with graffiti art print',
-    image: '/api/placeholder/400/500',
-    category: 'Hoodies',
-    badge: 'ARTIST',
-    rating: 4.6,
-    reviews: 892,
-    colors: ['Black', 'White'],
-    sizes: ['M', 'L', 'XL', 'XXL']
-  }
-];
+// Use comprehensive mock data from our data file
+const products = mockProducts.map(product => ({
+  id: product.id,
+  name: product.name,
+  price: product.price,
+  originalPrice: product.originalPrice,
+  discount: product.discount,
+  description: product.description,
+  image: product.images[0] || '/api/placeholder/400/500',
+  category: product.category,
+  badge: product.badges[0] || '',
+  rating: product.rating,
+  reviews: product.reviewsCount,
+  colors: product.colors.map(c => c.name),
+  sizes: product.sizes.map(s => s.name),
+  inStock: product.inStock,
+  isNew: product.isNew,
+  isBestseller: product.isBestseller,
+  isOnSale: product.isOnSale
+}));
 
-const categories = [
-  { name: 'All', count: 5000 },
-  { name: 'T-Shirts', count: 2500 },
-  { name: 'Hoodies', count: 800 },
-  { name: 'Shirts', count: 1200 },
-  { name: 'Pants', count: 900 },
-  { name: 'Jackets', count: 600 }
+const categoriesData = [
+  { name: 'All', count: mockProducts.length },
+  { name: 'hoodies', count: mockProducts.filter(p => p.category === 'hoodies').length },
+  { name: 't-shirts', count: mockProducts.filter(p => p.category === 't-shirts').length },
+  { name: 'sneakers', count: mockProducts.filter(p => p.category === 'sneakers').length },
+  { name: 'jeans', count: mockProducts.filter(p => p.category === 'jeans').length },
+  { name: 'jackets', count: mockProducts.filter(p => p.category === 'jackets').length },
+  { name: 'accessories', count: mockProducts.filter(p => p.category === 'accessories').length }
 ];
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
@@ -174,7 +73,7 @@ export default function CollectionsPage() {
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('');
 
   // Filter products based on selected category
-  const filteredProducts = mockProducts.filter(product => 
+  const filteredProducts = products.filter(product => 
     selectedCategory === 'All' || product.category === selectedCategory
   );
 
@@ -252,7 +151,7 @@ export default function CollectionsPage() {
               <div className="mb-8">
                 <h3 className="text-lg font-bold text-white mb-4">Categories</h3>
                 <div className="space-y-2">
-                  {categories.map((category) => (
+                  {categoriesData.map((category) => (
                     <button
                       key={category.name}
                       onClick={() => setSelectedCategory(category.name)}

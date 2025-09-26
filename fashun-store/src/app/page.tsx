@@ -16,8 +16,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Automatic Stock Image Replacer */}
-      <AutoStockImageReplacer autoStart={true} showProgress={true} />
+
 
       {/* Sale Banner */}
       <div className="bg-gradient-to-r from-red-600 to-pink-600 text-white text-center py-2 text-sm font-medium">
