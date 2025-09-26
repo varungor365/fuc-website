@@ -1,0 +1,205 @@
+name: Autonomous Link Check
+
+on:
+  schedule:
+    # Run every night at 2:00 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      full_scan:
+        description: 'Run full site scan'
+        required: false
+        default: 'true'
+        type: boolean
+      create_issues:
+        description: 'Create GitHub issues for broken links'
+        required: false
+        default: 'true'
+        type: boolean
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    name: Check Links and Create Issues
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'scripts/link-checker/package-lock.json'
+          
+      - name: Install dependencies
+        run: |
+          cd scripts/link-checker
+          npm ci
+          
+      - name: Run link check
+        id: link-check
+        run: |
+          cd scripts/link-checker
+          
+          # Determine scan options
+          SCAN_OPTIONS="--report"
+          
+          if [ "${{ github.event.inputs.full_scan }}" = "true" ] || [ "${{ github.event_name }}" = "schedule" ]; then
+            SCAN_OPTIONS="$SCAN_OPTIONS --full"
+          fi
+          
+          if [ "${{ github.event.inputs.create_issues }}" = "true" ] || [ "${{ github.event_name }}" = "schedule" ]; then
+            SCAN_OPTIONS="$SCAN_OPTIONS --github"
+          fi
+          
+          # Run the check
+          npm run check -- $SCAN_OPTIONS
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPO: ${{ github.event.repository.name }}
+          NEXT_PUBLIC_SITE_URL: https://fashun.co
+          
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-check-reports-${{ github.run_number }}
+          path: scripts/link-checker/reports/
+          retention-days: 30
+          
+      - name: Comment on PR (if applicable)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'scripts/link-checker/reports/latest-report.json';
+            
+            if (fs.existsSync(path)) {
+              const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+              
+              const comment = `## 🔍 Link Check Report
+              
+              **Scan Results:**
+              - Total Links: ${report.totalLinks}
+              - Working: ✅ ${report.workingLinks.length}
+              - Broken: ❌ ${report.brokenLinks.length}
+              - Redirects: 🔄 ${report.redirects.length}
+              
+              ${report.brokenLinks.length > 0 ? 
+                `**⚠️ Broken Links Found:**\n${report.brokenLinks.slice(0, 5).map(link => `- ${link.url} (Status: ${link.status})`).join('\n')}${report.brokenLinks.length > 5 ? `\n- ... and ${report.brokenLinks.length - 5} more` : ''}` :
+                '✅ **All links are working correctly!**'
+              }
+              
+              View the [full report](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for detailed information.`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+            
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Link Checker Failed',
+              body: `The automated link check failed during the nightly scan.
+              
+              **Details:**
+              - Run ID: ${{ github.run_id }}
+              - Workflow: ${{ github.workflow }}
+              - Trigger: ${{ github.event_name }}
+              - Time: ${new Date().toISOString()}
+              
+              Please check the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for more information.`,
+              labels: ['bug', 'automated', 'link-checker']
+            });
+            
+  weekly-full-scan:
+    runs-on: ubuntu-latest
+    name: Weekly Full Site Scan
+    if: github.event_name == 'schedule' && github.event.schedule == '0 2 * * 0'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'scripts/link-checker/package-lock.json'
+          
+      - name: Install dependencies
+        run: |
+          cd scripts/link-checker
+          npm ci
+          
+      - name: Run comprehensive scan
+        run: |
+          cd scripts/link-checker
+          npm run check -- --full --report --github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPO: ${{ github.event.repository.name }}
+          NEXT_PUBLIC_SITE_URL: https://fashun.co
+          
+      - name: Create weekly summary issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'scripts/link-checker/reports/latest-report.json';
+            
+            if (fs.existsSync(path)) {
+              const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+              
+              const summary = `## 📊 Weekly Link Health Report
+              
+              **Comprehensive Site Scan Completed**
+              
+              ### 📈 Overall Statistics
+              - **Total Links Scanned:** ${report.totalLinks}
+              - **Success Rate:** ${((report.workingLinks.length / report.totalLinks) * 100).toFixed(1)}%
+              - **Scan Duration:** ${(report.scanDuration / 1000).toFixed(2)} seconds
+              
+              ### 🔍 Results Breakdown
+              - ✅ **Working Links:** ${report.workingLinks.length}
+              - ❌ **Broken Links:** ${report.brokenLinks.length}
+              - 🔄 **Redirects:** ${report.redirects.length}
+              - ⚠️ **Warnings:** ${report.warnings.length}
+              
+              ### 🎯 Action Items
+              ${report.brokenLinks.length > 0 ? 
+                `**Priority Fixes Needed:**\n${report.brokenLinks.filter(l => l.isPriority || !l.isExternal).map(link => `- [ ] Fix ${link.url} (Status: ${link.status})`).join('\n')}` :
+                '✅ No immediate action required - all links are healthy!'
+              }
+              
+              ### 📋 Link Health Trends
+              - External Links: ${report.brokenLinks.filter(l => l.isExternal).length + report.workingLinks.filter(l => l.url.startsWith('http') && !l.url.includes('fashun.co')).length}
+              - Internal Links: ${report.brokenLinks.filter(l => !l.isExternal).length + report.workingLinks.filter(l => !l.url.startsWith('http') || l.url.includes('fashun.co')).length}
+              
+              ---
+              *This report was automatically generated by the FASHUN.CO Link Checker*
+              *Next scan: ${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toDateString()}*`;
+              
+              github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `📊 Weekly Link Health Report - ${new Date().toISOString().split('T')[0]}`,
+                body: summary,
+                labels: ['report', 'automated', 'link-checker', 'weekly']
+              });
+            }

@@ -1,6 +1,6 @@
 import SuperTokensReact from "supertokens-auth-react";
 import EmailPasswordReact from "supertokens-auth-react/recipe/emailpassword";
-import ThirdPartyReact from "supertokens-auth-react/recipe/thirdparty";
+// import ThirdPartyReact from "supertokens-auth-react/recipe/thirdparty"; // Commented out - not configured
 import SessionReact from "supertokens-auth-react/recipe/session";
 
 export const frontendConfig = () => {
@@ -42,18 +42,18 @@ export const frontendConfig = () => {
           },
         },
       }),
-      ThirdPartyReact.init({
-        // Social login styling
-        style: {
-          providerButton: {
-            backgroundColor: "rgba(31, 41, 55, 0.8)",
-            border: "1px solid rgba(255, 255, 255, 0.2)",
-            borderRadius: "8px",
-            color: "white",
-            marginBottom: "0.5rem",
-          },
-        },
-      }),
+      // ThirdPartyReact.init({
+      //   // Social login styling - COMMENTED OUT due to missing providers configuration
+      //   style: {
+      //     providerButton: {
+      //       backgroundColor: "rgba(31, 41, 55, 0.8)",
+      //       border: "1px solid rgba(255, 255, 255, 0.2)",
+      //       borderRadius: "8px",
+      //       color: "white",
+      //       marginBottom: "0.5rem",
+      //     },
+      //   },
+      // }),
       SessionReact.init(),
     ],
   });

@@ -22,12 +22,18 @@ export const useTheme = () => useContext(ThemeContext)
 
 function ThemeProvider({ children }: ProvidersProps) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
+  const [mounted, setMounted] = useState(false)
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark')
   }
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
     // Only run on client side
     if (typeof window === 'undefined') return
     
@@ -35,15 +41,25 @@ function ThemeProvider({ children }: ProvidersProps) {
     const savedTheme = localStorage.getItem('fashun-theme') as 'dark' | 'light' | null
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     setTheme(savedTheme || systemTheme || 'dark')
-  }, [])
+  }, [mounted])
 
   useEffect(() => {
+    if (!mounted) return
     // Only run on client side
     if (typeof window === 'undefined') return
     
     localStorage.setItem('fashun-theme', theme)
     document.documentElement.classList.toggle('dark', theme === 'dark')
-  }, [theme])
+  }, [theme, mounted])
+
+  // Prevent hydration mismatch by not rendering theme-dependent content until mounted
+  if (!mounted) {
+    return (
+      <ThemeContext.Provider value={{ theme: 'dark', toggleTheme }}>
+        {children}
+      </ThemeContext.Provider>
+    )
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

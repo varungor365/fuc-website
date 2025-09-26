@@ -1,0 +1,100 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e7] [cursor=pointer]:
+    - img [ref=e8] [cursor=pointer]
+  - alert [ref=e11]
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - navigation [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]:
+              - img "FASHUN.CO Logo" [ref=e19]
+              - heading "FASHUN.CO" [level=1] [ref=e20]
+            - generic [ref=e21]:
+              - link "Home" [ref=e22] [cursor=pointer]:
+                - /url: /
+              - link "Shop" [ref=e23] [cursor=pointer]:
+                - /url: /collections/all
+              - link "About" [ref=e24] [cursor=pointer]:
+                - /url: /about
+              - link "Contact" [ref=e25] [cursor=pointer]:
+                - /url: /contact
+              - link "Search" [ref=e26] [cursor=pointer]:
+                - /url: /search
+              - link "AI Features" [ref=e27] [cursor=pointer]:
+                - /url: /ai-features
+            - generic [ref=e28]:
+              - link "Account" [ref=e29] [cursor=pointer]:
+                - /url: /account
+              - link "Cart (0)" [ref=e30] [cursor=pointer]:
+                - /url: /cart
+        - main [ref=e31]:
+          - main [ref=e32]:
+            - generic [ref=e33]:
+              - generic [ref=e34]:
+                - heading "Premium Collections" [level=1] [ref=e35]
+                - paragraph [ref=e36]: Discover our curated selection of premium streetwear designed for the modern urban lifestyle.
+              - generic [ref=e38]:
+                - button "All" [ref=e39] [cursor=pointer]
+                - button "T-Shirts" [ref=e40] [cursor=pointer]
+                - button "Hoodies" [ref=e41] [cursor=pointer]
+                - button "Polos" [ref=e42] [cursor=pointer]
+                - button "Jackets" [ref=e43] [cursor=pointer]
+              - generic [ref=e44]:
+                - link "👕 ♡ T-Shirts Premium Streetwear T-Shirt High-quality cotton blend streetwear tee with modern fit. ₹2,499 Add to Cart" [ref=e45] [cursor=pointer]:
+                  - /url: /products/1
+                  - generic [ref=e46] [cursor=pointer]:
+                    - generic [ref=e48] [cursor=pointer]: 👕
+                    - button "♡" [ref=e51] [cursor=pointer]
+                  - generic [ref=e52] [cursor=pointer]:
+                    - generic [ref=e54] [cursor=pointer]: T-Shirts
+                    - heading "Premium Streetwear T-Shirt" [level=3] [ref=e55] [cursor=pointer]
+                    - paragraph [ref=e56] [cursor=pointer]: High-quality cotton blend streetwear tee with modern fit.
+                    - generic [ref=e57] [cursor=pointer]:
+                      - generic [ref=e58] [cursor=pointer]: ₹2,499
+                      - button "Add to Cart" [ref=e59] [cursor=pointer]
+                - link "👕 ♡ Hoodies Urban Hoodie Comfortable oversized hoodie perfect for street style. ₹4,999 Add to Cart" [ref=e60] [cursor=pointer]:
+                  - /url: /products/2
+                  - generic [ref=e61] [cursor=pointer]:
+                    - generic [ref=e63] [cursor=pointer]: 👕
+                    - button "♡" [ref=e66] [cursor=pointer]
+                  - generic [ref=e67] [cursor=pointer]:
+                    - generic [ref=e69] [cursor=pointer]: Hoodies
+                    - heading "Urban Hoodie" [level=3] [ref=e70] [cursor=pointer]
+                    - paragraph [ref=e71] [cursor=pointer]: Comfortable oversized hoodie perfect for street style.
+                    - generic [ref=e72] [cursor=pointer]:
+                      - generic [ref=e73] [cursor=pointer]: ₹4,999
+                      - button "Add to Cart" [ref=e74] [cursor=pointer]
+                - link "👕 ♡ Polos Designer Polo Shirt Classic polo with contemporary streetwear twist. ₹3,499 Add to Cart" [ref=e75] [cursor=pointer]:
+                  - /url: /products/3
+                  - generic [ref=e76] [cursor=pointer]:
+                    - generic [ref=e78] [cursor=pointer]: 👕
+                    - button "♡" [ref=e81] [cursor=pointer]
+                  - generic [ref=e82] [cursor=pointer]:
+                    - generic [ref=e84] [cursor=pointer]: Polos
+                    - heading "Designer Polo Shirt" [level=3] [ref=e85] [cursor=pointer]
+                    - paragraph [ref=e86] [cursor=pointer]: Classic polo with contemporary streetwear twist.
+                    - generic [ref=e87] [cursor=pointer]:
+                      - generic [ref=e88] [cursor=pointer]: ₹3,499
+                      - button "Add to Cart" [ref=e89] [cursor=pointer]
+                - link "👕 ♡ Jackets Vintage Denim Jacket Authentic vintage-style denim jacket with premium finish. ₹6,999 Add to Cart" [ref=e90] [cursor=pointer]:
+                  - /url: /products/4
+                  - generic [ref=e91] [cursor=pointer]:
+                    - generic [ref=e93] [cursor=pointer]: 👕
+                    - button "♡" [ref=e96] [cursor=pointer]
+                  - generic [ref=e97] [cursor=pointer]:
+                    - generic [ref=e99] [cursor=pointer]: Jackets
+                    - heading "Vintage Denim Jacket" [level=3] [ref=e100] [cursor=pointer]
+                    - paragraph [ref=e101] [cursor=pointer]: Authentic vintage-style denim jacket with premium finish.
+                    - generic [ref=e102] [cursor=pointer]:
+                      - generic [ref=e103] [cursor=pointer]: ₹6,999
+                      - button "Add to Cart" [ref=e104] [cursor=pointer]
+              - button "Load More Products" [ref=e106] [cursor=pointer]
+      - button "UI Controls" [ref=e110] [cursor=pointer]:
+        - img [ref=e111] [cursor=pointer]
+    - contentinfo [ref=e113]:
+      - paragraph [ref=e115]: © 2025 FASHUN.CO.IN. All rights reserved.
+```

@@ -1,0 +1,123 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e7] [cursor=pointer]:
+    - img [ref=e8] [cursor=pointer]
+  - alert [ref=e11]
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - navigation [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]:
+              - img "FASHUN.CO Logo" [ref=e19]
+              - heading "FASHUN.CO" [level=1] [ref=e20]
+            - generic [ref=e21]:
+              - link "Home" [ref=e22] [cursor=pointer]:
+                - /url: /
+              - link "Shop" [ref=e23] [cursor=pointer]:
+                - /url: /collections/all
+              - link "About" [ref=e24] [cursor=pointer]:
+                - /url: /about
+              - link "Contact" [ref=e25] [cursor=pointer]:
+                - /url: /contact
+              - link "Search" [ref=e26] [cursor=pointer]:
+                - /url: /search
+              - link "AI Features" [ref=e27] [cursor=pointer]:
+                - /url: /ai-features
+            - generic [ref=e28]:
+              - link "Account" [ref=e29] [cursor=pointer]:
+                - /url: /account
+              - link "Cart (0)" [ref=e30] [cursor=pointer]:
+                - /url: /cart
+        - main [ref=e31]:
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - generic [ref=e35]:
+                - img [ref=e37]
+                - heading "Page Not Found" [level=1] [ref=e40]
+                - paragraph [ref=e41]: The page you're looking for doesn't exist, but don't worry! Let's help you find what you're searching for.
+              - generic [ref=e43]:
+                - generic [ref=e44]:
+                  - img [ref=e45]
+                  - textbox "Search for products, styles, or trends..." [disabled] [ref=e48]
+                - paragraph [ref=e49]: Please go to the homepage to use the search functionality
+              - generic [ref=e50]:
+                - link "Go to Homepage" [ref=e51] [cursor=pointer]:
+                  - /url: /
+                  - img [ref=e52] [cursor=pointer]
+                  - text: Go to Homepage
+                - link "Browse All Products" [ref=e55] [cursor=pointer]:
+                  - /url: /collections/all
+                  - img [ref=e56] [cursor=pointer]
+                  - text: Browse All Products
+            - generic [ref=e59]:
+              - heading "Popular Categories" [level=2] [ref=e60]:
+                - img [ref=e61]
+                - text: Popular Categories
+              - generic [ref=e64]:
+                - link "🔥 Hoodies" [ref=e65] [cursor=pointer]:
+                  - /url: /collections/hoodies
+                  - generic [ref=e66] [cursor=pointer]:
+                    - generic [ref=e67] [cursor=pointer]: 🔥
+                    - heading "Hoodies" [level=3] [ref=e68] [cursor=pointer]
+                - link "👕 T-Shirts" [ref=e69] [cursor=pointer]:
+                  - /url: /collections/tshirts
+                  - generic [ref=e70] [cursor=pointer]:
+                    - generic [ref=e71] [cursor=pointer]: 👕
+                    - heading "T-Shirts" [level=3] [ref=e72] [cursor=pointer]
+                - link "👖 Jeans" [ref=e73] [cursor=pointer]:
+                  - /url: /collections/jeans
+                  - generic [ref=e74] [cursor=pointer]:
+                    - generic [ref=e75] [cursor=pointer]: 👖
+                    - heading "Jeans" [level=3] [ref=e76] [cursor=pointer]
+                - link "👟 Sneakers" [ref=e77] [cursor=pointer]:
+                  - /url: /collections/sneakers
+                  - generic [ref=e78] [cursor=pointer]:
+                    - generic [ref=e79] [cursor=pointer]: 👟
+                    - heading "Sneakers" [level=3] [ref=e80] [cursor=pointer]
+            - generic [ref=e81]:
+              - heading "Popular Products" [level=2] [ref=e82]
+              - generic [ref=e83]:
+                - link "Oversized Graphic Hoodie Oversized Graphic Hoodie Hoodies ₹2,999" [ref=e84] [cursor=pointer]:
+                  - /url: /products/oversized-graphic-hoodie
+                  - img "Oversized Graphic Hoodie" [ref=e86] [cursor=pointer]
+                  - generic [ref=e87] [cursor=pointer]:
+                    - heading "Oversized Graphic Hoodie" [level=3] [ref=e88] [cursor=pointer]
+                    - paragraph [ref=e89] [cursor=pointer]: Hoodies
+                    - paragraph [ref=e90] [cursor=pointer]: ₹2,999
+                - link "Minimalist T-Shirt Minimalist T-Shirt T-Shirts ₹1,299" [ref=e91] [cursor=pointer]:
+                  - /url: /products/minimalist-t-shirt
+                  - img "Minimalist T-Shirt" [ref=e93] [cursor=pointer]
+                  - generic [ref=e94] [cursor=pointer]:
+                    - heading "Minimalist T-Shirt" [level=3] [ref=e95] [cursor=pointer]
+                    - paragraph [ref=e96] [cursor=pointer]: T-Shirts
+                    - paragraph [ref=e97] [cursor=pointer]: ₹1,299
+                - link "Classic Denim Jacket Classic Denim Jacket Jackets ₹3,999" [ref=e98] [cursor=pointer]:
+                  - /url: /products/classic-denim-jacket
+                  - img "Classic Denim Jacket" [ref=e100] [cursor=pointer]
+                  - generic [ref=e101] [cursor=pointer]:
+                    - heading "Classic Denim Jacket" [level=3] [ref=e102] [cursor=pointer]
+                    - paragraph [ref=e103] [cursor=pointer]: Jackets
+                    - paragraph [ref=e104] [cursor=pointer]: ₹3,999
+                - link "Streetwear Joggers Streetwear Joggers Pants ₹2,499" [ref=e105] [cursor=pointer]:
+                  - /url: /products/streetwear-joggers
+                  - img "Streetwear Joggers" [ref=e107] [cursor=pointer]
+                  - generic [ref=e108] [cursor=pointer]:
+                    - heading "Streetwear Joggers" [level=3] [ref=e109] [cursor=pointer]
+                    - paragraph [ref=e110] [cursor=pointer]: Pants
+                    - paragraph [ref=e111] [cursor=pointer]: ₹2,499
+            - generic [ref=e112]:
+              - heading "Still can't find what you're looking for?" [level=3] [ref=e113]
+              - paragraph [ref=e114]: Our customer support team is here to help you find the perfect fashion items.
+              - generic [ref=e115]:
+                - link "Contact Support" [ref=e116] [cursor=pointer]:
+                  - /url: /contact
+                - link "Size Guide" [ref=e117] [cursor=pointer]:
+                  - /url: /size-guide
+      - button "UI Controls" [ref=e121] [cursor=pointer]:
+        - img [ref=e122] [cursor=pointer]
+    - contentinfo [ref=e124]:
+      - paragraph [ref=e126]: © 2025 FASHUN.CO.IN. All rights reserved.
+```

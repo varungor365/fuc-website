@@ -1,6 +1,6 @@
 import SuperTokens from "supertokens-node";
 import EmailPassword from "supertokens-node/recipe/emailpassword";
-import ThirdParty from "supertokens-node/recipe/thirdparty";
+// import ThirdParty from "supertokens-node/recipe/thirdparty"; // Commented out - not configured
 import Session from "supertokens-node/recipe/session";
 
 export const backendConfig = () => {
@@ -54,35 +54,35 @@ export const backendConfig = () => {
           ],
         },
       }),
-      ThirdParty.init({
-        // Social login providers
-        signInAndUpFeature: {
-          providers: [
-            {
-              config: {
-                thirdPartyId: "google",
-                clients: [
-                  {
-                    clientId: process.env.GOOGLE_CLIENT_ID || "",
-                    clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-                  },
-                ],
-              },
-            },
-            {
-              config: {
-                thirdPartyId: "github",
-                clients: [
-                  {
-                    clientId: process.env.GITHUB_CLIENT_ID || "",
-                    clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      }),
+      // ThirdParty.init({
+      //   // Social login providers - COMMENTED OUT due to missing env variables
+      //   signInAndUpFeature: {
+      //     providers: [
+      //       {
+      //         config: {
+      //           thirdPartyId: "google",
+      //           clients: [
+      //             {
+      //               clientId: process.env.GOOGLE_CLIENT_ID || "",
+      //               clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      //             },
+      //           ],
+      //         },
+      //       },
+      //       {
+      //         config: {
+      //           thirdPartyId: "github",
+      //           clients: [
+      //             {
+      //               clientId: process.env.GITHUB_CLIENT_ID || "",
+      //               clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
+      //             },
+      //           ],
+      //         },
+      //       },
+      //     ],
+      //   },
+      // }),
       Session.init({
         // Session configuration
         cookieSecure: process.env.NODE_ENV === "production",

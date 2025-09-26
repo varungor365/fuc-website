@@ -145,12 +145,12 @@ const InstagramFeed: React.FC<InstagramFeedProps> = ({
         </div>
         
         <Link
-          href="https://www.instagram.com/fashun.co"
+          href="https://www.instagram.com/fashun.co.in"
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105"
         >
-          Follow
+          Follow @fashun.co.in
         </Link>
       </div>
 
@@ -282,12 +282,12 @@ const InstagramFeed: React.FC<InstagramFeedProps> = ({
       {/* View All Posts Link */}
       <div className="mt-6 text-center">
         <Link
-          href="https://www.instagram.com/fashun.co"
+          href="https://www.instagram.com/fashun.co.in"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center space-x-2 text-purple-400 hover:text-purple-300 transition-colors duration-300"
         >
-          <span>View all posts on Instagram</span>
+          <span>View all posts @fashun.co.in</span>
           <ShareIcon className="w-4 h-4" />
         </Link>
       </div>

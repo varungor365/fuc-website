@@ -65,7 +65,9 @@ export const fontCombinations = {
   bold: { primary: pagefonts.headers.primary, secondary: pagefonts.headers.secondary },
 };
 
-// Get all font variables for the HTML element
+// Get all font variables for the HTML element - stable across server/client
 export const getAllFontVariables = () => {
-  return `${inter.variable} ${poppins.variable}`;
+  // Ensure consistent class names across server and client
+  const fontClasses = [inter.variable, poppins.variable].filter(Boolean).join(' ');
+  return fontClasses;
 };

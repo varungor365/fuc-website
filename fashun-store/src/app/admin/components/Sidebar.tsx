@@ -15,7 +15,8 @@ import {
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   BellIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
+  PhotoIcon
 } from '@heroicons/react/24/outline'
 import GlassCard from './GlassCard'
 
@@ -35,6 +36,7 @@ const Sidebar = () => {
     { name: 'Orders', href: '/admin/orders', icon: ShoppingBagIcon, badge: 12 },
     { name: 'Products', href: '/admin/products', icon: CubeIcon },
     { name: 'Customers', href: '/admin/customers', icon: UsersIcon },
+    { name: 'AI Generator', href: '/admin/ai-generator', icon: PhotoIcon },
     { name: 'Curated Insights', href: '/admin/insights', icon: LightBulbIcon },
     { name: 'Analytics', href: '/admin/analytics', icon: ChartBarIcon },
     { name: 'Marketing', href: '/admin/marketing', icon: MegaphoneIcon },

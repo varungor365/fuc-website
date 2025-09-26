@@ -1,0 +1,36 @@
+{
+  "name": "fashun-link-checker",
+  "version": "1.0.0",
+  "description": "Autonomous broken link checker for FASHUN.CO platform",
+  "type": "module",
+  "scripts": {
+    "check": "node src/link-checker.js",
+    "check:full": "node src/link-checker.js --full",
+    "check:external": "node src/link-checker.js --external-only",
+    "generate-report": "node src/report-generator.js",
+    "setup": "node src/setup.js"
+  },
+  "dependencies": {
+    "linkinator": "^6.0.4",
+    "cheerio": "^1.0.0-rc.12",
+    "@octokit/rest": "^20.0.2",
+    "node-fetch": "^3.3.2",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.1.1",
+    "node-cron": "^3.0.3",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0"
+  },
+  "keywords": [
+    "link-checker",
+    "seo",
+    "automation",
+    "github-integration",
+    "fashun"
+  ],
+  "author": "FASHUN.CO",
+  "license": "MIT"
+}

@@ -1,0 +1,63 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e7] [cursor=pointer]:
+      - img [ref=e8] [cursor=pointer]
+    - generic [ref=e11] [cursor=pointer]:
+      - button "Open issues overlay" [ref=e12] [cursor=pointer]:
+        - generic [ref=e13] [cursor=pointer]:
+          - generic [ref=e14] [cursor=pointer]: "0"
+          - generic [ref=e15] [cursor=pointer]: "1"
+        - generic [ref=e16] [cursor=pointer]: Issue
+      - button "Collapse issues badge" [ref=e17] [cursor=pointer]:
+        - img [ref=e18] [cursor=pointer]
+  - alert [ref=e20]
+  - generic [ref=e21]:
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - img "FASHUN.CO Logo" [ref=e28]
+              - heading "FASHUN.CO" [level=1] [ref=e29]
+            - generic [ref=e30]:
+              - link "Home" [ref=e31] [cursor=pointer]:
+                - /url: /
+              - link "Shop" [ref=e32] [cursor=pointer]:
+                - /url: /collections/all
+              - link "About" [ref=e33] [cursor=pointer]:
+                - /url: /about
+              - link "Contact" [ref=e34] [cursor=pointer]:
+                - /url: /contact
+              - link "Search" [ref=e35] [cursor=pointer]:
+                - /url: /search
+              - link "AI Features" [ref=e36] [cursor=pointer]:
+                - /url: /ai-features
+            - generic [ref=e37]:
+              - link "Account" [ref=e38] [cursor=pointer]:
+                - /url: /account
+              - link "Cart (0)" [ref=e39] [cursor=pointer]:
+                - /url: /cart
+        - main [ref=e40]:
+          - generic [ref=e42]:
+            - generic [ref=e43]:
+              - heading "FashUn.Co" [level=1] [ref=e44]
+              - paragraph [ref=e45]: Premium Streetwear Collection
+            - generic [ref=e47]:
+              - heading "Sign In" [level=2] [ref=e48]
+              - generic [ref=e49]:
+                - generic [ref=e50]:
+                  - generic [ref=e51]: Email
+                  - textbox "Enter your email" [ref=e52]
+                - generic [ref=e53]:
+                  - generic [ref=e54]: Password
+                  - textbox "Enter your password" [ref=e55]
+                - button "Sign In" [ref=e56] [cursor=pointer]
+            - button "Don't have an account? Sign up" [ref=e58] [cursor=pointer]
+      - button "UI Controls" [ref=e62] [cursor=pointer]:
+        - img [ref=e63] [cursor=pointer]
+    - contentinfo [ref=e65]:
+      - paragraph [ref=e67]: © 2025 FASHUN.CO.IN. All rights reserved.
+```
