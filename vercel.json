@@ -1,6 +1,3 @@
 {
-  "buildCommand": "cd fashun-store && npm run build",
-  "outputDirectory": "fashun-store/.next",
-  "installCommand": "cd fashun-store && npm install --legacy-peer-deps",
-  "rootDirectory": "fashun-store"
+  "framework": "nextjs"
 }
