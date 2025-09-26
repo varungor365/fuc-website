@@ -1,32 +1,4 @@
 {
-  "version": 2,
-  "name": "fashun-co",
   "framework": "nextjs",
-  "rootDirectory": "fashun-store",
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "functions": {
-    "fashun-store/app/api/**/*.ts": {
-      "runtime": "nodejs20.x"
-    }
-  },
-  "env": {
-    "NEXT_PUBLIC_AI_SERVICE_URL": "https://ai-service.vercel.app"
-  },
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        }
-      ]
-    }
-  ]
+  "rootDirectory": "fashun-store"
 }
