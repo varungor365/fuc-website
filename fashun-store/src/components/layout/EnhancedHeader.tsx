@@ -16,6 +16,7 @@ import {
   MoonIcon
 } from '@heroicons/react/24/outline';
 import { pagefonts } from '@/lib/simpleFonts';
+import { NavigationItem } from './MegaMenu';
 
 interface NavItem {
   name: string;
@@ -24,12 +25,13 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { name: 'Collections', href: '/collections' },
+  { name: 'T-Shirts', href: '/collections/t-shirts' },
+  { name: 'Hoodies', href: '/collections/hoodies' },
+  { name: 'Shirts', href: '/collections/shirts' },
+  { name: 'Pants', href: '/collections/pants' },
+  { name: 'Jackets', href: '/collections/jackets' },
   { name: 'New Arrivals', href: '/collections/new-arrivals', featured: true },
-  { name: 'AI Stylist', href: '/ai-stylist', featured: true },
-  { name: 'Outfit Builder', href: '/outfit-builder' },
-  { name: 'About', href: '/about' },
-  { name: 'Blog', href: '/blog' },
+  { name: 'Sale', href: '/collections/sale', featured: true },
 ];
 
 const EnhancedHeader: React.FC = () => {
@@ -90,23 +92,27 @@ const EnhancedHeader: React.FC = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`relative group ${pagefonts.homepage.secondary.className} font-medium transition-all duration-300 ${
-                    item.featured
-                      ? 'text-purple-400 hover:text-purple-300'
-                      : 'text-gray-300 hover:text-white'
-                  }`}
-                >
-                  {item.name}
-                  {item.featured && (
-                    <SparklesIcon className="absolute -top-2 -right-2 w-4 h-4 text-purple-400 animate-pulse" />
-                  )}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 group-hover:w-full" />
-                </Link>
-              ))}
+              <NavigationItem name="T-Shirts" href="/collections/t-shirts" hasDropdown={true} />
+              <NavigationItem name="Hoodies" href="/collections/hoodies" hasDropdown={true} />
+              <NavigationItem name="Shirts" href="/collections/shirts" />
+              <NavigationItem name="Pants" href="/collections/pants" />
+              <NavigationItem name="Jackets" href="/collections/jackets" />
+              <Link
+                href="/collections/new-arrivals"
+                className={`relative group ${pagefonts.homepage.secondary.className} font-medium transition-all duration-300 text-blue-400 hover:text-blue-300`}
+              >
+                New Arrivals
+                <SparklesIcon className="absolute -top-2 -right-2 w-4 h-4 text-blue-400 animate-pulse" />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 transition-all duration-300 group-hover:w-full" />
+              </Link>
+              <Link
+                href="/collections/sale"
+                className={`relative group ${pagefonts.homepage.secondary.className} font-medium transition-all duration-300 text-red-400 hover:text-red-300`}
+              >
+                Sale
+                <SparklesIcon className="absolute -top-2 -right-2 w-4 h-4 text-red-400 animate-pulse" />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-red-400 to-pink-400 transition-all duration-300 group-hover:w-full" />
+              </Link>
             </nav>
 
             {/* Right Side Actions */}

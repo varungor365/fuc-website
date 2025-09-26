@@ -4,8 +4,6 @@ import PersonalizedSections from '@/components/ai/PersonalizedSections'
 import StyleAssistantButton from '@/components/ai/StyleAssistantButton'
 import TrendingOutfits from '@/components/ai/TrendingOutfits'
 import { EnhancedButton } from '@/components/ui/AdvancedUIProvider'
-import AutoStockImageReplacer from '@/components/AutoStockImageReplacer'
-import AIImage from '@/components/AIImage'
 
 export const metadata: Metadata = {
   title: 'FASHUN.CO - Premium Streetwear & Urban Fashion',
@@ -16,14 +14,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Automatic Stock Image Replacer */}
-      <AutoStockImageReplacer autoStart={true} showProgress={true} />
-
-      {/* Sale Banner */}
-      <div className="bg-gradient-to-r from-red-600 to-pink-600 text-white text-center py-2 text-sm font-medium">
-        🔥 MEGA SALE: Up to 70% OFF + Extra 10% on ₹1999+ | Use Code: MEGA10 🔥
-      </div>
-
       {/* Header */}
       <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-lg border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4">
@@ -32,11 +22,10 @@ export default function Home() {
               FASHUN.CO
             </Link>
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/collections" className="hover:text-purple-400 transition-colors">Collections</Link>
-              <Link href="/collections/new-arrivals" className="hover:text-blue-400 transition-colors">New Arrivals</Link>
-              <Link href="/collections/sale" className="hover:text-red-400 transition-colors">Sale</Link>
               <Link href="/about" className="hover:text-purple-400 transition-colors">About</Link>
               <Link href="/contact" className="hover:text-purple-400 transition-colors">Contact</Link>
+              <Link href="/privacy" className="hover:text-purple-400 transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-purple-400 transition-colors">Terms</Link>
             </nav>
           </div>
         </div>
@@ -47,43 +36,19 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20"></div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center space-x-2 text-purple-400 mb-4">
-            <span className="text-sm font-medium">⭐ TRENDING NOW</span>
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black mb-6 leading-tight">
             <span className="block bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent">
-              STREET
+              FASHUN
             </span>
-            <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
-              FASHION
-            </span>
-            <span className="block text-white text-2xl md:text-3xl font-bold mt-2">
+            <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-white bg-clip-text text-transparent">
               REVOLUTION
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto">
-            Discover India's hottest streetwear collection. From oversized hoodies to graphic tees - express your style, your way.
+            Discover premium streetwear that defines your style. From bold graphics to minimalist designs, 
+            every piece tells your story.
           </p>
-
-          {/* Stats */}
-          <div className="flex justify-center space-x-8 mb-8">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-400">50K+</div>
-              <div className="text-sm text-gray-400">Happy Customers</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-pink-400">5000+</div>
-              <div className="text-sm text-gray-400">Products</div>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center text-2xl font-bold text-yellow-400">
-                4.8 ⭐
-              </div>
-              <div className="text-sm text-gray-400">Rating</div>
-            </div>
-          </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/collections">
@@ -92,19 +57,19 @@ export default function Home() {
                 size="lg" 
                 soundEffect="chime"
                 confettiEffect="achievement"
-                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                className="px-8 py-4"
               >
-                Shop Now 🛍️
+                Shop Collections
               </EnhancedButton>
             </Link>
-            <Link href="/collections/new-arrivals">
+            <Link href="/ui-demo">
               <EnhancedButton 
                 variant="secondary" 
                 size="lg" 
                 soundEffect="pop"
-                className="px-8 py-4 border-2 border-white/20 hover:border-purple-400"
+                className="px-8 py-4"
               >
-                New Arrivals ✨
+                Try UI Demo
               </EnhancedButton>
             </Link>
           </div>

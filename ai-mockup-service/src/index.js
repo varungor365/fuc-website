@@ -47,6 +47,236 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'FASHUN AI Mockup Service' });
 });
 
+// Job status endpoint
+app.get('/api/job-status/:jobId', (req, res) => {
+  const { jobId } = req.params;
+  const job = jobs.get(jobId);
+  
+  if (!job) {
+    return res.status(404).json({ error: 'Job not found' });
+  }
+  
+  res.json(job);
+});
+
+// Serve generated images
+app.use('/output', express.static(outputDir));
+
+// Auto-generate stock images endpoint
+app.post('/api/generate-stock-image', async (req, res) => {
+  try {
+    const { category, description, style = 'streetwear', width = 800, height = 600 } = req.body;
+    
+    if (!category || !description) {
+      return res.status(400).json({ error: 'Category and description are required' });
+    }
+
+    const jobId = Date.now().toString();
+    jobs.set(jobId, { status: 'processing', progress: 0 });
+
+    // Process image generation in background
+    generateStockImage(jobId, category, description, style, width, height)
+      .catch(error => {
+        console.error('Stock image generation error:', error);
+        jobs.set(jobId, { status: 'failed', error: error.message });
+      });
+
+    res.json({ jobId, status: 'processing' });
+  } catch (error) {
+    console.error('Stock image endpoint error:', error);
+    res.status(500).json({ error: 'Failed to start stock image generation' });
+  }
+});
+
+// Generate stock images using AI
+async function generateStockImage(jobId, category, description, style, width, height) {
+  try {
+    jobs.set(jobId, { status: 'processing', progress: 25 });
+
+    // Enhanced prompts for different categories
+    const categoryPrompts = {
+      'hero': `Professional hero banner image for ${description}, modern ${style} aesthetic, high-energy lifestyle photography, urban setting, vibrant colors`,
+      'product': `High-quality product photography of ${description}, clean white background, professional lighting, ${style} fashion, detailed texture`,
+      'collection': `Stylish collection banner for ${description}, ${style} fashion aesthetic, modern layout, trendy young adults, urban environment`,
+      'category': `Category banner image for ${description}, ${style} streetwear theme, modern minimalist design, bold typography space`,
+      'lifestyle': `Lifestyle photography featuring ${description}, ${style} fashion, trendy young people, urban setting, natural lighting`,
+      'banner': `Promotional banner for ${description}, ${style} aesthetic, modern design, eye-catching colors, space for text overlay`
+    };
+
+    const prompt = categoryPrompts[category] || `Professional ${category} image for ${description}, ${style} fashion aesthetic, high-quality photography`;
+    
+    jobs.set(jobId, { status: 'processing', progress: 50 });
+
+    // Try Perplexity API first (if available)
+    let imageUrl = null;
+    if (process.env.PERPLEXITY_API_KEY) {
+      try {
+        const perplexityResponse = await axios.post('https://api.perplexity.ai/chat/completions', {
+          model: 'llama-3.1-sonar-large-128k-online',
+          messages: [
+            {
+              role: 'user',
+              content: `Generate a high-quality stock image URL for: ${prompt}. Return only a direct image URL from a free stock photo service like Unsplash, Pexels, or Pixabay.`
+            }
+          ]
+        }, {
+          headers: {
+            'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const content = perplexityResponse.data.choices[0]?.message?.content;
+        const urlMatch = content.match(/(https?:\/\/[^\s]+\.(jpg|jpeg|png|webp))/i);
+        if (urlMatch) {
+          imageUrl = urlMatch[0];
+        }
+      } catch (error) {
+        console.log('Perplexity fallback, using Unsplash...');
+      }
+    }
+
+    jobs.set(jobId, { status: 'processing', progress: 75 });
+
+    // Fallback to Unsplash with smart keywords
+    if (!imageUrl) {
+      const keywords = extractKeywords(description, category);
+      const unsplashUrl = `https://source.unsplash.com/${width}x${height}/?${keywords.join(',')}&fit=crop&auto=format`;
+      imageUrl = unsplashUrl;
+    }
+
+    // Download and process the image
+    const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const imageBuffer = Buffer.from(imageResponse.data);
+
+    // Enhance the image with Sharp
+    const processedImage = await sharp(imageBuffer)
+      .resize(width, height, { fit: 'cover', position: 'center' })
+      .sharpen()
+      .modulate({ brightness: 1.1, saturation: 1.2 })
+      .png({ quality: 90 })
+      .toBuffer();
+
+    // Save to output directory
+    const filename = `stock-${category}-${jobId}.png`;
+    const filepath = path.join(outputDir, filename);
+    await fs.writeFile(filepath, processedImage);
+
+    jobs.set(jobId, { 
+      status: 'completed', 
+      progress: 100,
+      imageUrl: `/output/${filename}`,
+      originalUrl: imageUrl,
+      category,
+      description
+    });
+
+  } catch (error) {
+    console.error('Stock image generation failed:', error);
+    jobs.set(jobId, { status: 'failed', error: error.message });
+  }
+}
+
+// Extract smart keywords for image search
+function extractKeywords(description, category) {
+  const baseKeywords = ['fashion', 'streetwear', 'clothing', 'style'];
+  const categoryKeywords = {
+    'hero': ['lifestyle', 'urban', 'youth', 'energy'],
+    'product': ['clean', 'minimal', 'professional', 'product'],
+    'collection': ['trendy', 'modern', 'fashion', 'style'],
+    'category': ['banner', 'design', 'minimal', 'clean'],
+    'lifestyle': ['people', 'lifestyle', 'urban', 'street'],
+    'banner': ['design', 'modern', 'creative', 'visual']
+  };
+
+  const descriptionWords = description.toLowerCase().split(' ')
+    .filter(word => word.length > 3)
+    .slice(0, 3);
+
+  return [
+    ...baseKeywords,
+    ...(categoryKeywords[category] || []),
+    ...descriptionWords
+  ].slice(0, 6);
+}
+
+// Bulk stock image replacement endpoint
+app.post('/api/replace-all-stock-images', async (req, res) => {
+  try {
+    const { images = [] } = req.body;
+    
+    const jobId = Date.now().toString();
+    jobs.set(jobId, { status: 'processing', progress: 0, total: images.length, completed: 0, results: [] });
+
+    // Process all images in parallel
+    processAllStockImages(jobId, images)
+      .catch(error => {
+        console.error('Bulk image replacement error:', error);
+        jobs.set(jobId, { status: 'failed', error: error.message });
+      });
+
+    res.json({ jobId, status: 'processing', total: images.length });
+  } catch (error) {
+    console.error('Bulk replacement endpoint error:', error);
+    res.status(500).json({ error: 'Failed to start bulk image replacement' });
+  }
+});
+
+async function processAllStockImages(jobId, images) {
+  const results = [];
+  let completed = 0;
+
+  for (const imageRequest of images) {
+    try {
+      const { category, description, style = 'streetwear', width = 800, height = 600, id } = imageRequest;
+      
+      // Generate individual image
+      const individualJobId = `${jobId}-${id || completed}`;
+      await generateStockImage(individualJobId, category, description, style, width, height);
+      
+      // Get the result
+      const result = jobs.get(individualJobId);
+      if (result && result.status === 'completed') {
+        results.push({
+          id: id || completed,
+          imageUrl: result.imageUrl,
+          category,
+          description
+        });
+      }
+
+      completed++;
+      const progress = Math.round((completed / images.length) * 100);
+      
+      jobs.set(jobId, {
+        status: 'processing',
+        progress,
+        total: images.length,
+        completed,
+        results
+      });
+
+    } catch (error) {
+      console.error(`Failed to process image ${completed}:`, error);
+      results.push({
+        id: imageRequest.id || completed,
+        error: error.message,
+        category: imageRequest.category,
+        description: imageRequest.description
+      });
+      completed++;
+    }
+  }
+
+  jobs.set(jobId, {
+    status: 'completed',
+    progress: 100,
+    total: images.length,
+    completed,
+    results
+  });
+}
+
 // Generate mockup endpoint
 app.post('/generate-mockup', upload.single('design'), async (req, res) => {
   try {
