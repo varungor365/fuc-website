@@ -32,9 +32,6 @@
   "homepage": "https://fashun.co.in",
   "dependencies": {
     "framer-motion": "^12.23.21",
-    "sharp": "^0.34.4",
-    "next": "15.5.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "sharp": "^0.34.4"
   }
 }
