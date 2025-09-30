@@ -567,15 +567,13 @@ export default function Wishlist({ userId }: WishlistProps) {
                         </button>
 
                         <div className="flex items-center space-x-2">
-                          {collection.isPublic && (
-                            <button
-                              onClick={() => setShowShareModal(collection.id)}
-                              className="p-2 rounded-lg bg-gray-700 text-gray-400 hover:text-white transition-colors"
-                              title="Share collection"
-                            >
-                              <ShareIcon className="w-4 h-4" />
-                            </button>
-                          )}
+                          <button
+                            onClick={() => setShowShareModal(collection.id)}
+                            className="p-2 rounded-lg bg-gray-700 text-gray-400 hover:text-white transition-colors"
+                            title="Share collection"
+                          >
+                            <ShareIcon className="w-4 h-4" />
+                          </button>
                           
                           <button
                             onClick={() => handleDeleteCollection(collection.id)}
@@ -647,7 +645,7 @@ export default function Wishlist({ userId }: WishlistProps) {
                       <span className="text-white">Make this collection public</span>
                     </label>
                     <p className="text-gray-400 text-sm mt-1 ml-8">
-                      Public collections can be shared with others
+                      Public collections may appear in discovery. All collections can be shared via link.
                     </p>
                   </div>
                 </div>
@@ -674,58 +672,65 @@ export default function Wishlist({ userId }: WishlistProps) {
 
         {/* Share Modal */}
         <AnimatePresence>
-          {showShareModal && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-              onClick={() => setShowShareModal(null)}
-            >
+          {showShareModal && (() => {
+            const sharedCollection = collections.find(c => c.id === showShareModal)
+            return (
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-gray-800 rounded-xl p-6 w-full max-w-md"
-                onClick={(e) => e.stopPropagation()}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+                onClick={() => setShowShareModal(null)}
               >
-                <h3 className="text-xl font-semibold text-white mb-4">Share Collection</h3>
-                
-                <div className="space-y-4">
-                  <div className="bg-gray-900 rounded-lg p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1 mr-3">
-                        <div className="text-gray-400 text-sm mb-1">Share URL:</div>
-                        <div className="text-white font-mono text-sm break-all">
-                          {generateShareUrl(showShareModal)}
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  className="bg-gray-800 rounded-xl p-6 w-full max-w-md"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <h3 className="text-xl font-semibold text-white mb-4">Share Collection</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="bg-gray-900 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 mr-3">
+                          <div className="text-gray-400 text-sm mb-1">Share URL:</div>
+                          <div className="text-white font-mono text-sm break-all">
+                            {generateShareUrl(showShareModal)}
+                          </div>
                         </div>
+                        <button
+                          onClick={() => copyShareUrl(showShareModal)}
+                          className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition-colors"
+                          title="Copy link"
+                        >
+                          <LinkIcon className="w-4 h-4" />
+                        </button>
                       </div>
-                      <button
-                        onClick={() => copyShareUrl(showShareModal)}
-                        className="bg-purple-600 text-white p-2 rounded-lg hover:bg-purple-700 transition-colors"
-                        title="Copy link"
-                      >
-                        <LinkIcon className="w-4 h-4" />
-                      </button>
+                    </div>
+
+                    <div className="text-gray-400 text-sm">
+                      {sharedCollection?.isPublic ? (
+                        <>Anyone with this link can view your collection. This collection is public and may appear in discovery.</>
+                      ) : (
+                        <>Only people with this link can view your collection. This is a private collection and won't appear in public listings.</>
+                      )}
                     </div>
                   </div>
 
-                  <div className="text-gray-400 text-sm">
-                    Anyone with this link can view your public collection.
+                  <div className="flex items-center justify-end space-x-4 mt-6 pt-4">
+                    <button
+                      onClick={() => setShowShareModal(null)}
+                      className="bg-gray-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-600 transition-colors"
+                    >
+                      Close
+                    </button>
                   </div>
-                </div>
-
-                <div className="flex items-center justify-end space-x-4 mt-6 pt-4">
-                  <button
-                    onClick={() => setShowShareModal(null)}
-                    className="bg-gray-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-600 transition-colors"
-                  >
-                    Close
-                  </button>
-                </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          )}
+            )
+          })()}
         </AnimatePresence>
       </div>
     </div>
