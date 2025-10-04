@@ -9,7 +9,7 @@ const collections = [
     id: 1,
     name: 'Oversized Hoodies',
     description: 'Premium cotton blend hoodies with custom prints',
-    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=800&fit=crop&crop=center',
+    image: '/images/products/hoodies/hoodie-1-main.jpg',
     href: '/collections/hoodies',
     price: 'From ₹2,499',
     featured: true
@@ -18,7 +18,7 @@ const collections = [
     id: 2,
     name: 'Graphic Tees',
     description: 'Bold designs on premium comfort fit tees',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=800&fit=crop&crop=center',
+    image: '/images/products/t-shirts/tshirt-1-main.jpg',
     href: '/collections/tshirts',
     price: 'From ₹1,299',
     featured: true
@@ -27,7 +27,7 @@ const collections = [
     id: 3,
     name: 'Polo Collection',
     description: 'Elevated streetwear polos with unique details',
-    image: 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=600&h=800&fit=crop&crop=center',
+    image: '/images/products/t-shirts/tshirt-2-front.jpg',
     href: '/collections/polos',
     price: 'From ₹1,899',
     featured: false
@@ -36,7 +36,7 @@ const collections = [
     id: 4,
     name: 'Custom Designs',
     description: 'Create your own unique apparel',
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=800&fit=crop&crop=center',
+    image: '/images/products/hoodies/hoodie-2-front.jpg',
     href: '/designer',
     price: 'Design Now',
     featured: true

@@ -79,9 +79,9 @@ const TrendingOutfits: React.FC<TrendingOutfitsProps> = ({
         saves: 2847,
         trending: true,
         items: [
-          { id: '1', name: 'Oversized Hoodie', price: 2499, image: '/api/placeholder/150/200', category: 'hoodies' },
-          { id: '2', name: 'Cargo Pants', price: 3299, image: '/api/placeholder/150/200', category: 'pants' },
-          { id: '3', name: 'Chunky Sneakers', price: 5999, image: '/api/placeholder/150/200', category: 'shoes' }
+          { id: '1', name: 'Oversized Hoodie', price: 2499, image: '/images/products/hoodies/hoodie-1-main.jpg', category: 'hoodies' },
+          { id: '2', name: 'Cargo Pants', price: 3299, image: '/images/products/pants/jeans-1-main.jpg', category: 'pants' },
+          { id: '3', name: 'Chunky Sneakers', price: 5999, image: '/images/products/shoes/sneaker-1-main.jpg', category: 'shoes' }
         ],
         totalPrice: 11797,
         discount: 15

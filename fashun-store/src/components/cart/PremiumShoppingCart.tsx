@@ -129,7 +129,7 @@ const PremiumShoppingCart: React.FC<PremiumShoppingCartProps> = ({
     {
       id: 'rec-1',
       name: 'Matching Accessory',
-      image: '/api/placeholder/80/80',
+      image: '/images/products/accessories/cap-1-main.jpg',
       price: 899,
       originalPrice: 1299,
       category: 'accessories'
@@ -137,7 +137,7 @@ const PremiumShoppingCart: React.FC<PremiumShoppingCartProps> = ({
     {
       id: 'rec-2',
       name: 'Complementary Piece',
-      image: '/api/placeholder/80/80',
+      image: '/images/products/t-shirts/tshirt-2-main.jpg',
       price: 1499,
       category: 'clothing'
     }

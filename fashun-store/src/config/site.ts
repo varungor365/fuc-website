@@ -1,47 +1,49 @@
 // Site configuration - centralized for easy updates
 export const siteConfig = {
-  name: "FashUn.Co.in",
-  title: "FashUn.Co.in - Premium Streetwear & Custom Fashion",
-  description: "Discover premium streetwear and create custom designs with FashUn.Co.in. Hoodies, t-shirts, polos, and exclusive fashion pieces for the modern wardrobe.",
-  url: "https://fashun.co.in",
-  ogImage: "https://fashun.co.in/og.jpg",
+  name: "FASHUN",
+  title: "FASHUN - Premium Streetwear & AI-Powered Fashion",
+  description: "Discover premium streetwear, exclusive collections, and AI-powered style recommendations at FASHUN. Elevate your style with our curated fashion pieces.",
+  url: "https://fashun.co",
+  baseUrl: process.env.NODE_ENV === 'production' ? 'https://fashun.co' : 'http://localhost:3000',
+  ogImage: "https://fashun.co/og.jpg",
   links: {
-    twitter: "https://twitter.com/fashunco",
-    instagram: "https://instagram.com/fashun.co.in",
-    tiktok: "https://tiktok.com/@fashunco",
-    youtube: "https://youtube.com/@fashunco",
+    twitter: "https://twitter.com/fashun_co",
+    instagram: "https://instagram.com/fashun_official",
+    tiktok: "https://tiktok.com/@fashun_official",
+    youtube: "https://youtube.com/@fashun_official",
+    facebook: "https://facebook.com/fashun.official",
+    pinterest: "https://pinterest.com/fashun_official",
+    linkedin: "https://linkedin.com/company/fashun"
   },
   keywords: [
-    "streetwear",
-    "custom fashion",
-    "hoodies",
-    "t-shirts",
-    "premium clothing",
-    "fashion",
-    "apparel",
-    "custom design",
-    "india fashion",
-    "online shopping",
-    "polo shirts",
-    "jackets",
-    "sweatshirts",
-    "pants",
-    "shorts",
-    "accessories"
+    "streetwear", 
+    "fashion", 
+    "premium clothing", 
+    "AI fashion", 
+    "style recommendations",
+    "exclusive collections",
+    "urban fashion",
+    "designer clothing",
+    "smart shopping",
+    "personalized fashion",
+    "limited edition",
+    "sustainable fashion"
   ],
-  author: "FashUn.Co.in Team",
-  creator: "FashUn.Co.in",
-  metadataBase: new URL("https://fashun.co.in"),
+  author: "FASHUN Team",
+  creator: "FASHUN",
+  metadataBase: new URL("https://fashun.co"),
   
   // Business Information
   business: {
-    name: "FashUn.Co.in",
-    legalName: "FashUn Fashion Private Limited",
-    email: "hello@fashun.co.in",
+    name: "FASHUN",
+    legalName: "FASHUN Fashion Private Limited",
+    email: "hello@fashun.co",
+    supportEmail: "support@fashun.co",
+    businessEmail: "business@fashun.co",
     phone: "+91 98765 43210",
     address: {
       street: "123 Fashion Street",
-      city: "Mumbai",
+      city: "Mumbai", 
       state: "Maharashtra",
       postalCode: "400001",
       country: "India"
@@ -226,7 +228,153 @@ export const siteConfig = {
         description: "Complete your streetwear look with our premium accessories collection including caps, bags, and more."
       }
     }
+  },
+
+  // E-commerce settings
+  ecommerce: {
+    currency: "INR",
+    currencySymbol: "₹",
+    defaultLanguage: "en",
+    supportedLanguages: ["en", "hi"],
+    freeShippingThreshold: 2500,
+    returnPeriod: 30, // days
+    exchangePeriod: 30, // days
+    warranty: 6, // months
+    
+    // Payment methods
+    paymentMethods: [
+      "credit_card",
+      "debit_card", 
+      "upi",
+      "net_banking",
+      "wallet",
+      "cod" // Cash on Delivery
+    ],
+
+    // Shipping options
+    shipping: {
+      standard: {
+        name: "Standard Delivery",
+        description: "3-5 business days",
+        cost: 99,
+        freeThreshold: 2500
+      },
+      express: {
+        name: "Express Delivery", 
+        description: "1-2 business days",
+        cost: 199
+      },
+      premium: {
+        name: "Premium Delivery",
+        description: "Same day delivery",
+        cost: 299,
+        availability: ["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pune"]
+      }
+    },
+
+    // Tax settings
+    tax: {
+      gst: 18, // GST percentage in India
+      includedInPrice: false
+    }
+  },
+
+  // Enhanced feature flags
+  advancedFeatures: {
+    aiRecommendations: true,
+    wishlist: true,
+    compareProducts: true,
+    guestCheckout: true,
+    socialLogin: true,
+    newsletter: true,
+    reviews: true,
+    notifications: true,
+    darkMode: true,
+    multiCurrency: false,
+    inventory: true,
+    analytics: true,
+    seo: true,
+    pwa: true,
+    chatSupport: true,
+    videoProducts: true,
+    ar: false, // Augmented Reality try-on
+    personalizedHomepage: true
+  },
+
+  // Analytics and tracking
+  analytics: {
+    googleAnalytics: process.env.NEXT_PUBLIC_GA_ID,
+    facebookPixel: process.env.NEXT_PUBLIC_FB_PIXEL_ID,
+    hotjar: process.env.NEXT_PUBLIC_HOTJAR_ID,
+    mixpanel: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
+    gtm: process.env.NEXT_PUBLIC_GTM_ID
+  },
+
+  // API configuration
+  api: {
+    baseUrl: process.env.NODE_ENV === 'production' 
+      ? 'https://api.fashun.co' 
+      : 'http://localhost:3000/api',
+    timeout: 10000, // 10 seconds
+    retryAttempts: 3
+  },
+
+  // Search and AI settings
+  search: {
+    provider: "internal", // or "algolia", "elasticsearch"
+    enableAutocomplete: true,
+    enableSpellcheck: true,
+    enableSynonyms: true,
+    resultsPerPage: 24,
+    maxSuggestions: 5
+  },
+
+  ai: {
+    recommendations: {
+      enabled: true,
+      maxRecommendations: 8,
+      algorithm: "collaborative_filtering" // or "content_based", "hybrid"
+    },
+    chatbot: {
+      enabled: true,
+      provider: "openai" // or "dialogflow", "custom"
+    }
+  },
+
+  // Security settings
+  security: {
+    enableCSP: true, // Content Security Policy
+    enableHSTS: true, // HTTP Strict Transport Security
+    enableXSSProtection: true,
+    enableRateLimiting: true,
+    rateLimitRequests: 100, // requests per minute
+    sessionTimeout: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+    passwordMinLength: 8
+  },
+
+  // Performance settings
+  performance: {
+    enableImageOptimization: true,
+    enableLazyLoading: true,
+    enableCaching: true,
+    cacheMaxAge: 86400, // 24 hours in seconds
+    enableCompression: true,
+    enableMinification: true
   }
 };
+
+// Helper functions
+export const getBaseUrl = () => siteConfig.baseUrl
+export const getApiUrl = (endpoint: string) => `${siteConfig.api.baseUrl}${endpoint}`
+export const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: siteConfig.ecommerce.currency,
+    minimumFractionDigits: 0
+  }).format(amount)
+}
+export const isFeatureEnabled = (feature: keyof typeof siteConfig.advancedFeatures) => {
+  return siteConfig.advancedFeatures[feature]
+}
 
 export type SiteConfig = typeof siteConfig;

@@ -81,7 +81,7 @@ export default function Wishlist({ userId }: WishlistProps) {
       id: '1',
       productId: 'product-1',
       productName: 'Cozy Winter Hoodie',
-      productImage: '/api/placeholder/300/300',
+      productImage: '/images/products/hoodies/hoodie-1-main.jpg',
       currentPrice: 2699,
       originalPrice: 2999,
       size: 'L',
@@ -99,7 +99,7 @@ export default function Wishlist({ userId }: WishlistProps) {
       id: '2',
       productId: 'product-2',
       productName: 'Casual Denim Jacket',
-      productImage: '/api/placeholder/300/300',
+      productImage: '/images/products/hoodies/hoodie-2-main.jpg',
       currentPrice: 3499,
       originalPrice: 3499,
       size: 'M',
@@ -116,7 +116,7 @@ export default function Wishlist({ userId }: WishlistProps) {
       id: '3',
       productId: 'product-3',
       productName: 'Classic White Sneakers',
-      productImage: '/api/placeholder/300/300',
+      productImage: '/images/products/shoes/sneaker-1-main.jpg',
       currentPrice: 4999,
       originalPrice: 5999,
       size: '9',
@@ -136,7 +136,7 @@ export default function Wishlist({ userId }: WishlistProps) {
       description: 'Cozy pieces for the cold season',
       isPublic: true,
       itemCount: 5,
-      coverImage: '/api/placeholder/400/300',
+      coverImage: '/images/products/hoodies/hoodie-1-main.jpg',
       tags: ['winter', 'cozy', 'essentials'],
       shareStats: {
         viewCount: 25,
@@ -149,7 +149,7 @@ export default function Wishlist({ userId }: WishlistProps) {
       description: 'Fresh looks for spring',
       isPublic: false,
       itemCount: 3,
-      coverImage: '/api/placeholder/400/300',
+      coverImage: '/images/products/t-shirts/tshirt-1-main.jpg',
       tags: ['spring', 'fresh', 'casual']
     }
   ]

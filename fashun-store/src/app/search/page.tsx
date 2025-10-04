@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from 'react'
 import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
@@ -15,9 +16,7 @@ import {
   StarIcon
 } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid'
-import IntelligentSearch from '@/components/ai/IntelligentSearch'
-import SmartFilters from '@/components/ai/SmartFilters'
-import VisualSearch from '@/components/ai/VisualSearch'
+// import SmartFilters from '@/components/ai/SmartFilters' // Temporarily commented
 
 // Enhanced mock products data with AI-friendly attributes
 const products = [
@@ -26,7 +25,7 @@ const products = [
     name: 'Oversized Black Hoodie',
     price: 2999,
     originalPrice: 3999,
-    image: '/api/placeholder/400/500',
+    image: '/images/products/hoodies/hoodie-1-main.jpg',
     category: 'hoodies',
     color: 'black',
     size: ['S', 'M', 'L', 'XL'],
@@ -283,12 +282,22 @@ export default function EnhancedSearchPage() {
         <div className="container mx-auto px-4 py-6">
           <div className="space-y-4">
             {/* Main Search Bar */}
-            <IntelligentSearch
-              onSearch={handleSearch}
-              placeholder="Search with AI: 'black hoodie for winter' or 'outfit for date night'"
-              className="w-full"
-              isExpanded={true}
-            />
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch(searchQuery)}
+                placeholder="Search with AI: 'black hoodie for winter' or 'outfit for date night'"
+                className="w-full bg-primary-900/50 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-4 text-white placeholder-primary-400 focus:outline-none focus:border-accent-400/50"
+              />
+              <button
+                onClick={() => handleSearch(searchQuery)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-400 hover:text-white"
+              >
+                <MagnifyingGlassIcon className="w-5 h-5" />
+              </button>
+            </div>
 
             {/* Quick Actions */}
             <div className="flex items-center justify-between">
@@ -515,22 +524,41 @@ export default function EnhancedSearchPage() {
       </div>
 
       {/* AI Components */}
-      <SmartFilters
-        isOpen={showFilters}
-        onClose={() => setShowFilters(false)}
-        onFiltersChange={setFilters}
-        initialFilters={filters}
-        searchQuery={searchQuery}
-      />
+      {showFilters && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-primary-900/95 backdrop-blur-md border border-white/20 rounded-3xl p-8 max-w-md w-full">
+            <h3 className="text-xl font-semibold text-white mb-4">Filters</h3>
+            <p className="text-primary-300 mb-6">Advanced filtering options coming soon</p>
+            <button
+              onClick={() => setShowFilters(false)}
+              className="w-full btn btn-outline"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
-      <VisualSearch
-        isOpen={showVisualSearch}
-        onClose={() => setShowVisualSearch(false)}
-        onSearchResults={(results) => {
-          // Handle visual search results
-          console.log('Visual search results:', results)
-        }}
-      />
+      {/* Visual Search Modal - Component to be implemented */}
+      {showVisualSearch && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-primary-900/95 backdrop-blur-md border border-white/20 rounded-3xl p-8 max-w-md w-full">
+            <h3 className="text-xl font-semibold text-white mb-4">Visual Search</h3>
+            <p className="text-primary-300 mb-6">Upload an image to find similar products</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowVisualSearch(false)}
+                className="flex-1 btn btn-outline"
+              >
+                Cancel
+              </button>
+              <button className="flex-1 btn btn-glass">
+                Upload Image
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

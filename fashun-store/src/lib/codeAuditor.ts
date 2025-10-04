@@ -122,8 +122,13 @@ export class CodeAuditor {
     const files: string[] = [];
     for (const pattern of patterns) {
       try {
-        const matches = await glob(pattern, { cwd: this.workspacePath });
-        files.push(...matches.map(f => path.join(this.workspacePath, f)));
+        const matches = await new Promise<string[]>((resolve, reject) => {
+          glob(pattern, { cwd: this.workspacePath } as any, (err: Error | null, matches: string[]) => {
+            if (err) reject(err);
+            else resolve(matches);
+          });
+        });
+        files.push(...matches.map((f: string) => path.join(this.workspacePath, f)));
       } catch (error) {
         console.warn(`Could not search for pattern ${pattern}:`, error);
       }
@@ -258,7 +263,7 @@ export class CodeAuditor {
     // Check for custom component imports
     const componentMatches = content.match(/<([A-Z][a-zA-Z0-9]*)/g);
     if (componentMatches) {
-      const usedComponents = [...new Set(componentMatches.map(match => match.slice(1)))];
+      const usedComponents = Array.from(new Set(componentMatches.map(match => match.slice(1))));
       const importSection = content.split('\n').slice(0, 20).join('\n'); // First 20 lines
       
       usedComponents.forEach(component => {
@@ -622,8 +627,13 @@ export class CodeAuditor {
     const assetFiles: string[] = [];
     for (const pattern of assetPatterns) {
       try {
-        const matches = await glob(pattern, { cwd: publicDir });
-        assetFiles.push(...matches.map(f => path.join(publicDir, f)));
+        const matches = await new Promise<string[]>((resolve, reject) => {
+          glob(pattern, { cwd: publicDir } as any, (err: Error | null, matches: string[]) => {
+            if (err) reject(err);
+            else resolve(matches);
+          });
+        });
+        assetFiles.push(...matches.map((f: string) => path.join(publicDir, f)));
       } catch (error) {
         console.warn(`Could not find assets for pattern ${pattern}:`, error);
       }
@@ -696,8 +706,13 @@ export class CodeAuditor {
     const files: string[] = [];
     for (const pattern of patterns) {
       try {
-        const matches = await glob(pattern, { cwd: this.workspacePath });
-        files.push(...matches.map(f => path.join(this.workspacePath, f)));
+        const matches = await new Promise<string[]>((resolve, reject) => {
+          glob(pattern, { cwd: this.workspacePath } as any, (err: Error | null, matches: string[]) => {
+            if (err) reject(err);
+            else resolve(matches);
+          });
+        });
+        files.push(...matches.map((f: string) => path.join(this.workspacePath, f)));
       } catch (error) {
         console.warn(`Could not find components for pattern ${pattern}:`, error);
       }

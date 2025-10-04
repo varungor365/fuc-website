@@ -26,6 +26,8 @@ import {
   QuestionMarkCircleIcon,
   ScaleIcon
 } from '@heroicons/react/24/outline';
+import VariantSwatches from '../../../components/product/VariantSwatches';
+import ShippingCalculator from '../../../components/product/ShippingCalculator';
 import { StarIcon as StarIconSolid, HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 
 const mockProduct = {
@@ -42,23 +44,23 @@ const mockProduct = {
   category: 'Hoodies',
   tags: ['Cyberpunk', 'Neon', 'Limited Edition', 'Premium'],
   images: [
-    '/images/mock/products/hoodies/cyber-punk-hoodie.svg',
-    '/images/mock/products/hoodies/neon-glow-hoodie.svg',
-    '/images/mock/products/tshirts/holographic-tee.svg',
-    '/images/mock/products/jackets/quantum-bomber.svg'
+    '/images/products/t-shirts/tshirt-1-main.jpg',
+    '/images/products/t-shirts/tshirt-1-front.jpg',
+    '/images/products/t-shirts/tshirt-1-back.jpg',
+    '/images/products/t-shirts/tshirt-2-main.jpg'
   ],
   sizes: [
-    { name: 'XS', available: true, stock: 5 },
-    { name: 'S', available: true, stock: 8 },
-    { name: 'M', available: true, stock: 12 },
-    { name: 'L', available: true, stock: 15 },
-    { name: 'XL', available: true, stock: 10 },
-    { name: 'XXL', available: false, stock: 0 }
+    { id: 'xs', name: 'XS', stock: 5 },
+    { id: 's', name: 'S', stock: 8 },
+    { id: 'm', name: 'M', stock: 12 },
+    { id: 'l', name: 'L', stock: 15 },
+    { id: 'xl', name: 'XL', stock: 10 },
+    { id: 'xxl', name: 'XXL', stock: 0 }
   ],
   colors: [
-    { name: 'Neon Black', value: '#000000', available: true },
-    { name: 'Cyber Blue', value: '#00ffff', available: true },
-    { name: 'Matrix Green', value: '#00ff00', available: false }
+    { id: 'neon-black', name: 'Neon Black', colorCode: '#000000', stock: 25 },
+    { id: 'cyber-blue', name: 'Cyber Blue', colorCode: '#00ffff', stock: 18 },
+    { id: 'matrix-green', name: 'Matrix Green', colorCode: '#00ff00', stock: 0 }
   ],
   features: [
     'Premium cotton-polyester blend',
@@ -76,7 +78,7 @@ const relatedProducts = [
     name: 'Neon Glow Circuit Hoodie',
     price: 2999,
     originalPrice: 3799,
-    image: '/images/mock/products/hoodies/neon-glow-hoodie.svg',
+    image: '/images/products/hoodies/hoodie-1-main.jpg',
     rating: 4.6
   },
   {
@@ -84,7 +86,7 @@ const relatedProducts = [
     name: 'Holographic Matrix Tee',
     price: 1799,
     originalPrice: 2299,
-    image: '/images/mock/products/tshirts/holographic-tee.svg',
+    image: '/images/products/t-shirts/tshirt-2-front.jpg',
     rating: 4.7
   },
   {
@@ -92,7 +94,7 @@ const relatedProducts = [
     name: 'Quantum Tech Bomber',
     price: 4999,
     originalPrice: 6299,
-    image: '/images/mock/products/jackets/quantum-bomber.svg',
+    image: '/images/products/hoodies/hoodie-2-main.jpg',
     rating: 4.9
   }
 ];
@@ -159,8 +161,10 @@ const recentPurchases = [
 export default function ProductDetailPage() {
   const params = useParams();
   const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState(mockProduct.colors[0]);
+  const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [selectedShipping, setSelectedShipping] = useState<any>(null);
+  const [shippingCost, setShippingCost] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
@@ -230,6 +234,10 @@ export default function ProductDetailPage() {
       alert('Please select a size');
       return;
     }
+    if (!selectedColor) {
+      alert('Please select a color');
+      return;
+    }
     
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 3000);
@@ -269,6 +277,21 @@ export default function ProductDetailPage() {
   const handleWishlist = () => {
     setIsWishlisted(!isWishlisted);
     // Here you would typically save to user's wishlist in backend
+  };
+
+  // Variant handlers
+  const handleColorSelect = (colorId: string) => {
+    setSelectedColor(colorId);
+  };
+
+  const handleSizeSelect = (sizeId: string) => {
+    setSelectedSize(sizeId);
+  };
+
+  // Shipping handler
+  const handleShippingSelect = (option: any, cost: number) => {
+    setSelectedShipping(option);
+    setShippingCost(cost);
   };
 
   return (
@@ -441,41 +464,33 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Size Selection */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-medium">Size</h3>
-                <button
+            {/* Variant Selection */}
+            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+              <VariantSwatches
+                colors={product.colors}
+                sizes={product.sizes}
+                selectedColor={selectedColor}
+                selectedSize={selectedSize}
+                onColorSelect={handleColorSelect}
+                onSizeSelect={handleSizeSelect}
+                className="mb-4"
+              />
+              
+              <div className="flex items-center justify-between text-sm">
+                <button 
                   onClick={() => setShowSizeGuide(true)}
-                  className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors"
+                  className="text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors"
                 >
                   <ScaleIcon className="w-4 h-4" />
                   Size Guide
                 </button>
+                {selectedSize && selectedColor && (
+                  <span className="text-white/60">
+                    {product.sizes.find(s => s.id === selectedSize)?.stock} available in {selectedSize.toUpperCase()}
+                  </span>
+                )}
               </div>
-              <div className="grid grid-cols-6 gap-3">
-                {product.sizes.map((size) => (
-                  <motion.button
-                    key={size.name}
-                    onClick={() => size.available && setSelectedSize(size.name)}
-                    disabled={!size.available}
-                    className={`h-12 border rounded-lg font-medium transition-all ${
-                      selectedSize === size.name
-                        ? 'border-purple-500 bg-purple-500/20 text-purple-300'
-                        : size.available
-                        ? 'border-white/20 hover:border-white/50 hover:bg-white/5'
-                        : 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
-                    }`}
-                    whileHover={size.available ? { y: -2 } : {}}
-                    whileTap={size.available ? { y: 0 } : {}}
-                  >
-                    {size.name}
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-
-            {/* Quantity */}
+            </div>            {/* Quantity */}
             <div>
               <h3 className="text-lg font-medium mb-3">Quantity</h3>
               <div className="flex items-center gap-3">
@@ -496,7 +511,7 @@ export default function ProductDetailPage() {
                 </div>
                 {selectedSize && (
                   <span className="text-white/60 text-sm">
-                    {product.sizes.find(s => s.name === selectedSize)?.stock} available
+                    {product.sizes.find(s => s.id === selectedSize)?.stock} available
                   </span>
                 )}
               </div>
@@ -530,7 +545,7 @@ export default function ProductDetailPage() {
               <div className="flex gap-4">
                 <motion.button
                   onClick={handleAddToCart}
-                  disabled={!selectedSize || !product.inStock}
+                  disabled={!selectedSize || !selectedColor || !product.inStock}
                   className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -581,7 +596,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Product Features */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
+            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/10 mb-6">
               <div className="flex items-center gap-2">
                 <TruckIcon className="w-5 h-5 text-green-400" />
                 <span className="text-sm text-white/80">Free Delivery</span>
@@ -594,6 +609,16 @@ export default function ProductDetailPage() {
                 <ShieldCheckIcon className="w-5 h-5 text-purple-400" />
                 <span className="text-sm text-white/80">Secure Payment</span>
               </div>
+            </div>
+
+            {/* Shipping Calculator */}
+            <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+              <ShippingCalculator
+                productPrice={product.price}
+                productWeight={0.8}
+                onShippingSelect={handleShippingSelect}
+                className="bg-transparent border-none"
+              />
             </div>
           </motion.div>
         </div>

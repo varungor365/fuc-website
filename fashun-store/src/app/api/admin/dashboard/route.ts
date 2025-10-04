@@ -32,28 +32,28 @@ const mockDashboardData = {
       {
         id: 'hoodie-001',
         name: 'Essential Oversized Hoodie',
-        image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=100&h=100&fit=crop',
+        image: '/images/products/hoodies/hoodie-1-main.jpg',
         unitsSold: 45,
         revenue: 35955
       },
       {
         id: 'tshirt-001',
         name: 'Urban Graphic Tee',
-        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&h=100&fit=crop',
+        image: '/images/products/t-shirts/tshirt-1-main.jpg',
         unitsSold: 38,
         revenue: 11382
       },
       {
         id: 'hoodie-002',
         name: 'Graffiti Print Hoodie',
-        image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=100&h=100&fit=crop',
+        image: '/images/products/hoodies/hoodie-2-main.jpg',
         unitsSold: 32,
         revenue: 28768
       },
       {
         id: 'tshirt-002',
         name: 'Anime Character Tee',
-        image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=100&h=100&fit=crop',
+        image: '/images/products/t-shirts/tshirt-2-main.jpg',
         unitsSold: 29,
         revenue: 10141
       }

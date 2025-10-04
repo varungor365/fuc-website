@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'default-key-change-in-production'
+// Security: Require encryption key in production
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
+if (!ENCRYPTION_KEY && process.env.NODE_ENV === 'production') {
+  throw new Error('ENCRYPTION_KEY environment variable is required in production')
+}
+const encryptionKey = ENCRYPTION_KEY || 'development-key-not-for-production'
 
 // Encryption utilities
 function encrypt(text: string): string {
   try {
     const iv = crypto.randomBytes(16)
-    const key = crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32)
+    const key = crypto.scryptSync(encryptionKey, 'salt', 32)
     const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
     let encrypted = cipher.update(text, 'utf8', 'hex')
     encrypted += cipher.final('hex')
@@ -24,7 +29,7 @@ function decrypt(text: string): string {
     if (textParts.length !== 2) return text // Return original if not encrypted format
     const iv = Buffer.from(textParts[0], 'hex')
     const encryptedText = textParts[1]
-    const key = crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32)
+    const key = crypto.scryptSync(encryptionKey, 'salt', 32)
     const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv)
     let decrypted = decipher.update(encryptedText, 'hex', 'utf8')
     decrypted += decipher.final('utf8')
@@ -65,8 +70,20 @@ let apiKeysStore: Record<string, any> = {
 }
 
 function isAdminAuthenticated(request: NextRequest): boolean {
-  // In production, implement proper admin authentication
-  return true // Temporarily allow all requests for development
+  // In production, implement proper admin authentication with JWT/session
+  if (process.env.NODE_ENV === 'production') {
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return false
+    }
+    
+    const token = authHeader.substring(7)
+    // TODO: Verify JWT token or session
+    // For now, check for a basic admin token
+    return token === process.env.ADMIN_API_TOKEN
+  }
+  
+  return true // Allow in development
 }
 
 // GET - Fetch all API keys (masked)

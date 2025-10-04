@@ -91,7 +91,7 @@ const PremiumWishlist: React.FC<PremiumWishlistProps> = ({ userId, className = '
         brand: 'FASHUN',
         price: 2399,
         originalPrice: 2999,
-        image: '/api/placeholder/300/400',
+        image: '/images/products/hoodies/hoodie-1-main.jpg',
         category: 'hoodies',
         color: 'Black',
         sizes: ['S', 'M', 'L', 'XL'],
@@ -115,7 +115,7 @@ const PremiumWishlist: React.FC<PremiumWishlistProps> = ({ userId, className = '
         name: 'Vintage Graphic Tee',
         brand: 'STREET',
         price: 1299,
-        image: '/api/placeholder/300/400',
+        image: '/images/products/t-shirts/tshirt-1-main.jpg',
         category: 'tshirts',
         color: 'White',
         sizes: ['XS', 'S', 'M', 'L'],
@@ -135,7 +135,7 @@ const PremiumWishlist: React.FC<PremiumWishlistProps> = ({ userId, className = '
         brand: 'URBAN',
         price: 3599,
         originalPrice: 4499,
-        image: '/api/placeholder/300/400',
+        image: '/images/products/pants/jeans-1-main.jpg',
         category: 'pants',
         color: 'Khaki',
         sizes: ['28', '30', '32', '34'],
@@ -162,7 +162,7 @@ const PremiumWishlist: React.FC<PremiumWishlistProps> = ({ userId, className = '
         items: ['1'],
         isPublic: false,
         createdDate: new Date('2024-01-01'),
-        coverImage: '/api/placeholder/200/200'
+        coverImage: '/images/products/hoodies/hoodie-1-main.jpg'
       },
       {
         id: 'streetwear',

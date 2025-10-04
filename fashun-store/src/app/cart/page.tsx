@@ -13,7 +13,7 @@ const mockCartItems = [
     name: 'Oversized Black Hoodie',
     price: 2999,
     originalPrice: 3999,
-    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=300&h=400&fit=crop&crop=center',
+    image: '/images/products/hoodies/hoodie-1-main.jpg',
     color: 'Black',
     size: 'L',
     quantity: 2,
@@ -24,7 +24,7 @@ const mockCartItems = [
     name: 'Graphic Print Tee',
     price: 1499,
     originalPrice: 1999,
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=400&fit=crop&crop=center',
+    image: '/images/products/t-shirts/tshirt-1-main.jpg',
     color: 'White',
     size: 'M',
     quantity: 1,
@@ -35,7 +35,7 @@ const mockCartItems = [
     name: 'Premium Cotton Polo',
     price: 2299,
     originalPrice: 2799,
-    image: 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=300&h=400&fit=crop&crop=center',
+    image: '/images/products/t-shirts/tshirt-2-main.jpg',
     color: 'Navy',
     size: 'L',
     quantity: 1,
@@ -330,7 +330,7 @@ export default function CartPage() {
               <div key={i} className="group cursor-pointer">
                 <div className="relative aspect-square bg-primary-900 rounded-lg overflow-hidden mb-4">
                   <Image
-                    src={`https://images.unsplash.com/photo-157866299644${i}-48f60103fc96?w=300&h=400&fit=crop&crop=center`}
+                    src={`/images/products/${i % 2 === 0 ? 'hoodies/hoodie-1-main.jpg' : 't-shirts/tshirt-1-main.jpg'}`}
                     alt={`Recommended Product ${i}`}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"

@@ -18,6 +18,8 @@ import InstagramFeed from '@/components/home/InstagramFeed';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import TrustBadges from '@/components/home/TrustBadges';
 import NewsletterSignup from '@/components/home/NewsletterSignup';
+import CountdownTimer from '../components/promotional/CountdownTimer';
+import DealOfTheDay from '../components/promotional/DealOfTheDay';
 
 // Hero Section Component
 const HeroSection = () => {
@@ -25,7 +27,7 @@ const HeroSection = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background with Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-hero opacity-90"></div>
-      <div className="absolute inset-0 bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center opacity-20"></div>
+      <div className="absolute inset-0 bg-[url('/images/products/hoodies/hoodie-1-main.jpg')] bg-cover bg-center opacity-20"></div>
       
       {/* Floating Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -172,6 +174,9 @@ export default function HomePage() {
       
       {/* Shop by Category */}
       <ShopByCategory />
+      
+      {/* Deal of the Day */}
+      <DealOfTheDay />
       
       {/* Trending Products with AI */}
       <TrendingProducts />

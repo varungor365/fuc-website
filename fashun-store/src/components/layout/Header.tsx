@@ -25,10 +25,10 @@ const navigationItems = [
     href: '/collections/all',
     megaMenu: {
       categories: [
-        { name: 'T-Shirts', href: '/collections/tshirts', image: '/api/placeholder/200/200' },
-        { name: 'Hoodies', href: '/collections/hoodies', image: '/api/placeholder/200/200' },
-        { name: 'Polos', href: '/collections/polos', image: '/api/placeholder/200/200' },
-        { name: 'Accessories', href: '/collections/accessories', image: '/api/placeholder/200/200' }
+        { name: 'T-Shirts', href: '/collections/tshirts', image: '/images/products/t-shirts/tshirt-1-main.jpg' },
+        { name: 'Hoodies', href: '/collections/hoodies', image: '/images/products/hoodies/hoodie-1-main.jpg' },
+        { name: 'Polos', href: '/collections/polos', image: '/images/products/t-shirts/tshirt-2-main.jpg' },
+        { name: 'Accessories', href: '/collections/accessories', image: '/images/products/accessories/cap-1-main.jpg' }
       ],
       featured: [
         { name: 'New Arrivals', href: '/collections/new-arrivals' },

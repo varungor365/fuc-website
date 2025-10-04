@@ -100,7 +100,7 @@ export default function AdminDashboard() {
 
   const topProducts = [
     { 
-      image: '/images/mock/products/tshirts/holographic-tee.svg',
+      image: '/images/products/t-shirts/tshirt-1-main.jpg',
       name: 'Holographic Tech Tee',
       sold: 156,
       revenue: '₹23,400',
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
       aiScore: 94
     },
     {
-      image: '/images/mock/products/hoodies/cyber-punk-hoodie.svg',
+      image: '/images/products/hoodies/hoodie-1-main.jpg',
       name: 'Cyber Punk Hoodie',
       sold: 98,
       revenue: '₹44,100',
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
       aiScore: 89
     },
     {
-      image: '/images/mock/products/jackets/quantum-bomber.svg',
+      image: '/images/products/hoodies/hoodie-2-main.jpg',
       name: 'Quantum Bomber Jacket',
       sold: 87,
       revenue: '₹52,200',
@@ -124,7 +124,7 @@ export default function AdminDashboard() {
       aiScore: 92
     },
     {
-      image: '/images/mock/products/hoodies/neon-glow-hoodie.svg',
+      image: '/images/products/t-shirts/tshirt-2-main.jpg',
       name: 'Neon Glow Hoodie',
       sold: 73,
       revenue: '₹38,900',

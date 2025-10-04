@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRazorpay } from '../../hooks/useRazorpay';
 import { motion } from 'framer-motion';
 import { 
   CreditCardIcon,
@@ -31,7 +32,7 @@ const mockCartItems: CheckoutItem[] = [
     price: 3299,
     quantity: 1,
     size: 'L',
-    image: '/images/mock/products/hoodies/cyber-punk-hoodie.svg'
+    image: '/images/products/hoodies/hoodie-1-main.jpg',
   }
 ];
 
@@ -54,6 +55,9 @@ export default function CheckoutPage() {
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
+  
+  const { processPayment, isLoading: isRazorpayLoading } = useRazorpay();
 
   const cartItems = mockCartItems;
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -68,18 +72,57 @@ export default function CheckoutPage() {
     });
   };
 
-  const handleStepSubmit = () => {
+  const handleStepSubmit = async () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
       // Process payment
       setIsProcessing(true);
+      setPaymentError('');
       
-      // Simulate payment processing
-      setTimeout(() => {
-        setIsProcessing(false);
-        setOrderComplete(true);
-      }, 3000);
+      if (paymentMethod === 'razorpay') {
+        try {
+          await processPayment(
+            total,
+            formData,
+            {
+              items: cartItems,
+              shipping: { 
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                address: formData.address,
+                city: formData.city,
+                state: formData.state,
+                pincode: formData.pincode,
+                phone: formData.phone
+              },
+              total,
+              subtotal,
+              tax,
+              shippingCost: shipping
+            },
+            (paymentData) => {
+              console.log('Payment successful:', paymentData);
+              setIsProcessing(false);
+              setOrderComplete(true);
+            },
+            (error) => {
+              console.error('Payment error:', error);
+              setPaymentError(error.message || 'Payment failed');
+              setIsProcessing(false);
+            }
+          );
+        } catch (error: any) {
+          setPaymentError(error.message || 'Payment failed');
+          setIsProcessing(false);
+        }
+      } else {
+        // Simulate other payment methods
+        setTimeout(() => {
+          setIsProcessing(false);
+          setOrderComplete(true);
+        }, 3000);
+      }
     }
   };
 
@@ -422,7 +465,24 @@ export default function CheckoutPage() {
                 {paymentMethod === 'razorpay' && (
                   <div className="text-center py-8">
                     <ShieldCheckIcon className="w-16 h-16 text-green-400 mx-auto mb-4" />
-                    <p className="text-white/60">You will be redirected to Razorpay secure checkout</p>
+                    <h3 className="text-lg font-semibold text-white mb-2">Razorpay Secure Payment</h3>
+                    <p className="text-white/60 mb-4">
+                      Pay securely using UPI, Net Banking, Cards, and Wallets
+                    </p>
+                    
+                    <div className="flex flex-wrap justify-center gap-2 text-xs text-white/40">
+                      <span className="bg-white/10 px-2 py-1 rounded">UPI</span>
+                      <span className="bg-white/10 px-2 py-1 rounded">Cards</span>
+                      <span className="bg-white/10 px-2 py-1 rounded">Net Banking</span>
+                      <span className="bg-white/10 px-2 py-1 rounded">Wallets</span>
+                      <span className="bg-white/10 px-2 py-1 rounded">EMI</span>
+                    </div>
+                    
+                    {paymentError && (
+                      <div className="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
+                        <p className="text-red-300 text-sm">{paymentError}</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </motion.div>
@@ -469,13 +529,61 @@ export default function CheckoutPage() {
             {/* Continue Button */}
             <button
               onClick={handleStepSubmit}
-              disabled={!paymentMethod && currentStep === 2}
-              className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 disabled:cursor-not-allowed"
+              disabled={(!paymentMethod && currentStep === 2) || isProcessing || isRazorpayLoading}
+              className={`w-full font-semibold py-4 px-6 rounded-xl transition-all duration-300 ${
+                isProcessing || isRazorpayLoading 
+                  ? 'bg-gray-600 cursor-not-allowed' 
+                  : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600'
+              } text-white flex items-center justify-center gap-2`}
             >
-              {currentStep === 1 && 'Continue to Payment'}
-              {currentStep === 2 && 'Review Order'}
-              {currentStep === 3 && 'Complete Order'}
+              {isProcessing || isRazorpayLoading ? (
+                <>
+                  <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                  {paymentMethod === 'razorpay' ? 'Opening Razorpay...' : 'Processing...'}
+                </>
+              ) : (
+                <>
+                  {currentStep === 1 && 'Continue to Payment'}
+                  {currentStep === 2 && 'Review Order'}
+                  {currentStep === 3 && (paymentMethod === 'razorpay' ? 'Pay with Razorpay' : 'Complete Order')}
+                </>
+              )}
             </button>
+
+            {/* Express Checkout Options */}
+            {currentStep === 2 && (
+              <div className="mt-6 pt-6 border-t border-white/10">
+                <p className="text-center text-white/60 text-sm mb-4">Express checkout with</p>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Razorpay Express */}
+                  <button
+                    onClick={() => {
+                      setPaymentMethod('razorpay');
+                      setCurrentStep(3);
+                    }}
+                    className="py-3 px-4 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M14.5 4h-5L7 8.5 2.5 4h-1L4 6.5 1.5 9H3l2.5-2.5L8 9h6.5l-2-5z"/>
+                    </svg>
+                    Razorpay
+                  </button>
+
+                  {/* UPI Express */}
+                  <button
+                    onClick={() => {
+                      setPaymentMethod('upi');
+                      setCurrentStep(3);
+                    }}
+                    className="py-3 px-4 bg-orange-600 hover:bg-orange-700 rounded-lg text-white font-medium transition-colors flex items-center justify-center gap-2"
+                  >
+                    <BanknotesIcon className="w-5 h-5" />
+                    UPI
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Column - Order Summary */}

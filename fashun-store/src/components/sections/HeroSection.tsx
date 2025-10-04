@@ -17,7 +17,7 @@ export function HeroSection() {
       description: "Discover bold designs, premium fabrics, and customizable apparel that speaks your language.",
       cta: "Shop Collection",
       ctaLink: "/collections/all",
-      backgroundImage: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=1080&fit=crop&crop=center",
+      backgroundImage: "/images/products/hoodies/hoodie-1-main.jpg",
       backgroundVideo: "",
       textColor: "light"
     },
@@ -28,7 +28,7 @@ export function HeroSection() {
       description: "Use our AI-powered design tool to create unique prints and customize your perfect hoodie or tee.",
       cta: "Start Designing",
       ctaLink: "/designer",
-      backgroundImage: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1920&h=1080&fit=crop&crop=center",
+      backgroundImage: "/images/products/t-shirts/tshirt-1-main.jpg",
       backgroundVideo: "",
       textColor: "light"
     },
@@ -39,7 +39,7 @@ export function HeroSection() {
       description: "Premium quality meets environmental responsibility. Made with sustainable materials and ethical practices.",
       cta: "Learn More",
       ctaLink: "/sustainability",
-      backgroundImage: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1920&h=1080&fit=crop&crop=center",
+      backgroundImage: "/images/products/hoodies/hoodie-2-main.jpg",
       textColor: "light"
     }
   ]

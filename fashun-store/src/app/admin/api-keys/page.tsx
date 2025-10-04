@@ -146,15 +146,53 @@ export default function APIKeysPage() {
   const testConnection = async (service: string) => {
     setLoading(true)
     try {
+      const existingKey = apiKeys[service]
+      if (!existingKey) {
+        setTestResults(prev => ({ 
+          ...prev, 
+          [service]: { success: false, error: 'No API key configured' } 
+        }))
+        return
+      }
+
+      // Get the current form data for the service or use existing stored keys
+      const config = serviceConfigs[service]
+      let keyValue = ''
+      let secretValue = ''
+      
+      if (editingService === service) {
+        // Use form data if currently editing
+        if (service === 'razorpay') {
+          keyValue = formData.keyId || ''
+          secretValue = formData.keySecret || ''
+        } else if (service === 'stripe') {
+          keyValue = formData.publishableKey || ''
+          secretValue = formData.secretKey || ''
+        } else if (service === 'strapi') {
+          keyValue = formData.apiToken || ''
+          secretValue = formData.url || ''
+        } else {
+          const firstField = config.fields[0]
+          keyValue = formData[firstField.name] || ''
+        }
+      } else {
+        // Use stored keys (they will be decrypted on the server)
+        keyValue = existingKey.keyValue || ''
+        secretValue = existingKey.secretValue || ''
+      }
+
       const response = await fetch(`/api/admin/api-keys/${service}/test`, {
-        method: 'POST'
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ keyValue, secretValue })
       })
+      
       const result = await response.json()
       setTestResults(prev => ({ ...prev, [service]: result }))
     } catch (error) {
       setTestResults(prev => ({ 
         ...prev, 
-        [service]: { success: false, message: 'Connection failed' } 
+        [service]: { success: false, error: 'Connection failed' } 
       }))
     } finally {
       setLoading(false)
@@ -164,12 +202,40 @@ export default function APIKeysPage() {
   const saveAPIKey = async (service: string) => {
     setLoading(true)
     try {
+      const config = serviceConfigs[service]
+      
+      // Map form data to standard format
+      let keyValue = ''
+      let secretValue = ''
+      let keyName = 'API Key'
+      
+      if (service === 'razorpay') {
+        keyValue = formData.keyId || ''
+        secretValue = formData.keySecret || ''
+        keyName = 'Razorpay Keys'
+      } else if (service === 'stripe') {
+        keyValue = formData.publishableKey || ''
+        secretValue = formData.secretKey || ''
+        keyName = 'Stripe Keys'
+      } else if (service === 'strapi') {
+        keyValue = formData.apiToken || ''
+        secretValue = formData.url || ''
+        keyName = 'Strapi Config'
+      } else {
+        // For services with single field (openai, sendgrid, etc.)
+        const firstField = config.fields[0]
+        keyValue = formData[firstField.name] || ''
+        keyName = firstField.label
+      }
+
       const response = await fetch('/api/admin/api-keys', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           service,
-          ...formData
+          keyName,
+          keyValue,
+          secretValue: secretValue || undefined
         })
       })
 
@@ -177,6 +243,9 @@ export default function APIKeysPage() {
         await fetchAPIKeys()
         setEditingService(null)
         setFormData({})
+      } else {
+        const error = await response.json()
+        console.error('Failed to save API key:', error)
       }
     } catch (error) {
       console.error('Failed to save API key:', error)

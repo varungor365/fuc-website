@@ -9,7 +9,7 @@ const products = [
     name: 'Urban Explorer Hoodie',
     price: 2499,
     originalPrice: 3199,
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=500&fit=crop&crop=center',
+    image: '/images/products/hoodies/hoodie-1-main.jpg',
     colors: ['black', 'white', 'grey'],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     badge: 'Bestseller'
@@ -19,7 +19,7 @@ const products = [
     name: 'Minimalist Graphic Tee',
     price: 1299,
     originalPrice: 1699,
-    image: '/api/placeholder/400/500',
+    image: '/images/products/t-shirts/tshirt-2-main.jpg',
     colors: ['black', 'white', 'navy'],
     sizes: ['S', 'M', 'L', 'XL'],
     badge: 'New'
@@ -29,7 +29,7 @@ const products = [
     name: 'Oversized Street Polo',
     price: 1899,
     originalPrice: 2299,
-    image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400&h=500&fit=crop&crop=center',
+    image: '/images/products/t-shirts/tshirt-1-main.jpg',
     colors: ['black', 'white', 'olive'],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     badge: null
@@ -39,7 +39,7 @@ const products = [
     name: 'Custom Design Hoodie',
     price: 2799,
     originalPrice: null,
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=500&fit=crop&crop=center',
+    image: '/images/products/hoodies/hoodie-2-main.jpg',
     colors: ['custom'],
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     badge: 'Customizable'

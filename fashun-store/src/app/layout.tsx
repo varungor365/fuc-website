@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import ErrorBoundary from '../components/error/ErrorBoundary'
+import NewsletterPopup from '../components/promotional/NewsletterPopup'
 
 export const metadata: Metadata = {
   title: 'FASHUN.CO.IN - Premium Streetwear',
@@ -37,9 +39,12 @@ export default function RootLayout({
           </div>
         </nav>
         
-        <main className="flex-1">
-          {children}
-        </main>
+        <ErrorBoundary>
+          <main className="flex-1">
+            {children}
+          </main>
+          <NewsletterPopup />
+        </ErrorBoundary>
         
         <footer className="bg-gray-900 border-t border-gray-800 px-6 py-8">
           <div className="max-w-7xl mx-auto text-center">
