@@ -1,0 +1,40 @@
+<div class="collection-menu">
+  <h3 class="collection-menu__title">{{section.settings.custom_menu_title}}</h3>
+  {% if section.settings.menu.size > 0 %}
+    <ul class="no-bullets">
+      {% for link in linklists[section.settings.menu].links %}
+        {% assign child_list_handle = link.title | handle %}
+        {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+          <li>
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            <ul class="no-bullets">
+              {% for child_link in linklists[child_list_handle].links %}
+                {% assign grand_child_list_handle = child_link.title | handle %}
+                {% if linklists[grand_child_list_handle] and linklists[grand_child_list_handle].links.size > 0 %}
+                  <li>
+                    <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                    <ul class="no-bullets">
+                      {% for grand_child_link in linklists[grand_child_list_handle].links %}
+                        <li>
+                          {{ grand_child_link.title | link_to: grand_child_link.url }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                {% else %}
+                  <li>
+                    {{ child_link.title | link_to: child_link.url }}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+        {% else %}
+          <li>
+             <a href="{{ link.url }}">{{ link.title }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>

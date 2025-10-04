@@ -1,0 +1,32 @@
+{% if settings.display_brands_slider %}
+<section class="slider-brand-wrapper container wow fadeInUp" data-wow-delay="{{ settings.time_lazy_load }}ms">
+  <div id="slide_brand" class="owl-carousel slide_brand col-xs-12">    
+    {% for i in (1..10) %}
+      {% capture brands_slider_image_link %}brands_slider_image_{{ i }}_link{% endcapture %}
+      {% capture brands_slider_image_title %}brands_slider_image_{{ i }}_title{% endcapture %}
+      {% capture brand %}brand{{ i }}.png{% endcapture %}
+    
+      {% if settings[brands_slider_image_link] != blank %}
+    	<div class="item">
+          <a title="{{ settings[brands_slider_image_title] }}" href="{{ settings[brands_slider_image_title] }}">
+            <img src="{{ brand | asset_url }}" alt="{{ settings[brands_slider_image_title] }}"/>
+          </a>
+    	</div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+jQuery(document).ready(function() {
+  jQuery("#slide_brand").owlCarousel({
+    navigation : true,
+    autoPlay: true,
+    itemsDesktopSmall: [991, 3],
+    itemsTablet: [768, 3],
+    itemsTabletSmall: [767, 2],
+    itemsMobile : [479, 1]
+  });
+});
+</script>
+{% endif %}

@@ -1,0 +1,230 @@
+{% comment %}
+  This page represents the /collections and /products pages.
+  It is an optional, but highly recommended, template for your theme.
+
+  More info:
+    - http://docs.shopify.com/manual/configuration/store-customization/taking-control-of-collections-listing
+
+  Loop through each collection, except 'frontpage'.
+{% endcomment %}
+
+{%- assign col_num = section.settings.column_number | plus: 0 -%}
+
+<header>
+  <h2 class="list-collections__title">{{ 'collections.general.collection_list_title' | t }}</h2>
+</header>
+
+{% comment %}
+  Count the number of collections that will be shown
+  Remember that 'frontpage' collection is not counted
+{% endcomment %}
+{%- assign collection_count = 0 -%}
+{%- assign is_empty = true -%}
+
+{%- if section.settings.collection_src == 'all' -%}
+  {%- for collection in collections -%}
+    {%- unless collection.handle == 'frontpage' -%}
+      {%- assign collection_count = collection_count | plus: 1 -%}
+    {%- endunless -%}
+  {%- endfor -%}
+{%- else -%}
+  {%- assign collection_count = section.blocks.size -%}
+{%- endif -%}
+
+{%- if collection_count > 0 -%}
+  {%- assign is_empty = false -%}
+{%- endif -%}
+
+{% comment %}
+  Get the list and sort based on settings
+{% endcomment %}
+{%- if section.settings.collection_src == 'all' -%}
+  {%- assign sort_type = section.settings.sort -%}
+
+  {%- case sort_type -%}
+    {%- when 'products_count_low' or 'products_count_high' -%}
+      {%- assign list_collections = collections | sort: 'all_products_count' -%}
+    {%- when 'date' or 'date_reverse' -%}
+      {%- assign list_collections = collections | sort: 'published_at' -%}
+    {%- when 'title' or 'title_reverse' -%}
+      {%- assign list_collections = collections | sort: 'title' -%}
+    {%- else -%}
+      {%- assign list_collections = collections -%}
+  {%- endcase -%}
+
+  {%- if sort_type == 'products_count_high' or sort_type == 'date_reversed' or sort_type == 'title_reversed' -%}
+    {%- assign is_reverse_sort = true -%}
+  {%- else -%}
+    {%- assign is_reverse_sort = false -%}
+  {%- endif -%}
+{%- endif -%}
+
+{% comment %}
+  ---------------
+  - Grid markup -
+  ---------------
+{% endcomment %}
+<div class="grid grid--uniform list-collections-grid">
+  {%- if is_empty -%}
+    <div class="grid__item one-whole">
+      <p>{{ 'collections.general.collection_list_no_content' | t }}</p>
+    </div>
+  {%- else -%}
+    {%- if section.settings.collection_src == 'all' -%}
+      {%- if is_reverse_sort -%}
+        {%- for collection in list_collections reversed -%}
+          {%- if collection.handle == 'frontpage' -%}
+            {% continue %}
+          {%- endif -%}
+          {% include 'list-collections-item' %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for collection in list_collections -%}
+          {%- if collection.handle == 'frontpage' -%}
+            {% continue %}
+          {%- endif -%}
+          {% include 'list-collections-item' %}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- else -%}
+      {%- for block in section.blocks -%}
+        {%- assign collection = collections[block.settings.collection] -%}
+        {% include 'list-collections-item' %}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% include 'section-spacing' %}
+
+{% schema %}
+  {
+    "name": "Collections list page",
+    "class": "list-collections-section",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "All of your collections are listed by default. To customize your list, choose Custom."
+      },
+      {
+        "type": "radio",
+        "id": "collection_src",
+        "label": "Select collections to show",
+        "options": [
+          {
+            "value": "all",
+            "label": "All"
+          },
+          {
+            "value": "custom",
+            "label": "Custom"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": "Default, collections are sorted by Alphabetically, A-Z. Choose other type if you want. Only apply when all collections are shown."
+      },
+      {
+        "type": "select",
+        "id": "sort",
+        "label": "Sort type",
+        "options": [
+          {
+            "value": "products_count_high",
+            "label": "Products count, high to low"
+          },
+          {
+            "value": "products_count_low",
+            "label": "Products count, low to high"
+          },
+          {
+            "value": "title",
+            "label": "Alphabetically, A-Z"
+          },
+          {
+            "value": "title_reversed",
+            "label": "Alphabetically, Z-A"
+          },
+          {
+            "value": "date",
+            "label": "Date, old to new"
+          },
+          {
+            "value": "date_reversed",
+            "label": "Date, new to old"
+          }
+        ],
+        "default": "title"
+      },
+      {
+        "type": "select",
+        "id": "column_number",
+        "label": "Grid column number",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          }
+        ],
+        "default": "4",
+        "info": "The number of collections on each row of grid."
+      },
+      {
+        "type": "header",
+        "content": "Design options"
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margin (top right bottom left)",
+        "info": "60px auto 60px auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Padding (top right bottom left)",
+        "info": "60px 0 60px 0"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "label": "Collection",
+            "id": "collection",
+            "type": "collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

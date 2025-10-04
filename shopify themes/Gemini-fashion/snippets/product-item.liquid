@@ -1,0 +1,127 @@
+{%- unless base_product_item_wrapper -%}
+  {%- assign base_product_item_wrapper = 'grid__item medium--one-half large-up--one-quarter' -%}
+{%- endunless -%}
+
+{%- assign style_class = settings.display_style -%}
+
+{%- unless style_class == 'style05' -%}
+  {%- if settings.interactive_group_theme == 'light' -%}
+    {%- assign product_scheme_class = 'product-item--light' -%}
+  {%- else -%}
+    {%- assign product_scheme_class = 'product-item--dark' -%}
+  {%- endif -%}
+{%- endunless -%}
+
+{%- assign available_variant = product.selected_or_first_available_variant -%}
+{%- if available_variant.compare_at_price > available_variant.price -%}
+  {%- assign sale_percent = available_variant.compare_at_price | minus: available_variant.price | times: 100.0 | divided_by: available_variant.compare_at_price | round: 1 -%}
+{%- else -%}
+  {%- assign sale_percent = 0 -%}
+{%- endif -%}
+
+{%- if product.available -%}
+  {%- assign sold_out = false -%}
+{%- else -%}
+  {%- assign sold_out = true -%}
+{%- endif -%}
+
+{%- assign is_hot = false -%}
+{%- for tag in product.tags -%}
+  {%- assign tag_handle = tag | handleize -%}
+  {%- if tag_handle == 'hot' -%}
+    {%- assign is_hot = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign is_new = false -%}
+{%- for tag in product.tags -%}
+  {%- assign tag_handle = tag | handleize -%}
+  {%- if tag_handle == 'new' -%}
+    {%- assign is_new = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign is_saleoff = false -%}
+{%- for tag in product.tags -%}
+  {%- assign tag_handle = tag | handleize -%}
+  {%- if tag_handle == 'sale' -%}
+    {%- assign is_saleoff = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<div class="{% if grid_style == 'metro' %}grid--metro__item{% endif %} {{ base_product_item_wrapper }} {{ extra_product_item_wrapper }}">
+  <div class="product-item product-item--{{ style_class }} {% if sold_out %}product-item--soldout{% endif %} {{ product_scheme_class }}">
+    {%- if style_class == 'style03' or style_class == 'style05' -%}
+      <h2 class="product-title">
+        <a href="{{ product.url }}" title="{{ product.title }}">
+          {{ product.title }}
+        </a>
+      </h2>
+      {%- if style_class == 'style05' -%}
+        <div class="product-meta">
+          {%- include 'reviews-badge' -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+    <div class="product-image">
+      {%- if sold_out -%}
+        <span class="badge badge--soldout">
+          {{- 'products.product.sold_out' | t -}}
+        </span>
+      {%- elsif sale_percent != 0 -%}
+        <span class="badge badge--percent">
+          -{{- sale_percent -}}%
+        </span>
+      {%- elsif is_saleoff -%}
+        <span class="badge badge--saleoff">
+          {{- 'products.product.saleoff' | t -}}
+        </span>
+      {%- elsif is_hot -%}
+        <span class="badge badge--hot">
+          {{- 'products.product.hot' | t -}}
+        </span>
+      {%- elsif is_new -%}
+        <span class="badge badge--new">
+          {{- 'products.product.new' | t -}}
+        </span>
+      {%- endif -%}
+
+      <div class="product-image__img-wrapper">
+        <a href="{{ product.url }}" class="rec-fill text-center {% if product.images.size > 1 and settings.image_swap_enable %}front front--{{ settings.image_swap_animation }}{% endif %}">
+          <span class="middle-alignment">&nbsp;</span><img class="fitted-image" src="{{ product.featured_image | product_img_url: image_size }}" alt="{{ product.featured_image.alt | escape }}">
+        </a>
+        {%- if product.images.size > 1 and settings.image_swap_enable -%}
+          <a href="{{ product.url }}" class="rec-fill text-center back back--{{ settings.image_swap_animation }}">
+            <span class="middle-alignment">&nbsp;</span><img class="fitted-image" src="{{ product.images[1] | product_img_url: image_size }}" alt="{{ product.images[1].alt | escape }}">
+          </a>
+        {%- endif -%}
+      </div>
+      {%- unless style_class == 'style05' -%}
+        {%- include 'interactive-group' -%}
+      {%- endunless -%}
+    </div>
+
+    <div class="product-info">
+      {%- unless style_class == 'style03' or style_class == 'style05' -%}
+        <h2 class="product-title">
+          <a href="{{ product.url }}" title="{{ product.title }}">
+            {{ product.title }}
+          </a>
+        </h2>
+      {%- endunless -%}
+      <div class="product-meta">
+        {%- include 'product-price', available_variant: available_variant -%}
+        {%- unless style_class == 'style05' -%}
+          {%- include 'reviews-badge' -%}
+        {%- endunless -%}
+      </div>
+    </div>
+
+    {%- if style_class == 'style05' -%}
+      {%- include 'interactive-group' -%}
+    {%- endif -%}
+  </div>
+</div>

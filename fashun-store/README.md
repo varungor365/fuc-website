@@ -37,6 +37,11 @@ Visit `http://localhost:3000` to see the application.
 - **Zustand** - Lightweight state management
 - **React Hook Form** - Form handling and validation
 
+### Backend Stack
+- **Strapi 4.25.23** - Headless CMS for content management
+- **SQLite** - Database (development) / PostgreSQL (production)
+- **REST API** - RESTful API with custom endpoints
+
 ### Design System
 - **Dark-first theme** with premium streetwear aesthetic
 - **Mobile-first responsive design**
@@ -50,6 +55,8 @@ Visit `http://localhost:3000` to see the application.
 - 📱 **Mobile Optimized** - Touch-friendly interface
 - 🔍 **SEO Optimized** - Meta tags, structured data, sitemap
 - 🎭 **Animation Rich** - Framer Motion powered transitions
+- 🔌 **Headless CMS with Strapi** - Dynamic product management
+- 🏗️ **API-driven architecture** - RESTful API with fallback system
 
 ## 📁 Project Structure
 
@@ -135,6 +142,79 @@ npm run start
 1. Add your domain in Vercel dashboard
 2. Update DNS records to point to Vercel
 3. Enable automatic HTTPS
+
+## 🔌 Strapi CMS Integration
+
+FASHUN.CO uses Strapi as a headless CMS for product management.
+
+### Quick Start
+
+**Step 1: Start Strapi Backend**
+```bash
+cd fashun-backend
+npm install
+npm run develop
+```
+
+**Step 2: Create Admin Account**
+- Open http://localhost:1337/admin
+- Register your admin account
+- Follow the setup wizard
+
+**Step 3: Create Product Content-Type**
+- See `fashun-backend/SETUP_INSTRUCTIONS.md` for detailed steps
+- Or use Strapi's Content-Type Builder in the admin panel
+
+**Step 4: Seed Products**
+```bash
+cd fashun-backend
+npm run seed
+```
+
+**Step 5: Start Frontend**
+```bash
+cd fashun-store
+npm run dev
+```
+
+### Architecture
+
+```
+Strapi CMS (localhost:1337)
+  ↓ REST API
+Next.js API Routes (/api/products)
+  ↓ Server-side fetch
+React Components (with fallback to mockProducts)
+```
+
+### Development Modes
+
+**With Strapi (Recommended):**
+- Real product data from CMS
+- Can add/edit products in Strapi admin
+- Changes reflect immediately
+
+**Without Strapi (Fallback):**
+- Uses mockProducts.ts data
+- Useful for frontend-only development
+- No backend required
+
+### Troubleshooting
+
+**Products not loading:**
+- Check Strapi is running: http://localhost:1337/admin
+- Check API permissions in Strapi (Settings → Roles → Public)
+- Check browser console for errors
+
+**Strapi won't start:**
+- Delete `fashun-backend/.tmp` folder
+- Run `npm install` again
+- Check port 1337 is not in use
+
+**Seed script fails:**
+- Ensure Strapi is running
+- Ensure Product content-type is created
+- Check Strapi logs for errors
 
 ## 🔧 Customization
 

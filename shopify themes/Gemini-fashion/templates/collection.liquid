@@ -1,0 +1,198 @@
+{% comment %}
+Assign some variable from configuration in theme customize
+{% endcomment %}
+
+{%- assign top_banner_is_disabled = settings.top_banner_disable -%}
+{%- assign topbar_is_disabled = settings.collection_top_bar_disable -%}
+{%- assign toolbar_is_disabled = settings.toolbar_disable -%}
+
+{%- assign layout = settings.collection_layout -%}
+{%- if layout == 'fullwidth' -%}
+  {%- assign is_full_layout = true -%}
+{%- else -%}
+  {%- assign is_full_layout = false -%}
+{%- endif -%}
+
+{%- assign mobile_2_cols_enable = settings.two_cols_layout_enable -%}
+
+{%- assign column_number_w_sidebar = settings.column_number_with_sidebar | plus: 0 -%}
+{%- assign column_number_wo_sidebar = settings.column_number_without_sidebar | plus: 0 -%}
+{%- if is_full_layout -%}
+  {%- assign column_number = column_number_wo_sidebar -%}
+{%- else -%}
+  {%- assign column_number = column_number_w_sidebar -%}
+{%- endif -%}
+
+{%- assign grid_style = settings.collection_grid_style -%}
+
+{% comment %}
+Fix number of item_per_page to hide (not fix, just a hack) bug with metro grid.
+The height of images is calculated by css calc() and then is rounded up/down
+depend on browsers. It causes 1px diff of height between 2 small images with
+1 big image and further causes masonry calculate wrong position of grid items.
+Default: 12
+{% endcomment %}
+{%- assign item_per_page = 12 -%}
+{%- if grid_style == 'metro' -%}
+  {%- if column_number == 4 or column_number == 6 -%}
+    {%- assign item_per_page = 18 -%}
+  {%- elsif column_number == 5 -%}
+    {%- assign item_per_page = 14 -%}
+  {%- endif -%}
+{%- else -%}
+  {%- if column_number == 5 -%}
+    {%- assign item_per_page = 15 -%}
+  {%- endif -%}
+{%- endif -%}
+
+{% comment %}
+base_product_item_wrapper - Used to set classes for product item on small devices.
+extra_product_item_wrapper - Used to set classes for product item on bigger devices.
+Used in snippets/product-item.liquid
+{% endcomment %}
+{%- assign base_product_item_wrapper = 'grid__item medium--one-third' -%}
+{%- if mobile_2_cols_enable -%}
+  {%- assign base_product_item_wrapper = base_product_item_wrapper | append: ' small--one-half' -%}
+{%- endif -%}
+
+{%- unless grid_style == 'metro' -%}
+  {%- case column_number -%}
+    {%- when 2 -%}
+      {%- assign extra_product_item_wrapper = 'large-up--one-half' -%}
+    {%- when 3 -%}
+      {%- assign extra_product_item_wrapper = 'large-up--one-third' -%}
+    {%- when 4 -%}
+      {%- assign extra_product_item_wrapper = 'large-up--one-quarter' -%}
+    {%- when 5 -%}
+      {%- assign extra_product_item_wrapper = 'large-up--one-fifth' -%}
+    {%- when 6 -%}
+      {%- assign extra_product_item_wrapper = 'large-up--one-sixth' -%}
+  {%- endcase -%}
+{%- endunless -%}
+
+{% comment %}
+Set image size to use for product based on number of column numbers
+{% endcomment %}
+{%- if column_number >= 5 -%}
+  {%- assign image_size = '480x480' -%}
+{%- elsif column_number == 4 -%}
+  {%- assign image_size = '600x600' -%}
+{%- else -%}
+  {%- assign image_size = '1024x1024' -%}
+{%- endif -%}
+
+{% comment %} ----------*** Markup start here ***---------- {% endcomment %}
+{%- unless top_banner_is_disabled -%}
+  <section class="collection-top-banner">
+    {% section 'collection-slideshow' %}
+  </section>
+{%- endunless -%}
+
+<div class="page-width">
+  <div class="page-content page-content--{{ layout }}">
+  {%- unless is_full_layout -%}
+    <div class="grid">
+      <div class="js-filter-wrapper grid__item large-up--one-quarter medium-down--hide {% if layout == 'right_sidebar' %}large-up--push-three-quarters{% endif %}">
+        {% section 'collection-sidebar' %}
+      </div>
+
+      <div class="grid__item large-up--three-quarters {% if layout == 'right_sidebar' %}large-up--pull-one-quarter{% endif %}">
+  {%- endunless -%}
+
+    {%- unless topbar_is_disabled -%}
+      {% include 'collection-top-bar' %}
+    {%- endunless -%}
+
+    <section class="collection-content">
+      {%- unless toolbar_is_disabled and layout != 'fullwidth' -%}
+        {% include 'collection-toolbar' %}
+      {%- endunless -%}
+
+      {% paginate collection.products by item_per_page %}
+
+        <div class="grid grid--{{- grid_style -}} {% unless grid_style == 'normal' %} js-grid-masonry{% else %} grid--uniform{% endunless %}">
+          {%- for product in collection.products -%}
+            {%- if grid_style == 'metro' -%}
+              {%- if column_number == 2 -%}
+                {%- assign metro_surplus = forloop.index | modulo: 3 -%}
+              {%- else -%}
+                {%- assign metro_surplus = forloop.index | modulo: item_per_page -%}
+              {%- endif -%}
+
+              {%- case column_number -%}
+                {%- when 2 -%}
+                  {%- if metro_surplus == 0 -%}
+                    {%- assign image_size = '2048x2048' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--one-whole grid--metro__item--big' -%}
+                  {%- else -%}
+                    {%- assign image_size = '1024x1024' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--one-half' -%}
+                  {%- endif -%}
+
+                {%- when 3 -%}
+                  {%- if metro_surplus == 2 or metro_surplus == 7 -%}
+                    {%- assign image_size = '1024x1024' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--two-thirds grid--metro__item--big' -%}
+                  {%- else -%}
+                    {%- assign image_size = '600x600' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--one-third' -%}
+                  {%- endif -%}
+
+                {%- when 4 -%}
+                  {%- if metro_surplus == 2 or metro_surplus == 10 -%}
+                    {%- assign image_size = '1024x1024' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--one-half grid--metro__item--big' -%}
+                  {%- else -%}
+                    {%- assign image_size = '600x600' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--one-quarter' -%}
+                  {%- endif -%}
+
+                {%- when 5 -%}
+                  {%- if metro_surplus == 2 or metro_surplus == 6 -%}
+                    {%- assign image_size = '1024x1024' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--two-fifths grid--metro__item--big' -%}
+                  {%- else -%}
+                    {%- assign image_size = '600x600' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--one-fifth' -%}
+                  {%- endif -%}
+
+                {%- when 6 -%}
+                  {%- if metro_surplus == 2 or metro_surplus == 11 -%}
+                    {%- assign image_size = '1024x1024' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--one-third grid--metro__item--big' -%}
+                  {%- else -%}
+                    {%- assign image_size = '480x480' -%}
+                    {%- assign extra_product_item_wrapper = 'large-up--one-sixth' -%}
+                  {%- endif -%}
+              {%- endcase -%}
+            {%- endif -%}
+
+            {% include 'product-item' %}
+
+          {%- else -%}
+            <div class="grid__item one-whole">
+              <p>{{ 'general.extras.no_item_available' | t }}</p>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {% if paginate.pages > 1 %}
+          {% include 'pagination' %}
+        {% endif %}
+      {% endpaginate %}
+    </section>
+  {%- unless is_full_layout -%}
+      </div>
+    </div>
+  {%- endunless -%}
+  </div>
+</div>
+
+<div class="collection-sidebar--full-layout" id="full-layout-filter-drawer">
+  {%- if is_full_layout -%}
+    {% section 'collection-sidebar' %}
+  {%- endif -%}
+  <a class="filter-drawer__close" href="javascript:;">
+    {% include 'icon-close' %}
+  </a>
+</div>

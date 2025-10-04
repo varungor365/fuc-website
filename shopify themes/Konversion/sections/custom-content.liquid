@@ -1,0 +1,263 @@
+{% unless section.settings.disable_padding %}
+<div class="section-content__wrapper">
+{% endunless %}
+<div class="{% if section.settings.disable_padding %}grid--full{% else %}grid{% endif %} {% if section.settings.inverted %} section-custom-content--alt{% endif %}">
+{% for block in section.blocks %}
+  <div class="grid__item one-whole large--{{ block.settings.column_width }} custom__item" {{ block.shopify_attributes }}>
+    {% case section.settings.display %}
+      {% when "mobile" %}
+        {%- assign visibility_classes = "hide small--show" -%}
+      {% when "desktop" %}
+        {%- assign visibility_classes = "small--hide" -%}
+    {% endcase %}
+    <div class="custom__item-content custom__item-content--{{ block.type }} {{ visibility_classes }}">
+      {% case block.type %}
+        {% when 'image' %}
+          {% if block.settings.image != blank %}
+            {% if block.settings.link != blank %}
+              <a href="{{ block.settings.link }}">
+            {% endif %}
+            {{ block.settings.image | img_url: '1400x1400', crop: 'middle' | img_tag }}
+            {% if block.settings.link != blank %}
+              </a>
+            {% endif %}
+          {% else %}
+            {% if section.blocks.size == 2 %}
+              {{ "blank-image-2.png" | asset_img_url: '770x' | img_tag }}
+            {% else %}
+              {{ "blank-image-1.png" | asset_img_url: '1400x1400', crop: 'middle' | img_tag }}
+            {% endif %}
+          {% endif %}
+        {% when 'text' %}
+          <div class="text-{{ block.settings.align_text }}">
+            {% if block.settings.title != blank %}
+              <h2 class="text-center section-heading">{{ block.settings.title | escape }}</h2>
+            {% endif %}
+            {% if block.settings.text != blank %}
+              <div class="custom__item-text">{{ block.settings.text }}</div>
+            {% endif %}
+            {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+              <a href="{{ block.settings.button_link }}" class="btn">
+                {{ block.settings.button_label }}
+              </a>
+            {% endif %}
+          </div>
+        {% when 'html' %}
+          {% if block.settings.code != blank %}
+            {{ block.settings.code }}
+          {% endif %}
+        {% when 'map_embed' %}
+          {% if block.settings.code != blank %}
+            {{ block.settings.code }}
+          {% endif %}
+      {% endcase %}
+    </div>
+  </div>
+{% else %}
+  <div class="grid__item one-whole empty-section">
+    {{ 'homepage.onboarding.no_content' | t }}
+  </div>
+{% endfor %}
+</div>
+{% unless section.settings.disable_padding %}
+</div>
+{% endunless %}
+
+{% schema %}
+  {
+    "name": "Custom content",
+    "class": "section-content",
+    "settings": [
+      {
+        "type": "select",
+        "id": "display",
+        "label": "Display",
+        "default": "all",
+        "options": [
+          {"value": "all", "label": "Desktop & Mobile"},
+          {"value": "mobile", "label": "Mobile only"},
+          {"value": "desktop", "label": "Desktop only"}
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "inverted",
+        "label": "Invert color",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "disable_padding",
+        "label": "Disable Column Padding",
+        "default": false
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "ABOUT US"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed venenatis ex. Maecenas scelerisque dictum tortor, ac venenatis lacus aliquet sit amet. Fusce molestie diam in tellus condimentum, sed sollicitudin arcu vehicula. Nulla quam neque, volutpat a metus ut, vulputate mollis justo. Nullam eu nisi nec ligula vestibulum euismod.</p>"
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button label"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+          },
+          {
+            "type": "select",
+            "id": "align_text",
+            "label": "Align",
+            "default": "left",
+            "options": [
+              {"value": "left", "label": "Left"},
+              {"value": "center", "label": "Centered"},
+              {"value": "right", "label": "Right"}
+            ]
+          },
+          {
+            "type": "select",
+            "id": "column_width",
+            "label": "Column width",
+            "options": [
+              {"value": "one-whole", "label": "100%", "group": "Full-width"},
+              {"value": "one-half", "label": "50%", "group": "Halves"},
+              {"value": "one-third", "label": "33.3%", "group": "Thirds"},
+              {"value": "two-thirds", "label": "66.6%", "group": "Thirds"},
+              {"value": "one-quarter", "label": "25%", "group": "Quarters"},
+              {"value": "two-quarters", "label": "50%", "group": "Quarters"},
+              {"value": "three-quarters", "label": "75%", "group": "Quarters"},
+              {"value": "one-fifth", "label": "20%", "group": "Fifths"},
+              {"value": "two-fifths", "label": "40%", "group": "Fifths"},
+              {"value": "three-fifths", "label": "60%", "group": "Fifths"},
+              {"value": "four-fifths", "label": "80%", "group": "Fifths"}
+            ],
+            "default": "one-whole"
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "Recommended size 1800x200 px"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "select",
+            "id": "column_width",
+            "label": "Column width",
+            "options": [
+              {"value": "one-whole", "label": "100%", "group": "Full-width"},
+              {"value": "one-half", "label": "50%", "group": "Halves"},
+              {"value": "one-third", "label": "33.3%", "group": "Thirds"},
+              {"value": "two-thirds", "label": "66.6%", "group": "Thirds"},
+              {"value": "one-quarter", "label": "25%", "group": "Quarters"},
+              {"value": "two-quarters", "label": "50%", "group": "Quarters"},
+              {"value": "three-quarters", "label": "75%", "group": "Quarters"},
+              {"value": "one-fifth", "label": "20%", "group": "Fifths"},
+              {"value": "two-fifths", "label": "40%", "group": "Fifths"},
+              {"value": "three-fifths", "label": "60%", "group": "Fifths"},
+              {"value": "four-fifths", "label": "80%", "group": "Fifths"}
+            ],
+            "default": "one-whole"
+          }
+        ]
+      },
+      {
+        "type": "html",
+        "name": "Raw HTML code",
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "code",
+            "label": "HTML"
+          },
+          {
+            "type": "select",
+            "id": "column_width",
+            "label": "Column width",
+            "options": [
+              {"value": "one-whole", "label": "100%", "group": "Full-width"},
+              {"value": "one-half", "label": "50%", "group": "Halves"},
+              {"value": "one-third", "label": "33.3%", "group": "Thirds"},
+              {"value": "two-thirds", "label": "66.6%", "group": "Thirds"},
+              {"value": "one-quarter", "label": "25%", "group": "Quarters"},
+              {"value": "two-quarters", "label": "50%", "group": "Quarters"},
+              {"value": "three-quarters", "label": "75%", "group": "Quarters"},
+              {"value": "one-fifth", "label": "20%", "group": "Fifths"},
+              {"value": "two-fifths", "label": "40%", "group": "Fifths"},
+              {"value": "three-fifths", "label": "60%", "group": "Fifths"},
+              {"value": "four-fifths", "label": "80%", "group": "Fifths"}
+            ],
+            "default": "one-whole"
+          }
+        ]
+      },
+      {
+        "type": "map_embed",
+        "name": "Embed a map",
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "code",
+            "label": "Embed code"
+          },
+          {
+            "type": "select",
+            "id": "column_width",
+            "label": "Column width",
+            "options": [
+              {"value": "one-whole", "label": "100%", "group": "Full-width"},
+              {"value": "one-half", "label": "50%", "group": "Halves"},
+              {"value": "one-third", "label": "33.3%", "group": "Thirds"},
+              {"value": "two-thirds", "label": "66.6%", "group": "Thirds"},
+              {"value": "one-quarter", "label": "25%", "group": "Quarters"},
+              {"value": "two-quarters", "label": "50%", "group": "Quarters"},
+              {"value": "three-quarters", "label": "75%", "group": "Quarters"},
+              {"value": "one-fifth", "label": "20%", "group": "Fifths"},
+              {"value": "two-fifths", "label": "40%", "group": "Fifths"},
+              {"value": "three-fifths", "label": "60%", "group": "Fifths"},
+              {"value": "four-fifths", "label": "80%", "group": "Fifths"}
+            ],
+            "default": "one-whole"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom content",
+        "category": "Content",
+        "blocks": [
+          {
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

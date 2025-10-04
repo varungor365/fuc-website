@@ -1,0 +1,25 @@
+{% if settings.display_three_block_text %}
+<section class="three-block-text text-center container">
+  <ul class="row">
+    {% for i in (1..3) %}
+    {% capture img_block %}img_block_{{ i }}.png{% endcapture %}
+    {% capture tilte_block %}tilte_block_{{ i }}{% endcapture %}
+    {% capture desc_block %}desc_block_{{ i }}{% endcapture %}
+    
+    {% assign repeat = forloop.index | minus: 1 %}
+    {% assign delayTime = settings.time_lazy_load | times : repeat %}
+    <li class="col-xs-12 col-sm-4 wow fadeInUp" data-wow-delay="{{ delayTime }}ms">
+      <div class="inner">
+        <img src="{{ img_block | asset_url }}" alt="" />
+        {% if settings[tilte_block] != blank %}
+        <h4>{% include 'multilang' with settings[tilte_block] %}</h4>
+        {% endif %}
+        {% if settings[desc_block] != blank %}
+        <p>{% include 'multilang' with settings[desc_block] %}</p>
+        {% endif %}
+      </div>
+	</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}

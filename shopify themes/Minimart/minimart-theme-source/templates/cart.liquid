@@ -1,0 +1,131 @@
+<header class="page-header">
+  <div class="container">
+    <h2 {% if settings.enable_multilang %}data-translate="cart.general.title"{% endif %}>
+      {{ 'cart.general.title' | t }}
+    </h2>
+    {% include 'breadcrumb' %}
+  </div>
+</header>
+
+<div class="container">
+  {% if cart.item_count > 0 %}
+  <form action="/cart" method="post" id="cartform">
+    <div class="wrapper-cart">
+      <div class="cart-header hidden-xs">
+        <div class="image">
+          <label {% if settings.enable_multilang %}data-translate="cart.label.product"{% endif %}>{{ 'cart.label.product' | t }}</label>
+        </div>
+        <div class="item col-sm-3"><label>&nbsp;</label></div>
+        <div class="price text-center">
+          <label {% if settings.enable_multilang %}data-translate="cart.label.price"{% endif %}>{{ 'cart.label.price' | t }}</label>
+        </div>
+        <div class="product-qty text-center">
+          <label {% if settings.enable_multilang %}data-translate="cart.label.quantity"{% endif %}>{{ 'cart.label.quantity' | t }}</label>
+        </div>
+        <div class="total-price text-center">
+          <label {% if settings.enable_multilang %}data-translate="cart.general.subtotal"{% endif %}>{{ 'cart.general.subtotal' | t }}</label>
+        </div>
+        <div class="remove text-center">
+          <label {% if settings.enable_multilang %}data-translate="cart.general.remove"{% endif %}>{{ 'cart.general.remove' | t }}</label>
+        </div>
+      </div>
+
+      <ul class="cart-list">
+      {% for item in cart.items %}
+        <li class="product-item" id="{{ item.id }}">
+          <div class="image">
+            <div class="product-image">
+              <a href="{{ item.url }}">
+                <img src="{{ item | img_url: 'compact' }}"  alt="{{ item.title | escape }}" />
+              </a>
+            </div>
+          </div>
+
+          <div class="product-detail">
+            <div class="item">
+              <a href="{{ item.url }}" class="product-title">                
+                {% include 'multilang' with item.product.title %}
+              </a>
+              <p class="size">  
+                {% if item.product.variants.size != 0 %}
+                {% unless item.variant.title contains 'Default' %}
+                  {{ item.variant.title }}
+                {% endunless %}
+                {% endif %}
+              </p>
+              <p class="vendor"><strong>{{ item.vendor }}</strong></p>
+            </div>
+
+            <div class="price text-center">{{ item.price | money }}</div>
+
+            <div class="product-qty text-center">
+              <input class="qty" type="text" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" data-id="{{ item.id }}">
+              <div class="extra">
+                <div class="inc button">+</div>
+                <div class="dec button">-</div>
+              </div>
+            </div>
+
+            <div class="total-price text-center">{{ item.line_price | money }}</div>
+
+            <div class="remove text-center">
+              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" data-id="{{ item.id }}" {% if settings.enable_multilang %}data-translate="cart.general.remove"{% endif %}>{{ 'cart.general.remove' | t }}</a>
+            </div>
+          </div>
+        </li>
+      {% endfor %}	
+      </ul>
+
+      <div class="cart-button">
+        <a href="/collections/all" class="continue btn" {% if settings.enable_multilang %}data-translate="cart.ajax_cart.continue_shopping"{%endif%}>
+          {{ 'cart.ajax_cart.continue_shopping' | t }}
+        </a>
+        <div class="right">
+          <input type="submit" id="update-cart" class="btn" name="update" {% if settings.enable_multilang %}data-translate="cart.general.update"{% endif %} value="{{ 'cart.general.update' | t }}" />
+          <a href="/cart/clear" class="clear btn" {% if settings.enable_multilang %}data-translate="cart.general.clear_buton"{% endif %}>
+            {{ 'cart.general.clear_buton' | t }}
+          </a>
+        </div>
+      </div>
+    </div>
+	
+    <div class="row cart-row">
+      <div class="additional-comments col-sm-4">
+        <h4>{{ 'cart.general.note' | t }}</h4>
+        <textarea id="note" name="note" rows="10" cols="50">{{ cart.note }}</textarea>
+      </div>
+      
+      <div class="col-sm-4">
+        {% unless cart.item_count == 0 %}
+        {% include 'shipping-rates-calculator' %}
+        {% endunless %}
+      </div>
+      
+      <div class="cart-summary col-sm-4">
+        <div class="total-price">
+          <h4 {% if settings.enable_multilang %}data-translate="cart.general.summary"{% endif %}>{{ 'cart.general.summary' | t }}</h4>
+          <div class="price">
+            <strong><label {% if settings.enable_multilang %}data-translate="cart.general.subtotal"{% endif %}>{{ 'cart.general.subtotal' | t }}</label>:</strong>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+        </div>
+        
+        <input type="submit" name="checkout" class="btn" {% if settings.enable_multilang %}data-translate="cart.general.button_checkout"{% endif %} value="{{ 'cart.general.button_checkout' | t }}">
+        
+        {% include 'payment_methods' %}
+        
+        {% if additional_checkout_buttons %}        
+          <div class="extra-checkout-buttons">
+          {{ content_for_additional_checkout_buttons }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </form>
+
+  {% else %}
+  
+  <p {% if settings.enable_multilang %}data-translate="cart.general.empty"{% endif %}>{{ 'cart.general.empty' | t }}</p>
+  {% endif %}
+</div>

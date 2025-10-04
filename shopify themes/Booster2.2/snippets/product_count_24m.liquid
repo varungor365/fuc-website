@@ -1,0 +1,106 @@
+{{ 'jquery.countdownTimer_2hours.js' | asset_url | script_tag }}
+
+<script>
+  function timer(){
+    
+    var time_minute={{ settings.enable_timer_stg_custom }}/60 ;
+
+    var time_hours = Math.floor( time_minute / 60);
+    var time_minutes = Math.floor(time_minute % 60);  
+
+    var hours = getCookie("hours") == 'NaN' || getCookie("hours") == 'undefined' ? 00 : getCookie("hours");
+    var min = getCookie("minutes") == 'NaN' || getCookie("hours") == 'undefined' ? 00 : getCookie("minutes");
+    var second = getCookie("seconds") == 'NaN' || getCookie("hours") == 'undefined' ? 00 : getCookie("seconds");
+    if(second == 0 && min == 0)
+    {
+      $(function(){
+        $('#hm_timer').countdowntimer({
+          hours : time_hours,
+          minutes :time_minutes,
+          seconds :00,
+          size : "lg"
+        });
+      });
+    }
+    else
+    {
+      $(function(){
+        $('#hm_timer').countdowntimer({
+          hours : hours,
+          minutes :min,
+          seconds :second,
+          size : "lg"
+        });
+      }); 
+    }
+  }
+  $(document).ready(function(e){
+    timer();
+  });
+  $(document).on('shopify:section:select', function(e) {
+    timer();
+  });
+  $(document).on('shopify:section:deselect', function(e){
+    timer();
+  });
+</script>
+
+<table id="timertwohour">
+  <tr>
+    <td><span id="hm_timer"></span></td>
+  </tr>
+  <tr>
+    <td>
+      <span class="tm_lbl text-left">{{ 'products.timer.hour' | t }}</span>
+      <span class="tm_sap">&nbsp;</span>
+      <span class="tm_lbl">{{ 'products.timer.minute' | t }}</span>
+      <span class="tm_sap">&nbsp;</span>
+      <span class="tm_lbl text-right">{{ 'products.timer.second' | t }}</span>
+    </td>
+  </tr>
+</table>
+
+<script>
+  function timer2(){
+  var time_minute={{ settings.enable_timer_stg_custom }}/60 ;
+
+  var time_hours = Math.floor( time_minute / 60);
+  var time_minutes = Math.floor(time_minute % 60);  
+  
+  var hours = getCookie("hours") == 'NaN' || getCookie("hours") == 'undefined' ? 00 : getCookie("hours");
+  var min = getCookie("minutes") == 'NaN' || getCookie("hours") == 'undefined' ? 00 : getCookie("minutes");
+  var second = getCookie("seconds") == 'NaN' || getCookie("hours") == 'undefined' ? 00 : getCookie("seconds");
+  if(second == 0 && min == 0)
+  {
+      $(function(){
+    $('#hm_timer1201').countdowntimer({
+      hours : time_hours,
+      minutes :time_minutes,
+      seconds :00,
+      size : "lg"
+    });
+  });
+  }
+  else
+  {
+     $(function(){
+    $('#hm_timer1201').countdowntimer({
+      hours : hours,
+      minutes :min,
+      seconds :second,
+      size : "lg"
+    });
+  }); 
+  }
+  }
+  $(document).ready(function(e){
+    timer2();
+  });
+  $(document).on('shopify:section:select', function(e) {
+    timer2();
+  });
+  $(document).on('shopify:section:deselect', function(e){
+    timer2();
+  });
+</script>
+

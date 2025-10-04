@@ -1,0 +1,16 @@
+{% assign socials_string = 'facebook, twitter, vimeo, instagram, google-plus' %}
+{% assign socials = socials_string | split: ', ' %}
+
+<ul class="social">	
+{% for text in socials %}
+  {% assign i = forloop.index %}
+  {% capture footer_social_link %}footer_social_link_{{ i }}{% endcapture %}
+
+  {% if settings[footer_social_link] %}
+    <li class="{{ text }}">
+      <a href="{{ settings[footer_social_link] }}" title="{{ text | replace: '-', ' ' | downcase | capitalize }}">
+      </a>
+    </li>
+  {% endif %}
+{% endfor %}
+</ul>

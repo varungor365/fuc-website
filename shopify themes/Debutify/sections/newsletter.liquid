@@ -1,0 +1,66 @@
+<div id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="newsletter-section">
+  <div class="box">
+    <div class="wrapper">
+      {% unless section.settings.title == blank and section.settings.subtitle == blank %}
+        <div class="section-header text-center">
+          <h2 class="section-header__title">{{ section.settings.title | escape }}</h2>
+          <p class="section-header__subtitle">{{ section.settings.subtitle | escape }}</p>
+        </div>
+      {% endunless %}
+      
+      <div class="grid">
+        <div class="grid__item large--eight-twelfths push--large--two-twelfths one-whole text-center">
+          {% include 'newsletter-form' %}
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Newsletter",
+    "class": "newsletter-section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Subscribe to our newsletter"
+      },
+	  {
+        "type": "text",
+        "id": "subtitle",
+        "label": "Subheading",
+		"default": "A short sentence describing what someone will receive by subscribing"
+      },
+	  {
+        "type": "select",
+        "id": "send_icon",
+        "label": "Send icon",
+		"default": "fa-envelope",
+        "options": [
+          {
+            "value": "fa-arrow-right",
+            "label": "Arrow"
+          },
+          {
+            "value": "fa-envelope",
+            "label": "Envelope"
+          }
+        ]
+      },
+	  {
+        "type": "paragraph",
+        "content": "Any customers who sign up will have an account created for them in Shopify. [View customers](/admin/customers?query=&accepts_marketing=1)"
+      }
+	],
+	"presets": [
+      {
+        "name":  "Newsletter",
+        "category":"Promotional"
+      }
+    ]
+  }
+{% endschema %}

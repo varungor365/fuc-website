@@ -1,0 +1,42 @@
+{% if settings.show_block_computer %}
+  {% if settings.computer_collection == blank %}
+  <p style="margin-bottom: 30px;" class="container">
+    Please select a collection in Theme Setting to display the products (Home Page section -> Home Page Computers & Laptops)
+  </p>
+  {% else %}
+  <section class="widget-computer-product widget-block container">
+    {% if settings.computer_title != blank %}
+    <div class="widget-title text-center wow fadeIn">
+      <div class="row">
+        <div class="col-xs-12 col-sm-4"></div>
+        <h3 class="col-xs-12 col-sm-4">{% include 'multilang' with settings.computer_title %}</h3>
+
+        <div class="col-xs-12 col-sm-4 text-right">
+          <a href="{{ settings.computer_link }}">{% include 'multilang' with settings.computer_text %}</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <div class="widget-product">
+      <div class="products-grid owl-carousel">
+        {% for product in collections[settings.computer_collection].products limit:settings.computer_limit_all %}
+          {% include 'product-grid-item-slider' %}
+        {% endfor %}
+      </div> 
+    </div>
+  </section>
+
+  <script>
+  jQuery(document).ready(function() {
+    jQuery(".widget-computer-product .products-grid").owlCarousel({
+      navigation : true,
+      items: {{ settings.computer_collection_results_per_row }},
+      itemsDesktopSmall: [991, 3],
+      itemsTablet: [768, 3],
+      itemsTabletSmall: [767, 2],
+      itemsMobile : [479, 2]
+    });
+  });
+  </script>
+  {% endif %}
+{% endif %}

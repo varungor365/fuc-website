@@ -1,0 +1,10 @@
+{% if section.settings.title != blank or section.settings.subtitle != blank %}
+<div class="section__heading">
+  {% if section.settings.subtitle != blank %}
+  <h4 class="section__heading-subtitle">{{ section.settings.subtitle | escape }}</h4>
+  {% endif %}
+  {% if section.settings.title != blank %}
+  <h2 class="section__heading-title">{{ section.settings.title | escape }}</h2>
+  {% endif %}
+</div>
+{% endif %}

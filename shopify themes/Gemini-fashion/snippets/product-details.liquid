@@ -1,0 +1,76 @@
+{% comment %}
+  Block code to use in Product details Tabs or Accordion.
+{% endcomment %}
+
+{%- case block.type -%}
+  {%- when 'description' -%}
+    <div class="rte">
+      {{ product.description }}
+    </div>
+
+  {%- when 'custom' -%}
+    <div class="rte">
+      {{ block.settings.description }}
+    </div>
+
+  {%- when 'additional_description' -%}
+    <div class="rte">
+      {{ block.settings.description }}
+    </div>
+
+  {%- when 'size_guide' -%}
+    <div class="rte">
+      {{ block.settings.description }}
+    </div>
+    {%- if block.settings.type == 'image' -%}
+      <div
+        class="size-guide-image"
+        >
+        {%- if block.settings.size_guide_image -%}
+          <a
+            class="js-size-guide-popup"
+            href="{{ block.settings.size_guide_image | img_url: '2048x' }}"
+            >
+            <img
+              class=""
+              src="{{ block.settings.size_guide_image | img_url: '2048x' }}"
+              alt="Size guide image">
+          </a>
+        {%- else -%}
+          {% comment %}
+            FIXME: change to other than no-blocks.liquid
+          {% endcomment %}
+          {% include 'no-blocks' %}
+        {%- endif -%}
+      </div>
+    {%- else -%}
+      {%- if block.settings.size_guide_url != blank -%}
+        <a
+          class="size-guide-link"
+          href="{{ block.settings.size_guide_url }}"
+          target="_blank"
+          >
+          {%- if block.settings.size_guide_url_text != blank -%}
+            {{ block.settings.size_guide_url_text }}
+          {%- else -%}
+            {{ block.settings.size_guide_url }}
+          {%- endif -%}
+        </a>
+      {%- else -%}
+        {% comment %}
+          FIXME: change to other than no-blocks.liquid
+        {% endcomment %}
+        {% include 'no-blocks' %}
+      {%- endif -%}
+    {%- endif -%}
+
+  {%- when 'review' -%}
+    <div
+      id="shopify-product-reviews"
+      data-id="{{product.id}}"
+      >
+      {{ product.metafields.spr.reviews }}
+    </div>
+
+{%- endcase -%}
+

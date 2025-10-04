@@ -1,0 +1,367 @@
+{%- layout none -%}
+{% comment %}
+  Assign some variable from configuration in theme customize
+{% endcomment %}
+
+{%- assign layout = settings.product_page_layout -%}
+{%- if layout == 'top_gallery' -%}
+  {%- assign is_full_layout = true -%}
+  {%- assign product_image_size = '2048x' -%}
+{%- else -%}
+  {%- assign is_full_layout = false -%}
+  {%- assign product_image_size = '1024x' -%}
+{%- endif -%}
+
+{%- assign gallery_type = 'single_slider' -%}
+
+{%- unless gallery_type == 'single_slider' or gallery_type == 'center_mode_slider' -%}
+  {%- assign is_single_slider = false -%}
+{%- else -%}
+  {%- assign is_single_slider = true -%}
+{%- endunless -%}
+
+{%- assign zoom_type = settings.product_page_zoom_type -%}
+
+{%- if settings.product_page_detail_info_position == 'inside_info_col' -%}
+  {%- assign detail_is_inside_col = true -%}
+{%- else -%}
+  {%- assign detail_is_inside_col = false -%}
+{%- endif -%}
+
+{%- if settings.product_page_detail_displaying_type == 'tab' -%}
+  {%- assign display_detail_as_tabs = true -%}
+{%- else -%}
+  {%- assign display_detail_as_tabs = false -%}
+{%- endif -%}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+{%- if current_variant.compare_at_price > current_variant.price -%}
+  {%- assign sale_percent = available_variant.compare_at_price | minus: available_variant.price | times: 100.0 | divided_by: available_variant.compare_at_price | round: 1 -%}
+{%- else -%}
+  {%- assign sale_percent = 0 -%}
+{%- endif -%}
+
+{%- if product.available -%}
+  {%- assign sold_out = false -%}
+{%- else -%}
+  {%- assign sold_out = true -%}
+{%- endif -%}
+
+{%- assign is_hot = false -%}
+{%- for tag in product.tags -%}
+  {%- assign tag_handle = tag | handleize -%}
+  {%- if tag_handle == 'hot' -%}
+    {%- assign is_hot = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign is_new = false -%}
+{%- for tag in product.tags -%}
+  {%- assign tag_handle = tag | handleize -%}
+  {%- if tag_handle == 'new' -%}
+    {%- assign is_new = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign is_saleoff = false -%}
+{%- for tag in product.tags -%}
+  {%- assign tag_handle = tag | handleize -%}
+  {%- if tag_handle == 'sale' -%}
+    {%- assign is_saleoff = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign featured_image = current_variant.featured_image | default: product.featured_image -%}
+
+{%- assign disable_availability = settings.product_availability_disable -%}
+{%- assign disable_type = settings.product_type_disable -%}
+{%- assign disable_vendor = settings.product_vendor_disable -%}
+{%- assign disable_sku = settings.product_sku_disable -%}
+
+{% comment %}
+  Default of Slate.
+  [dev] Not so sure about these meta tags.
+    Maybe for accessibility and/or for SEO.
+    Need to research more about meta tag.
+{% endcomment %}
+<meta itemprop="name" content="{{ product.title }}{% unless current_variant.title == 'Default Title' %} - {{ current_variant.title }}{% endunless %}">
+<meta itemprop="url" content="{{ shop.url }}{{ current_variant.url }}">
+<meta itemprop="brand" content="{{ product.vendor }}">
+<meta itemprop="image" content="{{ featured_image | img_url: '600x600' }}">
+<meta itemprop="description" content="{{ product.description | strip_html | escape }}">
+
+{% comment %}
+  ---------------------------
+  - Main markup start here. -
+  ---------------------------
+{% endcomment %}
+<div class="product-page__content js-product-quick-view-container" data-enable-history-state="true" itemscope itemtype="http://schema.org/Product">
+  {%- unless is_full_layout -%}
+    <div class="page-width">
+      <div class="grid">
+        <div class="grid__item large-up--one-half one-whole {% if layout == 'right_side_gallery' %}large-up--push-one-half{% endif %}">
+          <section class="product-gallery-wrapper">
+            {% include 'product-gallery' %}
+          </section>
+        </div>
+
+        <div class="grid__item large-up--one-half one-whole {% if layout == 'right_side_gallery' %}large-up--pull-one-half{% endif %}">
+  {%- endunless -%}
+
+          {%- if is_full_layout -%}
+            <section class="product-gallery-wrapper product-gallery-wrapper--full">
+              {%- if gallery_type != 'center_mode_slider' -%}
+                <div class="page-width">
+                  <div class="grid">
+                    {%- if gallery_type == 'single_slider' or gallery_type == 'syncing_slider_bottom' -%}
+                      <div class="grid__item one-whole large-up--one-half large-up--push-one-quarter">
+                    {%- else -%}
+                      <div class="grid__item one-whole large-up--two-thirds large-up--push-one-sixth">
+                    {%- endif -%}
+              {%- endif -%}
+                {% include 'product-gallery' %}
+              {%- if gallery_type != 'center_mode_slider' -%}
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+            </section>
+          {%- endif -%}
+
+          <section class="product-info-wrapper {% if is_full_layout %}product-info-wrapper--full{% endif %}">
+            {%- if is_full_layout -%}
+              <div class="page-width">
+                <div class="grid">
+                  <div class="grid__item one-whole large-up--two-thirds large-up--push-one-sixth">
+            {%- endif -%}
+            <h1 class="product-info__title">{{ product.title }}</h1>
+            {% comment %}
+              <p>{{ product.vendor }}</p>
+            {% endcomment %}
+
+            <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+              <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+              <meta itemprop="price" content="{{ current_variant.price | divided_by: 100.00 }}">
+              <link itemprop="availability" href="http://schema.org/{% if current_variant.available %}InStock{% else %}OutOfStock{% endif %}">
+
+              {%- include 'reviews-badge' -%}
+
+              <div class="product-info__price js-price-wrapper">
+                <span class="product-info__price--current js-current-price">
+                  {{ current_variant.price | money }}
+                </span>
+
+                {% if product.compare_at_price_max > product.price %}
+                  <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+                  <s class="js-compare-price">
+                    {% if sale_percent != 0 %}
+                      {{ current_variant.compare_at_price | money }}
+                    {% endif %}
+                  </s>
+                {% endif %}
+              </div>
+
+              {% unless disable_availability and disable_type and disable_vendor and disable_sku %}
+                <div class="product-basic-info">
+                  {%- unless disable_availability -%}
+                    <p class="product-basic-info__item">
+                      <span class="label">
+                        {{- 'products.product.availability' | t -}}:
+                      </span>
+                      <span class="content js-availability"></span>
+                    </p>
+                  {%- endunless -%}
+                  {%- unless disable_type -%}
+                    <p class="product-basic-info__item">
+                      <span class="label">
+                        {{- 'products.product.type' | t -}}:
+                      </span>
+                      <a href="{{ product.type | url_for_type }}" class="content">
+                        {{- product.type -}}
+                      </a>
+                    </p>
+                  {%- endunless -%}
+                  {%- unless disable_vendor -%}
+                    <p class="product-basic-info__item">
+                      <span class="label">
+                        {{- 'products.product.vendor' | t -}}:
+                      </span>
+                      <a href="{{ product.vendor | url_for_vendor }}" class="content">
+                        {{- product.vendor -}}
+                      </a>
+                    </p>
+                  {%- endunless -%}
+                  {%- unless disable_sku -%}
+                    <p class="product-basic-info__item">
+                      <span class="label">
+                        {{- 'products.product.sku' | t -}}:
+                      </span>
+                      <span class="content js-sku">
+                        {%- if product.selected_variant -%}
+                          {{- product.selected_variant.sku -}}
+                        {%- endif -%}
+                      </span>
+                    </p>
+                  {%- endunless -%}
+                </div>
+              {% endunless %}
+
+              <div class="product-form-wrapper">
+                {% comment %}
+                  [dev] Change to AJAX.
+                {% endcomment %}
+                <form action="/cart/add" method="post" enctype="multipart/form-data">
+                  {% unless product.variants.size == 1 and product.options.size == 1 and product.options.first == 'Title' and product.variants.first.title == 'Default Title' %}
+                    {% for option in product.options_with_values %}
+                      <div class="selector-wrapper">
+                        <label
+                          {% if option.name == 'default' %}class="label-hidden"{% endif %}
+                          for="SingleOptionSelector-{{ forloop.index0 }}">
+                            {{ option.name }}
+                        </label>
+
+                        <select
+                          id="SingleOptionSelector-{{ forloop.index0 }}"
+                          data-single-option-selector
+                          data-index="option{{ option.position }}">
+                          {% for value in option.values %}
+                            <option
+                              value="{{ value | escape }}"
+                              {% if option.selected_value == value %}selected="selected"{% endif %}>
+                                {{ value }}
+                            </option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    {% endfor %}
+                  {% endunless %}
+
+                  <select name="id" class="no-js" data-product-select>
+                    {% for variant in product.variants %}
+                      <option
+                        {% if variant == current_variant %}selected="selected"{% endif %}
+                        {% unless variant.available %}disabled="disabled"{% endunless %}
+                        value="{{ variant.id }}">
+                          {{ variant.title }}
+                      </option>
+                    {% endfor %}
+                  </select>
+
+                  {% if product.variants.size >= 1 %}
+                    {% for option in product.options %}
+                      {% assign option_handle = option | downcase %}
+                      {% unless option_handle contains 'title' %}
+                        {% include 'gemini-swatch' with option %}
+                      {% endunless %}
+                    {% endfor %}
+                  {% endif %}
+
+                  <div class="product-action-wrapper js-action-wrapper">
+                    <div class="stock out-of-stock js-out-of-stock">
+                      <span class="stock__label">
+                        {{- 'products.product.out_of_stock' | t -}}
+                      </span>
+                    </div>
+                    <div class="stock unavailable js-unavailable">
+                      <span class="stock__label">
+                        {{- 'products.product.unavailable' | t -}}
+                      </span>
+                    </div>
+                    <div class="stock available js-available">
+                      <div class="input-group input-quantity clearfix">
+                        <label class="visually-hidden" for="Quantity">{{ 'products.product.quantity' | t }}</label>
+                        <button type="button" class="btn btn--lg quantity-button quantity-button--minus minus">
+                          <i class="fa fa-minus"></i>
+                        </button>
+                        <input type="number" class="input-quantity__value no-spinner js-input-quantity" id="Quantity" name="quantity" value="1" min="1">
+                        <button type="button" class="btn btn--lg quantity-button quantity-button--plus plus">
+                          <i class="fa fa-plus"></i>
+                        </button>
+                      </div>
+
+                      <button
+                        type="submit"
+                        name="add"
+                        class="btn btn--lg btn--add-to-cart js-gemini-add-to-cart"
+                        data-add-to-cart>
+                          <span class="add" data-add-to-cart-text>
+                            {{ 'products.product.add_to_cart' | t }}
+                          </span>
+                          <span class="adding">
+                            <i class="fa fa-spinner adding"></i>
+                          </span>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+            </div>
+            {%- if is_full_layout -%}
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          </section>
+
+          {%- unless is_full_layout -%}
+            {%- if settings.product_page_show_share_buttons -%}
+              {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
+            {%- endif -%}
+          {%- endunless -%}
+        {%- unless is_full_layout -%}
+        </div>
+        {%- endunless -%}
+
+        {%- if is_full_layout -%}
+          {% if settings.product_page_show_share_buttons %}
+            <div class="page-width social-sharing-wrapper--full">
+              {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
+            </div>
+          {% endif %}
+        {%- endif -%}
+
+  {%- unless is_full_layout -%}
+      </div>
+    </div>
+  {%- endunless -%}
+
+  {% unless product.empty? %}
+    <script type="application/json" data-product-json>
+      {{ product | json }}
+    </script>
+    <script>
+      /**
+       * From 2017-12-05, inventory_policy and inventory_quantity are
+       * deprecated and can't be retrieved by json filter above but still can
+       * be accessed via liquid object (with stores created after 2017-12-05).
+       *
+       * To keep all functions which require those 2 properties work, those
+       * values should be retrieved from liquid and pass to js.
+       *
+       * @see https://ecommerce.shopify.com/c/api-announcements/t/deprecated-notice-inventory_quantity-and-inventory_policy-fields-in-json-liquid-filter-483506
+       */
+      var infoStore = {
+        policy: 'deny',
+        quantity: 0
+      };
+
+      window.gemini = window.gemini || {};
+      gemini.invInfo = [];
+
+      {% for _variant in product.variants %}
+        infoStore.policy = '{{ _variant.inventory_policy }}' || 'deny';
+        infoStore.quantity = {{ _variant.inventory_quantity }} || 0;
+        gemini.invInfo.push(infoStore);
+      {% endfor %}
+    </script>
+  {% endunless %}
+</div>
+<script>
+$(document).ready(function() {
+  new theme.Product('.js-product-quick-view-container');
+})
+</script>

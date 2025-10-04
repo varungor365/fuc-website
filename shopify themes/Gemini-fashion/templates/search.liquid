@@ -1,0 +1,87 @@
+{%- assign mobile_2_cols_enable = settings.two_cols_layout_enable -%}
+
+{% comment %}
+base_product_item_wrapper - Used to set classes for product item on small devices.
+extra_product_item_wrapper - Used to set classes for product item on bigger devices.
+Used in snippets/product-item.liquid
+{% endcomment %}
+{%- assign base_product_item_wrapper = 'grid__item medium--one-third large-up--one-quarter' -%}
+{%- if mobile_2_cols_enable -%}
+  {%- assign base_product_item_wrapper = base_product_item_wrapper | append: ' small--one-half' -%}
+{%- endif -%}
+
+
+<div class="page__header" {% if settings.page_header_image %}style="background-image: url({{ settings.page_header_image | img_url: 'master' }});"{% endif %}>
+  <div class="page-width">
+    <header>
+      <h2 class="page__title">{{ 'general.search.title_html' | t: terms: search.terms }}</h2>
+      {% include 'breadcrumbs' %}
+    </header>
+  </div>
+</div>
+
+<div class="page-width">
+  {%- paginate search.results by 10 -%}
+
+    <h3 class="has-line">
+      {%- if search.performed -%}
+        {%- if search.results_count == 0 -%}
+          {{ 'general.search.no_results_html' | t: terms: search.terms }}
+        {%- else -%}
+          {{ 'general.search.results_for_html' | t: terms: search.terms }}
+        {%- endif -%}
+      {%- else -%}
+        {{ 'general.search.title' | t }}
+      {%- endif -%}
+    </h3>
+
+    {%- if search.performed == false or search.results_count == 0 -%}
+    <form class="form form-search" action="/search" method="get" role="search">
+      <div class="grid">
+        <div class="grid__item medium-up--one-half">
+          <div class="input-group">
+            <label for="Search" class="label-hidden">
+              {{ 'general.search.placeholder' | t }}
+            </label>
+            <input type="search"
+                   name="q"
+                   id="Search"
+                   class="search__input"
+                   value="{{ search.terms | escape }}"
+                   placeholder="{{ 'general.search.placeholder' | t }}">
+            <button type="submit" class="btn search__submit">
+              {% include 'icon-search' %}
+              <span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    {%- endif -%}
+
+    {%- if search.performed -%}
+      <div class="grid grid--normal grid--uniform">
+        {%- for item in search.results -%}
+          {%- if item.object_type == 'product' -%}
+            {%- assign image_size = '600x600' -%}
+            {%- assign product = item -%}
+            {% include 'product-item' %}
+          {%- else -%}
+            {%- assign article = item -%}
+            {%- assign image_size = '570x407' -%}
+            {%- assign flag_no_tags = true -%}
+            <div class="grid__item medium--one-half large-up--one-quarter one-whole">
+              {% include 'blog-item' %}
+            </div>
+          {%- endif -%}
+
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        {% include 'pagination' %}
+      {%- endif -%}
+    {%- endif -%}
+
+  {%- endpaginate -%}
+</div>

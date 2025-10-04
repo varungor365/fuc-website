@@ -1,0 +1,18 @@
+{% if settings.display_six_block_banner %}
+<section class="six-banner container">
+  <ul class="row">
+    {% for i in (1..6) %}
+    {% capture banner_six %}banner_six_{{ i }}.jpg{% endcapture %}
+    {% capture banner_six_link %}banner_six_link_{{ i }}{% endcapture %}
+    
+    {% assign repeat = forloop.index | minus: 1 %}
+    {% assign delayTime = settings.time_lazy_load | times : repeat %}
+    <li class="col-xs-6 col-md-4 text-center wow fadeInUp" data-wow-delay="{{ delayTime }}ms">
+      <a href="{{ settings[banner_six_link] }}">
+        <img src="{{ banner_six | asset_url }}" alt="" />
+      </a>
+	</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}

@@ -1,0 +1,76 @@
+{% if settings.blog_post_per_page != blank %}
+  {% assign blog_post_per_page = settings.blog_post_per_page %}
+{% else %}
+  {% assign blog_post_per_page = 3 %}
+{% endif %}
+
+{% paginate blog.articles by blog_post_per_page %}
+
+<div class="page-header">
+  <div class="container">
+    {% if current_tags %}    
+      <h2><a href="{{ blog.url }}">{% include 'multilang' with blog.title %}</a> &raquo; {{ current_tags.first }}</h2>
+    {% else %}    
+      <h2>{% include 'multilang' with blog.title %}</h2>
+    {% endif %}
+    
+    {% include 'breadcrumb' %}
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    {% if settings.display_sidebar_blog_page %}
+    {% include 'blog_sidebar' %}
+    {% endif %}
+
+    <div class="col-xs-12 {% if settings.display_sidebar_blog_page %}col-sm-9 {% endif %}col-main">
+      <div class="content-blog">
+
+        <ul class="list-blog">
+          {% for article in blog.articles %}
+          <li>
+            <h3><a href="{{ article.url }}">{% include 'multilang' with article.title %}</a></h3>
+
+            <p class="blog_author">
+              {% if blog.comments_enabled? %}
+              <a href="{{ article.url }}#comments" {% if settings.enable_multilang %}data-translate="blogs.comments.comments_with_count|count:{{article.comments_count}}"{%endif%}>
+                {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+              </a><span class="separator">/</span>
+              {% endif %}
+
+              {% capture date %}<time datetime='{{ article.published_at | date: '%Y-%m-%d' }}'>{{ article.published_at | date: '%b %d, %Y' }}</time>{% endcapture %}
+              {% capture author %}{{ article.author }}{% endcapture %}
+              <span class="blog_author" {% if settings.enable_multilang %}data-translate="blogs.article.author_on_date_html|date:{{date}},author:{{author}}" translate-item="blog-date-author"{%endif%}>
+                {{ 'blogs.article.author_on_date_html' | t: date: date, author: author }}        
+              </span>
+            </p> 
+
+            {% if settings.enable_multilang %}
+            <div class="des lang1">{{ article.content | split:"[lang2]" | first | split:"|" |first}}</div>
+            <div class="des lang2">{{ article.content | split:"[lang2]" | last | split:"|" |last }}</div>
+            {% else %}
+            <div class="des">{{ article.content | split:"[lang2]" | first | split:"|" |first}}</div>
+            {% endif %}
+
+            <p class="button">
+              <a href="{{ article.url }}" class="btn" {% if settings.enable_multilang %}data-translate="blogs.article.read_more"{% endif %}>{{ 'blogs.article.read_more' | t }}</a>
+            </p>
+
+            <ul class="user-tags">
+              {% include 'tags-article' %}
+            </ul>
+          </li>
+
+          {% endfor %}
+        </ul>
+
+        {% if paginate.pages > 1 %}
+          {% include 'pagination' %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endpaginate %}

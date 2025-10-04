@@ -1,0 +1,16 @@
+.spr-badge {
+  color: $color-review-stars;
+  .spr-badge-caption {
+    color: $color-review-count;
+  }
+}
+.loox-rating {
+  color: $color-review-stars;
+  min-height: 25px;
+  span {
+    color: $color-review-count;
+  }
+}
+.yotpo.bottomLine {
+  min-height: 20px;
+}

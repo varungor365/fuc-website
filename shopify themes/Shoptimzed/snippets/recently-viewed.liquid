@@ -1,0 +1,69 @@
+{% if settings.show_recent_products %}
+{{ 'jquery.tmpl.min.js' | asset_url | script_tag }}
+{{ 'jquery.products.min.js' | asset_url | script_tag }}
+<div id="recently-viewed-container" class="recently--viewed-products">
+  <div class="wrapper">
+    <h2 class="title">{{settings.recent_products_heading}}</h2>
+  	<div class="owl-carousel" id="recently-viewed-products"></div>
+  </div>
+</div>
+{% raw %}
+<script id="recently-viewed-product-template" type="text/x-jquery-tmpl">
+<div class="grid__item large--one-quarter medium--one-half">
+  <div class="grid__product-image text-center">
+  	<a href="${url}" class="grid__image">
+      <img alt="${title}" src="${Shopify.Products.resizeImage(featured_image, "large")}" class="main-image img-responsive" />
+  	</a>
+  </div>
+  <div class="grid__product-content text-center">
+  	<div class="price-section">
+      {{if compare_at_price > price}}
+      	<strike class="on_price">${compare_at_price}</strike>
+        <span class="price on_price">${price}</span>
+      {{else}}
+      	<span class="price on_price no-compare-price">${price}</span>
+      {{/if}}
+    </div>
+    <p class="h5">
+      <a href="${url}">${title}</a>
+    </p>
+  </div>
+</div>
+</script>
+{% endraw %}
+<script type="text/javascript">
+  Shopify.Products.showRecentlyViewed({
+    howManyToShow: {{settings.recent_products_number_of}},
+    onComplete: function() {
+      jQuery('#recently-viewed-products .on_price').each(function(){
+        var t = jQuery(this);
+        var p = t.text();
+        t.html(Shopify.formatMoney(p, window.money_format));
+      });
+      if ($('#recently-viewed-products').length) {
+        $("#recently-viewed-products").owlCarousel({
+          autoPlay: 8000,  
+          slideSpeed: 500,
+          stopOnHover: true,
+          nav:true,
+          responsive: {
+            0: {
+              items: 1
+            },
+            480: {
+              items: 2
+            },
+            768: {
+              items: 4
+            }
+          }
+        });
+      } else {
+        $('#recently-viewed-container').remove();
+  		$('.recently--viewed-hr').remove(); 
+      }
+    }
+  });
+  Shopify.Products.recordRecentlyViewed();
+</script>
+{% endif %}

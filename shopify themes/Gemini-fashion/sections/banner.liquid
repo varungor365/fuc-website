@@ -1,0 +1,191 @@
+<div class="banner" data-section-id="{{ section.id }}" data-section-type="banner">
+  {% if section.settings.use_container %} <div class="page-width"> {% endif %}
+  <div class="grid">
+    {% for block in section.blocks %}
+      {%- case block.settings.width -%}
+      {% when '1' %}
+        {% assign banner_width = 'medium-up--one-quarter' %}
+        {% if section.settings.use_container %}
+           {% assign image_size = '540x' %}
+        {% else %}
+           {% assign image_size = 'master' %}
+        {% endif %}
+      {% when '2' %}
+        {% assign banner_width = 'medium-up--one-third' %}
+        {% if section.settings.use_container %}
+          {% assign image_size = '740x' %}
+        {% else %}
+          {% assign image_size = 'master' %}
+        {% endif %}
+      {% when '3' %}
+        {% assign banner_width = 'medium-up--one-half' %}
+        {% if section.settings.use_container %}
+          {% assign image_size = '1110x' %}
+        {% else %}
+          {% assign image_size = 'master' %}
+        {% endif %}
+      {% when '4' %}
+        {%- assign banner_width = 'medium-up--two-thirds' -%}
+        {% if section.settings.use_container %}
+          {%- assign image_size = '1540x' -%}
+        {% else %}
+          {% assign image_size = 'master' %}
+        {% endif %}
+      {% when '5' %}
+        {% assign banner_width = '' %}
+        {% if section.settings.use_container %}
+          {% assign image_size = '2048x' %}
+        {% else %}
+          {% assign image_size = 'master' %}
+        {% endif %}
+      {%- endcase -%}
+      <div class="grid__item {{ banner_width }} one-whole">
+        <div class="banner__item {% if block.settings.link %}banner-hover{% endif %}">
+          {%- if block.settings.link -%}
+          <a href="{{ block.settings.link }}">
+          {%- endif -%}
+            <figure>
+              {%- if block.settings.image != blank -%}
+                <img src="{{ block.settings.image | img_url: image_size, format: 'pjpg' | split:'?' | first }}" alt="{{ block.settings.image.alt }}" width="{{ image_size | split: 'x'| first }}" height="{{ image_size | split: 'x'| last }}" />
+              {%- else -%}
+                {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+                {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+              {%- if block.settings.title != blank or block.settings.sub_title != blank -%}
+              <figcaption>
+                <div class="banner__item__inner">
+                  <h2>{{ block.settings.title }}</h2>
+                  <p>{{ block.settings.sub_title }}</p>
+                </div>
+              </figcaption>
+              {%- endif -%}
+            </figure>
+          {%- if block.settings.link -%}
+          </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% if section.settings.use_container %} </div> {% endif %}
+</div>
+
+{% include 'section-spacing' %}
+
+{% schema %}
+  {
+    "name": "Banner",
+    "class": "gemini-banner",
+    "max_blocks": 10,
+    "presets": [
+      {
+        "name": "Banner",
+        "category": "Image",
+        "blocks" : [
+          {
+            "type": "banner"
+          },
+          {
+            "type": "banner"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "header",
+        "content": "Design options"
+      },
+      {
+        "type": "paragraph",
+        "content": "To horizontally center a element use margin: auto;"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_container",
+        "label": "Use container",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margin (top right bottom left)",
+        "info": "60px auto 60px auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Padding (top right bottom left)",
+        "info": "60px 0 60px 0"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "banner",
+        "name": "Banner",
+        "settings": [
+          {
+            "type": "select",
+            "id": "width",
+            "label": "width: ",
+            "default": "3",
+            "options": [
+                {
+                  "value": "1",
+                  "label": "25%"
+                },
+                {
+                  "value": "2",
+                  "label": "33.33333333%"
+                },
+                {
+                  "value": "3",
+                  "label": "50%"
+                },
+                {
+                  "value": "4",
+                  "label": "66.66666667%"
+                },
+                {
+                  "value": "5",
+                  "label": "100%"
+                }
+              ]
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Title 1"
+          },
+          {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub Title"
+          },
+          {
+            "type":"url",
+            "id":"link",
+            "label":"Link",
+            "info": "Optional"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

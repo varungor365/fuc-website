@@ -1,0 +1,32 @@
+<ul class="shopping-cart-items">
+  {%- if cart.item_count > 0 -%}
+    {%- for item in cart.items limit:20 -%}
+    <li class="clearfix">
+      <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="mini-cart__remove js-remove-item-cart" data-variant-id="{{ item.id }}" title="{{ 'cart.general.remove' | t }}">
+        {% include 'icon-close' %}
+      </a>
+      <a href="{{ item.url | within: collections.all }}">
+        <img width="80" height="102" src="{{ item | img_url: '80x' | split:'?' | first }}" class="attachment-shop_thumbnail size-shop_thumbnail" alt="{{ item.title | escape }}">
+      </a>
+      <span class="item-name">{{ item.product.title }}</span>
+
+      {%- unless item.variant.title contains 'Default' -%}
+      <dl class="cart__item__variant">
+        {%- for option in item.product.options -%}
+          <dt class="variant-label">{{ option }}:</dt>
+          <dd class="variant-value">{{ item.variant.options[forloop.index0] }}</dd>
+        {%- endfor -%}
+      </dl>
+      {%- endunless -%}
+
+      <span class="item-price">{{ item.price | money }}</span>
+      <span class="item-quantity">x {{ item.quantity }}</span>
+    </li>
+    {%- endfor -%}
+  {%- else -%}
+  <li class="empty">
+    <span class="empty-icon">{% include 'icon-cart-outline' %}</span>
+    {{ 'cart.general.empty' | t }}
+  </li>
+  {%- endif -%}
+</ul>

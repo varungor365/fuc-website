@@ -1,0 +1,165 @@
+<style>
+  {%- if settings.logo != blank -%}
+    .site-header__logo-image {
+      max-width: {{ settings.logo_max_width }}px;
+    }
+  {%- endif -%}
+</style>
+
+<div class="announcement-bar announcement-bar--{{ section.settings.layout }} {% if section.settings.sticky_enabled %} announcement-bar--header-fixed {% endif %}">
+{%- if section.settings.announcement_enabled -%}
+  {% include 'announcement' %}
+{%- endif -%}
+</div>
+
+<div class="header {{ section.settings.layout }} {% if section.settings.sticky_enabled %} header--fixed {% endif %} {% if section.settings.announcement_enabled %} header--announcement {% endif %}">
+
+  {% assign header_layout = section.settings.layout %}
+  {% include header_layout %}
+
+  {% include 'search-form' %}
+  {% if section.settings.search_autocomplete %}{% include 'search-autocomplete' %}{% endif %}
+
+</div>
+
+{% include 'mobile-nav' %}
+{%- if settings.minicart == 'slide' -%}
+  <div class="mini-cart-drawer" id="mini-cart-drawer">
+    {% include 'minicart-slide' %}
+  </div>
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type":      "select",
+        "id":        "layout",
+        "label":     "Header Layout",
+        "options": [
+          { "value": "header01", "label": "Header 1" },
+          { "value": "header02", "label": "Header 2" },
+          { "value": "header03", "label": "Header 3" },
+          { "value": "header04", "label": "Header 4" },
+          { "value": "header05", "label": "Header 5" }
+        ],
+        "default":   "header01",
+        "info":      "Select header type"
+      },
+      {
+        "type": "checkbox",
+        "id": "sticky_enabled",
+        "label": "Enable sticky header",
+        "info": "If you enable this option, the header will fixed on top of page when user scroll page."
+      },
+      {
+        "type": "header",
+        "content": "Main Menu"
+      },
+      {
+        "type": "paragraph",
+        "content": "Label support: new, sale, hot"
+      },
+      {
+        "type": "link_list",
+        "id": "main_linklist",
+        "label": "Menu",
+        "default": "main-menu",
+        "info": "[Click to see how to create a drop-down menu](https:\/\/help.shopify.com\/manual\/sell-online\/online-store\/menus-and-links#create-a-drop-down-menu)"
+      },
+      {
+        "type": "header",
+        "content": "Mega Menu"
+      },
+      {
+        "type": "image_picker",
+        "id": "mega_image",
+        "label": "Mega image",
+        "info": "250px wide .png recommended"
+      },
+      {
+        "type": "url",
+        "id": "mega_link",
+        "label": "Mega Image Link"
+      },
+      {
+        "type": "header",
+        "content": "Top bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "announcement_enabled",
+        "label": "Show top bar",
+        "info": "If you enable this option, announcement bar will uppear on the top of website.",
+        "default": true
+      },
+      {
+        "type": "textarea",
+        "id": "announcement_text",
+        "label": "Announcement Text",
+        "default": "Your announcement text",
+        "info": "45 characters or less recommended"
+      },
+      {
+        "type": "url",
+        "id": "message_link",
+        "label": "Link to URL (optional)"
+      },
+      {
+        "type": "checkbox",
+        "id": "open_new_window",
+        "label": "Open link on new window",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social",
+        "label": "Show social media icons",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_currency",
+        "label": "Show currency",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_account",
+        "label": "Show account (top bar)",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Search"
+      },
+      {
+        "type": "checkbox",
+        "id": "search_autocomplete",
+        "label": "Enable autocomplete search",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Extra elements"
+      },
+      {
+        "type": "checkbox",
+        "id": "wishlist",
+        "label": "Wish list",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "account",
+        "label": "Account",
+        "default": false
+      }
+    ]
+  }
+{% endschema %}

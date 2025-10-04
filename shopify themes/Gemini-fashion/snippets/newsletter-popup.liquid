@@ -1,0 +1,95 @@
+{%- if settings.newsletter_poupup_show and template == 'index' or template != 'index' and settings.newsletter_poupup_only_homepage == false -%}
+
+<div id="js-newsletter-popup" data-pause="{{ settings.newsletter_poupup_delay_first }}" class="mfp-with-anim mfp-hide newsletter-popup">
+  {%- if settings.newsletter_poupup_image != blank -%}
+  <div class="newsletter-popup__banner">
+    <img  src="{{ settings.newsletter_poupup_image | img_url: 'master' }}"
+     srcset="{{ settings.newsletter_poupup_image | img_url: 'master' }} 1x, {{ settings.newsletter_poupup_image | img_url: 'master', scale: 2 }} 2x"
+     alt="{{ settings.newsletter_poupup_image.alt | default: shop.name }}" />
+  </div>
+  {%- endif -%}
+  <div class="newsletter-popup__content">
+    <div class="newsletter-popup__header">
+      <h3 class="newsletter-popup__heading">{{ 'newsletter_poupup.title' | t }}</h3>
+    </div>
+    <div class="newsletter-popup__body">
+      {%- if settings.newsletter_poupup_description != blank -%}
+      <div class="newsletter-popup__description">
+        {{ settings.newsletter_poupup_description }}
+      </div>
+      {%- endif -%}
+
+      {% if settings.mailchimp_url != "" %}
+      <form role="form" action="{{ settings.mailchimp_url }}" method="post" target="_blank" class="js-newsletter-form">
+        <fieldset>
+          <input type="text" placeholder="{{ 'newsletter_poupup.email_placeholder' | t }}" name="EMAIL" value="{% if customer %}{{ customer.email }}{% endif %}" class="newsletter-popup__input js-newsletter-input">
+          <div class="newsletter-popup__response js-newsletter-response"></div>
+          <button type="submit" class="newsletter-popup__submit">{{ 'newsletter_poupup.button' | t }}</button>
+          <a class="newsletter-popup__link_close" href="javascript:;">{{ 'newsletter_poupup.close' | t }}</a>
+        </fieldset>
+       </form>
+       {% else %}
+        <strong><u>Add newsletter redirect link in General / MailChimp action URL</u></strong>
+        {% endif %}
+    </div>
+
+    <div class="newsletter-popup__hide">
+      {% if settings.newsletter_poupup_show_social %}
+        <div class="newsletter-popup__social">
+          <span>{{ 'newsletter_poupup.follow' | t }}</span>
+          {% include 'social-connect' %}
+        </div>
+      {% endif %}
+
+      <div class="newsletter-popup__checkbox checkbox-faker">
+        <label for="js-newsletter-popup-hide">
+          <input type="checkbox" id="js-newsletter-popup-hide" />
+          <i class="fa fa-square-o"></i>
+          <span>&nbsp;{{ 'newsletter_poupup.question' | t }}</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    if (Cookies.get('newsleterPopup') != "disable") {
+      var pause = $('#js-newsletter-popup').attr('data-pause');
+      setTimeout(function() {
+        $.magnificPopup.open({
+          removalDelay: 500,
+          midClick: true,
+          items: {
+            src: '#js-newsletter-popup',
+            type: 'inline'
+          },
+          callbacks: {
+            beforeOpen: function() {
+              this.st.mainClass = 'moveup-effect';
+            }
+          },
+        });
+
+        var date = new Date();
+        var minutes = {{ settings.newsletter_poupup_delay }};
+        date.setTime(date.getTime() + (minutes * 60 * 1000));
+        Cookies.set('newsleterPopup', 'disable', {expires:date, path:'/'});
+      }, pause);
+    }
+
+    $(document).on('click', '.newsletter-popup__link_close', function (e) {
+      e.preventDefault();
+      $.magnificPopup.close();
+    });
+
+    $('#js-newsletter-popup-hide').change(function(){
+      if ($(this).is(':checked')) {
+        Cookies.set('newsleterPopup', "disable", {expires:7, path:'/'});
+      } else {
+        Cookies.set('newsleterPopup', null, { path: '/' });
+      }
+    });
+  });
+</script>
+{%- endif -%}

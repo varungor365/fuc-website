@@ -1,0 +1,48 @@
+<div class="page__header" {% if settings.page_header_image %}style="background-image: url({{ settings.page_header_image | img_url: 'master' }});"{% endif %}>
+  <div class="page-width">
+    <header>
+      <h2 class="page__title">{{ page.title }}</h2>
+      {% include 'breadcrumbs' %}
+    </header>
+  </div>
+</div>
+
+<div class="page-width">
+  <div class="rte">
+    {{ page.content }}
+  </div>
+
+  <ul class="wishlist-product" id="wishlist-product">
+    <li class="first">
+      <div class="product-img">&nbsp;</div>
+      <div class="product-name">{{ 'wishlist.label.product' | t }}</div>
+      <div class="product-price">{{ 'wishlist.label.price' | t }}</div>
+      <div class="product-status">{{ 'wishlist.label.stock_status' | t }}</div>
+      <div class="product-add">{{ 'wishlist.label.add_to_cart' | t }}</div>
+      <div class="product-remove">{{ 'wishlist.label.remove' | t }}</div>
+    </li>
+  </ul>
+</div>
+
+<script>
+$(function() {
+  var ids = JSON.parse(Cookies.get('wishlist') || null);
+
+  try {
+    if(ids) {
+      for (var i = 0; i < ids.length; i++) {
+        if (ids[i] != '') {
+          Shopify.getProduct(ids[i], function(product) {
+            gemini.wishlist.renderWishlistProduct(product);
+          });
+        }
+      }
+    } else {
+      // do something
+    }
+
+    jQuery('.currency .active').trigger('click');
+  } catch (err) {} // ignore errors reading cookies
+
+})
+</script>

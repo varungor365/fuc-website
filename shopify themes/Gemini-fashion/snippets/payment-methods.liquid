@@ -1,0 +1,20 @@
+<div class="payment">
+  {% if block.settings.title and block.settings.title != ''  %}
+  <h3 class="payment__title">{{ block.settings.title }}</h3>
+  {% endif %}
+
+  {% unless shop.enabled_payment_types == empty %}
+    {%- assign payment_icons_available = 'amazon_payments,american_express,apple_pay,bitcoin,cirrus,dankort,diners_club,discover,dogecoin,dwolla,forbrugsforeningen,interac,jcb,litecoin,maestro,master,paypal,visa' | split: ',' -%}
+
+    <ul class="payment__icons">
+      {% for type in shop.enabled_payment_types %}
+        {% if payment_icons_available contains type %}
+          <li>
+            {%- assign icon_name = type | prepend: 'icon-' -%}
+            {% include icon_name %}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endunless %}
+</div>

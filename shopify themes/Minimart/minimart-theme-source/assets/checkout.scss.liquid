@@ -1,0 +1,20 @@
+@import url('//fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,400italic,500,500italic,700italic,700');
+@import url('//fonts.googleapis.com/css?family=Montserrat:400,700');
+
+/*  Typography -------------------------- */
+html,
+body { font: {{ settings.general_font }}; color: {{ settings.body_text_color }}; }
+
+h1 { font: {{ settings.h1_font }}; color: {{ settings.body_text_2_color }}; }
+h2 { font: {{ settings.h2_font }}; color: {{ settings.body_text_2_color }}; }
+h3 { font: {{ settings.h3_font }}; color: {{ settings.body_text_2_color }}; }
+h4 { font: {{ settings.h4_font }}; color: {{ settings.body_text_2_color }}; }
+h5 { font: {{ settings.h5_font }}; color: {{ settings.body_text_2_color }}; }
+h6 { font: {{ settings.h6_font }}; color: {{ settings.body_text_2_color }}; }
+
+a, a:hover { color: {{ settings.body_text_color }}; }
+
+input,
+textarea,
+select { border: 1px {{ settings.body_line_style }} {{ settings.body_line_color}}; }
+label { color: {{ settings.body_text_2_color }}; }

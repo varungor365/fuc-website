@@ -1,0 +1,168 @@
+{%- assign limit = section.settings.desktop_grid | times: section.settings.rows -%}
+
+{% paginate collections[section.settings.home_featured_products].products by limit %}
+  <div id="section-{{ section.id }}" class="{% if section.settings.background_section %}bg-section {% endif %}"  data-section-id="{{ section.id }}" data-section-type="product-grid-section">
+      <div class="box">
+        <div class="wrapper">
+
+          {% unless section.settings.title == blank and section.settings.subtitle == blank %}
+            <div class="section-header">
+              <h2 class="section-header__title">{{ section.settings.title | escape }}</h2>
+              <p class="section-header__subtitle">{{ section.settings.subtitle | escape }}</p>
+            </div>
+          {% endunless %}
+
+          <div class="grid grid-uniform grid--spacer">
+            {% include 'product-width' %}
+            
+            {% if section.settings.home_featured_products == blank or collections[section.settings.home_featured_products] == empty or collections[section.settings.home_featured_products].products_count == 0 %}
+              {% unless emptyState %}
+                {% assign emptyState = true %}
+              {% endunless %}
+            
+              {% for i in (1..limit) %}
+                {% include 'product-grid-item' %}
+              {% endfor %}
+            {% else %}
+              {% for product in collections[section.settings.home_featured_products].products %}
+                {% include 'product-grid-item' %}
+              {% endfor %}
+            {% endif %}
+
+            {% if section.settings.show_view_all %}
+              <div class="grid__item one-whole text-center">
+                <a href="{{ collections[section.settings.home_featured_products].url }}" class="btn {{ section.settings.button_style }} view-all-link">
+                  {{ 'collections.general.view_all' | t }}
+                </a>
+              </div>
+            {% endif %}
+          </div>
+
+        </div>
+    </div>
+  </div>
+{% endpaginate %}
+
+{% schema %}
+  {
+    "name": "Featured collection",
+	"class": "featured-products-section",
+    "settings": [
+	  {
+        "type": "checkbox",
+        "id": "background_section",
+        "label": "Add background"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Featured products"
+      },
+	  {
+        "type": "text",
+        "id": "subtitle",
+        "label": "Subheading"
+      },
+      {
+        "type": "collection",
+        "id": "home_featured_products",
+        "label": "Collection"
+      },
+	  {
+		"type": "header",
+		"content": "Grid"
+	  },
+	  {
+        "type": "select",
+        "id": "rows",
+        "label": "Number of rows",
+        "default": "1",
+        "options": [
+		  {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          }
+        ]
+      },
+	  {
+		"type": "select",
+		"id": "desktop_grid",
+		"label": "Products per row (desktop)",
+        "default": "3",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          }
+        ]
+	  },
+	  {
+	  	"type": "select",
+		"id": "mobile_grid",
+		"label": "Product per row (mobile)",
+		"default": "1",
+		"options":[
+		  {
+			"value": "1",
+			"label": "1"
+		  },
+		  {
+			"value":"2",
+			"label": "2"
+		  }
+		]
+	  },
+	  {
+		"type": "header",
+		"content": "Footer"
+	  },
+	  {
+        "type": "checkbox",
+        "id": "show_view_all",
+        "label": "Show 'View all' button",
+        "default": true
+      },
+	  {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "default": "btn-outline-primary",
+        "options": [
+          {
+            "value": "",
+			"label": "Default"
+          },
+          {
+            "value": "btn--primary",
+            "label": "Full"
+          },
+		  {
+			"value": "btn-outline-primary",
+            "label": "Outline"
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "Featured collection",
+      "category": "Collection"
+    }]
+  }
+{% endschema %}

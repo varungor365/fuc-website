@@ -1,0 +1,92 @@
+{% if section.settings.show_announcement %}
+
+  {% if section.settings.home_page_only == false or template.name == 'index' %}
+    <div id="AnnouncementSection" class="text-center {% if section.settings.hide_mobile %}small--hide {% endif %}" data-section-id="{{ section.id }}" data-section-type="announcement-section">
+      
+      {% if section.settings.link != blank and section.settings.button_text == blank %}
+        <a class="announcement-bar banner" href="{{ section.settings.link }}">
+          <span class="announcement-text">{{ section.settings.text | escape }}</span>
+        </a>
+      {% else %}
+        <div class="announcement-bar banner">
+          <span class="announcement-text">{{ section.settings.text | escape }}</span>
+          
+          {% unless section.settings.button_text == blank %}
+            <a href="{{ section.settings.link }}" class="btn btn-{{ section.settings.button_style }}-announcement btn--small small--full">{{ section.settings.button_text | escape }}
+              <span class="fas fa-arrow-right" aria-hidden="true"></span>
+            </a>
+          {% endunless %} 
+        </div>
+      {% endif %}  
+      
+	</div>
+  {% endif %}
+
+
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Announcement",
+    "class": "announcement-section",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_announcement",
+        "label": "Show announcement",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "home_page_only",
+        "label": "Home page only",
+        "default": false
+      },
+	  {
+        "type": "checkbox",
+        "id": "hide_mobile",
+        "label": "Hide on mobile",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "text",
+        "label": "Text",
+        "default": "Announce something here"
+      },
+	  {
+        "type": "url",
+        "id": "link",
+        "label": "Link"
+      },
+	  {
+        "type": "text",
+        "id": "button_text",
+        "label": "Button label"
+      },
+      {
+		"type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "default": "outline",
+        "options": [
+          {
+            "label": "Full",
+            "value": ""
+          },
+          {
+            "label": "Outline",
+            "value": "outline"
+          }
+		]
+	  }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

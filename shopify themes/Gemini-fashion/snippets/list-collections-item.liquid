@@ -1,0 +1,73 @@
+{% comment %}
+  This snippet is used to showcase each collection during the loop,
+{% endcomment %}
+
+{% comment %}
+  Set default variables.
+{% endcomment %}
+{%- assign collection_handle = collection.handle -%}
+{%- assign grid_item_width = 'grid__item medium--one-half' -%}
+{%- assign collection_img_size = '1024x1024' -%}
+
+{% comment %}
+  Set class on large screen devices based on settings
+{% endcomment %}
+{%- case col_num -%}
+  {%- when 2 -%}
+    {%- assign grid_item_width = grid_item_width | append: ' large-up--one-half' -%}
+  {%- when 3 -%}
+    {%- assign grid_item_width = grid_item_width | append: ' large-up--one-third' -%}
+  {%- when 4 -%}
+    {%- assign grid_item_width = grid_item_width | append: ' large-up--one-quarter' -%}
+    {%- assign collection_img_size = '600x600' -%}
+  {%- when 5 -%}
+    {%- assign grid_item_width = grid_item_width | append: ' large-up--one-fifth' -%}
+    {%- assign collection_img_size = '480x480' -%}
+  {%- when 6 -%}
+    {%- assign grid_item_width = grid_item_width | append: ' large-up--one-sixth' -%}
+    {%- assign collection_img_size = '480x480' -%}
+{%- endcase -%}
+
+{% comment %}
+  Set collection image
+{% endcomment %}
+{%- if collection.image -%}
+  {%- assign collection_image = collection.image -%}
+{%- elsif collection.products.first.featured_image -%}
+  {%- assign collection_image = collection.products.first.featured_image -%}
+{%- else -%}
+  {%- assign collection_image = blank -%}
+{%- endif -%}
+
+{% comment %}
+  ---------------
+  - Main markup -
+  ---------------
+{% endcomment %}
+<div class="{{ grid_item_width }}">
+  <div class="list-collections-item">
+    <a
+      class="rec-fill"
+      href="{{ collection.url }}"
+      >
+      <div
+        class="list-collections-item__image"
+        {% if collection_image != blank %}
+          style="background-image: url({{ collection_image | img_url: collection_img_size }})"
+        {% endif %}
+        >
+        {%- if collection_image == blank -%}
+          {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+      <div class="list-collections-item__content">
+        <h3 class="list-collections-item__title">
+          {{ collection.title }}
+        </h3>
+        <span class="list-collections-item__products-count">
+          {{ 'collections.general.collection_products_count' | t: product_count: collection.all_products_count }}
+        </span>
+      </div>
+    </a>
+  </div>
+</div>

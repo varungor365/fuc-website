@@ -1,0 +1,185 @@
+<div id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="hero-section">
+  {% if section.blocks.size > 0 %}
+    {% include 'hero' %}
+  {% endif %}
+</div>
+
+{% schema %}
+  {
+    "name": "Slideshow",
+	"class": "hero-section",
+	"max_blocks": 4,
+    "settings": [
+	  {
+        "type": "select",
+        "id": "section_height",
+        "label": "Section height",
+        "default": "xlarge",
+        "options": [
+          {
+            "label": "Extra Small",
+            "value": "xsmall"
+          },
+		  {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+		  {
+            "label": "Extra Large",
+            "value": "xlarge"
+          }
+        ]
+      },
+	  {
+		"type": "header",
+		"content": "Slider options"
+	  },
+	  {
+        "type": "checkbox",
+        "id": "hero_auto",
+        "label": "Auto rotate",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "hero_dots",
+        "label": "Show dots",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "hero_arrows",
+        "label": "Show arrows",
+        "default": false
+      },
+	  {
+        "type": "select",
+        "id": "hero_auto_speed",
+        "label": "Slide changes every",
+        "options": [
+          {
+            "value": "5000",
+            "label": "5 seconds"
+          },
+          {
+            "value": "7000",
+            "label": "7 seconds"
+          },
+          {
+            "value": "10000",
+            "label": "10 seconds"
+          }
+        ]
+      }
+    ],
+	"blocks" : [
+      {
+        "type": "slide",
+        "name": "Slide",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "select",
+            "id": "alignment",
+            "label": "Image alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "top",
+                "label": "Top"
+              },
+              {
+                "value": "center",
+                "label": "Middle"
+              },
+              {
+                "value": "bottom",
+                "label": "Bottom"
+              }
+            ]
+          },
+		  {
+            "type": "checkbox",
+            "id": "overlay",
+            "label": "Show overlay",
+            "default": true
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Image with text overlay"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Use overlay text to give your customers insight into your brand. Select imagery and text that relates to your style and story.</p>"
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "text-center",
+            "options": [
+              {
+                "value": "",
+                "label": "Left"
+              },
+              {
+                "value": "text-center",
+                "label": "Center"
+              },
+              {
+                "value": "text-right",
+                "label": "Right"
+              }
+            ]
+          },	
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button label"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+          },
+          {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button style",
+            "default": "btn--primary",
+            "options": [
+              {
+                "value": "",
+                "label": "Default"
+              },
+              {
+                "value": "btn--primary",
+                "label": "Full"
+              },
+              {
+                "value": "btn-outline-primary",
+                "label": "Outline"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

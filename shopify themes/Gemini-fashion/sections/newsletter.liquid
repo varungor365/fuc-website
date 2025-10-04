@@ -1,0 +1,63 @@
+<div data-section-id="{{ section.id }}" data-section-type="imagetextoverlay" style="background-color: {{ section.settings.background }}">
+  <div class="page-width">
+    {% include 'section-heading' %}
+    {% include 'newsletter' %}
+  </div>
+</div>
+
+{% include 'section-spacing' %}
+
+{% schema %}
+  {
+    "name": "Newsletter",
+    "class": "gemini-newsletter",
+    "presets": [
+      {
+        "name": "Newsletter",
+        "category": "Newsletter"
+      }
+    ],
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Join our newsletter"
+      },
+      {
+        "type": "text",
+        "id": "subtitle",
+        "label": "SubHeading",
+        "default": "Subtitle"
+      },
+      {
+        "type": "text",
+        "id": "btn_label",
+        "label": "Button label",
+        "default": "Subscribe"
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margin (top right bottom left)",
+        "info": "60px auto 60px auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Padding (top right bottom left)",
+        "info": "60px 0 60px 0"
+      }
+    ]
+  }
+{% endschema %}

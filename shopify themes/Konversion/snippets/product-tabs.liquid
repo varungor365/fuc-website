@@ -1,0 +1,134 @@
+{% assign product_match = product.handle | prepend: "product/" %}
+{% assign reviews_tab_default_position = true %}
+{% assign description_tab_default_position = true %}
+
+{% for link in linklists["product-tabs"].links %}
+  {% if link.title == "global" or link.title contains "global/" or link.title == product_match %}
+    {% assign tab_link = link.url | replace: '#', '' | downcase %}
+    {% if tab_link == "reviews" %}
+      {% assign reviews_tab_default_position = false %}
+    {% endif %}
+    {% if tab_link == "description" %}
+      {% assign description_tab_default_position = false %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+<div id="tab-container" class="medium-down--hide tab-container">
+  <ul class='etabs'>
+    {% if description_tab_default_position %}
+    <li class='tab'><a href="#tab-description">{{ "products.product.tabs.description" | t }}</a></li>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      {% for block in section.blocks %}
+        {% assign custom_tabs_content = blank %}
+        {% if block.type == 'tab' %}
+          {% assign blog = blogs[block.settings.blog] %}
+
+          {% include "product-tabs-content", tab_content: blank %}
+
+          {% if tab_content != blank %}
+            <li class='tab' {{ block.shopify_attributes }}>
+              <a href="#tab-{{ block.id }}">
+                {% if block.settings.title != blank %}
+                  {{ block.settings.title }}
+                {% else %}
+                  {{ blog.title }}
+                {% endif %}
+              </a>
+            </li>
+            {% comment %}
+              Collect tabs content for later here
+              so that we can avoid another loop
+            {% endcomment %}
+            {% capture this_tab_content %}
+              <div id="tab-{{ block.id }}">
+                <div class="tab__page-content rte">
+                  {{tab_content}}
+                </div>
+              </div>
+            {% endcapture %}
+            {%- assign custom_tabs_content = custom_tabs_content | append: this_tab_content -%}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% if section.settings.product_reviews and reviews_tab_default_position%}
+      <li class='tab'><a href="#tab-reviews" class="reviews-tab" >{{ "products.product.tabs.reviews" | t }}</a></li>
+    {% endif %}
+
+    {% if linklists["product-tabs"].links.size > 0 %}
+      {% for link in linklists["product-tabs"].links %}
+        {%- assign tab_content = blank -%}
+        {% include "product-tab-content", tab_content: tab_content %}
+
+
+        {% if tab_link == "description"  %}
+          <li class='tab'><a href="#tab-description">{{ "products.product.tabs.description" | t }}</a></li>
+        {% endif %}
+
+        {% if tab_link == "reviews" and section.settings.product_reviews %}
+          <li class='tab'><a href="#tab-reviews" class="reviews-tab">{{ "products.product.tabs.reviews" | t }}</a></li>
+        {% endif %}
+
+        {% if tab_content != blank %}
+          <li class='tab'>
+            <a href="#tab-{{ link.object.id }}-{{ forloop.index }}">
+              {% assign title_slice = link.object.title  | split: '||' %}
+              {{ title_slice[0] | strip }}
+            </a>
+          </li>
+          {% comment %}
+            Collect tabs content for later here
+            so that we can avoid another loop
+          {% endcomment %}
+          {% capture this_tab_content %}
+            <div id="tab-{{ link.object.id }}-{{ forloop.index }}">
+              <div class="tab__page-content rte">
+                {{tab_content}}
+              </div>
+            </div>
+          {% endcapture %}
+          {%- assign custom_tabs_content = custom_tabs_content | append: this_tab_content -%}
+        {% endif %}
+
+      {% endfor %}
+      {% if linklists["product-tabs"].links contains "Reviews" %}
+        Contains Reviews
+      {% endif %}
+    {% endif %}
+  </ul>
+  <div id="tab-description">
+    <div class="product-description rte">
+      {{ product_description }}
+    </div>
+  </div>
+  {% if custom_tabs_content != blank %}
+    {{ custom_tabs_content }}
+  {% endif %}
+
+  {% if section.settings.product_reviews %}
+  <div id="tab-reviews">
+    {% if settings.app_product_reviews_enabled != blank %}
+      {% if settings.app_product_reviews_enabled == "product_reviews" %}
+        <div id="shopify-product-reviews" class="js-delete--mobile" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+      {% elsif settings.app_product_reviews_enabled == "loox_reviews" %}
+        <div id="looxReviews" class="js-delete--mobile" data-product-id="{{product.id}}">{{ product.metafields.loox.reviews }}</div>
+      {% elsif settings.app_product_reviews_enabled == "yotpo_reviews" %}
+        <div class="yotpo yotpo-main-widget js-delete--mobile"
+             data-product-id="{{ product.id }}"
+             data-name="{{ product.title | escape }}"
+             data-url="{{ shop.url }}{{ product.url }}"
+             data-image-url="{{ product.featured_image | product_img_url: "large" |replace: '?', '%3F' | replace: '&','%26'}}"
+             data-description="{{ product_description | escape }}">
+        </div>
+      {% endif %}
+    {% else %}
+      <br>
+      <h3 class="text-meta text-center">Product Reviews app integration required</h3>
+      <p class="text-meta text-center">Please enable integration in General Settings > Apps</p>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>

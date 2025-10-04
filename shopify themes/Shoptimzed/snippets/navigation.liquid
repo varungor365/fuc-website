@@ -1,0 +1,185 @@
+{% for link in linklists[settings.header_linklist_1].links %}
+  {% assign child_list_handle = link.title | handleize %}
+  {% if linklists[child_list_handle].links != blank %}
+    <li class="site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %}" aria-haspopup="true">
+      <a href="{{ link.url }}" class="site-nav__link">
+        {{ link.title }}
+        <span class="icon icon-arrow-down" aria-hidden="true"></span>
+      </a>
+      <ul class="site-nav__dropdown">
+        {% for childlink in linklists[child_list_handle].links %}
+          <li{% if childlink.active %} class="site-nav--active"{% endif %}>
+            <a href="{{ childlink.url }}" class="site-nav__link">{{ childlink.title | escape }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% else %}
+    <li {% if link.active %}class="site-nav--active"{% endif %}>
+      <a href="{{ link.url }}" class="site-nav__link">{{ link.title }}</a>
+    </li>
+  {% endif %}
+{% endfor %}
+
+{% if settings.megamenu_custom_link_enable %}
+  {% assign customLinkHTML = "" %}
+  {% for i in (1..5) %}
+    {% assign custom_link_heading = 'megamenu_custom_link_' | append:i | append:"_text"  %}
+    {% assign custom_link_collection = 'megamenu_custom_link_' | append:i | append:"_collection"  %}
+    {% if settings[custom_link_heading] != "" %}
+      {% if settings[custom_link_collection] != "" %}
+        {% capture customLinkHTML %}
+		{{ customLinkHTML }}
+		<div class="section-wrapper-custom-links">
+          <p><a href="{{ settings[custom_link_collection] }}">{{ settings[custom_link_heading] }}<span class="separator"> » </span></a></p>
+        </div>
+		{% endcapture %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if settings.enable_megamenu %}
+  {% for i in (1..5) %}
+    {% assign enable = 'megamenu_' | append:i  | append:"_enable" %}
+	{% if settings[enable] %}
+      {% assign text = 'megamenu_' | append:i  | append:"_text" %}
+      {% assign default_collection = 'megamenu_' | append:i  | append:"_default_collection" %}
+	  {% assign enable_icon = 'megamenu_' | append:i  | append:"_icon_enable" %}
+      {% assign totalEnable = 0 %}
+	  {% assign totalEnableValidate = 0 %}
+ 	  {% for j in (1..9) %}
+		{% assign submenu_heading = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:"_heading"  %}
+        {% assign submenu_menu = 'megamenu_' | append:i | append:"_submenu_" | append:j %}
+		{% if settings[submenu_menu] != "" %}
+			{% assign totalEnableValidate = totalEnableValidate | plus: 1 %}	
+		{% endif %}
+	  {% endfor %}	
+	
+	{% assign megamenuwidthclass = 'widthfull' %}
+	 {% assign menuwrapperwidthclass = 'wraperwidthfull' %}
+	 {% assign menuprodlimit = 0 %}
+	 {% if totalEnableValidate == 1 %}
+		{% assign menuprodlimit = 3 %}
+	 {% elsif totalEnableValidate == 2 %}
+		{% assign menuprodlimit = 2 %}
+  {% elsif totalEnableValidate == 3 %}
+		{% assign menuprodlimit = 1 %}
+	{% elsif totalEnableValidate == 5 %}
+		{% assign menuprodlimit = 3 %}
+	 {% elsif totalEnableValidate == 6 %}
+		{% assign menuprodlimit = 2 %}
+ {% elsif totalEnableValidate == 7 %}
+		{% assign menuprodlimit = 1 %}
+{% else %}
+{% assign menuprodlimit = 0 %}
+	{% endif %}
+
+	
+      <li class="site-nav--has-dropdown megamenu--links" aria-haspopup="true">
+        <a href="{% if default_collection != '' and settings.megamenu_default_link %}/collections/{{ collections[settings[default_collection]].handle }}{% else %}javascript:void(0);{% endif %}" class="megamenu-nav site-nav__link">
+          {{ settings[text] }}
+         
+        </a>
+         <span class="icon icon-arrow-down" aria-hidden="true" id="arrow-for-{{ i }}"></span>
+        <ul class="site-nav__dropdown" id="menu-for-{{ i }}">
+          <li class="megamenu--sub-menus">
+            <div class="megamenu--submenus {% if settings[enable_icon] %}icons-enable{% endif %} {% if settings[default_collection] == "" %}megamenu--product-disabled{% endif %} {{megamenuwidthclass}}" >
+              {% for j in (1..9) %}
+                {% assign submenu_heading = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:"_heading"  %}
+                {% assign submenu_link = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:""  %}  
+                {% assign submenu_menu = 'megamenu_' | append:i | append:"_submenu_" | append:j %}
+                {% if settings[submenu_menu] != "" %}
+              	 
+              	  {% assign totalEnable = totalEnable | plus: 1 %}
+                  <div class="section-wrapper">
+                     {% if settings[submenu_heading] != "" %}
+                       <p class="section-title">
+                          {% if settings[enable_icon] %}
+                            {% capture icon_c %}megamenu_{{ i }}_submenu_{{ j }}_icon.png{% endcapture %}
+                            <img src="{{ icon_c | asset_url }}" alt="{{ shop.name }}" class="no-border ratina-img" />
+                          {% endif %}
+                          <a href='/collections/{{ settings[submenu_link] }}'> {{ settings[submenu_heading] }}</a>
+                       </p>
+                     {% endif %}
+                     <div class="single-list">
+                       {% for link in linklists[settings[submenu_menu]].links %}
+                         <p><a href="{{ link.url }}">{{ link.title }}</a></p>      
+                       {% endfor %}
+                     </div>
+                  </div>
+                  
+                {% endif %}
+              {% endfor %}
+        
+            {% if settings[default_collection] != "" %}
+                {% for product in collections[settings[default_collection]].products limit:menuprodlimit %}
+              
+              <div class="  section-wrapper {{megamenuwidthclass}}">
+                  <div class="megamenu-product {{menuwrapperwidthclass}}">
+                    <a href="{{ product.url }}" class="text-center">                                    
+                      <img class="megamenu--product-img" alt="Image of {{ product.title }}" src="{{ product.featured_image | product_img_url: 'medium' }}" />
+                      {% if settings.display_product_price %}
+                        <div class="grid__product-content text-center">
+                          <span class="price {{ price_class }}">
+                            {% unless product.available %}
+                              {{ 'products.product.unavailable' | t }}
+                            {% else %}
+                              {{ product.price | money }}
+                            {% endunless %}
+                          </span>
+                          <p class="h5">
+                            {{ product.title }}
+                          </p>
+                      	</div>
+                      {% endif %}
+                    </a>
+                  </div>
+              </div>
+                {% endfor %}
+            {% endif %}
+                  </div>
+          </li>
+          {% if customLinkHTML %}
+          <li class="megamenu--custom-links">
+            {{ customLinkHTML }}
+          </li>
+          {% endif %}
+         
+          {% if totalEnable == 0 %}
+            <script type="text/javascript">
+              $(document).ready(function(){
+                $('#menu-for-{{ i }}').remove();
+                $('#arrow-for-{{ i }}').remove();
+              });
+            </script>
+          {% endif %}
+        </ul>
+      </li>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% for link in linklists[settings.header_linklist_2].links %}
+  {% assign child_list_handle = link.title | handleize %}
+  {% if linklists[child_list_handle].links != blank %}
+    <li class="site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %}" aria-haspopup="true">
+      <a href="{{ link.url }}" class="megamenu-nav site-nav__link">
+        {{ link.title }}
+       
+      </a>
+       <span class="icon icon-arrow-down" aria-hidden="true"></span>
+      <ul class="site-nav__dropdown">
+        {% for childlink in linklists[child_list_handle].links %}
+          <li{% if childlink.active %} class="site-nav--active"{% endif %}>
+            <a href="{{ childlink.url }}" class="site-nav__link">{{ childlink.title | escape }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% else %}
+    <li {% if link.active %}class="site-nav--active"{% endif %}>
+      <a href="{{ link.url }}" class="site-nav__link">{{ link.title }}</a>
+    </li>
+  {% endif %}
+{% endfor %}

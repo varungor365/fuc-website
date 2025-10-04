@@ -1,0 +1,90 @@
+<div
+  class="page__header"
+  {% if settings.page_header_image %}
+    style="background-image: url({{ settings.page_header_image | img_url: 'master' }});"
+  {% endif %}
+  >
+  <div class="page-width">
+    <header>
+      <h2 class="page__title">{{ page.title }}</h2>
+      {% include 'breadcrumbs' %}
+    </header>
+  </div>
+</div>
+
+<div class="page-width">
+  <div class="grid">
+    <div class="grid__item medium-up--five-twelfths">
+      {%- if page.content != blank -%}
+        <h3 class="has-line">{{ 'contact.information.title' | t }}</h3>
+        <div class="rte rte--has-mb3x">
+          {{ page.content }}
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="grid__item medium-up--one-half {% if page.content != blank %}medium-up--push-one-twelfth{% endif %}">
+      {% section 'contact-map' %}
+    </div>
+    <div class="grid__item medium-up--one-half">
+      <h3 class="has-line">{{ 'contact.form.title' | t }}</h3>
+      <div class="form contact-form">
+        {% form 'contact' %}
+
+          {% if form.posted_successfully? %}
+            <p class="form-success">
+              {{ 'contact.form.post_success' | t }}
+            </p>
+          {% endif %}
+
+          {{ form.errors | default_errors }}
+
+          <div class="grid">
+            <div class="grid__item medium-up--one-third">
+              <label for="ContactFormName">{{ 'contact.form.name' | t }}</label>
+              <input type="text"
+                name="contact[name]"
+                id="ContactFormName"
+                placeholder="{{ 'contact.form.name' | t }}"
+                value="{% if form[name] %}{{ form[name] }}{% elsif customer %}{{ customer.name }}{% endif %}">
+            </div>
+
+            <div class="grid__item medium-up--one-third">
+              <label for="ContactFormEmail">{{ 'contact.form.email' | t }}</label>
+              <input type="email"
+                name="contact[email]"
+                id="ContactFormEmail"
+                placeholder="{{ 'contact.form.email' | t }}"
+                value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                spellcheck="false"
+                autocomplete="off"
+                autocapitalize="off">
+            </div>
+
+            <div class="grid__item medium-up--one-third">
+              <label for="ContactFormPhone">{{ 'contact.form.phone' | t }}</label>
+              <input type="tel"
+                name="contact[phone]"
+                id="ContactFormPhone"
+                placeholder="{{ 'contact.form.phone' | t }}"
+                value="{% if form[phone] %}{{ form[phone] }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+                pattern="[0-9\-]*">
+            </div>
+          </div>
+
+          <label for="ContactFormMessage">{{ 'contact.form.message' | t }}</label>
+          <textarea rows="10"
+            name="contact[body]"
+            id="ContactFormMessage"
+            placeholder="{{ 'contact.form.message' | t }}"
+            >
+            {% if form.body %} {{ form.body }} {% endif %}
+          </textarea>
+
+          <input type="submit" class="btn" value="{{ 'contact.form.send' | t }}">
+
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>
+

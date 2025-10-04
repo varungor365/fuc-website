@@ -1,0 +1,325 @@
+{% comment %}
+  Set the extension of your color files below. Use 'png', 'jpeg', 'jpg' or 'gif'.
+{% endcomment %}
+
+{%- assign file_extension = settings.color_swatch_image_extension | default: 'png' -%}
+
+{%- assign default_state = section.settings.default_state -%}
+
+<div class="collection-sidebar">
+  <h3 class="visually-hidden">
+    {{ 'general.extras.filter' | t }}
+  </h3>
+
+  {%- for block in section.blocks -%}
+    {%- assign filter_title = block.settings.title -%}
+    {%- assign filter_title_lower = filter_title | downcase -%}
+
+    <section class="filter filter--{{ block.type }} {% if filter_title_lower contains 'size' %}filter--size{% endif %} {% if filter_title_lower contains 'tag' %}filter--tag{% endif %}">
+      <h3 class="filter__title">
+        <a
+          class="{% if default_state == 'collapsed' %}collapsed{% endif %}"
+          data-toggle="collapse"
+          href="#filter{{ block.id }}"
+          aria-expanded="false"
+          aria-controls="filter{{ block.id }}"
+          >
+          {{- block.settings.title -}}
+        </a>
+        <button class="filter__clear">
+          {{- 'collections.filters.clear' | t -}}
+        </button>
+      </h3>
+      <ul
+        class="filter__list collapse {% if default_state == 'open' %}in{% endif %}"
+        id="filter{{ block.id }}"
+        >
+        {%- case block.type -%}
+
+          {%- when 'vendor' -%}
+            {%- if block.settings.display == 'default' -%}
+              {%- for vendor in collection.all_vendors -%}
+                {%- assign tag = vendor | strip -%}
+                {%- assign tag_handleize = tag | handleize -%}
+                <li
+                  class="filter__item"
+                  data-filter="{{ tag_handleize }}"
+                  data-group="vendors"
+                  data-link="{{ vendor | url_for_vendor }}"
+                  data-title="{{ tag }}"
+                  >
+                  <a href="javascript:;"> {{- tag -}} </a>
+                </li>
+              {%- endfor -%}
+            {%- else -%}
+              {%- assign vendors = block.settings.vendor_list | split: ',' -%}
+              {%- assign amount = vendors | size -%}
+              {%- if amount > 0 -%}
+                {%- for vendor in vendors -%}
+                  {%- assign tag = vendor | strip -%}
+                  {%- assign tag_handleize = tag | handleize -%}
+                  {%- if collection.all_vendors contains tag -%}
+                  <li
+                    class="filter__item"
+                    data-filter="{{ tag_handleize }}"
+                    data-group="vendors"
+                    data-link="{{ vendor | url_for_vendor }}"
+                    data-title="{{ tag }}"
+                    >
+                    <a href="javascript:;"> {{- tag -}} </a>
+                  </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+            {%- endif -%}
+
+          {%- when 'category' -%}
+            {%- if block.settings.display == 'default' -%}
+              {%- for cat in collection.all_types -%}
+                {%- assign tag = cat | strip -%}
+                {%- assign tag_handleize = tag | handleize -%}
+                <li
+                  class="filter__item"
+                  data-filter="{{ tag_handleize }}"
+                  data-group="types"
+                  data-link="{{ cat | url_for_type }}"
+                  data-title="{{ tag }}"
+                  >
+                  <a href="javascript:;"> {{- tag -}} </a>
+                </li>
+              {%- endfor -%}
+            {%- else -%}
+              {%- assign cats = block.settings.category_list | split: ',' -%}
+              {%- assign amount = cats | size -%}
+              {%- if amount > 0 -%}
+                {%- for cat in cats -%}
+                  {%- assign tag = cat | strip -%}
+                  {%- assign tag_handleize = tag | handleize -%}
+                  {%- if collection.all_types contains tag -%}
+                  <li
+                    class="filter__item"
+                    data-filter="{{ tag_handleize }}"
+                    data-group="types"
+                    data-link="{{ cat | url_for_type }}"
+                    data-title="{{ tag }}"
+                    >
+                    <a href="javascript:;"> {{- tag -}} </a>
+                  </li>
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+            {%- endif -%}
+
+          {%- when 'others' -%}
+            {%- assign filters = block.settings.filter_list | split: ',' -%}
+            {%- assign amount = filters | size -%}
+            {%- if amount > 0 -%}
+              {%- for filter in filters -%}
+                {%- assign tag = filter | strip -%}
+                {%- assign tag_handleize = tag | handleize -%}
+                {%- if collection.tags contains tag -%}
+                <li
+                  class="filter__item"
+                  data-filter="{{ tag_handleize | split: '|' | first }}"
+                  data-group="others"
+                  >
+                  <a href="javascript:;">{{ tag | split: '|' | first }}</a>
+                </li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+
+          {%- when 'color' -%}
+            {%- assign colors = block.settings.color_list | split: ',' -%}
+            {%- assign amount = colors | size -%}
+            {%- if amount > 0 -%}
+              {%- for color in colors -%}
+                {%- assign tag = color | strip -%}
+                {%- assign tag_handleize = tag | handleize -%}
+                {%- if collection.tags contains tag -%}
+                <li
+                  class="filter__item {% if current_tags contains tag %}filter__item--active{% endif %}"
+                  data-filter="{{ tag_handleize | split: '|' | first }}"
+                  data-group="colors"
+                  >
+                  <a href="javascript:;">
+                    <span
+                      class="color-holder js-color-swatch-label"
+                      style="{% if block.settings.color_selector == 'default' %}background-color: {{ tag }};{% else %}background-color: {{ tag }}; background-image: url({{ tag | append: '.' | append: file_extension | asset_url }}){% endif %}"
+                      >
+                      {{ tag | split: '|' | first }}
+                    </span>
+                  </a>
+                </li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+
+        {%- endcase -%}
+      </ul>
+    </section>
+  {%- else -%}
+    <p>{{ 'collections.onboarding.filter_instruction' | t }}</p>
+  {%- endfor -%}
+
+  <div class="text-right">
+    <button type="button" class="btn filter__clear-all">
+      {{ 'collections.filters.clear_all' | t }}
+    </button>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection filters",
+  "class": "collection-filter",
+  "settings": [
+    {
+      "type": "radio",
+      "id": "default_state",
+      "options": [
+        {
+          "value": "collapsed",
+          "label": "Collapsed"
+        },
+        {
+          "value": "open",
+          "label": "Open"
+        }
+      ],
+      "default": "open",
+      "label": "Default state",
+      "info": "Choose how to display filters as default"
+    }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "vendor",
+      "name": "Vendor",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Vendor",
+          "label": "Title"
+        },
+        {
+          "type": "radio",
+          "id": "display",
+          "options": [
+            {
+              "value": "default",
+              "label": "All vendors"
+            },
+            {
+              "value": "selected",
+              "label": "Selected vendors"
+            }
+          ],
+          "default": "default",
+          "label": "Vendor option",
+          "info": "Choose how to select vendors."
+        },
+        {
+          "type": "textarea",
+          "id": "vendor_list",
+          "label": "Vendors",
+          "info": "Enter vendor list. Separate by a comma, i.e \"Vendor 1, Vendor 2, Vendor 3\". Only accept existing Vendors. Apply for Selected vendors."
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "name": "Color",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Color",
+          "label": "Title"
+        },
+        {
+          "type": "radio",
+          "id": "color_selector",
+          "options": [
+            {
+              "value": "default",
+              "label": "Swatch color. (Default)"
+            },
+            {
+              "value": "bg_image",
+              "label": "Uploaded images. (Filename format: color_name.png)"
+            }
+          ],
+          "label": "Filter color settings",
+          "info": "Choose how to display color filter. If you choose Uploaded images, make sure that all images are uploaded to assets folder with extension '.png'. In case an image is missing or broken, default color will be displayed."
+        },
+        {
+          "type": "textarea",
+          "id": "color_list",
+          "label": "Color list",
+          "info": "Enter color list. Separate by a comma, i.e \"red, blue, green\". See the list of supported colors [here](http://www.colors.commutercreative.com/grid/)"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Category",
+          "label": "Title"
+        },
+        {
+          "type": "radio",
+          "id": "display",
+          "options": [
+            {
+              "value": "default",
+              "label": "All categories"
+            },
+            {
+              "value": "selected",
+              "label": "Selected categories"
+            }
+          ],
+          "default": "default",
+          "label": "Vendor option",
+          "info": "Choose how to select categories."
+        },
+        {
+          "type": "textarea",
+          "id": "category_list",
+          "label": "Category list",
+          "info": "Enter category list. Separate by a comma, i.e \"Shirts, Skirts, Pants\". Only accept existing Product types"
+        }
+      ]
+    },
+    {
+      "type": "others",
+      "name": "Filter by Others",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Other",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "filter_list",
+          "label": "Filter list",
+          "info": "Enter filter list. Separate by a comma, i.e \"Tag 1, Tag 2, Tag 3\"."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

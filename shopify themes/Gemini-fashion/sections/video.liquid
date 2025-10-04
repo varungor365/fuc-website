@@ -1,0 +1,83 @@
+<div data-section-id="{{ section.id }}" data-section-type="video">
+  {% if section.settings.use_container %} <div class="page-width"> {% endif %}
+  {% include 'section-heading' %}
+  <div class="video video--169">
+    {%- if section.settings.embed != blank -%}
+    {{ section.settings.embed }}
+    {%- else -%}
+    <iframe class="video__player" src="https://www.youtube.com/embed/_9VUPq3SxOc?rel=0&amp;controls=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+    {%- endif -%}
+  </div>
+  {% if section.settings.use_container %} </div> {% endif %}
+</div>
+
+{% include 'section-spacing' %}
+
+{% schema %}
+  {
+    "name": "Video",
+    "class": "gemini-video",
+    "presets": [
+      {
+        "name": "Video",
+        "category": "Image"
+      }
+    ],
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Subtitle"
+      },
+      {
+        "type": "text",
+        "id": "subtitle",
+        "label": "SubHeading",
+        "default": "Subtitle"
+      },
+      {
+        "type": "text",
+        "id": "embed",
+        "label": "YouTube or Vimeo embed code",
+        "info": "Find [embed code](http:\/\/help.glassdoor.com\/article\/Finding-the-embed-code-on-YouTube-or-Vimeo\/en_US)"
+      },
+      {
+        "type": "header",
+        "content": "Design options"
+      },
+      {
+        "type": "paragraph",
+        "content": "To horizontally center a element use margin: auto;"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_container",
+        "label": "Use container",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margin (top right bottom left)",
+        "info": "60px auto 60px auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Padding (top right bottom left)",
+        "info": "60px 0 60px 0"
+      }
+    ]
+  }
+{% endschema %}

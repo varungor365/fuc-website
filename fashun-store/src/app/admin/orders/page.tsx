@@ -1,515 +1,879 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import {
-  TruckIcon,
-  EyeIcon,
-  PrinterIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  XCircleIcon,
-  MagnifyingGlassIcon,
-  FunnelIcon,
-  ArrowDownTrayIcon,
-  ChatBubbleLeftIcon,
-  CurrencyDollarIcon
-} from '@heroicons/react/24/outline'
+import GlassCard from '@/components/admin/GlassCard'
+import { useErrorTracking } from '@/lib/errorTracking'
 
 interface Order {
   id: string
-  order_number: string
-  customer_name: string
-  customer_email: string
-  total_amount: number
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
-  payment_status: 'pending' | 'paid' | 'failed' | 'refunded'
-  items_count: number
-  shipping_address: string
-  created_at: string
-  updated_at: string
-  tracking_number?: string
+  orderNumber: string
+  customer: {
+    id: string
+    name: string
+    email: string
+    avatar?: string
+  }
+  items: OrderItem[]
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded'
+  paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded' | 'partial'
+  shippingMethod: string
+  trackingNumber?: string
+  total: number
+  subtotal: number
+  shipping: number
+  tax: number
+  discount: number
+  createdAt: string
+  updatedAt: string
+  shippingAddress: Address
+  billingAddress: Address
   notes?: string
 }
 
-interface OrderStats {
-  total_orders: number
-  pending_orders: number
-  shipped_orders: number
-  total_revenue: number
-  avg_order_value: number
+interface OrderItem {
+  id: string
+  productId: string
+  productName: string
+  productSku: string
+  variantName?: string
+  quantity: number
+  price: number
+  image: string
 }
 
-export default function OrdersPage() {
+interface Address {
+  name: string
+  street1: string
+  street2?: string
+  city: string
+  state: string
+  zipCode: string
+  country: string
+  phone?: string
+}
+
+interface OrderFilters {
+  status: string
+  paymentStatus: string
+  dateRange: { from: string; to: string }
+  sortBy: 'created' | 'total' | 'customer' | 'status'
+  sortOrder: 'asc' | 'desc'
+  search: string
+}
+
+const ORDER_STATUSES = {
+  pending: { color: 'text-yellow-400 bg-yellow-400/10', label: 'Pending' },
+  processing: { color: 'text-blue-400 bg-blue-400/10', label: 'Processing' },
+  shipped: { color: 'text-purple-400 bg-purple-400/10', label: 'Shipped' },
+  delivered: { color: 'text-green-400 bg-green-400/10', label: 'Delivered' },
+  cancelled: { color: 'text-red-400 bg-red-400/10', label: 'Cancelled' },
+  refunded: { color: 'text-gray-400 bg-gray-400/10', label: 'Refunded' }
+}
+
+const PAYMENT_STATUSES = {
+  pending: { color: 'text-yellow-400 bg-yellow-400/10', label: 'Pending' },
+  paid: { color: 'text-green-400 bg-green-400/10', label: 'Paid' },
+  failed: { color: 'text-red-400 bg-red-400/10', label: 'Failed' },
+  refunded: { color: 'text-gray-400 bg-gray-400/10', label: 'Refunded' },
+  partial: { color: 'text-orange-400 bg-orange-400/10', label: 'Partial' }
+}
+
+export default function AdminOrdersPage() {
+  const router = useRouter()
+  const { logError, addBreadcrumb } = useErrorTracking()
+  
   const [orders, setOrders] = useState<Order[]>([])
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>([])
-  const [stats, setStats] = useState<OrderStats | null>(null)
   const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
+  const [selectedOrders, setSelectedOrders] = useState<string[]>([])
+  const [showBulkActions, setShowBulkActions] = useState(false)
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
-
-  // Mock data
-  const mockOrders: Order[] = [
-    {
-      id: '1',
-      order_number: 'ORD-2024-001',
-      customer_name: 'John Doe',
-      customer_email: 'john@example.com',
-      total_amount: 2499,
-      status: 'processing',
-      payment_status: 'paid',
-      items_count: 3,
-      shipping_address: '123 Main St, City, State 12345',
-      created_at: '2024-01-15T10:30:00Z',
-      updated_at: '2024-01-15T14:20:00Z',
-      tracking_number: 'TRK123456789',
-      notes: 'Customer requested express delivery'
-    },
-    {
-      id: '2',
-      order_number: 'ORD-2024-002',
-      customer_name: 'Jane Smith',
-      customer_email: 'jane@example.com',
-      total_amount: 1899,
-      status: 'shipped',
-      payment_status: 'paid',
-      items_count: 2,
-      shipping_address: '456 Oak Ave, City, State 67890',
-      created_at: '2024-01-14T09:15:00Z',
-      updated_at: '2024-01-16T11:45:00Z',
-      tracking_number: 'TRK987654321'
-    },
-    {
-      id: '3',
-      order_number: 'ORD-2024-003',
-      customer_name: 'Mike Johnson',
-      customer_email: 'mike@example.com',
-      total_amount: 3299,
-      status: 'pending',
-      payment_status: 'pending',
-      items_count: 4,
-      shipping_address: '789 Pine St, City, State 13579',
-      created_at: '2024-01-16T16:20:00Z',
-      updated_at: '2024-01-16T16:20:00Z'
-    },
-    {
-      id: '4',
-      order_number: 'ORD-2024-004',
-      customer_name: 'Sarah Wilson',
-      customer_email: 'sarah@example.com',
-      total_amount: 1599,
-      status: 'delivered',
-      payment_status: 'paid',
-      items_count: 1,
-      shipping_address: '321 Elm Dr, City, State 24680',
-      created_at: '2024-01-12T08:30:00Z',
-      updated_at: '2024-01-18T12:00:00Z',
-      tracking_number: 'TRK555666777'
-    },
-    {
-      id: '5',
-      order_number: 'ORD-2024-005',
-      customer_name: 'David Brown',
-      customer_email: 'david@example.com',
-      total_amount: 899,
-      status: 'cancelled',
-      payment_status: 'refunded',
-      items_count: 1,
-      shipping_address: '654 Maple Ave, City, State 97531',
-      created_at: '2024-01-13T14:45:00Z',
-      updated_at: '2024-01-14T10:30:00Z',
-      notes: 'Customer requested cancellation due to size issue'
-    }
-  ]
-
-  const mockStats: OrderStats = {
-    total_orders: 125,
-    pending_orders: 23,
-    shipped_orders: 45,
-    total_revenue: 287500,
-    avg_order_value: 2300
-  }
+  const [showOrderDetails, setShowOrderDetails] = useState(false)
+  const [filters, setFilters] = useState<OrderFilters>({
+    status: 'all',
+    paymentStatus: 'all',
+    dateRange: { from: '', to: '' },
+    sortBy: 'created',
+    sortOrder: 'desc',
+    search: ''
+  })
 
   useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
+    addBreadcrumb('navigation', 'Accessed Orders Management')
+    fetchOrders()
+  }, [filters])
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true)
+      // TODO: Replace with actual API call
+      const mockOrders: Order[] = [
+        {
+          id: '1',
+          orderNumber: 'ORD-2024-001',
+          customer: {
+            id: 'cust_1',
+            name: 'John Doe',
+            email: 'john@example.com',
+            avatar: '/api/placeholder/40/40'
+          },
+          items: [
+            {
+              id: 'item_1',
+              productId: 'prod_1',
+              productName: 'Premium Streetwear Hoodie',
+              productSku: 'HOOD-001',
+              variantName: 'Large Black',
+              quantity: 2,
+              price: 89.99,
+              image: '/api/placeholder/60/60'
+            }
+          ],
+          status: 'processing',
+          paymentStatus: 'paid',
+          shippingMethod: 'Express Shipping',
+          trackingNumber: 'TRK123456789',
+          total: 199.97,
+          subtotal: 179.98,
+          shipping: 15.99,
+          tax: 14.00,
+          discount: 10.00,
+          createdAt: '2024-01-20T10:30:00Z',
+          updatedAt: '2024-01-20T14:15:00Z',
+          shippingAddress: {
+            name: 'John Doe',
+            street1: '123 Main St',
+            city: 'New York',
+            state: 'NY',
+            zipCode: '10001',
+            country: 'USA',
+            phone: '+1-555-0123'
+          },
+          billingAddress: {
+            name: 'John Doe',
+            street1: '123 Main St',
+            city: 'New York',
+            state: 'NY',
+            zipCode: '10001',
+            country: 'USA'
+          },
+          notes: 'Customer requested gift wrapping'
+        },
+        {
+          id: '2',
+          orderNumber: 'ORD-2024-002',
+          customer: {
+            id: 'cust_2',
+            name: 'Jane Smith',
+            email: 'jane@example.com'
+          },
+          items: [
+            {
+              id: 'item_2',
+              productId: 'prod_2',
+              productName: 'Limited Edition Graphic Tee',
+              productSku: 'TEE-002',
+              quantity: 1,
+              price: 49.99,
+              image: '/api/placeholder/60/60'
+            }
+          ],
+          status: 'shipped',
+          paymentStatus: 'paid',
+          shippingMethod: 'Standard Shipping',
+          trackingNumber: 'TRK987654321',
+          total: 59.98,
+          subtotal: 49.99,
+          shipping: 9.99,
+          tax: 4.00,
+          discount: 4.00,
+          createdAt: '2024-01-19T15:45:00Z',
+          updatedAt: '2024-01-20T09:20:00Z',
+          shippingAddress: {
+            name: 'Jane Smith',
+            street1: '456 Oak Ave',
+            city: 'Los Angeles',
+            state: 'CA',
+            zipCode: '90210',
+            country: 'USA'
+          },
+          billingAddress: {
+            name: 'Jane Smith',
+            street1: '456 Oak Ave',
+            city: 'Los Angeles',
+            state: 'CA',
+            zipCode: '90210',
+            country: 'USA'
+          }
+        },
+        {
+          id: '3',
+          orderNumber: 'ORD-2024-003',
+          customer: {
+            id: 'cust_3',
+            name: 'Mike Johnson',
+            email: 'mike@example.com'
+          },
+          items: [
+            {
+              id: 'item_3',
+              productId: 'prod_3',
+              productName: 'Designer Denim Jacket',
+              productSku: 'JACK-003',
+              quantity: 1,
+              price: 159.99,
+              image: '/api/placeholder/60/60'
+            }
+          ],
+          status: 'pending',
+          paymentStatus: 'pending',
+          shippingMethod: 'Standard Shipping',
+          total: 169.98,
+          subtotal: 159.99,
+          shipping: 9.99,
+          tax: 12.80,
+          discount: 12.80,
+          createdAt: '2024-01-20T16:00:00Z',
+          updatedAt: '2024-01-20T16:00:00Z',
+          shippingAddress: {
+            name: 'Mike Johnson',
+            street1: '789 Pine St',
+            city: 'Chicago',
+            state: 'IL',
+            zipCode: '60601',
+            country: 'USA'
+          },
+          billingAddress: {
+            name: 'Mike Johnson',
+            street1: '789 Pine St',
+            city: 'Chicago',
+            state: 'IL',
+            zipCode: '60601',
+            country: 'USA'
+          }
+        }
+      ]
+      
+      await new Promise(resolve => setTimeout(resolve, 800))
       setOrders(mockOrders)
-      setFilteredOrders(mockOrders)
-      setStats(mockStats)
+    } catch (error) {
+      logError(error as Error, { context: 'fetchOrders' })
+    } finally {
       setLoading(false)
-    }, 1000)
-  }, [])
-
-  useEffect(() => {
-    let filtered = orders
-
-    if (searchTerm) {
-      filtered = filtered.filter(order =>
-        order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.customer_email.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    }
-
-    if (statusFilter) {
-      filtered = filtered.filter(order => order.status === statusFilter)
-    }
-
-    setFilteredOrders(filtered)
-  }, [searchTerm, statusFilter, orders])
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'processing':
-        return 'bg-blue-100 text-blue-800'
-      case 'shipped':
-        return 'bg-indigo-100 text-indigo-800'
-      case 'delivered':
-        return 'bg-green-100 text-green-800'
-      case 'cancelled':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
     }
   }
 
-  const getPaymentStatusColor = (status: string) => {
-    switch (status) {
-      case 'paid':
-        return 'bg-green-100 text-green-800'
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'failed':
-        return 'bg-red-100 text-red-800'
-      case 'refunded':
-        return 'bg-purple-100 text-purple-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
-  const updateOrderStatus = (orderId: string, newStatus: Order['status']) => {
-    setOrders(prev => prev.map(order => 
-      order.id === orderId 
-        ? { ...order, status: newStatus, updated_at: new Date().toISOString() }
-        : order
-    ))
-  }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
-
-  if (loading) {
-    return (
-      <div className="p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-white rounded-lg shadow p-6">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-8 bg-gray-200 rounded w-1/2"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+  const handleOrderSelect = (orderId: string) => {
+    setSelectedOrders(prev => 
+      prev.includes(orderId) 
+        ? prev.filter(id => id !== orderId)
+        : [...prev, orderId]
     )
   }
 
+  const handleSelectAll = () => {
+    if (selectedOrders.length === filteredOrders.length) {
+      setSelectedOrders([])
+    } else {
+      setSelectedOrders(filteredOrders.map(o => o.id))
+    }
+  }
+
+  const handleBulkAction = async (action: string) => {
+    try {
+      addBreadcrumb('user', `Bulk action: ${action}`, { orderCount: selectedOrders.length })
+      
+      switch (action) {
+        case 'mark_processing':
+          // TODO: Implement bulk status update
+          break
+        case 'mark_shipped':
+          // TODO: Implement bulk shipping
+          break
+        case 'export':
+          // TODO: Implement export
+          break
+        case 'print_labels':
+          // TODO: Implement print shipping labels
+          break
+      }
+      
+      setSelectedOrders([])
+      setShowBulkActions(false)
+      fetchOrders()
+    } catch (error) {
+      logError(error as Error, { context: 'bulkAction', action })
+    }
+  }
+
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    try {
+      addBreadcrumb('user', `Status change: ${newStatus}`, { orderId })
+      
+      setOrders(prev => prev.map(order => 
+        order.id === orderId 
+          ? { ...order, status: newStatus as any, updatedAt: new Date().toISOString() }
+          : order
+      ))
+      
+      // TODO: Call actual API
+    } catch (error) {
+      logError(error as Error, { context: 'statusChange', orderId, newStatus })
+    }
+  }
+
+  const showOrderDetail = (order: Order) => {
+    setSelectedOrder(order)
+    setShowOrderDetails(true)
+    addBreadcrumb('navigation', `Viewed order details: ${order.orderNumber}`)
+  }
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount)
+  }
+
+  const filteredOrders = orders.filter(order => {
+    if (filters.status !== 'all' && order.status !== filters.status) return false
+    if (filters.paymentStatus !== 'all' && order.paymentStatus !== filters.paymentStatus) return false
+    if (filters.search && 
+        !order.orderNumber.toLowerCase().includes(filters.search.toLowerCase()) &&
+        !order.customer.name.toLowerCase().includes(filters.search.toLowerCase()) &&
+        !order.customer.email.toLowerCase().includes(filters.search.toLowerCase())) return false
+    return true
+  }).sort((a, b) => {
+    const { sortBy, sortOrder } = filters
+    let aVal: any, bVal: any
+    
+    switch (sortBy) {
+      case 'total': aVal = a.total; bVal = b.total; break
+      case 'customer': aVal = a.customer.name; bVal = b.customer.name; break
+      case 'status': aVal = a.status; bVal = b.status; break
+      default: aVal = a.createdAt; bVal = b.createdAt; break
+    }
+    
+    if (sortOrder === 'desc') [aVal, bVal] = [bVal, aVal]
+    return aVal > bVal ? 1 : -1
+  })
+
   return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Orders</h1>
-          <p className="text-gray-600">Manage and track customer orders</p>
-        </div>
-        <div className="flex space-x-3">
-          <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center space-x-2">
-            <ArrowDownTrayIcon className="h-5 w-5" />
-            <span>Export</span>
-          </button>
-          <Link
-            href="/admin/orders/new"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
-          >
-            <span>Create Order</span>
-          </Link>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <TruckIcon className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Orders</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.total_orders}</p>
-              </div>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-slate-900 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">Orders</h1>
+            <p className="text-white/60">Manage customer orders and fulfillment</p>
           </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                <ClockIcon className="h-6 w-6 text-yellow-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Pending</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.pending_orders}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
-                <TruckIcon className="h-6 w-6 text-indigo-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Shipped</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.shipped_orders}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <CurrencyDollarIcon className="h-6 w-6 text-green-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">₹{stats.total_revenue.toLocaleString()}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                <CurrencyDollarIcon className="h-6 w-6 text-purple-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Avg Order Value</p>
-                <p className="text-2xl font-bold text-gray-900">₹{stats.avg_order_value}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow mb-6 p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="relative">
-            <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-3 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search orders..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">All Statuses</option>
-            <option value="pending">Pending</option>
-            <option value="processing">Processing</option>
-            <option value="shipped">Shipped</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-
-          <div className="flex items-center text-sm text-gray-600">
-            <FunnelIcon className="h-4 w-4 mr-2" />
-            {filteredOrders.length} orders found
-          </div>
-        </div>
-      </div>
-
-      {/* Orders Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Order
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Customer
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Payment
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Total
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">{order.order_number}</div>
-                      <div className="text-sm text-gray-500">{order.items_count} items</div>
-                      {order.tracking_number && (
-                        <div className="text-xs text-blue-600">Tracking: {order.tracking_number}</div>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">{order.customer_name}</div>
-                      <div className="text-sm text-gray-500">{order.customer_email}</div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPaymentStatusColor(order.payment_status)}`}>
-                      {order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    ₹{order.total_amount.toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatDate(order.created_at)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex items-center justify-end space-x-2">
-                      <button
-                        onClick={() => setSelectedOrder(order)}
-                        className="text-blue-600 hover:text-blue-900"
-                      >
-                        <EyeIcon className="h-4 w-4" />
-                      </button>
-                      <button className="text-gray-600 hover:text-gray-900">
-                        <PrinterIcon className="h-4 w-4" />
-                      </button>
-                      <button className="text-green-600 hover:text-green-900">
-                        <ChatBubbleLeftIcon className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Order Detail Modal */}
-      {selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-gray-900">Order Details: {selectedOrder.order_number}</h3>
-                <button
-                  onClick={() => setSelectedOrder(null)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  ×
-                </button>
-              </div>
-            </div>
+          
+          <div className="flex gap-3">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+              onClick={() => {/* TODO: Implement create order */}}
+            >
+              Create Order
+            </motion.button>
             
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-md font-semibold text-gray-900 mb-3">Customer Information</h4>
-                  <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">Name:</span> {selectedOrder.customer_name}</p>
-                    <p><span className="font-medium">Email:</span> {selectedOrder.customer_email}</p>
-                    <p><span className="font-medium">Address:</span> {selectedOrder.shipping_address}</p>
-                  </div>
-                </div>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-medium hover:bg-white/20 transition-all duration-200"
+              onClick={() => {/* TODO: Implement export */}}
+            >
+              Export
+            </motion.button>
+          </div>
+        </div>
 
-                <div>
-                  <h4 className="text-md font-semibold text-gray-900 mb-3">Order Information</h4>
-                  <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">Order Date:</span> {formatDate(selectedOrder.created_at)}</p>
-                    <p><span className="font-medium">Last Updated:</span> {formatDate(selectedOrder.updated_at)}</p>
-                    <p><span className="font-medium">Items:</span> {selectedOrder.items_count}</p>
-                    <p><span className="font-medium">Total:</span> ₹{selectedOrder.total_amount.toLocaleString()}</p>
-                    {selectedOrder.tracking_number && (
-                      <p><span className="font-medium">Tracking:</span> {selectedOrder.tracking_number}</p>
-                    )}
-                  </div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <GlassCard className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/60 text-sm mb-1">Total Orders</p>
+                <p className="text-2xl font-bold text-white">{orders.length}</p>
+                <p className="text-green-400 text-sm mt-1">+12% from last month</p>
+              </div>
+              <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+              </div>
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/60 text-sm mb-1">Pending Orders</p>
+                <p className="text-2xl font-bold text-white">{orders.filter(o => o.status === 'pending').length}</p>
+                <p className="text-yellow-400 text-sm mt-1">Requires attention</p>
+              </div>
+              <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/60 text-sm mb-1">Total Revenue</p>
+                <p className="text-2xl font-bold text-white">
+                  {formatCurrency(orders.reduce((sum, order) => sum + order.total, 0))}
+                </p>
+                <p className="text-green-400 text-sm mt-1">+8% from last week</p>
+              </div>
+              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/60 text-sm mb-1">Avg Order Value</p>
+                <p className="text-2xl font-bold text-white">
+                  {formatCurrency(orders.length > 0 ? orders.reduce((sum, order) => sum + order.total, 0) / orders.length : 0)}
+                </p>
+                <p className="text-blue-400 text-sm mt-1">+5% from last month</p>
+              </div>
+              <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+
+        {/* Filters */}
+        <GlassCard className="p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
+            {/* Search */}
+            <div className="lg:col-span-2">
+              <input
+                type="text"
+                placeholder="Search orders, customers..."
+                value={filters.search}
+                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
+              />
+            </div>
+
+            {/* Order Status */}
+            <div>
+              <select
+                value={filters.status}
+                onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              >
+                <option value="all">All Statuses</option>
+                {Object.entries(ORDER_STATUSES).map(([status, config]) => (
+                  <option key={status} value={status}>{config.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Payment Status */}
+            <div>
+              <select
+                value={filters.paymentStatus}
+                onChange={(e) => setFilters(prev => ({ ...prev, paymentStatus: e.target.value }))}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              >
+                <option value="all">All Payments</option>
+                {Object.entries(PAYMENT_STATUSES).map(([status, config]) => (
+                  <option key={status} value={status}>{config.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Sort */}
+            <div>
+              <select
+                value={`${filters.sortBy}-${filters.sortOrder}`}
+                onChange={(e) => {
+                  const [sortBy, sortOrder] = e.target.value.split('-')
+                  setFilters(prev => ({ ...prev, sortBy: sortBy as any, sortOrder: sortOrder as any }))
+                }}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              >
+                <option value="created-desc">Newest First</option>
+                <option value="created-asc">Oldest First</option>
+                <option value="total-desc">Highest Value</option>
+                <option value="total-asc">Lowest Value</option>
+                <option value="customer-asc">Customer A-Z</option>
+                <option value="status-asc">Status</option>
+              </select>
+            </div>
+
+            {/* Bulk Actions */}
+            <div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowBulkActions(!showBulkActions)}
+                className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-200"
+              >
+                Bulk Actions
+              </motion.button>
+            </div>
+          </div>
+        </GlassCard>
+
+        {/* Bulk Actions Panel */}
+        {showBulkActions && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            <GlassCard className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <input
+                    type="checkbox"
+                    checked={selectedOrders.length === filteredOrders.length}
+                    onChange={handleSelectAll}
+                    className="w-5 h-5 text-blue-500 bg-white/10 border-white/20 rounded focus:ring-blue-500"
+                  />
+                  <span className="text-white">
+                    {selectedOrders.length} order{selectedOrders.length !== 1 ? 's' : ''} selected
+                  </span>
+                </div>
+                
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => handleBulkAction('mark_processing')}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Mark Processing
+                  </button>
+                  <button
+                    onClick={() => handleBulkAction('mark_shipped')}
+                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                  >
+                    Mark Shipped
+                  </button>
+                  <button
+                    onClick={() => handleBulkAction('print_labels')}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    Print Labels
+                  </button>
+                  <button
+                    onClick={() => handleBulkAction('export')}
+                    className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                  >
+                    Export
+                  </button>
                 </div>
               </div>
+            </GlassCard>
+          </motion.div>
+        )}
+
+        {/* Orders Table */}
+        <GlassCard className="overflow-hidden">
+          {loading ? (
+            <div className="p-12 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
+                <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+              </div>
+              <p className="text-white/60">Loading orders...</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="border-b border-white/10">
+                  <tr>
+                    <th className="text-left p-6 text-white/80 font-medium">
+                      <input
+                        type="checkbox"
+                        checked={selectedOrders.length === filteredOrders.length && filteredOrders.length > 0}
+                        onChange={handleSelectAll}
+                        className="w-5 h-5 text-blue-500 bg-white/10 border-white/20 rounded focus:ring-blue-500"
+                      />
+                    </th>
+                    <th className="text-left p-6 text-white/80 font-medium">Order</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Customer</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Items</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Total</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Status</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Payment</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Date</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredOrders.map((order) => (
+                    <motion.tr
+                      key={order.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer"
+                      onClick={() => showOrderDetail(order)}
+                    >
+                      <td className="p-6">
+                        <input
+                          type="checkbox"
+                          checked={selectedOrders.includes(order.id)}
+                          onChange={(e) => {
+                            e.stopPropagation()
+                            handleOrderSelect(order.id)
+                          }}
+                          className="w-5 h-5 text-blue-500 bg-white/10 border-white/20 rounded focus:ring-blue-500"
+                        />
+                      </td>
+                      
+                      <td className="p-6">
+                        <div>
+                          <p className="font-medium text-white">{order.orderNumber}</p>
+                          {order.trackingNumber && (
+                            <p className="text-sm text-white/60">Tracking: {order.trackingNumber}</p>
+                          )}
+                        </div>
+                      </td>
+                      
+                      <td className="p-6">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
+                            {order.customer.name.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="text-white font-medium">{order.customer.name}</p>
+                            <p className="text-white/60 text-sm">{order.customer.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      
+                      <td className="p-6">
+                        <div className="flex items-center gap-2">
+                          <span className="text-white">{order.items.length}</span>
+                          <span className="text-white/60 text-sm">
+                            item{order.items.length !== 1 ? 's' : ''}
+                          </span>
+                        </div>
+                      </td>
+                      
+                      <td className="p-6">
+                        <span className="text-white font-medium">{formatCurrency(order.total)}</span>
+                      </td>
+                      
+                      <td className="p-6">
+                        <select
+                          value={order.status}
+                          onChange={(e) => {
+                            e.stopPropagation()
+                            handleStatusChange(order.id, e.target.value)
+                          }}
+                          className={`px-3 py-1 rounded-full text-sm font-medium border-0 bg-transparent ${ORDER_STATUSES[order.status].color}`}
+                        >
+                          {Object.entries(ORDER_STATUSES).map(([status, config]) => (
+                            <option key={status} value={status} className="bg-gray-800 text-white">
+                              {config.label}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      
+                      <td className="p-6">
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${PAYMENT_STATUSES[order.paymentStatus].color}`}>
+                          {PAYMENT_STATUSES[order.paymentStatus].label}
+                        </span>
+                      </td>
+                      
+                      <td className="p-6">
+                        <span className="text-white/80">
+                          {new Date(order.createdAt).toLocaleDateString()}
+                        </span>
+                      </td>
+                      
+                      <td className="p-6">
+                        <div className="flex items-center gap-2">
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              showOrderDetail(order)
+                            }}
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          </motion.button>
+                          
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="p-2 text-purple-400 hover:text-purple-300 transition-colors"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              // TODO: Print invoice
+                            }}
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                            </svg>
+                          </motion.button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </GlassCard>
+      </div>
+
+      {/* Order Details Modal */}
+      {showOrderDetails && selectedOrder && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-6"
+          onClick={() => setShowOrderDetails(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-primary-900/90 backdrop-blur-md border border-white/10 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <div>
+                <h2 className="text-2xl font-bold text-white">{selectedOrder.orderNumber}</h2>
+                <p className="text-white/60">Order Details</p>
+              </div>
+              <button
+                onClick={() => setShowOrderDetails(false)}
+                className="p-2 text-white/60 hover:text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Order Info Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <GlassCard className="p-4">
+                  <h3 className="text-lg font-semibold text-white mb-4">Customer Information</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-medium">
+                        {selectedOrder.customer.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-white font-medium">{selectedOrder.customer.name}</p>
+                        <p className="text-white/60 text-sm">{selectedOrder.customer.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                </GlassCard>
+
+                <GlassCard className="p-4">
+                  <h3 className="text-lg font-semibold text-white mb-4">Order Summary</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Subtotal:</span>
+                      <span className="text-white">{formatCurrency(selectedOrder.subtotal)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Shipping:</span>
+                      <span className="text-white">{formatCurrency(selectedOrder.shipping)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Tax:</span>
+                      <span className="text-white">{formatCurrency(selectedOrder.tax)}</span>
+                    </div>
+                    {selectedOrder.discount > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-white/60">Discount:</span>
+                        <span className="text-green-400">-{formatCurrency(selectedOrder.discount)}</span>
+                      </div>
+                    )}
+                    <div className="border-t border-white/10 pt-2">
+                      <div className="flex justify-between font-semibold">
+                        <span className="text-white">Total:</span>
+                        <span className="text-white">{formatCurrency(selectedOrder.total)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </GlassCard>
+              </div>
+
+              {/* Order Items */}
+              <GlassCard className="p-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Order Items</h3>
+                <div className="space-y-3">
+                  {selectedOrder.items.map((item) => (
+                    <div key={item.id} className="flex items-center gap-4 p-3 bg-white/5 rounded-lg">
+                      <div className="w-16 h-16 bg-white/10 rounded-lg overflow-hidden">
+                        <img 
+                          src={item.image} 
+                          alt={item.productName}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-white font-medium">{item.productName}</p>
+                        <p className="text-white/60 text-sm">SKU: {item.productSku}</p>
+                        {item.variantName && (
+                          <p className="text-white/60 text-sm">{item.variantName}</p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <p className="text-white">Qty: {item.quantity}</p>
+                        <p className="text-white font-medium">{formatCurrency(item.price * item.quantity)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </GlassCard>
+
+              {/* Shipping Address */}
+              <GlassCard className="p-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Shipping Address</h3>
+                <div className="text-white/80">
+                  <p>{selectedOrder.shippingAddress.name}</p>
+                  <p>{selectedOrder.shippingAddress.street1}</p>
+                  {selectedOrder.shippingAddress.street2 && <p>{selectedOrder.shippingAddress.street2}</p>}
+                  <p>{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.zipCode}</p>
+                  <p>{selectedOrder.shippingAddress.country}</p>
+                  {selectedOrder.shippingAddress.phone && <p>Phone: {selectedOrder.shippingAddress.phone}</p>}
+                </div>
+              </GlassCard>
 
               {selectedOrder.notes && (
-                <div className="mt-6">
-                  <h4 className="text-md font-semibold text-gray-900 mb-3">Notes</h4>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-700">{selectedOrder.notes}</p>
-                  </div>
-                </div>
+                <GlassCard className="p-4">
+                  <h3 className="text-lg font-semibold text-white mb-4">Order Notes</h3>
+                  <p className="text-white/80">{selectedOrder.notes}</p>
+                </GlassCard>
               )}
-
-              <div className="mt-6">
-                <h4 className="text-md font-semibold text-gray-900 mb-3">Update Status</h4>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => updateOrderStatus(selectedOrder.id, 'processing')}
-                    className="px-3 py-2 bg-blue-100 text-blue-800 rounded-lg text-sm hover:bg-blue-200"
-                  >
-                    Mark as Processing
-                  </button>
-                  <button
-                    onClick={() => updateOrderStatus(selectedOrder.id, 'shipped')}
-                    className="px-3 py-2 bg-indigo-100 text-indigo-800 rounded-lg text-sm hover:bg-indigo-200"
-                  >
-                    Mark as Shipped
-                  </button>
-                  <button
-                    onClick={() => updateOrderStatus(selectedOrder.id, 'delivered')}
-                    className="px-3 py-2 bg-green-100 text-green-800 rounded-lg text-sm hover:bg-green-200"
-                  >
-                    Mark as Delivered
-                  </button>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
     </div>
   )

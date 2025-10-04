@@ -1,0 +1,194 @@
+<div
+  class="instafeed {% if section.settings.use_container %} section--has-container{% else %} section--no-container{% endif %}"
+  data-section-id="{{ section.id }}"
+  data-section-type="instafeed"
+  >
+  {% if section.settings.use_container %}
+    <div class="page-width">
+  {% endif %}
+    {% include 'section-heading' %}
+    <input type="hidden" id="token-{{ section.id }}" value="{{ settings.accessToken }}">
+    <div
+      id="instafeed-{{ section.id }}"
+    class="instafeed__carousel {% if section.settings.disable_spacing %} instafeed__carousel--gapless{% else %} instafeed__carousel--has-gap{% endif %} js-slick-carousel"
+      data-sort-by="{{ section.settings.sort }}"
+      data-rows="{{ section.settings.rows }}"
+      data-arrow-type="{{ section.settings.arrow_type }}"
+      data-slick='{"slidesToShow": "{{ section.settings.slidetoshow }}", "autoplay": {{ section.settings.autoplay }}, "arrows": {{ section.settings.arrows }},"responsive":[{"breakpoint": 992,"settings":{"slidesToShow": {{ section.settings.tablet_slidetoshow }} }},{"breakpoint": 768,"settings":{"slidesToShow": {{ section.settings.mobile_slidetoshow }} }}]}'
+      >
+    </div>
+  {% if section.settings.use_container %}
+    </div>
+  {% endif %}
+</div>
+
+{% include 'section-spacing' %}
+
+{% schema %}
+  {
+    "name": "Instagram Feed",
+    "class": "gemini-instafeed",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Instagram Feed"
+      },
+      {
+        "type": "text",
+        "id": "subtitle",
+        "label": "SubHeading",
+        "default": "Subtitle"
+      },
+      {
+        "type": "select",
+        "id": "sort",
+        "label": "Sort by",
+        "default": "none",
+        "options": [
+          {
+            "value": "none",
+            "label": "none (default)."
+          },
+          {
+            "value": "most-recent",
+            "label": "Newest to oldest."
+          },
+          {
+            "value": "least-recent",
+            "label": "Oldest to newest."
+          },
+          {
+            "value": "most-liked",
+            "label": "Highest # of likes to lowest."
+          },
+          {
+            "value": "least-liked",
+            "label": "Lowest # likes to highest."
+          },
+          {
+            "value": "most-commented",
+            "label": "Highest # of comments to lowest."
+          },
+          {
+            "value": "least-commented",
+            "label": "Lowest # of comments to highest."
+          },
+          {
+            "value": "random",
+            "label": "Random order."
+          }
+        ]
+      },
+      {
+       "type": "header",
+       "content": "Slider options"
+      },
+      {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Enable autoplay",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "arrows",
+        "label": "Show Arrows",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "arrow_type",
+        "default": "arrow",
+        "label": "Arrows type",
+        "options": [
+          {
+            "value": "arrow",
+            "label": "Default"
+          },
+          {
+            "value": "square",
+            "label": "Squared arrows"
+          },
+          {
+            "value": "circle",
+            "label": "Circle arrows"
+          },
+          {
+            "value": "half-circle",
+            "label": "Half-circle arrows"
+          }
+        ],
+        "info": "Choose arrows type. Note that Half-circle is NOT shown when users check Use container and uncheck Disable spacing at the same time."
+      },
+      {
+        "type": "text",
+        "id": "speed",
+        "label": "Speed: (integer)",
+        "default": "300"
+      },
+      {
+        "type": "text",
+        "id": "slidetoshow",
+        "label": "Desktop slides to show: (integer)",
+        "default": "6"
+      },
+      {
+        "type": "text",
+        "id": "tablet_slidetoshow",
+        "label": "Tablet slides To Show: (integer)",
+        "default": "3"
+      },
+      {
+        "type": "text",
+        "id": "mobile_slidetoshow",
+        "label": "Mobile slides To Show: (integer)",
+        "default": "1"
+      },
+      {
+        "type": "header",
+        "content": "Design options"
+      },
+      {
+        "type": "paragraph",
+        "content": "To horizontally center a element use margin: auto;"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_container",
+        "label": "Use container",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "disable_spacing",
+        "label": "Disable spacing",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margin (top right bottom left)",
+        "info": "60px auto 60px auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Padding (top right bottom left)",
+        "info": "60px 0 60px 0"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Instagram Feed",
+        "category": "Instagram"
+      }
+    ]
+  }
+{% endschema %}

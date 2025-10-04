@@ -1,9 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-// import { motion, AnimatePresence } from 'framer-motion' // Removed for now
-import { AuthProvider } from '@/components/auth/AuthProvider'
-import SuperTokensProvider from '@/components/auth/SuperTokensProvider'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -22,18 +20,12 @@ export const useTheme = () => useContext(ThemeContext)
 
 function ThemeProvider({ children }: ProvidersProps) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
-  const [mounted, setMounted] = useState(false)
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark')
   }
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
     // Only run on client side
     if (typeof window === 'undefined') return
     
@@ -41,25 +33,15 @@ function ThemeProvider({ children }: ProvidersProps) {
     const savedTheme = localStorage.getItem('fashun-theme') as 'dark' | 'light' | null
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     setTheme(savedTheme || systemTheme || 'dark')
-  }, [mounted])
+  }, [])
 
   useEffect(() => {
-    if (!mounted) return
     // Only run on client side
     if (typeof window === 'undefined') return
     
     localStorage.setItem('fashun-theme', theme)
     document.documentElement.classList.toggle('dark', theme === 'dark')
-  }, [theme, mounted])
-
-  // Prevent hydration mismatch by not rendering theme-dependent content until mounted
-  if (!mounted) {
-    return (
-      <ThemeContext.Provider value={{ theme: 'dark', toggleTheme }}>
-        {children}
-      </ThemeContext.Provider>
-    )
-  }
+  }, [theme])
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -89,9 +71,20 @@ function PageTransitionProvider({ children }: ProvidersProps) {
 
   return (
     <PageTransitionContext.Provider value={{ isTransitioning, startTransition }}>
-      <div className="transition-opacity duration-300 ease-in-out">
-        {children}
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key="page-content"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ 
+            duration: 0.3, 
+            ease: [0.22, 1, 0.36, 1] // Custom easing for smooth transitions
+          }}
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
     </PageTransitionContext.Provider>
   )
 }
@@ -99,14 +92,10 @@ function PageTransitionProvider({ children }: ProvidersProps) {
 // Combined Providers
 export function Providers({ children }: ProvidersProps) {
   return (
-    <SuperTokensProvider>
-      <AuthProvider>
-        <ThemeProvider>
-          <PageTransitionProvider>
-            {children}
-          </PageTransitionProvider>
-        </ThemeProvider>
-      </AuthProvider>
-    </SuperTokensProvider>
+    <ThemeProvider>
+      <PageTransitionProvider>
+        {children}
+      </PageTransitionProvider>
+    </ThemeProvider>
   )
 }

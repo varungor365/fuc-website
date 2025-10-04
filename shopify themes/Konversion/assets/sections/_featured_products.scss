@@ -1,0 +1,48 @@
+/*================ Featured Products Section ================*/
+
+.section-featured-products {
+  .product-list {
+    .slick-list {
+      {% unless settings.margin_on_mobile %}
+        margin-left: -5px;
+      {% endunless %}
+    }
+  }
+  .product-list__item {
+    margin-left: 5px;
+    {% if settings.margin_on_mobile %}
+      margin-right: 5px;
+    {% endif %}
+  }
+  @include at-query($min, $medium) {
+    padding: 0 $gutter $gutter;
+  }
+  @include at-query($min, $large) {
+    @extend .page-width--large--important;
+  }
+}
+
+.slider {
+  &:not(.slick-initialized) {
+    .product-list__item:nth-child(1n+2) {
+      display: none;
+    }
+  }
+
+  /*================ Desktop Version ================*/
+  @include at-query($min, $large) {
+    .product-list__item {
+      margin-left: $gutter;
+    }
+  }
+}
+
+@include at-query($max, $small) {
+  .no-slider--grid {
+    .one-whole {
+      .product-card {
+        margin: $gutter;
+      }
+    }
+  }
+}

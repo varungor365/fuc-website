@@ -1,103 +1,335 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { motion } from 'framer-motion'
+import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  MagnifyingGlassIcon,
+  MagnifyingGlassIcon, 
+  ShoppingBagIcon, 
+  HeartIcon, 
   UserIcon,
-  HeartIcon,
-  ShoppingBagIcon,
   Bars3Icon,
-  SparklesIcon
-} from '@heroicons/react/24/outline'
-import { useCartStore, useWishlistStore, useUIStore } from '@/stores'
+  XMarkIcon,
+  SunIcon,
+  MoonIcon,
+  BellIcon,
+  ChatBubbleLeftIcon
+} from '@heroicons/react/24/outline';
+import { HeartIcon as HeartSolidIcon, ShoppingBagIcon as ShoppingBagSolidIcon } from '@heroicons/react/24/solid';
+import { useCart } from '@/hooks/useCart';
 
-export default function Header() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const cartItemCount = useCartStore(state => state.getItemCount())
-  const wishlistItems = useWishlistStore(state => state.items)
+const navigationItems = [
+  {
+    name: 'Shop',
+    href: '/collections/all',
+    megaMenu: {
+      categories: [
+        { name: 'T-Shirts', href: '/collections/tshirts', image: '/api/placeholder/200/200' },
+        { name: 'Hoodies', href: '/collections/hoodies', image: '/api/placeholder/200/200' },
+        { name: 'Polos', href: '/collections/polos', image: '/api/placeholder/200/200' },
+        { name: 'Accessories', href: '/collections/accessories', image: '/api/placeholder/200/200' }
+      ],
+      featured: [
+        { name: 'New Arrivals', href: '/collections/new-arrivals' },
+        { name: 'Best Sellers', href: '/collections/best-sellers' },
+        { name: 'Sale Items', href: '/collections/sale' }
+      ]
+    }
+  },
+  { name: 'New Arrivals', href: '/collections/new-arrivals' },
+  { name: 'Designer', href: '/designer' },
+  { name: 'Lookbook', href: '/lookbook' },
+  { name: 'About', href: '/about' }
+];
+
+export function Header() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { itemCount } = useCart();
+  
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showMegaMenu, setShowMegaMenu] = useState<string | null>(null);
+  
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
+        setShowMegaMenu(null);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery('');
     }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  };
 
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled 
-          ? 'bg-primary-900/95 backdrop-blur-xl border-b border-white/10' 
-          : 'bg-transparent'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <div className="font-hero text-2xl lg:text-3xl text-white">
-              FASHUN
-              <span className="text-accent-500">.CO</span>
+    <>
+      <motion.header
+        ref={headerRef}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled 
+            ? 'glass backdrop-blur-xl bg-white/80 shadow-lg border-b border-white/20' 
+            : 'bg-transparent'
+        }`}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        {/* Top Bar */}
+        <div className="border-b border-neutral-200/50 bg-gradient-primary">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between py-2 text-sm text-white">
+              <div className="flex items-center space-x-6">
+                <span>Free shipping on orders over ₹2,999</span>
+                <span className="hidden md:inline">|</span>
+                <span className="hidden md:inline">30-day returns</span>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Link href="/track" className="hover:text-primary-200 transition-colors">
+                  Track Order
+                </Link>
+                <span>|</span>
+                <Link href="/contact" className="hover:text-primary-200 transition-colors">
+                  Help
+                </Link>
+              </div>
             </div>
-          </Link>
-
-          {/* Navigation */}
-          <nav className="hidden lg:flex space-x-8">
-            <Link href="/collections/new-arrivals" className="text-white/80 hover:text-white font-medium">
-              New Arrivals
-            </Link>
-            <Link href="/collections/t-shirts" className="text-white/80 hover:text-white font-medium">
-              T-Shirts
-            </Link>
-            <Link href="/collections/hoodies" className="text-white/80 hover:text-white font-medium">
-              Hoodies
-            </Link>
-            <Link href="/studio" className="text-purple-400 hover:text-purple-300 font-medium flex items-center">
-              <SparklesIcon className="w-4 h-4 mr-1" />
-              Design Studio
-            </Link>
-            <Link href="/outfit-builder" className="text-accent-400 hover:text-accent-300 font-medium flex items-center">
-              <SparklesIcon className="w-4 h-4 mr-1" />
-              AI Assistant
-            </Link>
-            <Link href="/collections/sale" className="text-accent-400 font-accent text-sm font-medium">
-              Sale
-            </Link>
-          </nav>
-
-          {/* Icons */}
-          <div className="flex items-center space-x-4">
-            <button className="btn-ghost p-2">
-              <MagnifyingGlassIcon className="w-6 h-6" />
-            </button>
-            <Link href="/auth/login" className="btn-ghost p-2">
-              <UserIcon className="w-6 h-6" />
-            </Link>
-            <Link href="/wishlist" className="btn-ghost p-2 relative">
-              <HeartIcon className="w-6 h-6" />
-              {wishlistItems.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-accent-400 text-primary-900 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {wishlistItems.length}
-                </span>
-              )}
-            </Link>
-            <button className="btn-ghost p-2 relative">
-              <ShoppingBagIcon className="w-6 h-6" />
-              {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-accent-400 text-primary-900 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartItemCount}
-                </span>
-              )}
-            </button>
           </div>
         </div>
-      </div>
-    </motion.header>
-  )
+
+        {/* Main Header */}
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between py-4">
+            {/* Logo */}
+            <motion.div
+              className="flex items-center"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Link href="/" className="flex items-center space-x-2">
+                <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">F</span>
+                </div>
+                <div className="hidden sm:block">
+                  <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                    FASHUN.CO.IN
+                  </h1>
+                  <p className="text-xs text-neutral-600 -mt-1">Premium Streetwear</p>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-8">
+              {navigationItems.map((item) => (
+                <div
+                  key={item.name}
+                  className="relative"
+                  onMouseEnter={() => item.megaMenu && setShowMegaMenu(item.name)}
+                  onMouseLeave={() => setShowMegaMenu(null)}
+                >
+                  <Link
+                    href={item.href}
+                    className={`text-neutral-700 hover:text-primary-600 transition-colors font-medium relative py-2 ${
+                      pathname === item.href ? 'text-primary-600' : ''
+                    }`}
+                  >
+                    {item.name}
+                    {pathname === item.href && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-primary"
+                        layoutId="activeNav"
+                        initial={false}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                  </Link>
+
+                  {/* Mega Menu */}
+                  <AnimatePresence>
+                    {item.megaMenu && showMegaMenu === item.name && (
+                      <motion.div
+                        className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-96 glass rounded-2xl border border-white/20 shadow-2xl overflow-hidden"
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="p-6">
+                          <div className="grid grid-cols-2 gap-4">
+                            {item.megaMenu.categories.map((category) => (
+                              <Link
+                                key={category.name}
+                                href={category.href}
+                                className="group flex items-center space-x-3 p-3 rounded-xl hover:bg-white/50 transition-all duration-200"
+                              >
+                                <div className="w-12 h-12 rounded-lg overflow-hidden">
+                                  <img
+                                    src={category.image}
+                                    alt={category.name}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                  />
+                                </div>
+                                <span className="font-medium text-neutral-800">{category.name}</span>
+                              </Link>
+                            ))}
+                          </div>
+                          <div className="border-t border-white/20 mt-4 pt-4">
+                            <div className="flex space-x-4">
+                              {item.megaMenu.featured.map((featured) => (
+                                <Link
+                                  key={featured.name}
+                                  href={featured.href}
+                                  className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                                >
+                                  {featured.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </nav>
+
+            {/* Search Bar */}
+            <div className="hidden md:flex flex-1 max-w-md mx-8">
+              <form onSubmit={handleSearch} className="w-full relative">
+                <input
+                  type="text"
+                  placeholder="Search for products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 rounded-full border border-neutral-200 bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                />
+                <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-500" />
+              </form>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-2">
+              {/* Search (Mobile) */}
+              <motion.button
+                onClick={() => setIsSearchOpen(true)}
+                className="md:hidden p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <MagnifyingGlassIcon className="w-5 h-5 text-neutral-700" />
+              </motion.button>
+
+              {/* Wishlist */}
+              <motion.button
+                onClick={() => router.push('/account/wishlist')}
+                className="relative p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <HeartIcon className="w-5 h-5 text-neutral-700" />
+              </motion.button>
+
+              {/* Cart */}
+              <motion.button
+                onClick={() => router.push('/cart')}
+                className="relative p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ShoppingBagIcon className="w-5 h-5 text-neutral-700" />
+                {itemCount > 0 && (
+                  <motion.span
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  >
+                    {itemCount}
+                  </motion.span>
+                )}
+              </motion.button>
+
+              {/* User Account */}
+              <motion.button
+                onClick={() => router.push('/account')}
+                className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <UserIcon className="w-5 h-5 text-neutral-700" />
+              </motion.button>
+
+              {/* Mobile Menu Toggle */}
+              <motion.button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="lg:hidden p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {isMobileMenuOpen ? (
+                  <XMarkIcon className="w-5 h-5 text-neutral-700" />
+                ) : (
+                  <Bars3Icon className="w-5 h-5 text-neutral-700" />
+                )}
+              </motion.button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              className="lg:hidden glass border-t border-white/20"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="container mx-auto px-4 py-6">
+                <nav className="space-y-4">
+                  {navigationItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="block py-2 text-neutral-700 hover:text-primary-600 transition-colors font-medium"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
+    </>
+  );
 }
+
+export default Header;

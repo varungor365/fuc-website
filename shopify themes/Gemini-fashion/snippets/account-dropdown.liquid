@@ -1,0 +1,17 @@
+<ul class="dropdown-menu dropdown-menu-right">
+  {% if customer %}
+    <li>
+      <a href="/account">{{ 'customer.account.dashboard' | t }}</a>
+    </li>
+    <li>
+      {{ 'layout.customer.log_out' | t | customer_logout_link }}
+    </li>
+  {% else %}
+    <li>
+      {{ 'layout.customer.log_in' | t | customer_login_link }}
+    </li>
+    <li>
+      {{ 'layout.customer.create_account' | t | customer_register_link }}
+    </li>
+  {% endif %}
+</ul>

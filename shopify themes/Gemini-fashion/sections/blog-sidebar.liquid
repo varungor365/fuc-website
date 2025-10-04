@@ -1,0 +1,268 @@
+{%- for block in section.blocks -%}
+{%- case block.type -%}
+  {% when 'search' %}
+  <aside id="search-{{ block.id }}" class="widget widget__search">
+    <form class="search__form" method="get" action="/search" role="search">
+      <label>
+        <input class="search__field" type="search"  placeholder="{{ 'general.search.blog_placeholder' | t }}" name="q"{% if search.performed %} value="{{ search.terms | escape | downcase }}"{% endif %} />
+        <input type="hidden" name="type" value="article" />
+      </label>
+      <button type="submit" class="search__submit">
+        {% include 'icon-search' %}
+      </button>
+    </form>
+  </aside>
+  {% when 'categories' %}
+  {% assign blogs_name = block.settings.sidebar_blogs | split: ',' %}
+  {% if blogs_name.size > 0 %}
+  <aside id="categories-{{ block.id }}" class="widget widget__categories">
+    <h3 class="widget__title">{{ block.settings.title }}</h3>
+    <ul>
+     {% for str in blogs_name %}
+       {% assign word = str | strip | handleize %}
+       {%- assign number_count = blogs[word].articles_count | plus:0 -%}
+       {% unless number_count < 1 %}
+         {% if blog.handle == word %}
+           <li class="cat-item current-cat">
+             <a href="{{ blogs[word].url }}">{{ blogs[word].title }}</a>
+             <span>{{ blogs[word].articles_count }}</span>
+           </li>
+           {% else %}
+           <li class="cat-item">
+             <a href="{{ blogs[word].url }}">{{ blogs[word].title }}</a>
+             <span>{{ blogs[word].articles_count }}</span>
+           </li>
+         {% endif %}
+       {% endunless %}
+     {% endfor %}
+    </ul>
+  </aside>
+  {% endif %}
+  {% when 'instagram' %}
+  <aside id="gemini-instagram-{{ block.id }}" class="widget widget__instagram">
+    <h3 class="widget__title">{{ block.settings.title }}</h3>
+    <div class="instagram-sidebar x3">
+    </div>
+  </aside>
+  {% when 'recent' %}
+  {% if template == "blog" %}
+  <aside id="recent-posts-{{ block.id }}" class="widget widget__recentpost">
+    <h3 class="widget__title">{{ block.settings.title }}</h3>
+    <ul>
+      {% for article in blogs[blog.handle].articles limit:5 %}
+      <li>
+        {% include 'icon-ios-paper-outline' %}
+        <a href="{{ article.url }}">{{ article.title }}</a>
+        <span class="post-date">{{ article.published_at | time_tag: format: 'month_day_year' }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </aside>
+  {% elsif template == "article" and blogs[blog.handle].articles_count > 1 %}
+  <aside id="recent-posts-{{ block.id }}" class="widget widget__recentpost">
+    <h3 class="widget__title">{{ block.settings.title }}</h3>
+    <ul>
+      {% for f_article in blogs[blog.handle].articles limit:5 %}
+        {%- if article.id != f_article.id -%}
+          <li>
+            {% include 'icon-ios-paper-outline' %}
+            <a href="{{ f_article.url }}">{{ f_article.title }}</a>
+            <span class="post-date">{{ f_article.published_at | time_tag: format: 'month_day_year' }}</span>
+          </li>
+        {%- endif -%}
+      {% endfor %}
+    </ul>
+  </aside>
+  {% endif %}
+  {% when 'collection' %}
+  <aside id="shopify_products-{{ block.id }}" class="widget shopify widget__products">
+    <h3 class="widget__title">{{ block.settings.title }}</h3>
+    {% if block.settings.featured_product_list_collection == blank %}
+    <p style="margin-bottom: 30px;">{{ 'homepage.onboarding.no_content' | t }}</p>
+    {% else %}
+    <ul>
+      {% for product in collections[block.settings.featured_product_list_collection].products limit:block.settings.featured_product_limit_all %}
+
+        {% assign on_sale = false %}
+        {% if product.compare_at_price_min > product.price_min %}
+          {% assign on_sale = true %}
+        {% endif %}
+         {%- assign image_size = '80x102' -%}
+        {% assign c = block.settings.featured_product_list_collection %}
+        <li>
+          <div class="widget__thumb">
+            <a href="{{ product.url }}" title="{{ product.title }}">
+              <img width="{{ image_size | split: 'x'| first }}"
+                src="{{ product.featured_image.src | img_url: image_size | split:'?' | first }}"
+                class="attachment-shop_catalog size-shop_catalog wp-post-image"
+                alt="{{ product.featured_image.alt | escape }}"
+                srcset="{{ product.featured_image.src | img_url: image_size | split:'?' | first }} 370w,
+                   {{ product.featured_image.src | img_url: '118x150' | split:'?' | first }} 118w,
+                   {{ product.featured_image.src | img_url: '235x300' | split:'?' | first }} 235w,
+                   {{ product.featured_image.src | img_url: '768x980' | split:'?' | first }} 768w,
+                   {{ product.featured_image.src | img_url: '803x1024' | split:'?' | first }} 803w,
+                   {{ product.featured_image.src | img_url: '80x102' | split:'?' | first }} 80w,
+                   {{ product.featured_image.src | img_url: 'master' | split:'?' | first }}.jpg 870w" sizes="(max-width: 80px) 100vw, 80px">
+            </a>
+          </div>
+          <div class="widget__info">
+            <a class="product-title" href="{{ product.url }}" title="{{ product.title }}">
+              <span>{{ product.title }}</span>
+            </a>
+            {%- if product.price_varies -%}
+              {{ product.price_min | money }}–{{ product.price_max | money }}
+            {%- elsif on_sale -%}
+              <del>{{ product.compare_at_price  | money }}</del> <ins>{{ product.price | money }}</ins>
+            {%- else -%}
+              {{ product.price | money }}
+            {%- endif -%}
+          </div>
+        </li>
+
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </aside>
+  {% when 'tags' %}
+  {% if blog.all_tags.size > 0 %}
+  <aside id="tagcloud-{{ block.id }}" class="widget widget__tagcloud">
+    <h3 class="widget__title">{{ block.settings.title }}</h3>
+    <div class="tagcloud">
+    {% for tag in blog.all_tags %}
+       {% if current_tags contains tag %}
+       <a class="chosen" href="{{ tag.title }}" style="pointer-events: none">{{ tag.title }}</a>
+       {% else %}
+       {{ tag | link_to_tag: tag }}
+       {% endif %}
+    {% endfor %}
+    </div>
+  </aside>
+  {% endif %}
+{%- endcase -%}
+{%- endfor -%}
+
+{% schema %}
+  {
+    "name": "Blog sidebar",
+    "class": "blog-sidebar",
+    "max_blocks": 9,
+    "blocks": [
+      {
+        "type": "search",
+        "name": "Search",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Search"
+          }
+        ]
+      },
+      {
+        "type": "categories",
+        "name": "Categories",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Categories"
+          },
+          {
+          "type": "textarea",
+          "id": "sidebar_blogs",
+          "label": "Blogs Handle",
+          "default": "Beauty, Fashion, Food, Life-Style, Travel"
+        }
+        ]
+      },
+      {
+        "type": "instagram",
+        "name": "Instagram feed",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Instagram"
+          }
+        ]
+      },
+      {
+        "type": "recent",
+        "name": "Recent Post",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Recent Post"
+          }
+        ]
+      },
+      {
+        "type": "collection",
+        "name": "Featured Products Sidebar",
+        "settings": [
+         {
+          "type":"text",
+          "id":"title",
+          "label":"Title",
+          "default":"Sale Products"
+          },
+          {
+           "type": "collection",
+           "id": "featured_product_list_collection",
+           "label": "Collection to use"
+         },
+          {
+           "type": "text",
+           "id": "featured_product_limit_all",
+           "label": "Number of products to show",
+           "default": "5"
+         }
+        ]
+      },
+      {
+        "type": "tags",
+        "name": "Blog Tags",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Blog Tags"
+          }
+        ]
+      }
+    ],
+    "default": {
+      "blocks": [
+        {
+          "type": "search"
+        },
+        {
+          "type": "categories"
+        },
+        {
+          "type": "instagram"
+        },
+        {
+          "type": "recent"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "tags"
+        }
+      ]
+    }
+  }
+{% endschema %}

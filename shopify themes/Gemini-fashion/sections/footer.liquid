@@ -1,0 +1,644 @@
+<div class="footer-widgets">
+  <div class="page-width">
+    <div class="grid">
+      {% for block in section.blocks %}
+        {%- case block.settings.width -%}
+          {% when '16%' %}
+            {%- assign block_width = 'medium-up--one-sixth one-half small--one-whole' -%}
+          {% when '25%' %}
+            {%- assign block_width = 'large-up--one-quarter one-half small--one-whole' -%}
+          {% when '33%' %}
+            {%- assign block_width = 'large-up--one-third one-half small--one-whole' -%}
+          {% when '50%' %}
+            {%- assign block_width = 'one-half small--one-whole' -%}
+          {% when '66%' %}
+            {%- assign block_width = 'medium-up--two-thirds one-whole' -%}
+          {% when '75%' %}
+            {%- assign block_width = 'medium-up--three-quarters one-whole' -%}
+          {% when '100%' %}
+            {%- assign block_width = 'one-whole' -%}
+        {%- endcase -%}
+
+        <div class="grid__item {{ block_width }}">
+        {%- case block.type -%}
+          {%- when 'text' -%}
+            <div class="contact">
+              <div class="contact__organization">
+                <p itemscope itemtype="http://schema.org/Organization">
+                  <a href="/" itemprop="url">
+                    {% if block.settings.logo %}
+                    <img src="{{ block.settings.logo | img_url: 'master' }}"
+                     srcset="{{ block.settings.logo | img_url: 'master' }} 1x, {{ block.settings.logo | img_url: 'master', scale: 2 }} 2x"
+                     alt="{{ block.settings.logo.alt | default: shop.name }}"
+                     class="" width="150" height="auto" itemprop="logo">
+                    {% else %}
+                      {{ shop.name }}
+                    {% endif %}
+                </a>
+                </p>
+              </div>
+              <div class="contact__message">
+                {{ block.settings.textarea }}
+              </div>
+              {% if block.settings.social_enabled %}
+                {% include 'social-connect' %}
+              {% endif %}
+            </div>
+          {%- when 'menu' -%}
+            {% include 'navigation' %}
+          {%- when 'newsletter' -%}
+            <div class="newsletter newsletter--footer">
+              {% if block.settings.title %}
+                <h3 class="newsletter__title">{{ block.settings.title }}</h3>
+              {% endif %}
+              <p>{{ 'newsletter.newsletter_email' | t }}</p>
+              <form role="form" action="{{ settings.mailchimp_url }}" method="post" target="_blank" class="js-newsletter-form">
+                <div class="newsletter__input">
+                  <input type="text" class="newsletter__input--text js-newsletter-input" name="EMAIL" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'newsletter.email_placeholder' | t }}">
+                  <div class="newsletter-popup__response js-newsletter-response"></div>
+                  <button type="submit" class="newsletter__input--btn">
+                    {{ 'newsletter.submit' | t }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          {%- when 'social' -%}
+            {% include 'social-connect' %}
+          {%- when 'image' -%}
+            {% include 'image' %}
+          {%- when 'payment' -%}
+            {% include 'payment-methods' %}
+          {%- when 'googlemap' -%}
+            <div class="gmap-wrapper">
+              {% if block.settings.title %}
+                <h3 class="gemini-gmap__title">{{ block.settings.title }}</h3>
+              {% endif %}
+              <div
+                class="gemini-gmap gemini-gmap--footer js-gmap-footer"
+                data-address="{{ block.settings.address }}"
+                data-lat="{{ block.settings.lat }}"
+                data-lng="{{ block.settings.lng }}"
+                data-height="{{ block.settings.map_height }}"
+                data-zoom-level="{{ block.settings.zoom_level }}"
+                data-map-type="{{ block.settings.map_type }}"
+                {% if block.settings.custom_style_enable and block.settings.custom_style_snippet != blank %}
+                  data-map-style='{{ block.settings.custom_style_snippet }}'
+                {% endif %}
+                data-marker-disable="{{ block.settings.marker_disable }}"
+                data-zoom-control-disable="{{ block.settings.zoom_control_disable }}"
+                data-street-view-control-disable="{{ block.settings.street_view_control_disable }}"
+                data-draggable-control-disable="{{ block.settings.draggable_control_disable }}"
+                data-double-click-zoom-control-disable="{{ block.settings.double_click_zoom_control_disable }}"
+                data-scrollwheel-zoom-control-disable="{{ block.settings.scrollwheel_zoom_control_disable }}"
+                data-map-type-control-disable="{{ block.settings.map_type_control_disable }}"
+              >&nbsp;</div>
+
+              {%- if block.settings.margin != blank or block.settings.background != blank -%}
+                {%- assign mapMargin = block.settings.margin -%}
+                {%- assign mapBgColor = block.settings.bgColor -%}
+                <style>
+                  .gemini-gmap--footer {
+                    {%- if mapMargin != blank -%}
+                      margin: {{ mapMargin }};
+                    {%- endif -%}
+                    {%- if mapBgColor != blank -%}
+                      background-color: {{ mapBgColor }};
+                    {%- endif -%}
+                  }
+                </style>
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+        </div>
+      {% endfor %}
+
+
+      {% if section.settings.show_payment_icons %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Footer",
+    "max_blocks": 6,
+    "blocks": [
+      {
+        "type": "menu",
+        "name": "Footer Menu",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Quick links"
+          },
+          {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Add menu"
+          },
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Container width",
+            "default": "16%",
+            "options": [
+              {
+                "value": "16%",
+                "label": "16%"
+              },
+              {
+                "value": "25%",
+                "label": "25%"
+              },
+              {
+                "value": "33%",
+                "label": "33%"
+              },
+              {
+                "value": "50%",
+                "label": "50%"
+              },
+              {
+                "value": "66%",
+                "label": "66%"
+              },
+              {
+                "value": "75%",
+                "label": "75%"
+              },
+              {
+                "value": "100%",
+                "label": "100%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "name": "Get in touch",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Logo"
+          },
+          {
+            "type": "image_picker",
+            "id": "logo",
+            "label": "Custom logo",
+            "info": "192px wide .png recommended"
+          },
+          {
+            "type": "header",
+            "content": "Get in touch"
+          },
+          {
+            "type": "textarea",
+            "id": "textarea",
+            "label": "Text",
+            "default": "<p>Use this text to share information about your brand with your customers.</p>",
+            "info": "Html code support"
+          },
+          {
+            "type": "checkbox",
+            "id": "social_enabled",
+            "label": "Show social media icons",
+            "info": "Add accounts in Social media section"
+          },
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Container width",
+            "default": "25%",
+            "options": [
+              {
+                "value": "16%",
+                "label": "16%"
+              },
+              {
+                "value": "25%",
+                "label": "25%"
+              },
+              {
+                "value": "33%",
+                "label": "33%"
+              },
+              {
+                "value": "50%",
+                "label": "50%"
+              },
+              {
+                "value": "66%",
+                "label": "66%"
+              },
+              {
+                "value": "75%",
+                "label": "75%"
+              },
+              {
+                "value": "100%",
+                "label": "100%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "newsletter",
+        "name": "Newsletter signup",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Subscribe"
+          },
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Container width",
+            "default": "25%",
+            "options": [
+              {
+                "value": "25%",
+                "label": "25%"
+              },
+              {
+                "value": "33%",
+                "label": "33%"
+              },
+              {
+                "value": "50%",
+                "label": "50%"
+              },
+              {
+                "value": "66%",
+                "label": "66%"
+              },
+              {
+                "value": "75%",
+                "label": "75%"
+              },
+              {
+                "value": "100%",
+                "label": "100%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "googlemap",
+        "name": "Google map",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "header",
+            "content": "General"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Find us at"
+          },
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Container width",
+            "default": "25%",
+            "options": [
+              {
+                "value": "25%",
+                "label": "25%"
+              },
+              {
+                "value": "33%",
+                "label": "33%"
+              },
+              {
+                "value": "50%",
+                "label": "50%"
+              },
+              {
+                "value": "66%",
+                "label": "66%"
+              },
+              {
+                "value": "75%",
+                "label": "75%"
+              },
+              {
+                "value": "100%",
+                "label": "100%"
+              }
+            ]
+          },
+          {
+            "type": "header",
+            "content": "Map center"
+          },
+          {
+            "type": "paragraph",
+            "content": "Enter your address"
+          },
+          {
+            "type": "text",
+            "id": "address",
+            "label": "Store address",
+            "default": "Sir Matt Busby Way, Stretford, Manchester M16 0RA, UK"
+          },
+          {
+            "type": "paragraph",
+            "content": "Or enter the correct coordinate (latitude, longitude)"
+          },
+          {
+            "type": "text",
+            "id": "lat",
+            "label": "Latitude",
+            "default": "53.4629517"
+          },
+          {
+            "type": "text",
+            "id": "lng",
+            "label": "Longitude",
+            "default": "-2.2911847"
+          },
+          {
+            "type": "header",
+            "content": "Style options"
+          },
+          {
+            "type": "text",
+            "id": "map_height",
+            "label": "Map height (in pixel)",
+            "default": "200"
+          },
+          {
+            "type": "text",
+            "id": "zoom_level",
+            "label": "Zoom level",
+            "default": "14"
+          },
+          {
+            "type": "select",
+            "id": "map_type",
+            "label": "Map type",
+            "options": [
+              {
+                "value": "roadmap",
+                "label": "Roadmap"
+              },
+              {
+                "value": "satellite",
+                "label": "Satellite"
+              },
+              {
+                "value": "hybrid",
+                "label": "Hybrid"
+              },
+              {
+                "value": "terrain",
+                "label": "Terrain"
+              }
+            ],
+            "default": "roadmap"
+          },
+          {
+            "type": "checkbox",
+            "id": "custom_style_enable",
+            "label": "Enable custom style",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "custom_style_snippet",
+            "label": "Custom style snippets",
+            "info": "Use custom style snippets to apply your style to google map. You can go to [Snazzy Maps](https://snazzymaps.com/) to create your own or search for your expected style, then copy and paste snippet here."
+          },
+          {
+            "type": "checkbox",
+            "id": "marker_disable",
+            "label": "Disable map marker",
+            "default": false
+          },
+          {
+            "type": "header",
+            "content": "Control settings"
+          },
+          {
+            "type": "checkbox",
+            "id": "zoom_control_disable",
+            "label": "Disable zoom control",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "street_view_control_disable",
+            "label": "Disable street view control",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "draggable_control_disable",
+            "label": "Disable draggable control",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "double_click_zoom_control_disable",
+            "label": "Disable double click zoom control",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "scrollwheel_zoom_control_disable",
+            "label": "Disable scrollwheel zoom control",
+            "default": false
+          },
+          {
+            "type": "checkbox",
+            "id": "map_type_control_disable",
+            "label": "Disable Map type control",
+            "default": false
+          },
+          {
+            "type": "header",
+            "content": "Design options"
+          },
+          {
+            "type": "color",
+            "id": "background",
+            "label": "Background"
+          },
+          {
+            "type": "text",
+            "id": "margin",
+            "label": "Margins (valid css margin value)",
+            "info": "60px auto 60px auto"
+          }
+        ]
+      },
+      {
+        "type": "social",
+        "name": "Social Connected",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Keep Connected"
+          },
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Container width",
+            "default": "25%",
+            "options": [
+              {
+                "value": "16%",
+                "label": "16%"
+              },
+              {
+                "value": "25%",
+                "label": "25%"
+              },
+              {
+                "value": "33%",
+                "label": "33%"
+              },
+              {
+                "value": "50%",
+                "label": "50%"
+              },
+              {
+                "value": "66%",
+                "label": "66%"
+              },
+              {
+                "value": "75%",
+                "label": "75%"
+              },
+              {
+                "value": "100%",
+                "label": "100%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "image",
+        "name": "Custom Image",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Custom image",
+            "info": "Select your custom image"
+          },
+          {
+            "type": "text",
+            "id": "image_width",
+            "label": "Image width"
+          },
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Container width",
+            "default": "25%",
+            "options": [
+              {
+                "value": "16%",
+                "label": "16%"
+              },
+              {
+                "value": "25%",
+                "label": "25%"
+              },
+              {
+                "value": "33%",
+                "label": "33%"
+              },
+              {
+                "value": "50%",
+                "label": "50%"
+              },
+              {
+                "value": "66%",
+                "label": "66%"
+              },
+              {
+                "value": "75%",
+                "label": "75%"
+              },
+              {
+                "value": "100%",
+                "label": "100%"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "payment",
+        "name": "Payment methods",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "We accept"
+          },
+          {
+            "type": "select",
+            "id": "width",
+            "label": "Container width",
+            "default": "25%",
+            "options": [
+              {
+                "value": "16%",
+                "label": "16%"
+              },
+              {
+                "value": "25%",
+                "label": "25%"
+              },
+              {
+                "value": "33%",
+                "label": "33%"
+              },
+              {
+                "value": "50%",
+                "label": "50%"
+              },
+              {
+                "value": "66%",
+                "label": "66%"
+              },
+              {
+                "value": "75%",
+                "label": "75%"
+              },
+              {
+                "value": "100%",
+                "label": "100%"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+{% endschema %}

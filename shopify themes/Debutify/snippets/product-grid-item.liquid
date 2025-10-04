@@ -1,0 +1,150 @@
+<!-- /snippets/product-grid-item.liquid -->
+{% comment %}
+
+  This snippet is used to showcase each product during the loop,
+  'for product in collection.products' in collection.liquid.
+
+  A liquid variable (grid_item_width) is set just before the this
+  snippet is included to change the size of the container.
+  Once the variable is set on a page, all future instances of this
+  snippet will use that width. Overwrite the variable to adjust this.
+
+  Example
+    - assign grid_item_width = 'large--one-quarter medium--one-half'
+
+{% endcomment %}
+
+{% unless grid_item_width %}
+  {% assign grid_item_width = 'large--one-third medium--one-half' %}
+{% endunless %}
+
+{% unless width %}
+  {%- assign width = 310 -%}
+{% endunless %}
+{% unless height %}
+  {%- assign height = 415 -%}
+{% endunless %}
+
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign sold_out = true %}
+{% if product.available or emptyState == true %}
+  {% assign sold_out = false %}
+{% endif %}
+
+{% capture img_id_class %}ProductImage-{{ product.featured_image.id }}{% endcapture %}
+{% capture img_wrapper_id %}ProductImageWrapper-{{ product.featured_image.id }}{% endcapture %}
+{%- assign img_url = product.featured_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+{% if emptyState %}
+  {% assign product_link = '/admin/products' %}
+{% else %}
+  {% assign product_link = product.url | within: collection %}
+{% endif %}
+
+<div class="grid__item grid-product {{ grid_item_width }}{% if sold_out %} is-sold-out{% endif %} {% if settings.product_card %} product-card{% endif %}">
+  <div class="grid-product__wrapper">
+    <div class="grid-product__image-wrapper">
+      <a href="{{ product_link }}" class="grid-product__image-link image-link">
+        {% if emptyState %}
+          {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+          {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+        {% else %}  
+          <div id="{{ img_wrapper_id }}" class="product--wrapper image-wrapper" style="padding-top:{{ 1 | divided_by: product.featured_image.aspect_ratio | times: 100 }}%;">
+            <img class="product--image image lazyload {{ img_id_class }}"
+                 src="{{ product.featured_image | img_url: '150x150' }}"
+                 data-src="{{ img_url }}"
+                 data-widths="[180, 370, 590, 740, 900, 1080, 1296, 1512, 1728, 2048]"
+                 data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+                 data-sizes="auto"
+                 alt="{{ product.featured_image.alt | escape }}">
+          </div>
+
+          <div class="wrapper-badge">
+            {% if sold_out %}
+              <div class="badge badge-sold-out">
+                <span class="fas fa-clock"></span>
+              </div>
+            {% elsif on_sale %}
+              <div class="badge badge-on-sale">
+                <span class="fas fa-tags"></span>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="wrapper-sale">
+            {% if sold_out %}
+              <span class="text-sold-out">{{ 'products.product.sold_out_html' | t }}</span>
+            {% elsif on_sale %}
+              {% capture saved_amount %}
+                {% if settings.sale_type == 'amount' %}
+                  {{ product.compare_at_price | minus: product.price | money_without_trailing_zeros }}
+                {% elsif settings.sale_type == 'percentage' %}
+                  {{ product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | money_without_currency | times: 100 | remove: '.0' }}%
+                {% endif %}
+              {% endcapture %}
+              <span class="text-on-sale">{{ 'products.general.save_html' | t: saved_amount: saved_amount }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      </a>
+    </div>
+    
+    <a href="{{ product_link }}" class="grid-product__meta">
+      {% if emptyState %}
+        <span class="grid-product__title">{{ 'home_page.onboarding.product_title' | t }}</span>
+        <p class="grid-product__price-wrap">
+          <span class="grid-product__price">
+            <span class="price">$19.99</span>
+          </span>
+        </p>
+      {% else %}
+        {% if settings.grid_product_vendor %}
+          <p class="vendor grid-product__vendor">{{ product.vendor }}</p>
+        {% endif %}
+      
+      	{% if settings.review_badge_grid == 'review_badge_above' %}
+          {% include 'review-badge', badge_template: 'grid' %}
+        {% endif %}
+      
+        <p class="grid-product__title">{{ product.title }}</p>
+      	
+      	{% if settings.review_badge_grid == 'review_badge_under' %}
+          {% include 'review-badge', badge_template: 'grid' %}
+        {% endif %}
+      
+        <p class="grid-product__price-wrap">
+          <span class="grid-product__price">
+            {% if on_sale %}
+              <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+              <span class="price price-compare">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+              <span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
+            {% else %}
+               <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+            {% endif %}
+            <span class="price {% if on_sale %} on-sale{% endif %}">
+              {% if product.price_varies %}
+                {{ product.price_min | money_without_trailing_zeros }}+
+              {% else %}
+                {{ product.price | money_without_trailing_zeros }}
+              {% endif %}
+            </span>
+          </span>
+        </p>
+      {% endif %}
+    </a>
+  </div>
+</div>
+
+{% comment %}
+  Add a line break to force item to go to the next line when the grid is = 2
+{% endcomment %}
+
+{% if section.settings.desktop_grid == '2' %}
+  {% if forloop.index == 2 or forloop.index == 4 or forloop.index == 6 %}
+    <hr class="hr--breaker">
+  {% endif %}
+{% endif %}

@@ -1,0 +1,60 @@
+{% if settings.display_breadcrumb %}
+  {% unless template == 'index' %}
+  <div class="breadcrumb">
+    <a href="/" data-translate="general.breadcrumbs.home">{{ 'general.breadcrumbs.home' | t }}</a>  
+    {% if template contains 'product' %} 
+
+      {% if collection %}
+        <span class="arrow">/</span>  
+        {% if collection.handle %}
+        {% capture url %}/collections/{{ collection.handle }}{% endcapture %}  
+          <a href="{{ url }}">{% include 'multilang' with collection.title %}</a>
+        {% endif %}
+      {% else %}
+        <span class="arrow">/</span>
+        <a href="/collections/all">{{ 'collections.general.items_count.other' | t }}</a>
+      {% endif %}
+
+      <span class="arrow">/</span>
+      {% include 'multilang' with product.title %}
+
+    {% elsif template contains 'collection' and collection.handle %}
+
+      {% if current_tags %}
+        <span class="arrow">/</span>
+        {% capture url %}/collections/{{ collection.handle }}{% endcapture %}  
+        <a href="{{ url }}">{% include 'multilang' with collection.title %}</a>
+
+        <span class="arrow">/</span>  
+        {% include 'multilang' with current_tags.first %}
+
+      {% else %}
+        <span class="arrow">/</span>  
+        <a href="{{ url }}">{% include 'multilang' with collection.title %}</a>
+      {% endif %}
+
+    {% elsif template == 'cart' %}
+      <span class="arrow">/</span>  	
+      <span {% if settings.enable_multilang %}data-translate="general.breadcrumbs.cart"{% endif %}>{{ 'general.breadcrumbs.cart' | t }}</span>
+
+    {% elsif template == 'article' %}
+
+      <span class="arrow">/</span>  
+      <a href="{{ blog.url }}">{% include 'multilang' with blog.title %}</a>
+
+      <span class="arrow">/</span>  
+      {% include 'multilang' with article.title %}
+
+      {% elsif template contains 'page' %}
+
+      <span class="arrow">/</span>  
+      {% include 'multilang' with page.title %}
+
+    {% else %}
+      <span class="arrow">/</span>
+      {% include 'multilang' with page_title %}
+
+    {% endif %}
+  </div>
+  {% endunless %}
+{% endif %}

@@ -1,0 +1,662 @@
+/*============================================================================
+  # Basic styles
+==============================================================================*/
+
+html {
+  background-color: $color-bg;
+  height: 100%;
+}
+
+
+body {
+  background-color: $color-bg;
+
+  {% if settings.layout_background_type == "image_pattern" %}
+  background-image: url('{{ settings.layout_background_pattern_image_picker | img_url: 'original' }}');
+  background-repeat: repeat;
+  {% elsif settings.layout_background_type == "full_image" %}
+  background-image: url('{{ settings.layout_background_image_picker | img_url: 'master' }}');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  {% elsif settings.layout_background_type == "gradient" %}
+  $color1: {{ settings.layout_gradient_first_color }};
+  $color2: {{ settings.layout_gradient_second_color }};
+  background: linear-gradient({{ settings.background_gradient_rotation }}deg, $color1, $color2);
+  {% endif %}
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+}
+
+
+select, input{
+  outline: none;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.main-content.not-found-template {
+  padding-top: 0 !important;
+}
+
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+.page-width {
+  @include clearfix();
+  max-width: $site-width;
+  margin: 0 auto;
+  padding: 0 ($gutter / 4);
+
+  @include at-query ($min, $medium) {
+    padding: 0 $gutter;
+  }
+}
+
+@include at-query ($min, $large) {
+  .page-width--large {
+    max-width: $site-width;
+    margin: 0 auto;
+    padding: $gutter;
+  }
+  .page-width--large--important {
+    max-width: $site-width !important;
+    margin: 0 auto !important;
+    padding: $gutter !important;
+  }
+}
+
+.standard-page {
+  padding: $gutter;
+}
+.standard-page__title {
+  @extend .h2;
+  font-size: 1.4rem;
+  line-height: 2.1rem;
+  text-align: center;
+  padding-bottom: ($gutter / 3);
+}
+.page--empty {
+  padding: ($gutter * 3) $gutter $gutter;
+  text-align: center;
+  p {
+    color: $color-pale;
+  }
+  .h3 {
+    margin-bottom: $gutter;
+  }
+}
+
+.text-meta {
+  color: $color-pale;
+}
+
+/*================ Desktop Version ================*/
+@include at-query($min, $large) {
+  .standard-page {
+    @extend .page-width--large--important;
+  }
+  .standard-page__title {
+    text-align: left;
+  }
+  .page--empty {
+    padding: ($gutter * 5) $gutter $gutter;
+    .h3 {
+      margin-bottom: $gutter * 2;
+    }
+  }
+}
+
+.normal-section-padding {
+  padding: 0 $gutter $gutter;
+}
+
+.section-heading {
+  margin-bottom: $gutter / 3 * 2;
+  margin-top: $gutter;
+  @include at-query($max, $small) {
+    margin-top: $gutter / 2;
+  }
+}
+
+// Fixed Header
+
+@mixin fixed-header() {
+  &>header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: $z-index-toolbar;
+  }
+}
+body.fixed-header--all {
+  @include fixed-header;
+}
+@include at-query($max, $pre-large) {
+  body.fixed-header--mobile {
+    @include fixed-header;
+  }
+  body.fixed-header--all,
+  body.fixed-header--mobile {
+    .main-content {
+      //padding-top: $header-height-mobile;
+      padding-top: $header-height;
+
+    }
+  }
+}
+@include at-query($min, $large) {
+  body.fixed-header--desktop {
+    @include fixed-header;
+  }
+  body.fixed-header--all,
+  body.fixed-header--desktop {
+    .drawer {
+      position: fixed;
+    }
+    .main-content {
+      padding-top: $header-height;
+    }
+  }
+}
+
+
+/*============================================================================
+  #Rich Text Editor
+==============================================================================*/
+.rte {
+  margin-bottom: $gutter / 2;
+
+  a {
+    text-decoration: underline;
+  }
+
+  // Add some top margin to headers from the rich text editor
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 2em;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  > div {
+    margin-bottom: $gutter / 2;
+  }
+
+  li {
+    margin-bottom: 0.4em;
+  }
+}
+
+.rte--header {
+  margin-bottom: 0;
+}
+
+/*============================================================================
+  #Links and Buttons
+==============================================================================*/
+a,
+.text-link {
+  color: $color-link;
+  text-decoration: none;
+  background: transparent;
+  outline: none;
+}
+
+a:hover,
+a:focus {
+  color: $color-link-hover;
+  outline: none;
+}
+
+button {
+  overflow: visible;
+  outline: none;
+}
+
+button[disabled],
+html input[disabled] {
+  cursor: default;
+  outline: none;
+}
+
+.btn,
+.rte .btn {
+  display: inline-block;
+  padding: 15px 30px;
+  width: auto;
+  margin: 0;
+  line-height: 1.42;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 2px solid $color-btn-primary-text;
+  @include user-select(none);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: $radius;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.2s ease;
+
+  /*================ Set primary button colors - can override later ================*/
+  background-color: $color-btn-primary;
+  color: $color-btn-primary-text;
+
+  &:hover {
+    background-color: $color-btn-primary-hover;
+    color: $color-btn-primary-text;
+    box-shadow: 0px 5px 31px -1px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active,
+  &:focus {
+   background-color: $color-btn-primary-active;
+   color: $color-btn-primary-text;
+  }
+
+  &[disabled],
+  &.disabled {
+    cursor: default;
+    color: $disabled-border;
+    background-color: $disabled-grey !important;
+    box-shadow: none;
+    &:hover {
+      color: $disabled-border;
+    }
+  }
+}
+
+.btn--secondary,
+.rte .btn--secondary {
+  @extend .btn;
+  background-color: $color-btn-secondary;
+
+  &:hover {
+    background-color: $color-btn-secondary-hover;
+    color: $color-btn-secondary-text;
+  }
+
+  &:active,
+  &:focus {
+   background-color: $color-btn-secondary-active;
+   color: $color-btn-secondary-text;
+  }
+}
+
+.btn--special,
+.rte .btn--special {
+  @extend .btn;
+  background-color: $color-btn-special;
+  border-radius: 0;
+  border: none;
+  color: $color-btn-special-text;
+
+  &:hover {
+    background-color: $color-btn-special-hover;
+    color: $color-btn-special-text;
+  }
+
+  &:active,
+  &:focus {
+   background-color: $color-btn-special-active;
+   color: $color-btn-special-text;
+  }
+}
+
+.btn--small {
+  padding: 4px 5px;
+  font-size: rem(12px);
+}
+
+.btn--large {
+  padding: 12px 30px;
+  font-size: rem(16px);
+}
+
+.btn--full {
+  width: 100%;
+}
+
+/*================ Force an input/button to look like a text link ================*/
+.text-link {
+  display: inline;
+  border: 0 none;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+/*============================================================================
+  #Lists
+==============================================================================*/
+ul, ol {
+  margin: 0 0 ($gutter / 2) 20px;
+  padding: 0;
+}
+
+ol { list-style: decimal; }
+ul ul, ul ol,
+ol ol, ol ul { margin: 4px 0 5px 20px; }
+li { margin-bottom: 0.25em; }
+
+ul.square { list-style: square outside; }
+ul.disc { list-style: disc outside; }
+ol.alpha { list-style: lower-alpha outside; }
+
+.no-bullets {
+  list-style: none outside;
+  margin-left: 0;
+}
+
+.inline-list {
+  margin-left: 0;
+
+  li {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+}
+
+.comma-list {
+  @extend .inline-list;
+  margin: 0;
+  .comma-list__item:not(:last-child) {
+    &::after {
+      content: ",";
+    }
+  }
+}
+
+/*============================================================================
+  #Tables
+==============================================================================*/
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+table.full {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.table-wrap {
+  max-width: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+th {
+  font-weight: bold;
+}
+
+th, td {
+  text-align: left;
+  padding: $gutter / 2;
+  border: 1px solid $color-border;
+}
+
+/*============================================================================
+  Responsive tables, defined with .table--responsive on table element.
+  Only defined for IE9+
+==============================================================================*/
+.table--responsive {
+  @include at-query($max, $small) {
+    thead {
+      display: none;
+    }
+
+    tr {
+      display: block;
+    }
+
+    // IE9 table layout fixes
+    tr,
+    td {
+      float: left;
+      clear: both;
+      width: 100%;
+    }
+
+    th,
+    td {
+      display: block;
+      text-align: right;
+      padding: 15px;
+    }
+
+    td:before {
+      content: attr(data-label);
+      float: left;
+      text-align: center;
+      font-size: 12px;
+      padding-right: 10px;
+    }
+
+    &.cart-table {
+      img {
+        margin: 0 auto;
+      }
+
+      .js-qty {
+        float: right;
+      }
+    }
+  }
+}
+
+@include at-query($max, $small) {
+  .table--small-hide {
+    display: none !important;
+  }
+
+  .table__section + .table__section {
+    position: relative;
+    margin-top: 10px;
+    padding-top: 15px;
+
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 15px;
+      right: 15px;
+      border-bottom: 1px solid $color-border;
+    }
+  }
+}
+
+
+/*============================================================================
+  #OOCSS Media Object
+    - http://www.stubbornella.org/content/2010/06/25/the-media-object-saves-hundreds-of-lines-of-code/
+==============================================================================*/
+.media,
+.media-flex {
+  overflow: hidden;
+  _overflow: visible;
+  zoom: 1;
+}
+
+.media-img {
+  float: left;
+  margin-right: $gutter;
+}
+
+.media-img-right {
+  float: right;
+  margin-left: $gutter;
+}
+
+.media-img img,
+.media-img-right img {
+  display: block;
+}
+
+
+/*============================================================================
+  #Images and Iframes
+==============================================================================*/
+img {
+  border: 0 none;
+}
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+img,
+iframe {
+  max-width: 100%;
+}
+
+.video-wrapper {
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  height: auto;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.alert-info {
+  border-radius: 3px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.social-sharing {
+  margin-top: $gutter / 2;
+  margin-left: 5px;
+  .social-sharing__link {
+    padding-right: 10px;
+    .social-sharing__icon {
+      background-image: url('{{ "social-icons-sprite.png" | asset_img_url: "132x32" }}');
+      background-repeat: no-repeat;
+      display: inline-block;
+      height: 32px;
+      width: 32px;
+      &.social-sharing__icon--facebook {
+        background-position-x: 0;
+      }
+      &.social-sharing__icon--twitter {
+        background-position-x: -33px;
+      }
+      &.social-sharing__icon--pinterest {
+        background-position-x: -66px;
+      }
+      &.social-sharing__icon--gplus {
+        background-position-x: -99px;
+      }
+    }
+  }
+}
+
+// Disable empty rating
+.spr-badge[data-rating="0.0"] {
+  visibility: hidden;
+}
+
+// Swap license alert buttons
+.swal2-cancel.swal2-styled {
+  float: left;
+}
+
+
+//Styled checkbox
+.konversion-checkbox {
+  position: absolute; // take it out of document flow
+  opacity: 0; // hide it
+
+  & + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  // Box.
+  & + label:before {
+    content: '';
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border: solid #cecece 2px;
+    border-radius: 2px;
+  }
+
+  // Box hover
+  &:hover + label:before {
+    background: $color-special;
+    border: solid $color-special 2px;
+  }
+
+  // Box focus
+  &:focus + label:before {
+  //box-shadow: 0 0 0 3px $color-special;
+  }
+
+  // Box checked
+  &:checked + label:before {
+    background: $color-special;
+    border: solid $color-special 2px;
+
+  }
+
+  // Disabled state label.
+  &:disabled + label {
+    color: #b8b8b8;
+    cursor: auto;
+  }
+
+  // Disabled box.
+  &:disabled + label:before {
+    box-shadow: none;
+    background: #ddd;
+  }
+
+  // Checkmark. Could be replaced with an image
+  &:checked + label:after, &:hover + label:after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 9px;
+    background: white;
+    width: 2px;
+    height: 2px;
+    box-shadow:
+            2px 0 0 white,
+            4px 0 0 white,
+            4px -2px 0 white,
+            4px -4px 0 white,
+            4px -6px 0 white,
+            4px -8px 0 white;
+    transform: rotate(45deg);
+  }
+}

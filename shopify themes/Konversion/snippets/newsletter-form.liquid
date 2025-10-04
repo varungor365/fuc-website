@@ -1,0 +1,28 @@
+<div class="newsletter-form">
+  {% if block != blank %}
+    {% comment %} Part of footer {% endcomment %}
+    {%- assign custom_text = block.settings.text -%}
+    {%- assign button_text = block.settings.button_text -%}
+  {% else %}
+    {%- assign custom_text = section.settings.text -%}
+    {%- assign button_text = section.settings.button_text -%}
+  {% endif %}
+  {% if custom_text != blank and form.posted_successfully? != true %}
+    <div class="newsletter-form__text">
+      {{ custom_text }}
+    </div>
+  {% endif %}
+  {% form 'customer' %}
+    {{ form.errors | default_errors }}
+    {% if form.posted_successfully? %}
+      <p class="note form-success h3">{{ 'general.newsletter_form.confirmation' | t }}</p>
+    {% else %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="newsletter-form__group">
+        <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" id="Mail" class="newsletter-form__input" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+        <input type="submit" class="btn btn--secondary newsletter-form__btn" name="subscribe" id="subscribe" value="{% if button_text != blank %}{{ button_text }}{% else %}{{ 'general.newsletter_form.submit' | t }}{% endif %}">
+      </div>
+    {% endif %}
+  {% endform %}
+
+</div>

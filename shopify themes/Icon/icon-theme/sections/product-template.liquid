@@ -1,0 +1,161 @@
+<div itemscope itemtype="http://schema.org/Product" id="product-{{ product.id }}" class="product-page product-template" data-product-id="{{ product.id }}" data-section-id="{{ section.id }}" data-enable-history-state="true" data-section-type="product-section">
+
+  <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+  <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+
+  <div class="section-title desktop-12 mobile-3">
+    <h1 itemprop="name">{{ product.title }}</h1>
+  </div>  
+
+  <div class="clear"></div>
+
+  <div id="product-photos" class="desktop-6 mobile-3">
+    {% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+    <div id="product-main-image" class="{% if product.images.size > 1 %}desktop-10{% else %}desktop-12{% endif %} main-product-image">
+      <img id="{{ product.id }}" data-image-id="{{ image.id }}" src="{{ featured_image | img_url: 'master' }}" alt='{{ image.alt | escape }}' title="{{ product.title }}"/>
+    </div>
+
+    {% if product.images.size > 1 %} 
+    <div class="desktop-2" id="thumbnail-gallery">   
+      {% if product.images.size > 4 %}<div class="thumbnail-slider">{% endif %}
+      {% for image in product.images %}
+      <div class="slide">
+        <a href="{{ image | product_img_url: 'master' }}" data-image-id="{{ image.id }}" class="clicker-thumb">
+          <img class="thumbnail" src="{{ image | product_img_url: 'master' }}" data-image-id="{{ image.id }}" alt="{{ image.alt | escape }}" data-image-id="{{ image.id }}" />
+        </a>
+      </div>
+      {% endfor %}
+      {% if product.images.size > 4 %}</div>{% endif %}
+    </div>        
+    {% endif %}
+  </div>
+  
+
+  <div id="product-right" class="desktop-6 mobile-3">
+    {% if collection %} 
+    <div class="desktop-1 right mobile-hide">
+      {% if collection.previous_product %}
+      {{ '<i class="icon-angle-left icon-2x"></i>' | link_to: collection.previous_product }}
+      {% endif %}
+      &nbsp;
+      {% if collection.next_product %}
+      {{ '<i class="icon-angle-right icon-2x"></i>' | link_to: collection.next_product }}
+      {% endif %}
+    </div>
+    {% endif %}
+    <div id="product-description">
+      {% if section.settings.product-vendor %}<h3>{{ 'products.product.designer' | t }}: {{ product.vendor }}</h3>{% endif %}
+      <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+        <p id="product-price">
+          {% if product.available %}
+          {% if product.compare_at_price > product.price %}
+          <span class="product-price" itemprop="price">{{ product.price | money }}</span>&nbsp;<span class="was">{{ product.compare_at_price | money }}</span>
+          {% else %}
+          <span class="product-price" itemprop="price">{{ product.price | money }}</span>
+          {% endif %}
+          {% else %}
+          <span class="product-price" itemprop="price">{{ 'products.product.sold_out' | t }}</span>
+          {% endif %}
+        </p> 
+
+        <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+        <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+
+        {% if section.settings.product-note != blank %}
+        <p class="product-note">
+          {{ section.settings.product-note | escape }}
+        </p>
+        {% endif %}
+
+        {% include 'short-form' %}  
+      </div>
+
+      <div class="rte">
+        {{ product.description }}
+      </div>     
+
+      <div class="clear"></div>
+
+      <div class="desc">
+        {% include 'social' with product %}
+      </div>        
+    </div>    
+  </div>
+
+  <div class="clear"></div>
+
+  {% if collection %}
+  {% include 'related-products' %}
+  {% endif %}
+
+  <div class="clear"></div>
+
+  {% if collection %} 
+  <div id="product-navigation" class="desktop-12 mobile-3">
+    <span class="backto">
+      {{ 'products.product.back_to' | t }} {{ collection.title | link_to: collection.url }}
+    </span>
+  </div>
+  {% endif %}
+
+
+{% if section.settings.thumbnails == 'left' %}
+<style>
+	.main-product-image.desktop-10 { float: right! important; }
+</style>
+{% endif %}
+{% unless section.settings.show-sku %}
+<style>
+    .variant-sku { display: none; }
+</style>
+{% endunless %}
+{% unless section.settings.enable-zoom %}
+<style>
+  img.zoomImg { display: none! important; }
+</style>
+{% endunless %}
+</div>
+{% schema %}
+{
+    "name": "Product Page",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable-zoom",
+        "label": "Enable image zoom",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "thumbnails",
+        "label": "Image thumbnail position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "product-vendor",
+        "label": "Show vendor"
+      },
+      {
+        "type": "checkbox",
+        "id": "show-sku",
+        "label": "Show variant SKU",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "product-note",
+        "label": "Product page note"
+      }
+    ]
+  }
+{% endschema %}

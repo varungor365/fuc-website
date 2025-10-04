@@ -1,0 +1,155 @@
+{% include 'block-width' %}
+
+{% if section.blocks.size > 0 %}
+  <div id="section-{{ section.id }}" class="{% if section.settings.background_section %}bg-section {% endif %}" data-section-id="{{ section.id }}" data-section-type="quotes-section">
+    <div class="box">
+      <div class="wrapper">
+        
+        {% unless section.settings.title == blank and section.settings.subtitle == blank %}
+          <div class="section-header text-center">
+            <h2 class="section-header__title">{{ section.settings.title | escape }}</h2>
+            <p class="section-header__subtitle">{{ section.settings.subtitle | escape }}</p>
+          </div>
+        {% endunless %}
+        
+        {% if section.blocks.size > 0 %}
+          <div class="quotes-wrapper">
+            <div class="quotes-slider" id="Quotes-{{ section.id }}"
+                 data-count="{{ section.blocks.size }}"
+                 data-autoplay="{{ section.settings.quote_auto }}"
+                 data-autoplaySpeed="{{ section.settings.quote_auto_speed }}"
+                 data-dots="{{ section.settings.quote_dots }}"
+                 data-arrows="{{ section.settings.quote_arrows }}"
+            >
+              
+              <!-- Blocks -->
+              {% for block in section.blocks %}
+                <div class="quotes-slide--{{ block.id }}" {{ block.shopify_attributes }}>
+                  <blockquote class="quotes-slider__text text-center">
+                    <p><span class="fas fa-quote-left fa-2x"></span></p>
+                    {% if block.settings.quote != blank %}
+                      <div class="rte">{{ block.settings.quote }}</div>
+                    {% endif %}
+                    {% if block.settings.author != blank %}
+                      <cite>{{ block.settings.author | escape }}</cite>
+                    {% endif %}
+                  </blockquote>
+                </div>
+              {% endfor %}
+              
+            </div>
+          </div>
+        {% endif %}
+          
+        {% if section.blocks.size == 0 %}
+          {% include 'no-blocks' %}
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Testimonials",
+    "class": "quotes-section",
+    "max_blocks": 9,
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "background_section",
+        "label": "Add background"
+      },
+	  {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Testimonials"
+      },
+	  {
+        "type": "text",
+        "id": "subtitle",
+        "label": "Subheading"
+      },
+	  {
+		"type": "header",
+		"content": "Slider options"
+	  },
+	  {
+        "type": "checkbox",
+        "id": "quote_auto",
+        "label": "Auto rotate",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "quote_dots",
+        "label": "Show dots",
+        "default": false
+      },
+	  {
+        "type": "checkbox",
+        "id": "quote_arrows",
+        "label": "Show arrows",
+        "default": false
+      },
+	  {
+        "type": "select",
+        "id": "quote_auto_speed",
+        "label": "Slide changes every",
+        "options": [
+          {
+            "value": "5000",
+            "label": "5 seconds"
+          },
+          {
+            "value": "7000",
+            "label": "7 seconds"
+          },
+          {
+            "value": "10000",
+            "label": "10 seconds"
+          }
+        ]
+      }
+	],
+	"blocks" : [
+	  {
+        "type": "quote",
+        "name": "Testimonials",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "quote",
+            "label": "Text",
+            "default":"<p>Share blog posts, products, or promotions with your customers. Use this text to describe products, share details on availability and style, or as a space to display recent reviews or FAQs.</p>"
+          },
+		  {
+            "type": "text",
+            "id": "author",
+            "label": "Author",
+            "default":"Author's name"
+          }
+        ]
+      }
+    ],
+	"presets": [
+      {
+        "name":  "Testimonials",
+        "category":"Text",
+		"blocks": [
+          {
+            "type": "quote"
+          },
+          {
+            "type": "quote"
+          },
+          {
+            "type": "quote"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

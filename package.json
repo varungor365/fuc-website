@@ -31,7 +31,9 @@
   },
   "homepage": "https://fashun.co.in",
   "dependencies": {
+    "clsx": "^2.1.1",
     "framer-motion": "^12.23.21",
-    "sharp": "^0.34.4"
+    "sharp": "^0.34.4",
+    "tailwind-merge": "^3.3.1"
   }
 }

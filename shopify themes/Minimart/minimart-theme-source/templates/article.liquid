@@ -1,0 +1,148 @@
+{% assign number_of_comments = article.comments_count %}
+
+{% if comment and comment.created_at %}
+  {% assign number_of_comments = article.comments_count | plus: 1 %}
+{% endif %}
+
+<header class="page-header">
+  <div class="container">
+    {% if current_tags %}    
+      <h2><a href="{{ blog.url }}">{% include 'multilang' with blog.title %}</a> &raquo; {{ current_tags.first }}</h2>
+    {% else %}
+      <h2>{% include 'multilang' with blog.title %}</h2>
+    {% endif %}
+
+    {% include 'breadcrumb' %}
+  </div>
+</header>
+
+<div class="container">
+  <div class="row">
+    {% if settings.display_sidebar_blog_page %}
+    {% include 'blog_sidebar' %}
+    {% endif %}
+
+    <div class="col-xs-12 {% if settings.display_sidebar_blog_page %}col-sm-9 {% endif %}blog-detail col-main">
+      <header class="title">
+        <h3>{% include 'multilang' with article.title %}</h3>
+      </header>
+
+      <p class="blog_author">
+        {% if blog.comments_enabled? %}
+        <a href="{{ article.url }}#comments" {% if settings.enable_multilang %}data-translate="blogs.comments.comments_with_count|count:{{article.comments_count}}"{%endif%}>
+          {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+        </a><span class="separator">/</span>
+        {% endif %}
+
+        {% capture date %}<time datetime='{{ article.published_at | date: '%Y-%m-%d' }}'>{{ article.published_at | date: '%b %d, %Y' }}</time>{% endcapture %}
+        {% capture author %}{{ article.author }}{% endcapture %}
+        <span class="blog_author" {% if settings.enable_multilang %}data-translate="blogs.article.author_on_date_html|date:{{date}},author:{{author}}" translate-item="blog-date-author"{%endif%}>
+          {{ 'blogs.article.author_on_date_html' | t: date: date, author: author }}        
+        </span>
+      </p>
+
+      {% if settings.enable_multilang %}
+      <div class="rte lang1">{{ article.content | split: '[lang2]' | first}}</div>
+      <div class="rte lang2">{{ article.content | split: '[lang2]' | last}}</div>
+      {% else %}
+      <div class="rte">{{ article.content | split: '[lang2]' | first}}</div>
+      {% endif %}
+
+      <ul class="user-tags">
+        {% include 'tags-article' %}
+      </ul>
+
+      {% if settings.display_share %}
+      {% include 'share' with article %}
+      {% endif %}
+
+      {% if blog.next_article or blog.previous_article %}
+      <div class="action-btn">
+        {% if blog.previous_article %}
+        <span class="left">
+          &larr; {{ 'blogs.article.older_post' | t | link_to: blog.previous_article }}
+        </span>
+        {% endif %}
+        {% if blog.next_article %}
+        <span class="right">
+          {{ 'blogs.article.newer_post' | t | link_to: blog.next_article }} &rarr;
+        </span>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if blog.comments_enabled? %}	
+      <h2 class="title-comment">{{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}</h2>
+
+        {% paginate article.comments by 5 %}
+        <div id="comments">
+
+          {% if comment and comment.created_at %}
+          <p class="note form-success">
+            {% if blog.moderated? %}
+            <span {% if settings.enable_multilang %}data-translate="blogs.comments.success_moderated"{%endif%}>{{ 'blogs.comments.success_moderated' | t }}</span>
+            {% else %}
+            <span {% if settings.enable_multilang %}data-translate="blogs.comments.success"{%endif%}>{{ 'blogs.comments.success' | t }}</span>
+            {% endif %}
+          </p>
+          {% endif %}
+
+          {% if number_of_comments > 0 %}
+          <ul>
+            {% comment %}If a comment was just submitted with no blank field, let's show it.{% endcomment %}
+            {% if comment and comment.created_at %}
+            <li id="{{ comment.id }}" class="comment first{% if article.comments_count == 0 %} last{% endif %}">
+              {% include 'comment' %}
+            </li>
+            {% endif %}
+
+            {% for comment in article.comments %}
+            <li id="{{ comment.id }}" class="comment{% unless number_of_comments > article.comments_count %}{% if forloop.first %} first{% endif %}{% endunless %}{% if forloop.last %} last {% endif %}">
+              {% include 'comment' %}
+            </li>
+            {% endfor %}
+          </ul>
+
+          {% if paginate.pages > 1 %}
+          <div class="text-center">
+            {% include 'pagination' %}
+          </div>
+          {% endif %}
+          {% endif %}
+
+          {% form article %}
+          <h3 id="add-comment-title" {% if settings.enable_multilang %}data-translate="blogs.comments.title"{%endif%}>{{ 'blogs.comments.title' | t }}</h3>
+          {% include 'form-errors-custom' %}
+          <div class="comment-form">
+            <label for="comment-author" {% if settings.enable_multilang %}data-translate="blogs.comments.name"{%endif%}>{{ 'blogs.comments.name' | t }}</label>
+            <input {% if form.errors contains "author" %}class="error"{% endif %} type="text" name="comment[author]" id="comment-author" value="{{ form.author }}">
+
+            <label for="comment-email" {% if settings.enable_multilang %}data-translate="blogs.comments.email"{%endif%}>{{ 'blogs.comments.email' | t }}</label>
+            <input {% if form.errors contains "email" %}class="error"{% endif %} type="email" name="comment[email]" id="comment-email" value="{{ form.email }}">
+          </div>
+
+          <div class="message">
+            <label for="comment-body" {% if settings.enable_multilang %}data-translate="blogs.comments.message"{%endif%}>{{ 'blogs.comments.message' | t }}</label>
+            <textarea {% if form.errors contains "body" %}class="error"{% endif %} name="comment[body]" id="comment-body">{{ form.body }}</textarea>
+          </div>
+
+          <p class="note" {% if settings.enable_multilang %}data-translate="blogs.comments.note"{%endif%}>{{ 'blogs.comments.note' | t }}</p>
+          <input type="submit" class="btn-secondary" value="{{ 'blogs.comments.post' | t }}">
+          {% if form.errors %}
+          <script>
+            window.location.hash = '#add-comment-title';
+          </script>
+          {% endif %}
+
+          {% if form.posted_successfully? %}
+          <script>
+            window.location.hash = '#comments';
+          </script>
+          {% endif %}
+          {% endform %}
+      </div>
+      {% endpaginate %}
+      {% endif %}
+    </div>
+  </div>
+</div>

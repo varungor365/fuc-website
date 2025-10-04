@@ -1,0 +1,29 @@
+{%- assign topbar_style = settings.collection_top_bar_style -%}
+
+<aside class="collection__top-bar">
+  <ul class="collection-list">
+    {%- case topbar_style -%}
+
+    {%- when 'show_all_collections' -%}
+      {%- for coll in collections -%}
+        <li class="collection-list__item {% if coll.handle == collection.handle %}collection-list__item--active{% endif %}">
+          <a href="{{ coll.url }}">{{ coll.title }}</a>
+        </li>
+      {%- else -%}
+        <span>{{ 'general.extras.no_item_available' | t }}</span>
+      {%- endfor -%}
+
+    {%- when 'show_link_list' -%}
+      {%- assign topbar_linklist_handle = settings.collection_link_list | handleize -%}
+      {%- assign link_list = linklists[topbar_linklist_handle].links -%}
+      {%- for link in link_list -%}
+        <li class="collection-list__item {% if link.active %}collection-list__item--active{% endif %}">
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        </li>
+      {%- else -%}
+        <span>{{ 'general.extras.no_item_available' | t }}</span>
+      {%- endfor -%}
+
+    {%- endcase -%}
+  </ul>
+</aside>

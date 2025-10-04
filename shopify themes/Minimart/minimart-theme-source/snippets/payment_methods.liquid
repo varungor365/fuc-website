@@ -1,0 +1,17 @@
+{% assign payment_methods_string = 'visa, visa-electron, mastercard, maestro, american-express, solo, paypal, discover, google-checkout, cirrus, bitcoin' %}
+{% assign methods = payment_methods_string | split: ', ' %}
+
+<ul class="payment-methods {% unless template == 'cart' %}wow fadeInUp{% endunless %}" {% unless template == 'cart' %}data-wow-delay="{{ settings.time_lazy_load }}ms"{% endunless %}>	
+  {% for method in methods %}
+    {% assign display_current_method = method | prepend: 'payment_methods_display_' %}
+
+    {% if settings[display_current_method] %}
+      {% assign current_method_icon = method | prepend: 'icon-cc-' | append: '.png' %}
+      <li>
+        <a href="#" title="{{ method | replace: '-', ' ' | downcase | capitalize }}">
+          {{ current_method_icon | asset_url | img_tag: method }}
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>

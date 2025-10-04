@@ -1,0 +1,367 @@
+{% if settings.collections_quickview %}
+  <div id="quick-view" class="modal fade">
+    <div class="modal-content">
+      <div class="modal-body"></div>
+    </div>
+  </div>
+{% endif %}
+{% if settings.upsell_popup_enable %}
+  <div id="upsell-popup" class="modal fade">
+    <div class="modal-content">
+      <img src="{{ 'special_offer.png' | asset_url }}" alt="Offer" class="modal--offer-image" />
+      <div class="modal-body">
+        <img src="{{ all_products[settings.free_product].images.first | img_url: 'compact' }}" alt="{{ all_products[settings.free_product].images.first.alt | escape }}" class="modal--free-image" />
+        <h4 class="upsell-heading">{{ settings.upsell_headline_text }}</h4>
+        <div class="upsell-bottom">
+          <button type="button" class="btn btn-default upsell-yes-btn">{{ settings.yes_button_text }}</button>
+          <button type="button" class="btn btn-default upsell-no-btn">{{ settings.no_button_text }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% if settings.newsletter_popup %}
+  <div id="newsletter-popup" class="modal fade">
+    <div class="modal-content">
+      <div class="close-button"><i class="fa fa-times-circle" aria-hidden="true"></i></div>
+      <div class="modal-body">
+      
+        <div class="entry-popups-wrap">
+           <div class="entry-popups-inner">
+             {% if settings.newsletter_popup_page != blank %}
+             {{ pages[settings.newsletter_popup_page].content }}
+             {% endif %}
+             <div class="etp-form-wrap">        
+              {% if settings.newsletter_popup_form %}
+                {% if settings.newslatter_use_mailchimp %}
+                  <form action="{{ settings.newslatter_mailchimp_url }}" method="post" id="mc-embedded-subscribe-form" class="contact-form mailing-form" name="mc-embedded-subscribe-form" target="_blank">
+                    <div class="input-group">
+                      <i class="fa fa-envelope-o email-icon"></i>
+                      <input required type="email" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="EMAIL" id="contact_email" class="input-group-field" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+                      <span class="input-group-btn">
+                        <input type="submit" class="btn" name="subscribe" id="subscribe" value="{{ settings.newslatter_btn_text }}">
+                      </span>
+                    </div>
+                  </form>
+                {% else %}       
+                
+<!--                 <label for="email">Email</label><br/> -->
+                 <div class="etp-input-wrap etp-eamil-field">
+                  <input type="email" name="email" id="email" placeholder="Enter Your Email Address"/>
+                  <span class="etp-input-icon">
+                    <img src="{{ 'form-mail-icon.png' | asset_url }}" alt="icon">
+                  </span>
+                 </div>
+                 
+<!--                  <label for="name">Name</label><br/> -->
+                <div class="etp-input-wrap etp-eamil-name">
+                  <input type="text" name="name" id="name" placeholder="Name"/>
+                  <span class="etp-input-icon">
+                    <img src="{{ 'form-user-icon.png' | asset_url }}" alt="icon">
+                  </span>
+                </div>
+                 
+                <br/>
+                <div style="display:none;">
+                <label for="hp">HP</label><br/>
+                <input type="text" name="hp" id="hp"/>
+                </div>
+                <input type="hidden" name="list" value="PiHBh1gDR6hGyYb5HjPa892Q"/>
+                 
+                 
+                <div class="etp-form-btn-wrap">
+                  <div class="etp-form-btn">  
+                    <input type="submit" class="btn"  name="submit" id="submit" value="{{ settings.newslatter_btn_text }}">
+                    <span class="etp-form-btn-errow">
+                      <img src="{{ 'entry-btn-erow.png' | asset_url }}" alt="Button icon">
+                    </span>
+                  </div>
+                </div>
+<!--                 <input type="submit" name="submit" id="submit"/> -->
+                </form>
+                {% comment %} 
+                  {% form 'customer' %}
+                    {{ form.errors | default_errors }}
+                    {% if form.posted_successfully? %}
+                      <p class="note form-success">{{ 'general.newsletter_form.confirmation' | t }}</p>
+                    {% else %}
+                      <div class="etp-input-wrap etp-eamil-field">
+                        <input required type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" id="Email" class="input-group-field" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+                        <input type="hidden" name="contact[tags]" value="newsletter">
+                        <span class="etp-input-icon">
+                          <img src="{{ 'form-user-icon.png' | asset_url }}" alt="icon">
+                        </span>
+                          </div>
+                          <div class="etp-input-wrap etp-eamil-name">
+                            <input name="customer[first_name]" id="fname" class="input-group__field newsletter__input" value="" placeholder="Name" autocorrect="off" autocapitalize="off" type="text">
+                            <span class="etp-input-icon">
+                              <img src="{{ 'form-mail-icon.png' | asset_url }}" alt="icon">
+                            </span>
+                          </div>
+                          <div class="etp-form-btn-wrap">
+                                    <div class="etp-form-btn">  
+                                      <input type="submit" class="btn" name="subscribe" id="subscribe" value="{{ settings.newslatter_btn_text }}">
+                                       <span class="etp-form-btn-errow">
+                                          <img src="{{ 'entry-btn-erow.png' | asset_url }}" alt="Button icon">
+                                       </span>
+                                    </div>
+                                 </div>
+                        
+                      <div class="input-group">
+                        <i class="fa fa-envelope-o email-icon"></i>
+                        <input required type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}" name="contact[email]" id="Email" class="input-group-field" aria-label="{{ 'general.newsletter_form.newsletter_email' | t }}" autocorrect="off" autocapitalize="off">
+                        <input type="hidden" name="contact[tags]" value="newsletter">
+                           <input name="customer[first_name]" id="fname" class="input-group__field newsletter__input" value="" placeholder="Name" autocorrect="off" autocapitalize="off" type="text">
+                        <span class="input-group-btn">
+                          <input type="submit" class="btn" name="subscribe" id="subscribe" value="{{ settings.newslatter_btn_text }}">
+                        </span>
+                      </div>
+                           
+                    {% endif %}
+                  {% endform %}
+                {% endcomment %}
+               
+               
+               
+                {% endif %}
+              {% endif %}
+              </div><!-- /.etp-form-wrap -->
+              <div class="etp-ftr-des-wrap">
+                <p class="etp-ftr-des">By clicking the button, you’ll.</p>
+                <p class="etp-ftr-des">1) confirm you’re a genius.</p>
+                <p class="etp-ftr-des">2) Get my 51 helpful Shopify growth hacking tips.</p>
+                
+              </div>      
+            </div>
+           <p class="etp-ftr-des_bottom">We gurantee 100% privacy. your information not be shared. - <a href="#">Privacy Policy</a></p>
+          </div>         
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(function() {
+      var popup = $.cookie('popup');
+      var cookie_enabled = {% if settings.newsletter_popup_days != blank and settings.newsletter_popup_days != "0" %}true{% else %}false{% endif %};
+      if (cookie_enabled && popup == 'open') {
+        return false;
+      } else {
+        setTimeout( function() {
+          timber.modalBox();
+          {% if settings.newsletter_popup_max_width != blank %}
+            $("#newsletter-popup").find('.modal-content').css('max-width', "{{ settings.newsletter_popup_max_width }}px");
+          {% else %}
+            $("#newsletter-popup").find('.modal-content').css('max-width', "600px");
+          {% endif %}
+          $("#newsletter-popup").addClass('in');
+        }, {% if settings.newsletter_popup_seconds != blank %}{{ settings.newsletter_popup_seconds }}{% else %}2{% endif %}*1000);
+      }
+      if (cookie_enabled) {
+        $.cookie('popup', 'open', { expires: {{ settings.newsletter_popup_days }} });
+      }
+      $('#newsletter-popup').click(function(){
+        $('#newsletter-popup').removeClass("in");
+      });
+      $('.modal-content').click(function(e){
+        e.stopPropagation();
+      });
+      $('.close-button').click(function(e){
+        $('#newsletter-popup').removeClass("in");
+      });
+    });
+  </script>
+{% endif %}
+<style>
+/*======================================
+         Entry Popups 
+======================================*/
+.modal .modal-body {
+    padding: 0;
+}
+.close-button {
+    position: absolute;
+    z-index: 999;
+}
+.modal .modal-content{
+  border:none;
+}  
+.entry-popups-wrap{
+   font-family: 'Roboto', sans-serif;
+   color: #0F1008;
+   background: #1A2B32;
+   margin: 0 auto;
+   position: relative;
+   overflow: hidden;
+   padding: 10px;
+}
+.entry-popups-inner{
+   background-image: url('https://cdn.shopify.com/s/files/1/1291/3935/files/entry-popups-bg.png?15198011989956276772');
+   background-repeat: no-repeat;
+   background-position: center;
+   background-size: cover;
+   background-color: #fff;
+   padding: 0 32px;
+}
+.entry-popups-header img{
+   margin: 0 auto; 
+}
+.clr:after{
+   content: '';
+   display: table;
+   clear: both;
+   height: 0;
+}
+.etp-video-title {
+   font-size: 20px;
+   font-weight: 900;
+   color: #B7256C;
+   letter-spacing: 0.4px;
+   line-height: 50px;
+   background-image: url(https://cdn.shopify.com/s/files/1/1291/3935/files/green-devider.png?1448760…);
+    background-repeat: no-repeat;
+    background-position: left 35px;
+    padding-bottom: 16px;
+  	padding-right: 10px;
+    display: inline-block;
+    
+}
+.etp-video-title span{
+   color: #111308;
+}
+.etp-video-growth {
+    font-size: 24px;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #B7256C;
+    line-height: 26px;
+}
+.etp-video-wrap{
+    margin-top: 40px;
+    margin-bottom: 5px;
+}
+.etp-video-left, .etp-video-right{
+   display: inline-block;
+   vertical-align: middle;
+   width: 50%;
+}
+.etp-video-right{
+   margin-left: -5px;
+}
+.etp-video-video-img {
+    display: inline-block;
+    border: solid 3px #555;
+    box-shadow: 0 0 8px 0 rgba(0,0,0,0.3);
+      line-height: 0;
+}
+.entry-popups-header{
+	text-align: center;
+}
+.etp-form-title {
+    color: #0F1008;
+    font-size: 19px;
+    text-align: center;
+    padding: 20px 28px;
+    ;line-height: 23px;
+}
+.etp-form-wrap .etp-input-wrap{
+   position: relative;
+}
+.etp-input-wrap .etp-input-icon{
+   position: absolute;
+   top: 50%;
+   right: 20px;
+   -webkit-transform: translateY(-50%);
+   -ms-transform: translateY(-50%);
+   transform: translateY(-50%);
+}
+.etp-input-wrap{
+   margin-bottom: 10px;
+}
+.etp-input-wrap input {
+    font-size: 14px;
+    padding: 8px 15px;
+      padding-top: 8px;
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 16px;
+    color: #0F1008;
+    background-color: #fff;
+    font-weight: 400;
+    border: 1px solid #fff;
+    border-radius: 0;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    padding-top: 10px;
+    box-shadow: 0 1px 8px 1px rgba(0,0,0,0.4);
+}
+.etp-form-btn-wrap{
+   text-align: center;
+}
+.etp-form-btn{
+   position: relative;
+   display: inline-block;
+   margin-bottom: 10px;
+}
+#newsletter-popup .etp-form-btn input[type="submit"]{
+   font-weight: 500;
+   font-size: 21px;
+   color: #0F1008;
+   line-height: 24px;
+   height: 43px;
+   padding: 10px 32px;
+   padding-right: 84px;
+   text-align: center;
+   width: auto;
+   text-transform: uppercase;
+   display: inline-block;
+   border-radius: 40px;
+   letter-spacing: 0.2px;
+   -webkit-appearance: none;
+   vertical-align: middle;
+   -webkit-transition: all 0.3s ease-in-out;
+   -ms-transition: all 0.3s ease-in-out;
+   transition: all 0.3s ease-in-out;
+   box-shadow: none;
+   margin: 0;
+   position: relative;
+   overflow: hidden;
+}
+.etp-form-btn-errow {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   z-index: 2;
+   width: 32px;
+   right: 32px;
+   border-left: solid 2px rgba(0,0,0,0.1);
+}
+.etp-form-btn-errow img{
+   margin-top: 12px;
+margin-left: 11px;
+}
+.etp-ftr-des-wrap{
+   text-align: center;
+   padding-bottom: 10px;
+}
+.etp-ftr-des-wrap p{
+   color: #666;
+   font-size: 13px;
+   margin-bottom: 7px;
+   line-height: 16px;
+}
+  
+.first_51{
+	    font-size: 40px;
+    display: inline-block;
+    font-weight: 900;
+    line-height: normal;
+    position: relative;
+    top: -12px;
+}
+  .first_511{
+      display: inline-block;
+  }
+/*======================================
+      End Style
+======================================*/
+</style>

@@ -1,0 +1,16 @@
+{% if settings.display_two_block_banner %}
+<ul class="row">
+  {% for i in (1..2) %}
+  {% capture two_banner %}two_banner_{{ i }}.jpg{% endcapture %}
+  {% capture two_banner_link %}two_banner_link_{{ i }}{% endcapture %}
+  
+  {% assign repeat = forloop.index | minus: 1 %}
+  {% assign delayTime = settings.time_lazy_load | times : repeat %}
+  <li class="col-xs-12 col-sm-6 wow fadeInUp" data-wow-delay="{{ delayTime }}ms">
+    <a href="{{ settings[two_banner_link] }}">
+      <img src="{{ two_banner | asset_url }}" alt="" />
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

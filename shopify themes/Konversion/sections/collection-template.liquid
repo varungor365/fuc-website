@@ -1,0 +1,781 @@
+{%- assign limit = 6 -%}
+
+<div data-section-id="{{ section.id }}" data-section-type="collection-template">
+
+  <style>
+    .page-header{
+      text-align: {{ section.settings.collection_title_description_alignment }};
+    }
+    .page-header .page-header__title{
+      text-align: {{ section.settings.collection_title_description_alignment }};
+    }
+    .page-header .page-header__description{
+      text-align: {{ section.settings.collection_title_description_alignment }};
+    }
+  </style>
+
+{% for block in section.blocks %}
+  {% if block.type == "banner" and block.settings.image != blank %}
+  {%- assign block_collection = collections[block.settings.collection] -%}
+  {% if block_collection.handle == collection.handle or block.settings.collection == blank and collection.handle == 'all' %}
+    <style>
+      .collection-banner--{{ block.id }} {
+        background-image: url('{{ block.settings.image | img_url: '1024x' }}');
+        background-position: center {{ block.settings.alignment }};
+      }
+      @media screen and (min-width: 1024px) {
+        .collection-banner--{{ block.id }} {
+          background-image: url('{{ block.settings.image | img_url: '2000x' }}');
+        }
+      }
+      .collection-banner--{{ block.id }}:after {
+        {% case block.settings.gradient_color %}
+          {% when 'white' %}
+            background-image: -webkit-linear-gradient(right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            background-image: -moz-linear-gradient(right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            background-image: -ms-linear-gradient(right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            background-image: -o-linear-gradient(right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+          {% when 'white_bottom' %}
+            width: 100%;
+            height: 35%;
+            background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            background-image: -ms-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            background-image: -o-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+            background-image: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+          {% when 'black' %}
+            background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+            background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+            background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+            background-image: -o-linear-gradient(right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+        {% endcase %}
+      }
+      .collection-banner--{{ block.id }} .collection-banner__title {
+        color: {{ block.settings.color_title }};
+      }
+      .collection-banner--{{ block.id }} .collection-banner__subtitle p {
+        color: {{ block.settings.color_text }};
+      }
+
+    </style>
+    {% case block.settings.display %}
+      {% when "mobile" %}
+        {%- assign visibility_classes = "large--hide" -%}
+      {% when "desktop" %}
+        {%- assign visibility_classes = "medium-down--hide" -%}
+    {% endcase %}
+    <div class="collection-banner collection-banner--{{ block.settings.image_height }} collection-banner--{{ block.id }} {{ visibility_classes }}">
+      {% if block.settings.title != blank or block.settings.text != blank %}
+        <div class="collection-banner__content">
+          <div class="page-width--large">
+            {% unless block.settings.title == blank %}
+              <h1 class="collection-banner__title">
+                {{ block.settings.title | escape }}
+              </h1>
+            {% endunless %}
+            {% unless block.settings.text == blank %}
+              <div class="collection-banner__subtitle">
+                {{ block.settings.text }}
+              </div>
+            {% endunless %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    {% break %}
+  {% endif %}
+  {% endif %}
+{% endfor %}
+
+  <header class="page-header">
+    {% if section.settings.breadcrumbs %}
+      {% include 'breadcrumb' %}
+    {% endif %}
+    {% if section.settings.display_title or section.settings.display_description %}
+        <div class="page-width--large">
+      {% if section.settings.display_title %}
+          <h2 class="page-header__title">{{ collection.title }}</h2>
+      {% endif %}
+      {% if section.settings.display_description %}
+          <p class="page-header__description">{{ collection.description }}</p>
+      {% endif %}
+      {% if section.settings.display_separator %}
+          <hr>
+      {% endif %}
+      </div>
+    {% endif %}
+  </header>
+
+  {% if section.settings.dispaly_filters or section.settings.dispaly_sorting %}
+	{% if section.settings.location_filter_sorting == "top" %}
+  	  {% assign desktop_class = "" %}
+    {% else %}
+  	  {% assign desktop_class = "large--hide" %}
+    {% endif %}
+    <div class="collection-template top-filter page-width--large {{ desktop_class }}">
+      <div class="grid">
+        <div class="grid__item one-whole">
+          <div class="collection-controls grid--full">
+            {% if section.settings.dispaly_filters %}
+              <div class="grid__item {% if section.settings.dispaly_sorting %}one-half{% else %}one-whole{% endif %}">
+                {% include 'collection-filters-dropdown' %}
+              </div>
+            {% endif %}
+            {% if section.settings.dispaly_sorting %}
+              <div class="grid__item {% if section.settings.dispaly_filters %}one-half{% else %}one-whole{% endif %}">
+                {% include 'collection-sorting-dropdown' %}
+              </div>
+            {% endif %}
+            {% if section.settings.dispaly_sorting %}
+              <div class="grid__item {% if section.settings.dispaly_filters %}one-whole{% endif %}">
+                {% include 'collection-menu-dropdown' %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% comment %}
+  ================= MOBILE VERSION =================
+  {% endcomment %}
+
+{% assign is_infinite_mobile = section.settings.dispaly_infinite_mobile %}
+
+{% case section.settings.mobile_layout %}
+  {% when '1-col' %}
+    {% assign mobile_cols = 1 %}
+  {% when '2-col' %}
+    {% assign mobile_cols = 2 %}
+{% endcase %}
+
+{% assign mobile_limit = section.settings.display_number_of_rows_mobile | times: mobile_cols %}
+{% paginate collection.products by mobile_limit %}
+
+  <div class="collection-template page-width--large large--hide">
+    <div class="grid">
+
+      <div class="grid__item one-whole">
+        {% case section.settings.mobile_layout %}
+          {% when '1-col' %}
+            {%- assign mobile_col_sizes = "medium-down--one-whole" -%}
+          {% else %}
+            {%- assign mobile_col_sizes = "medium-down--one-half" -%}
+        {% endcase %}
+        <div class="grid--full grid--uniform product-list product-list--{{ section.settings.mobile_layout }} product-mobile">
+          {%- assign btn_action = section.settings.product_btn_action -%}
+          {%- assign btn_text = section.settings.product_btn_text -%}
+          {% if section.settings.add_to_cart == 'hoverable'%}
+            {%- assign card_hoverable = section.settings.add_to_cart -%}
+          {% endif %}
+          {% for product in collection.products %}
+            <div class="grid__item {{ mobile_col_sizes }}">
+              <div class="product-list__item">
+                {% include 'product-card' %}
+              </div>
+            </div>
+          {% endfor %}
+
+          {% if paginate.next and is_infinite_mobile == true %}
+            <div class="more-mobile"><a href="{{ paginate.next.url }}">More</a></div>
+          {% endif %}
+        </div>
+
+		<div id="product-list-foot-mobile"></div>
+
+        {% if paginate.pages > 1 and is_infinite_mobile == false %}
+          <hr>
+          <div class="pagination">
+            {{ paginate | default_pagination | replace: '&laquo; Previous', '&larr;' | replace: 'Next &raquo;', '&rarr;' }}
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+  </div>
+
+{% endpaginate %}
+
+  {% comment %}
+  ================= DESKTOP VERSION =================
+  {% endcomment %}
+
+{% assign is_infinite_desktop = section.settings.dispaly_infinite_desktop %}
+
+{% case section.settings.desktop_layout %}
+  {% when '2-col' %}
+    {%- assign desktop_col_sizes = "large--one-half" -%}
+    {% assign desktop_cols = 2 %}
+  {% when '3-col' %}
+    {%- assign desktop_col_sizes = "large--one-third" -%}
+    {% assign desktop_cols = 3 %}
+  {% when '4-col' %}
+    {%- assign desktop_col_sizes = "large--one-quarter" -%}
+    {% assign desktop_cols = 4 %}
+{% endcase %}
+
+{% assign desktop_limit = section.settings.display_number_of_rows_desktop | times: desktop_cols %}
+{% paginate collection.products by desktop_limit %}
+
+  <div class="collection-template page-width--large medium-down--hide">
+    {% if section.settings.dispaly_filters or section.settings.dispaly_sorting %}
+      {% if section.settings.location_filter_sorting == "top" %}
+        {% assign has_sidebar = false %}
+      {% else %}
+        {% assign has_sidebar = true %}
+      {% endif %}
+    {% endif %}
+    <div class="grid">
+
+      <div class="grid__item one-whole{% if has_sidebar %} large--one-quarter{% endif %}">
+        {% if has_sidebar %}
+          <div class="collection-sidebar">
+
+            {% if section.settings.custom_menu_position == 'before_filters' %}
+               {% include 'collection-menu' %}
+            {% endif %}
+
+            {% if section.settings.dispaly_filters %}
+              {% include 'collection-filter' %}
+            {% endif %}
+
+            {% if section.settings.custom_menu_position == 'after_filters' %}
+               {% include 'collection-menu' %}
+            {% endif %}
+
+            {% if section.settings.dispaly_sorting %}
+              {% include 'collection-sorting' %}
+            {% endif %}
+
+            {% if section.settings.custom_menu_position == 'after_sorting' %}
+               {% include 'collection-menu' %}
+            {% endif %}
+
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="grid__item one-whole{% if has_sidebar %} large--three-quarters{% endif %}">
+        <div class="grid--full grid--uniform product-list product-desktop">
+          {%- assign btn_action = section.settings.product_btn_action -%}
+          {%- assign btn_text = section.settings.product_btn_text -%}
+          {% if section.settings.add_to_cart == 'hoverable' %}
+            {%- assign card_hoverable = section.settings.add_to_cart -%}
+          {% endif %}
+          {% for product in collection.products %}
+            <div class="grid__item {{ desktop_col_sizes }}">
+              <div class="product-list__item">
+                {% include 'product-card' %}
+              </div>
+            </div>
+          {% endfor %}
+
+          {% if paginate.next and is_infinite_desktop == true %}
+            <div class="more-desktop"><a href="{{ paginate.next.url }}">More</a></div>
+          {% endif %}
+        </div>
+
+		<div id="product-list-foot-desktop"></div>
+
+        {% if paginate.pages > 1 and is_infinite_desktop == false %}
+          <hr>
+          <div class="pagination">
+            {{ paginate | default_pagination | replace: '&laquo; Previous', '&larr;' | replace: 'Next &raquo;', '&rarr;' }}
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+  </div>
+
+{% endpaginate %}
+
+</div>
+
+{% schema %}
+  {
+    "name": "Collection page",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "breadcrumbs",
+        "label": "Display breadcrumbs",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "dispaly_filters",
+        "label": "Display tag filters",
+        "default": true
+      },
+      {
+        "type": "radio",
+        "id": "add_to_cart",
+        "label": "Add to cart button location:",
+        "default": "below_the_product",
+        "options": [
+          {"value": "below_the_product", "label": "Below the product"},
+          {"value": "hoverable", "label": "On hover"},
+          {"value": "none", "label": "None"}
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "second_image_on_hover",
+        "label": "Display a second product image on hover",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "dispaly_sorting",
+        "label": "Display sorting options",
+        "default": true
+      },
+      {
+        "type": "radio",
+        "id": "location_filter_sorting",
+        "label": "Location for filters & sorting",
+        "default": "top",
+        "options": [
+          {"value": "top", "label": "Top Right"},
+          {"value": "left", "label": "Left side"}
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Title & Description"
+      },
+      {
+        "type": "checkbox",
+        "id": "display_title",
+        "label": "Display title",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "display_description",
+        "label": "Display description",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "collection_title_description_alignment",
+        "label": "Title and description alignment",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "center"
+      },
+      {
+        "type": "checkbox",
+        "id": "display_separator",
+        "label": "Display separator",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Custom menu"
+      },
+      {
+        "type": "text",
+        "id": "custom_menu_title",
+        "label": "Menu Title",
+        "default": "Menu"
+      },
+      {
+        "type": "paragraph",
+        "content": "Adds a link section to the left sidebar (eg. Collections list)"
+      },
+      {
+        "type": "link_list",
+        "id": "menu",
+        "label": "Menu"
+      },
+      {
+        "type": "radio",
+        "id": "custom_menu_position",
+        "label": "Custom menu position",
+        "default": "before_filters",
+        "options": [
+          {"value": "before_filters", "label": "Before filters"},
+          {"value": "after_filters", "label": "After filters"},
+          {"value": "after_sorting", "label": "After sorting"}
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Categorize Tags"
+      },
+      {
+        "type": "paragraph",
+        "content": "To categorize tags, or said differently, to group filters into categories, just add a tag filter-{category}-{tag} to your product. E.g. add 'filter-color-blue' and 'filter-color-red' to your product, this will add a category 'color' with 'blue' and 'red' as tags in your filters."
+      },
+
+
+      {
+        "type": "select",
+        "id": "collapse_filters_max",
+        "label": "Collapse category when it has:",
+        "options": [
+          {
+            "value": "0",
+            "label": "Never collapse"
+          },
+          {
+            "value": "1",
+            "label": "1 item (Always collapse)"
+          },
+          {
+            "value": "5",
+            "label": "5 items"
+          },
+          {
+            "value": "6",
+            "label": "6 items"
+          },
+          {
+            "value": "7",
+            "label": "7 items"
+          },
+          {
+            "value": "8",
+            "label": "8 items"
+          },
+          {
+            "value": "9",
+            "label": "9 items"
+          },
+          {
+            "value": "10",
+            "label": "10+ items"
+          }
+        ],
+        "default": "5"
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_non_categorized",
+        "label": "Hide all non-categorized tags from filters",
+        "default": false
+      },
+
+      {
+        "type": "header",
+        "content": "Mobile Settings"
+      },
+      {
+        "type": "radio",
+        "id": "mobile_layout",
+        "label": "Mobile Layout",
+        "default": "2-col",
+        "options": [
+          {"value": "1-col", "label": "1-column"},
+          {"value": "2-col", "label": "2-column"}
+        ]
+      },
+      {
+        "type": "select",
+        "id": "display_number_of_rows_mobile",
+        "label": "Number of rows",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+          {
+            "value": "9",
+            "label": "9"
+          },
+          {
+            "value": "10",
+            "label": "10"
+          }
+        ],
+        "default": "2"
+      },
+      {
+        "type": "checkbox",
+        "id": "dispaly_infinite_mobile",
+        "label": "Enable infinite scroll",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Desktop Settings"
+      },
+      {
+        "type": "radio",
+        "id": "desktop_layout",
+        "label": "Desktop Layout",
+        "default": "4-col",
+        "options": [
+          {"value": "2-col", "label": "2-column"},
+          {"value": "3-col", "label": "3-column"},
+          {"value": "4-col", "label": "4-column"}
+        ]
+      },
+      {
+        "type": "select",
+        "id": "display_number_of_rows_desktop",
+        "label": "Number of rows",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          },
+          {
+            "value": "7",
+            "label": "7"
+          },
+          {
+            "value": "8",
+            "label": "8"
+          },
+          {
+            "value": "9",
+            "label": "9"
+          },
+          {
+            "value": "10",
+            "label": "10"
+          }
+        ],
+        "default": "2"
+      },
+      {
+        "type": "checkbox",
+        "id": "dispaly_infinite_desktop",
+        "label": "Enable infinite scroll",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Product button"
+      },
+      {
+        "type": "select",
+        "id": "product_btn_action",
+        "label": "Product button action",
+        "options": [
+          {
+            "value": "none",
+            "label": "None (hide button)"
+          },
+          {
+            "value": "add_to_cart",
+            "label": "Add to cart and stay on page"
+          },
+          {
+            "value": "add_to_cart_redirect",
+            "label": "Add to cart and go to cart page"
+          },
+          {
+            "value": "add_to_cart_checkout",
+            "label": "Add to cart and go to checkout"
+          },
+          {
+            "value": "product_page",
+            "label": "Product page"
+          }
+        ],
+        "default": "add_to_cart"
+      },
+      {
+        "type": "text",
+        "id": "product_btn_text",
+        "label": "Product button text",
+        "default": "Add to Cart"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "banner",
+        "name": "Image Banner",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection",
+            "info": "Select collection that you want to add an image banner for. Select 'None' if you want to display the banner on the Catalog page (the 'All products' page)."
+          },
+          {
+            "type": "paragraph",
+            "content": "[Recommended image dimensions](https:\/\/desk.zoho.com\/portal\/tabarnapp\/kb\/articles\/recommended-image-sizes-for-the-slideshow)"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "select",
+            "id": "display",
+            "label": "Display",
+            "default": "desktop",
+            "options": [
+              {"value": "desktop", "label": "Desktop only"},
+              {"value": "all", "label": "Desktop & Mobile"},
+              {"value": "mobile", "label": "Mobile only"}
+            ]
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Banner title"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Tell more about this collection</p>"
+          },
+          {
+            "type": "select",
+            "id": "image_height",
+            "label": "Image height",
+            "default": "xsmall",
+            "options": [
+              {
+                "label": "Extra small",
+                "value": "xsmall"
+              },
+              {
+                "label": "Small",
+                "value": "small"
+              },
+              {
+                "label": "Medium",
+                "value": "medium"
+              },
+              {
+                "label": "Large",
+                "value": "large"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "alignment",
+            "label": "Image alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "top",
+                "label": "Top"
+              },
+              {
+                "value": "center",
+                "label": "Middle"
+              },
+              {
+                "value": "bottom",
+                "label": "Bottom"
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "color_title",
+            "label": "Title color",
+            "default": "#fff"
+          },
+          {
+            "type": "color",
+            "id": "color_text",
+            "label": "Text color",
+            "default": "#fff"
+          },
+          {
+            "type": "select",
+            "id": "gradient_color",
+            "label": "Gradient color",
+            "options": [
+              {
+                "value": "none",
+                "label": "None (disable gradient)"
+              },
+              {
+                "value": "white",
+                "label": "White (left)"
+              },
+              {
+                "value": "black",
+                "label": "Black (left)"
+              },
+              {
+                "value": "white_bottom",
+                "label": "White (bottom)"
+              }
+            ],
+            "default": "black"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

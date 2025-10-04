@@ -1,302 +1,623 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import Link from 'next/link'
-import {
-  PlusIcon,
-  PencilIcon,
-  TrashIcon,
-  EyeIcon,
-  MagnifyingGlassIcon,
-  AdjustmentsHorizontalIcon,
-  ShoppingBagIcon
-} from '@heroicons/react/24/outline'
-import strapiService, { Product as StrapiProduct } from '@/lib/strapi'
+import GlassCard from '@/components/admin/GlassCard'
+import { useErrorTracking } from '@/lib/errorTracking'
 
 interface Product {
-  id: number
+  id: string
   name: string
-  description: string
+  sku: string
+  category: string
   price: number
-  sale_price?: number
-  stock_quantity: number
-  image?: string
-  category?: {
-    name: string
-  }
-  inStock: boolean
+  salePrice?: number
+  status: 'active' | 'inactive' | 'draft' | 'out_of_stock'
+  stock: number
+  images: string[]
+  variants: ProductVariant[]
   createdAt: string
+  updatedAt: string
+  aiScore?: number
+  tags: string[]
 }
 
-export default function ProductsPage() {
+interface ProductVariant {
+  id: string
+  name: string
+  sku: string
+  price: number
+  stock: number
+  attributes: { [key: string]: string }
+}
+
+interface ProductFilters {
+  status: string
+  category: string
+  priceRange: { min: number; max: number }
+  sortBy: 'name' | 'price' | 'stock' | 'created' | 'ai_score'
+  sortOrder: 'asc' | 'desc'
+  search: string
+}
+
+export default function AdminProductsPage() {
+  const router = useRouter()
+  const { logError, addBreadcrumb } = useErrorTracking()
+  
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState('')
-  const [categories, setCategories] = useState<any[]>([])
-  const [sortBy, setSortBy] = useState('createdAt:desc')
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([])
+  const [showBulkActions, setShowBulkActions] = useState(false)
+  const [filters, setFilters] = useState<ProductFilters>({
+    status: 'all',
+    category: 'all',
+    priceRange: { min: 0, max: 1000 },
+    sortBy: 'created',
+    sortOrder: 'desc',
+    search: ''
+  })
+
+  // Mock categories for filter
+  const categories = [
+    'T-Shirts', 'Hoodies', 'Jackets', 'Pants', 'Shoes', 'Accessories'
+  ]
 
   useEffect(() => {
-    loadProducts()
-    loadCategories()
-  }, [searchTerm, categoryFilter, sortBy])
+    addBreadcrumb('navigation', 'Accessed Products Management')
+    fetchProducts()
+  }, [filters])
 
-  const loadProducts = async () => {
+  const fetchProducts = async () => {
     try {
       setLoading(true)
+      // TODO: Replace with actual API call
+      const mockProducts: Product[] = [
+        {
+          id: '1',
+          name: 'Premium Streetwear Hoodie',
+          sku: 'HOOD-001',
+          category: 'Hoodies',
+          price: 89.99,
+          salePrice: 69.99,
+          status: 'active',
+          stock: 25,
+          images: ['/api/placeholder/400/400'],
+          variants: [
+            { id: 'v1', name: 'Small Black', sku: 'HOOD-001-S-BLK', price: 89.99, stock: 10, attributes: { size: 'S', color: 'Black' } },
+            { id: 'v2', name: 'Medium Black', sku: 'HOOD-001-M-BLK', price: 89.99, stock: 15, attributes: { size: 'M', color: 'Black' } }
+          ],
+          createdAt: '2024-01-15T08:00:00Z',
+          updatedAt: '2024-01-20T10:30:00Z',
+          aiScore: 94,
+          tags: ['premium', 'streetwear', 'winter']
+        },
+        {
+          id: '2',
+          name: 'Limited Edition Graphic Tee',
+          sku: 'TEE-002',
+          category: 'T-Shirts',
+          price: 49.99,
+          status: 'active',
+          stock: 0,
+          images: ['/api/placeholder/400/400'],
+          variants: [],
+          createdAt: '2024-01-10T12:00:00Z',
+          updatedAt: '2024-01-18T15:45:00Z',
+          aiScore: 88,
+          tags: ['limited', 'graphic', 'cotton']
+        },
+        {
+          id: '3',
+          name: 'Designer Denim Jacket',
+          sku: 'JACK-003',
+          category: 'Jackets',
+          price: 159.99,
+          status: 'draft',
+          stock: 12,
+          images: ['/api/placeholder/400/400'],
+          variants: [],
+          createdAt: '2024-01-12T09:15:00Z',
+          updatedAt: '2024-01-19T11:20:00Z',
+          aiScore: 91,
+          tags: ['designer', 'denim', 'casual']
+        }
+      ]
       
-      const params: any = {
-        'populate[0]': 'category',
-        'populate[1]': 'image',
-        'sort[0]': sortBy
-      }
-
-      if (searchTerm) {
-        params['filters[name][$containsi]'] = searchTerm
-      }
-
-      if (categoryFilter) {
-        params['filters[category][name][$eq]'] = categoryFilter
-      }
-
-      const response = await strapiService.getProducts(params)
-      const transformedProducts: Product[] = (response.data || []).map((product: StrapiProduct) => ({
-        id: product.id,
-        name: product.attributes.name,
-        description: product.attributes.description,
-        price: product.attributes.price,
-        stock_quantity: product.attributes.stock_quantity,
-        image: product.attributes.images?.data?.[0]?.attributes?.url,
-        category: { name: product.attributes.category },
-        inStock: product.attributes.status === 'active' && product.attributes.stock_quantity > 0,
-        createdAt: product.attributes.createdAt
-      }))
-      setProducts(transformedProducts)
+      await new Promise(resolve => setTimeout(resolve, 800)) // Simulate loading
+      setProducts(mockProducts)
     } catch (error) {
-      console.error('Error loading products:', error)
+      logError(error as Error, { context: 'fetchProducts' })
     } finally {
       setLoading(false)
     }
   }
 
-  const loadCategories = async () => {
-    try {
-      const response = await strapiService.getCategories()
-      setCategories(response.data || [])
-    } catch (error) {
-      console.error('Error loading categories:', error)
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'text-green-400 bg-green-400/10'
+      case 'inactive': return 'text-gray-400 bg-gray-400/10'
+      case 'draft': return 'text-yellow-400 bg-yellow-400/10'
+      case 'out_of_stock': return 'text-red-400 bg-red-400/10'
+      default: return 'text-gray-400 bg-gray-400/10'
     }
   }
 
-  const handleDeleteProduct = async (productId: number) => {
-    if (!confirm('Are you sure you want to delete this product?')) {
-      return
-    }
+  const getStockStatus = (stock: number) => {
+    if (stock === 0) return { text: 'Out of Stock', color: 'text-red-400' }
+    if (stock < 10) return { text: 'Low Stock', color: 'text-yellow-400' }
+    return { text: 'In Stock', color: 'text-green-400' }
+  }
 
+  const handleProductSelect = (productId: string) => {
+    setSelectedProducts(prev => 
+      prev.includes(productId) 
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    )
+  }
+
+  const handleSelectAll = () => {
+    if (selectedProducts.length === products.length) {
+      setSelectedProducts([])
+    } else {
+      setSelectedProducts(products.map(p => p.id))
+    }
+  }
+
+  const handleBulkAction = async (action: string) => {
     try {
-      await strapiService.deleteProduct(productId)
-      setProducts(products.filter(p => p.id !== productId))
+      addBreadcrumb('user', `Bulk action: ${action}`, { productCount: selectedProducts.length })
+      
+      switch (action) {
+        case 'activate':
+          // TODO: Implement bulk activate
+          break
+        case 'deactivate':
+          // TODO: Implement bulk deactivate
+          break
+        case 'delete':
+          // TODO: Implement bulk delete
+          break
+        case 'export':
+          // TODO: Implement export
+          break
+      }
+      
+      setSelectedProducts([])
+      setShowBulkActions(false)
+      fetchProducts()
     } catch (error) {
-      console.error('Error deleting product:', error)
-      alert('Failed to delete product')
+      logError(error as Error, { context: 'bulkAction', action })
+    }
+  }
+
+  const handleQuickEdit = (productId: string, field: string, value: any) => {
+    try {
+      addBreadcrumb('user', `Quick edit: ${field}`, { productId, field, value })
+      
+      setProducts(prev => prev.map(product => 
+        product.id === productId 
+          ? { ...product, [field]: value, updatedAt: new Date().toISOString() }
+          : product
+      ))
+    } catch (error) {
+      logError(error as Error, { context: 'quickEdit', productId, field })
     }
   }
 
   const filteredProducts = products.filter(product => {
-    const matchesSearch = !searchTerm || 
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase())
+    if (filters.status !== 'all' && product.status !== filters.status) return false
+    if (filters.category !== 'all' && product.category !== filters.category) return false
+    if (filters.search && !product.name.toLowerCase().includes(filters.search.toLowerCase()) && 
+        !product.sku.toLowerCase().includes(filters.search.toLowerCase())) return false
+    if (product.price < filters.priceRange.min || product.price > filters.priceRange.max) return false
+    return true
+  }).sort((a, b) => {
+    const { sortBy, sortOrder } = filters
+    let aVal: any, bVal: any
     
-    const matchesCategory = !categoryFilter || 
-      product.category?.name === categoryFilter
-
-    return matchesSearch && matchesCategory
+    switch (sortBy) {
+      case 'name': aVal = a.name; bVal = b.name; break
+      case 'price': aVal = a.price; bVal = b.price; break
+      case 'stock': aVal = a.stock; bVal = b.stock; break
+      case 'ai_score': aVal = a.aiScore || 0; bVal = b.aiScore || 0; break
+      default: aVal = a.createdAt; bVal = b.createdAt; break
+    }
+    
+    if (sortOrder === 'desc') [aVal, bVal] = [bVal, aVal]
+    return aVal > bVal ? 1 : -1
   })
 
-  if (loading) {
-    return (
-      <div className="p-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="bg-white rounded-lg shadow p-6">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Products</h1>
-        <Link
-          href="/admin/products/new"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
-        >
-          <PlusIcon className="h-5 w-5" />
-          <span>Add Product</span>
-        </Link>
-      </div>
-
-      {/* Filters and Search */}
-      <div className="bg-white rounded-lg shadow mb-6 p-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {/* Search */}
-          <div className="relative">
-            <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-3 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+    <div className="min-h-screen bg-gradient-to-br from-primary-950 via-primary-900 to-slate-900 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">Products</h1>
+            <p className="text-white/60">Manage your product catalog with intelligent insights</p>
           </div>
-
-          {/* Category Filter */}
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">All Categories</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.attributes?.name || category.name}>
-                {category.attributes?.name || category.name}
-              </option>
-            ))}
-          </select>
-
-          {/* Sort */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="createdAt:desc">Newest First</option>
-            <option value="createdAt:asc">Oldest First</option>
-            <option value="name:asc">Name A-Z</option>
-            <option value="name:desc">Name Z-A</option>
-            <option value="price:asc">Price Low to High</option>
-            <option value="price:desc">Price High to Low</option>
-          </select>
-
-          {/* Results Count */}
-          <div className="flex items-center text-sm text-gray-600">
-            <AdjustmentsHorizontalIcon className="h-4 w-4 mr-2" />
-            {filteredProducts.length} products found
+          
+          <div className="flex gap-3">
+            <Link href="/admin/products/new">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+              >
+                Add Product
+              </motion.button>
+            </Link>
+            
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-xl font-medium hover:bg-white/20 transition-all duration-200"
+              onClick={() => {/* TODO: Implement import */}}
+            >
+              Import
+            </motion.button>
           </div>
         </div>
-      </div>
 
-      {/* Products Grid */}
-      {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
-              {/* Product Image */}
-              <div className="w-full h-48 bg-gray-200 rounded-t-lg overflow-hidden">
-                {product.image ? (
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                    <span className="text-gray-400">No Image</span>
-                  </div>
-                )}
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <GlassCard className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/60 text-sm mb-1">Total Products</p>
+                <p className="text-2xl font-bold text-white">{products.length}</p>
               </div>
+              <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+            </div>
+          </GlassCard>
 
-              {/* Product Info */}
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-2 truncate">{product.name}</h3>
-                <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
+          <GlassCard className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/60 text-sm mb-1">Active Products</p>
+                <p className="text-2xl font-bold text-white">{products.filter(p => p.status === 'active').length}</p>
+              </div>
+              <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/60 text-sm mb-1">Low Stock</p>
+                <p className="text-2xl font-bold text-white">{products.filter(p => p.stock > 0 && p.stock < 10).length}</p>
+              </div>
+              <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+            </div>
+          </GlassCard>
+
+          <GlassCard className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-white/60 text-sm mb-1">Avg AI Score</p>
+                <p className="text-2xl font-bold text-white">
+                  {Math.round(products.reduce((acc, p) => acc + (p.aiScore || 0), 0) / products.length)}%
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+
+        {/* Filters & Search */}
+        <GlassCard className="p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
+            {/* Search */}
+            <div className="lg:col-span-2">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={filters.search}
+                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
+              />
+            </div>
+
+            {/* Status Filter */}
+            <div>
+              <select
+                value={filters.status}
+                onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="draft">Draft</option>
+                <option value="out_of_stock">Out of Stock</option>
+              </select>
+            </div>
+
+            {/* Category Filter */}
+            <div>
+              <select
+                value={filters.category}
+                onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              >
+                <option value="all">All Categories</option>
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Sort */}
+            <div>
+              <select
+                value={`${filters.sortBy}-${filters.sortOrder}`}
+                onChange={(e) => {
+                  const [sortBy, sortOrder] = e.target.value.split('-')
+                  setFilters(prev => ({ ...prev, sortBy: sortBy as any, sortOrder: sortOrder as any }))
+                }}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              >
+                <option value="created-desc">Newest First</option>
+                <option value="created-asc">Oldest First</option>
+                <option value="name-asc">Name A-Z</option>
+                <option value="name-desc">Name Z-A</option>
+                <option value="price-desc">Price High-Low</option>
+                <option value="price-asc">Price Low-High</option>
+                <option value="stock-desc">Stock High-Low</option>
+                <option value="ai_score-desc">AI Score High-Low</option>
+              </select>
+            </div>
+
+            {/* Actions */}
+            <div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowBulkActions(!showBulkActions)}
+                className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-200"
+              >
+                Bulk Actions
+              </motion.button>
+            </div>
+          </div>
+        </GlassCard>
+
+        {/* Bulk Actions Panel */}
+        {showBulkActions && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            <GlassCard className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <input
+                    type="checkbox"
+                    checked={selectedProducts.length === products.length}
+                    onChange={handleSelectAll}
+                    className="w-5 h-5 text-blue-500 bg-white/10 border-white/20 rounded focus:ring-blue-500"
+                  />
+                  <span className="text-white">
+                    {selectedProducts.length} product{selectedProducts.length !== 1 ? 's' : ''} selected
+                  </span>
+                </div>
                 
-                {/* Category */}
-                {product.category && (
-                  <span className="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded mb-2">
-                    {product.category.name}
-                  </span>
-                )}
-
-                {/* Price */}
-                <div className="flex items-center space-x-2 mb-2">
-                  {product.sale_price ? (
-                    <>
-                      <span className="text-lg font-bold text-green-600">₹{product.sale_price.toLocaleString()}</span>
-                      <span className="text-sm text-gray-500 line-through">₹{product.price.toLocaleString()}</span>
-                    </>
-                  ) : (
-                    <span className="text-lg font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
-                  )}
-                </div>
-
-                {/* Stock Status */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    product.inStock 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
-                  }`}>
-                    {product.inStock ? `${product.stock_quantity} in stock` : 'Out of stock'}
-                  </span>
-                </div>
-
-                {/* Actions */}
-                <div className="flex space-x-2">
-                  <Link
-                    href={`/products/${product.id}`}
-                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded text-sm text-center transition-colors"
-                  >
-                    <EyeIcon className="h-4 w-4 inline mr-1" />
-                    View
-                  </Link>
-                  <Link
-                    href={`/admin/products/${product.id}/edit`}
-                    className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-2 rounded text-sm text-center transition-colors"
-                  >
-                    <PencilIcon className="h-4 w-4 inline mr-1" />
-                    Edit
-                  </Link>
+                <div className="flex gap-3">
                   <button
-                    onClick={() => handleDeleteProduct(product.id)}
-                    className="flex-1 bg-red-100 hover:bg-red-200 text-red-700 px-3 py-2 rounded text-sm transition-colors"
+                    onClick={() => handleBulkAction('activate')}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
-                    <TrashIcon className="h-4 w-4 inline mr-1" />
+                    Activate
+                  </button>
+                  <button
+                    onClick={() => handleBulkAction('deactivate')}
+                    className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                  >
+                    Deactivate
+                  </button>
+                  <button
+                    onClick={() => handleBulkAction('export')}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Export
+                  </button>
+                  <button
+                    onClick={() => handleBulkAction('delete')}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
                     Delete
                   </button>
                 </div>
               </div>
+            </GlassCard>
+          </motion.div>
+        )}
+
+        {/* Products Table */}
+        <GlassCard className="overflow-hidden">
+          {loading ? (
+            <div className="p-12 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
+                <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+              </div>
+              <p className="text-white/60">Loading products...</p>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow p-12 text-center">
-          <ShoppingBagIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
-          <p className="text-gray-600 mb-6">
-            {searchTerm || categoryFilter 
-              ? 'Try adjusting your search criteria or filters.' 
-              : 'Get started by creating your first product.'}
-          </p>
-          <Link
-            href="/admin/products/new"
-            className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-          >
-            <PlusIcon className="h-5 w-5" />
-            <span>Add Your First Product</span>
-          </Link>
-        </div>
-      )}
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="border-b border-white/10">
+                  <tr>
+                    <th className="text-left p-6 text-white/80 font-medium">
+                      <input
+                        type="checkbox"
+                        checked={selectedProducts.length === filteredProducts.length}
+                        onChange={handleSelectAll}
+                        className="w-5 h-5 text-blue-500 bg-white/10 border-white/20 rounded focus:ring-blue-500"
+                      />
+                    </th>
+                    <th className="text-left p-6 text-white/80 font-medium">Product</th>
+                    <th className="text-left p-6 text-white/80 font-medium">SKU</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Category</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Price</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Stock</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Status</th>
+                    <th className="text-left p-6 text-white/80 font-medium">AI Score</th>
+                    <th className="text-left p-6 text-white/80 font-medium">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredProducts.map((product) => (
+                    <motion.tr
+                      key={product.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                    >
+                      <td className="p-6">
+                        <input
+                          type="checkbox"
+                          checked={selectedProducts.includes(product.id)}
+                          onChange={() => handleProductSelect(product.id)}
+                          className="w-5 h-5 text-blue-500 bg-white/10 border-white/20 rounded focus:ring-blue-500"
+                        />
+                      </td>
+                      
+                      <td className="p-6">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 bg-white/10 rounded-lg overflow-hidden">
+                            <Image
+                              src={product.images[0]}
+                              alt={product.name}
+                              width={64}
+                              height={64}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <p className="font-medium text-white">{product.name}</p>
+                            <p className="text-sm text-white/60">{product.tags.join(', ')}</p>
+                          </div>
+                        </div>
+                      </td>
+                      
+                      <td className="p-6">
+                        <span className="font-mono text-white/80">{product.sku}</span>
+                      </td>
+                      
+                      <td className="p-6">
+                        <span className="text-white/80">{product.category}</span>
+                      </td>
+                      
+                      <td className="p-6">
+                        <div className="flex flex-col">
+                          {product.salePrice ? (
+                            <>
+                              <span className="text-green-400 font-medium">${product.salePrice}</span>
+                              <span className="text-white/40 line-through text-sm">${product.price}</span>
+                            </>
+                          ) : (
+                            <span className="text-white font-medium">${product.price}</span>
+                          )}
+                        </div>
+                      </td>
+                      
+                      <td className="p-6">
+                        <div className="flex items-center gap-2">
+                          <span className={`font-medium ${getStockStatus(product.stock).color}`}>
+                            {product.stock}
+                          </span>
+                          <span className={`text-sm ${getStockStatus(product.stock).color}`}>
+                            {getStockStatus(product.stock).text}
+                          </span>
+                        </div>
+                      </td>
+                      
+                      <td className="p-6">
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(product.status)}`}>
+                          {product.status.replace('_', ' ').toUpperCase()}
+                        </span>
+                      </td>
+                      
+                      <td className="p-6">
+                        {product.aiScore && (
+                          <div className="flex items-center gap-2">
+                            <div className="w-12 h-2 bg-white/10 rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                                style={{ width: `${product.aiScore}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-white/80 text-sm font-medium">{product.aiScore}%</span>
+                          </div>
+                        )}
+                      </td>
+                      
+                      <td className="p-6">
+                        <div className="flex items-center gap-2">
+                          <Link href={`/admin/products/${product.id}`}>
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
+                            >
+                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                            </motion.button>
+                          </Link>
+                          
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="p-2 text-purple-400 hover:text-purple-300 transition-colors"
+                            onClick={() => {/* TODO: Implement duplicate */}}
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                          </motion.button>
+                          
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className="p-2 text-red-400 hover:text-red-300 transition-colors"
+                            onClick={() => {/* TODO: Implement delete */}}
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </motion.button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </GlassCard>
+      </div>
     </div>
   )
 }

@@ -1,0 +1,40 @@
+<div class="blog-widget-wrapper blog-newslatter">
+  <h3>{{ 'blogs.sidebar.newsletter' | t }}</h3>
+  {% form 'customer' %}
+  <input type="hidden" id="contact_tags" name="contact[tags]" value="prospect,newsletter,164"/>
+  <div>
+        <input required class="form-control" type="text" id="contact_email" name="contact[email]" placeholder="Your email address"/>
+  </div>
+  <div class="subscribe-div">
+    <input type='submit' class="btn btn-default subscribe-button" value="{{ settings.newslatter_btn_text }}" />
+  </div>
+  {% endform %}
+</div>
+<div class="blog-widget-wrapper blog-newslatter blog-recent">
+<h3 class="h4">{{ 'blogs.sidebar.recent_articles' | t }}</h3>
+  <ul class="list-unstyled list-styled">
+    {% for article in blog.articles limit:10 %}
+      <li>
+        <img class="blog-sidebar-img" src="{{ article.image.src | img_url: 'small' }}" alt="{{ article.title | escape }}" />
+        <div class="stitle">
+          <h3>{{ article.title | link_to: article.url }}</h3>
+          <span class="date blog-data-inline"><i class="fa fa-calendar"></i> {{ article.published_at | date: "%b %d, %Y" }}</span>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="blog-widget-wrapper blog-newslatter">
+{% if blog.all_tags.size > 0 %}
+  <h3 class="h4">{{ 'blogs.sidebar.categories' | t }}</h3>
+  <ul class="no-bullets">
+    {% for tag in blog.all_tags %}
+      {% if current_tags contains tag %}
+      <li>{{ tag }}</li>
+      {% else %}
+      <li>{{ tag | link_to_tag: tag }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}
+</div>

@@ -1,0 +1,280 @@
+{%- assign layout = settings.product_page_layout -%}
+{%- assign is_full_layout = false -%}
+{%- if layout == 'top_gallery' -%}
+  {%- assign is_full_layout = true -%}
+{%- endif -%}
+
+{%- assign mobile_2_cols_enable = section.settings.two_cols_layout_enable -%}
+
+{%- if section.settings.show_related_products -%}
+  {% comment %}
+    Assign some variable from configuration in theme customize
+  {% endcomment %}
+
+  {%- assign section_title = section.settings.related_title -%}
+
+  {%- assign col_num = section.settings.related_col_num -%}
+  {%- assign row_num = section.settings.related_row_num -%}
+
+  {% comment %}
+    Collections to ignore.
+    Never pick related items from those.
+  {% endcomment %}
+
+  {%- assign exclusions = section.settings.exclusion_list | remove: ' ' | split: ',' -%}
+
+  {% comment %}
+    Looking for a relevant collection.
+  {% endcomment %}
+
+  {% comment %}
+    Get related_collection for user using Custom fields.
+  {% endcomment %}
+  {%- if product.metafields.c_f['Related Products'] -%}
+    {%- assign related_collection = collections[product.metafields.c_f['Related Products']] -%}
+  {%- endif -%}
+
+  {%- assign found_a_collection = false -%}
+
+  {% comment %}
+    Find a collection of this product which is not in exclusion list,
+    and has at least 2 products.
+  {% endcomment %}
+  {%- if related_collection and related_collection.all_products_count > 1 -%}
+    {%- unless exclusions contains related_collection.handle -%}
+      {%- assign found_a_collection = true -%}
+    {%- endunless -%}
+  {%- endif -%}
+
+  {%- unless found_a_collection -%}
+    {%- for c in product.collections -%}
+      {%- unless exclusions contains c.handle or c.all_products_count < 2 -%}
+        {%- assign found_a_collection = true -%}
+        {%- assign related_collection = c -%}
+        {% break %}
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endunless -%}
+
+  {%- if found_a_collection -%}
+
+    {%- assign counter = 0 -%}
+    {%- assign product_limit = col_num | times: row_num -%}
+    {%- assign current_product = product -%}
+
+    {%- assign grid_style = 'normal' -%}
+
+    {% comment %}
+      base_product_item_wrapper - Used to set classes for product item on small devices.
+      extra_product_item_wrapper - Used to set classes for product item on bigger devices.
+      Used in snippets/product-item.liquid
+    {% endcomment %}
+    {%- assign base_product_item_wrapper = 'grid__item medium-up--one-half' -%}
+    {%- if mobile_2_cols_enable -%}
+      {%- assign base_product_item_wrapper = base_product_item_wrapper | append: ' small--one-half' -%}
+    {%- endif -%}
+
+    {%- case col_num -%}
+      {%- when '2' -%}
+        {%- assign extra_product_item_wrapper = 'large-up--one-half' -%}
+      {%- when '3' -%}
+        {%- assign extra_product_item_wrapper = 'large-up--one-third' -%}
+      {%- when '4' -%}
+        {%- assign extra_product_item_wrapper = 'large-up--one-quarter' -%}
+      {%- when '5' -%}
+        {%- assign extra_product_item_wrapper = 'large-up--one-fifth' -%}
+      {%- when '6' -%}
+        {%- assign extra_product_item_wrapper = 'large-up--one-sixth' -%}
+    {%- endcase -%}
+
+    {% comment %}
+      Set image size to use for product based on number of column numbers
+    {% endcomment %}
+    {%- if col_num == '2' -%}
+      {%- assign image_size = '1024x1024' -%}
+    {%- elsif col_num == '6' or col_num == '5' -%}
+      {%- assign image_size = '480x480' -%}
+    {%- else -%}
+      {%- assign image_size = '600x600' -%}
+    {%- endif -%}
+
+    {% comment %}
+      Set either or both to true, if you want
+      to limit yourself to items with same vendor, and/or type.
+    {% endcomment %}
+
+    {% assign same_vendor = false %}
+    {% assign same_type = false %}
+
+    {%- capture related_items -%}
+      {%- for product in related_collection.products -%}
+        {%- unless product.handle == current_product.handle -%}
+          {%- unless same_vendor and current_product.vendor != product.vendor -%}
+            {%- unless same_type and current_product.type != product.type -%}
+
+              {% include 'product-item' %}
+
+              {%- assign counter = counter | plus: 1 -%}
+              {%- if counter == product_limit -%}
+                {% break %}
+              {%- endif -%}
+
+              {%- assign surplus = counter | modulo: col_num -%}
+              {%- if surplus == 0 -%}
+                <div class="clearfix">&nbsp;</div>
+              {%- endif -%}
+
+            {%- endunless -%}
+          {%- endunless -%}
+        {%- endunless -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- assign related_items = related_items | trim -%}
+
+    {%- unless related_items == blank -%}
+      <div class="related-product">
+        {%- if is_full_layout -%}
+          <div class="page-width">
+        {%- endif -%}
+          <aside class="grid">
+            <div class="grid__item">
+              {% unless section_title == blank %}
+                <header class="related-section-header {% if is_full_layout %}related-section-header--full{% endif %}">
+                  <h2 class="related-section-header__title">
+                    <span class="related-section-header__text">
+                      {{ section_title }}
+                    </span>
+                  </h2>
+                </header>
+              {% endunless %}
+              <div
+                class="grid grid--normal js-related-product"
+                data-col="{% if mobile_2_cols_enable %}2{% else %}1{% endif %}"
+                >
+                {{ related_items }}
+              </div>
+            </div>
+          </aside>
+        {%- if is_full_layout -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endunless -%}
+
+  {%- endif -%}
+{%- endif -%}
+
+{% include 'section-spacing' %}
+
+{% schema %}
+  {
+    "name": "Related products",
+    "class": "related-product-section",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_related_products",
+        "label": "Show related products",
+        "default": true
+      },
+      {
+        "type": "textarea",
+        "id": "exclusion_list",
+        "label": "Exclusion list",
+        "default": "best-selling,new-arrivals",
+        "info": "Related products is listed base on collection. Enter the list of excluded collections' handle (some collections with many products but not exactly related like 'best-selling', 'new-arrivals' etc.) you want to ignore when search for related products."
+      },
+      {
+        "type": "text",
+        "id": "related_title",
+        "label": "Section title",
+        "default": "Recommended"
+      },
+      {
+        "type": "select",
+        "id": "related_col_num",
+        "label": "Items per row (Desktop)",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          }
+        ],
+        "default": "4"
+      },
+      {
+        "type": "select",
+        "id": "related_row_num",
+        "label": "Number of rows (Desktop)",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          }
+        ],
+        "default": "1"
+      },
+      {
+        "type": "header",
+        "content": "Mobile layout"
+      },
+      {
+        "type": "checkbox",
+        "id": "two_cols_layout_enable",
+        "default": false,
+        "label": "Enable 2 columns layout on mobile"
+      },
+      {
+        "type": "header",
+        "content": "Design options"
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margin (top right bottom left)",
+        "info": "60px auto 60px auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Padding (top right bottom left)",
+        "info": "60px 0 60px 0"
+      }
+    ]
+  }
+{% endschema %}

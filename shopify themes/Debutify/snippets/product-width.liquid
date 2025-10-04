@@ -1,0 +1,20 @@
+{% case section.settings.desktop_grid %}
+  {% when '2' %}
+    {% if section.settings.mobile_grid == '1' %}
+      {% assign grid_item_width = 'large--four-twelfths push--large--two-twelfths medium--one-half' %}
+    {% else %}
+      {% assign grid_item_width = 'large--four-twelfths push--large--two-twelfths medium--one-half small--one-half' %}
+    {% endif %}
+  {% when '3' %}
+    {% if section.settings.mobile_grid == '1' %}
+      {% assign grid_item_width = 'large--one-third medium--four-twelfths' %}
+    {% else %}
+      {% assign grid_item_width = 'large--one-third medium--four-twelfths small--one-half' %}
+    {% endif %}
+  {% when '4' %}
+    {% if section.settings.mobile_grid == '1' %}
+      {% assign grid_item_width = 'large--one-quarter medium--one-half' %}
+    {% else %}
+      {% assign grid_item_width = 'large--one-quarter medium--one-half small--one-half' %}
+    {% endif %}
+{% endcase %}

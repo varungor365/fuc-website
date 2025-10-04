@@ -1,0 +1,67 @@
+{% if section.blocks.size > 1 %}
+  {% assign hero_slick = true %}
+{% else %}
+  {% assign hero_slick = false %}
+{% endif %}
+ 
+{% include 'hero-header' %}
+ 
+<div id="Hero-{{ section.id }}" class="hero-container {% if hero_slick %} hero-slick{% endif %}"
+  {% if hero_slick %}
+     data-hero-slick="{{ hero_slick }}"
+     {% if section.settings.section_height == 'large' %}data-fullscreen="true"{% endif %}
+     data-autoplay="{{ section.settings.hero_auto }}"
+     data-autoplaySpeed="{{ section.settings.hero_auto_speed }}"
+     data-dots="{{ section.settings.hero_dots }}"
+     data-arrows="{{ section.settings.hero_arrows }}"
+  {% endif %}
+>
+  
+  <!-- Blocks -->
+  {% for block in section.blocks %}
+    <div class="hero {% if hero_header %} hero-{{ block.id }} hero-header{% endif %} hero--{{ section.settings.section_height }} overlay lazyload {% unless forloop.first == true %} lazypreload{% endunless %} {% if hero_slick %} hero__slide slide--{{ block.id }}{% endif %}"
+         {% if block.settings.image %}
+         data-bgset="{% include 'bgset', image: block.settings.image %}"
+         data-sizes="auto"
+         data-parent-fit="cover"
+         style="background-position: {{ block.settings.alignment }}; background-image: url('{{ block.settings.image | img_url: '300x300' }});"
+         {% endif %}
+         {{ block.shopify_attributes }}
+    >
+      {% if block.settings.image == blank %}
+        <div class="placeholder-background">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {% endif %}
+      <div class="hero__inner">
+        <div class="hero__text-wrapper {{ block.settings.text_alignment }}">
+          <div class="grid">
+            <div class="grid__item large--eight-twelfths push--large--two-twelfths one-whole hero-content">
+              {% if block.settings.title != blank %}
+                <h2 class="hero__title">{{ block.settings.title | escape }}</h2>
+              {% endif %}
+              {% if block.settings.text != blank %}
+                <div class="rte hero__text">{{ block.settings.text }}</div>
+              {% endif %}
+              {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                <a href="{{ block.settings.button_link }}" class="btn {{ block.settings.button_style }} hero__btn">
+                  {{ block.settings.button_label | escape }} <span class="fas fa-arrow-right" aria-hidden="true"></span>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+         </div>
+      </div>
+      
+      {% unless block.settings.overlay %}
+        <style>
+          .hero-{{ block.id }}.overlay:after{
+            background-color: transparent;
+          }
+        </style>
+      {% endunless %}
+      
+    </div>
+  {% endfor %}
+      
+</div>

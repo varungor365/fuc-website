@@ -1,0 +1,217 @@
+{% if section.settings.title != blank %}
+  <h2 class="text-center section-heading">{{ section.settings.title | escape }}</h2>
+{% endif %}
+
+{%- assign product = all_products[section.settings.product] -%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign featured_product_section = true -%}
+{% unless product.options.size == 1 and product.variants[0].title == 'Default Title' %}
+  {%- assign has_variants = true -%}
+{% else %}
+  {%- assign has_variants = false -%}
+{% endunless %}
+<div id="product_{{ product.id }}" data-section-id="product_{{ product.id }}" data-section-type="featured-product-section">
+
+  {% if settings.show_multiple_currencies and has_variants %}
+    {% comment %}
+      Used to replace currency when changing variants and it has a different price
+    {% endcomment %}
+    <ul class="product-variant-prices-ref hide">
+      {% for _prod_var in product.variants %}
+        {% if _prod_var.available %}
+          <li data-variant-id="{{ _prod_var.id }}">{{ _prod_var.price | money }}|{{ _prod_var.compare_at_price | money }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div class="product-list large--hide">
+    <div class="product-list__item">
+      {%- assign btn_action = section.settings.btn_action -%}
+      {%- assign btn_text = section.settings.btn_text -%}
+      {%- assign card_hoverable = true -%}
+      {% if section.settings.product != blank %}
+        {% include 'product-card' %}
+      {% else %}
+        {% include 'blank-product-card' %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="product-preview page-width--large medium-down--hide">
+    {% if section.settings.product != blank %}
+      <div class="grid">
+        <div class="grid__item six-twelfths push--one-twelfth">
+          {% include 'product-gallery' %}
+        </div>
+        <div class="grid__item four-twelfths push--one-twelfth">
+          <div class="product-info">
+            {% include "product-description-split",
+              product_description: product.description,
+              excerpt_size: section.settings.excerpt_word_count,
+              product_short_desc: blank
+            %}
+            {% include 'product-page-info' %}
+            {% include 'product-meta' %}
+          </div>
+        </div> <!-- end desktop -->
+      </div>
+    {% else %}
+      {% include 'blank-featured-product' %}
+    {% endif %}
+  </div>
+  {% unless product.empty? %}
+    <script type="application/json" id="ProductJson-product_{{ product.id }}">
+      {{ product | json }}
+    </script>
+  {% endunless %}
+</div>
+{%- assign featured_product_section = false -%}
+
+{% schema %}
+  {
+    "name": "Featured product",
+    "class": "section-featured-product",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Featured Product"
+      },
+      {
+        "type": "product",
+        "id": "product",
+        "label": "Product"
+      },
+      {
+        "type": "select",
+        "id": "btn_action",
+        "label": "Button action",
+        "options": [
+          {
+            "value": "none",
+            "label": "None (hide button)"
+          },
+          {
+            "value": "add_to_cart",
+            "label": "Add to cart and stay on page"
+          },
+          {
+            "value": "add_to_cart_redirect",
+            "label": "Add to cart and go to cart page"
+          },
+          {
+            "value": "add_to_cart_checkout",
+            "label": "Add to cart and go to checkout"
+          },
+          {
+            "value": "product_page",
+            "label": "Product page"
+          }
+        ],
+        "default": "add_to_cart"
+      },
+      {
+        "type": "text",
+        "id": "btn_text",
+        "label": "Button text",
+        "default": "Add to Cart"
+      },
+      {
+        "type": "header",
+        "content": "Product properties"
+      },
+      {
+        "type": "select",
+        "id": "product_options_style",
+        "label": "Options style",
+        "options": [
+          {
+            "value": "dropdown",
+            "label": "Select dropdown list"
+          },
+          {
+            "value": "swatches",
+            "label": "dropdown"
+          }
+        ],
+        "default": "dropdown"
+      },
+      {
+        "type": "checkbox",
+        "id": "display_quantity_selector",
+        "label": "Display quantity selector",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Product Gallery"
+      },
+      {
+        "type": "select",
+        "id": "gallery_zoom_type",
+        "label": "Zoom type",
+        "options": [
+          {
+            "value": "mouseover",
+            "label": "On mouse over"
+          },
+          {
+            "value": "grab",
+            "label": "On click/touch"
+          }
+        ],
+        "default": "mouseover"
+      },
+      {
+        "type": "checkbox",
+        "id": "gallery_arrows",
+        "label": "Display arrows",
+        "default": true
+      },
+      {
+        "type": "radio",
+        "id": "gallery_direction",
+        "label": "Gallery type",
+        "default": "vertical",
+        "options": [
+          {"value": "vertical", "label": "Vertical gallery"},
+          {"value": "horizontal", "label": "Horizontal gallery"}
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Short Description"
+      },
+      {
+        "type": "select",
+        "id": "excerpt_word_count",
+        "label": "Excerpt size",
+        "options": [
+          {"value": "0", "label": "Disable automatic excerpts"},
+          {"value": "10", "label": "10 words"},
+          {"value": "15", "label": "15 words"},
+          {"value": "20", "label": "20 words"},
+          {"value": "25", "label": "25 words"},
+          {"value": "30", "label": "30 words"},
+          {"value": "35", "label": "35 words"},
+          {"value": "40", "label": "40 words"},
+          {"value": "45", "label": "45 words"},
+          {"value": "50", "label": "50 words"}
+        ],
+        "default": "15",
+        "info": "Maximum amount of words to excerpt from product description"
+      },
+      {
+        "type": "paragraph",
+        "content": "NOTE: HTML is stripped from short description. If you want to format short description text (eg. Add bullet points), insert [end-short-description] in the product content, and all the content above will be considered as a short description, the rest as a product description."
+      }
+    ],
+    "presets": [
+      {
+        "name": "Single product",
+        "category": "Products"
+      }
+    ]
+  }
+{% endschema %}

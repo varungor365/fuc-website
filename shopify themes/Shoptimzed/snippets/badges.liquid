@@ -1,0 +1,50 @@
+  {% assign badgestyle = "topright" %}
+  {% assign badge = false %}
+  {% for tag in product.tags %}
+    {% if tag contains "badgestyle-" %}{% capture badgestyle %}{{ tag | replace: "badgestyle-","" }}{% endcapture %}{% endif %}
+	{% if tag contains "badge-" %}{% capture badge %}{{ tag | replace: "badge-","" }}{% endcapture %}{% endif %}
+  {% endfor %}
+  {% unless product.available %}
+	<div class="badges topleft">
+	  <img src="{{ 'sold_out.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+	</div>
+  {% elsif badge %}
+	<div class="badges {{ badgestyle }}">
+	  {% if badge == "freeshipping" %}
+      	<img src="{{ 'shipping_free.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "bestseller" %}
+      	<img src="{{ 'best_seller.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "new" %}
+      	<img src="{{ 'new.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "onsale" %}
+      	<img src="{{ 'on_sale.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "performance" %}
+      	<img src="{{ 'performance.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "savenow" %}
+      	<img src="{{ 'save_now.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "toprated" %}
+      	<img src="{{ 'top_rated.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "preorder" %}
+      	<img src="{{ 'pre_order.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "instock" %}
+      	<img src="{{ 'in_stock.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "soldout" %}
+      	<img src="{{ 'sold_out.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "custom1" %}
+      	<img src="{{ 'custom_1.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+      {% if badge == "custom2" %}
+      	<img src="{{ 'custom_2.png' | asset_url }}" class="p-badge-img" alt="Badge" />
+      {% endif %}
+	</div>
+  {% endunless %}

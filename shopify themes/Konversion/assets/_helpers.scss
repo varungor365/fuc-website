@@ -1,0 +1,105 @@
+/*============================================================================
+  # Helper Classes
+==============================================================================*/
+.is-transitioning {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.display-table {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.display-table-cell {
+  display: table-cell;
+  vertical-align: middle;
+  float: none;
+}
+
+@include at-query ($min, $large) {
+  .large--display-table {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .large--display-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+    float: none;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px; width: 1px;
+  margin: -1px; padding: 0; border: 0;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+// Only show when JS is not supported
+.no-js:not(html) {
+  display: none;
+
+  .no-js & {
+    display: block;
+  }
+}
+
+// Only show when JS is supported
+.js {
+  .no-js & {
+    display: none;
+  }
+}
+
+.pull-left {
+  float: left;
+}
+.pull-right {
+  float: right;
+}
+@include at-query ($min, $large) {
+  .large--pull-left {
+    float: left;
+  }
+  .large--pull-right {
+    float: right;
+  }
+}
+.empty-page-placeholder {
+  color: $color-meta-text;
+  height: $gutter * 6;
+  padding-top: $gutter * 2;
+  text-align: center;
+  width: 100%;
+  h2, .h2 {
+    color: $color-meta-text;
+  }
+}
+
+.accordion {
+  margin: 0 0 $gutter / 2;
+  dt {
+    background-color: $color-panel;
+    border-bottom: 1px solid $color-border;
+    font-size: 1.2rem;
+    padding: $gutter / 3;
+    margin: 0 $gutter / -3;
+  }
+  dd {
+    margin: 0;
+    padding: $gutter / 3 0;
+    &:last-of-type {
+      position: relative;
+      top: -1px;
+    }
+  }
+}

@@ -1,0 +1,317 @@
+<style>
+{% if section.settings.header_mobile == 'top' %}
+  .footer-spacer{height:0px;}
+{% endif %}
+</style>
+
+<div class="header-mobile-{{ section.settings.header_mobile }}
+            header-container
+            {% if settings.sticky_header %}sticky-header {% endif %}
+            nav-{{ section.settings.navigation_type }}"
+     data-section-id="{{ section.id }}" data-section-type="header-section" data-template="{{ template.name }}">
+    
+      <!-- Header -->
+	  <header class="site-header" role="banner">
+		<div class="wrapper-fluid header-wrapper">
+          
+          <!-- left icons -->
+          <div class="nav-containers nav-container-left-icons">
+            <ul class="inner-nav-containers">
+              <li class="site-nav__item site-nav--open">
+                <a href="" class="site-nav__link site-nav__link--icon js-drawer-open-button-left" aria-controls="NavDrawer">
+                  <span class="icon-fallback-text">
+                    <span class="fas fa-bars" aria-hidden="true"></span>
+                    <span class="fallback-text">{{ 'general.drawers.navigation' | t }}</span>
+                  </span>
+                </a>
+              </li>
+              {% if shop.customer_accounts_enabled %}
+                <li class="site-nav__item {% if section.settings.navigation_type != "hidden" %}large--hide {% endif %}">
+                  <a class="site-nav__link site-nav__link--icon" href="/account">
+                    <span class="icon-fallback-text">
+                      <span class="fas fa-user" aria-hidden="true"></span>
+                      <span class="fallback-text">
+                        {% if customer %}
+                          {{ 'layout.customer.account' | t }}
+                        {% else %}
+                          {{ 'layout.customer.log_in' | t }}
+                        {% endif %}
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+          
+          <!-- Logo -->
+          <div class="nav-containers nav-container-logo">
+            <ul class="inner-nav-containers">
+              
+                {% assign image_size = section.settings.height_logo | prepend: 'x' %}
+                {% assign image_size_mobile = section.settings.height_logo_mobile | prepend: 'x' %}
+              
+				{% if template.name == 'index' %}
+                	<h1 class="site-header__logo" itemscope itemtype="http://schema.org/Organization">
+              	{% else %}
+                	<div class="site-header__logo" itemscope itemtype="http://schema.org/Organization">
+              	{% endif %}
+                	<a href="/" itemprop="url" class="site-header__logo-link">
+               			{% if section.settings.inverted_logo and template.name == 'index' or template.name == 'collection' or template.name == 'article' %}
+                          	<img class="logo inverted-logo" src="{{ section.settings.inverted_logo | img_url: image_size }}"
+                            srcset="{{ section.settings.inverted_logo | img_url: image_size }} 1x, {{ section.settings.inverted_logo | img_url: image_size, scale: 2 }} 2x"
+                            alt="{{ section.settings.inverted_logo.alt | default: shop.name }}"
+                            itemprop="logo">
+                        {% else %}
+                      		<span class="inverted-logo">{{ shop.name }}</span> 
+						{% endif %}
+                    
+						{% if section.settings.default_logo %}
+                        	<img class="logo default-logo" src="{{ section.settings.default_logo | img_url: image_size }}"
+                        	srcset="{{ section.settings.default_logo | img_url: image_size }} 1x, {{ section.settings.default_logo | img_url: image_size, scale: 2 }} 2x"
+                       		alt="{{ section.settings.default_logo.alt | default: shop.name }}"
+                   			itemprop="logo">
+                      
+                      		<img class="logo mobile-logo" src="{{ section.settings.default_logo | img_url: image_size_mobile }}"
+                        	srcset="{{ section.settings.default_logo | img_url: image_size_mobile }} 1x, {{ section.settings.default_logo | img_url: image_size_mobile, scale: 2 }} 2x"
+                       		alt="{{ section.settings.default_logo.alt | default: shop.name }}"
+                   			itemprop="logo">
+                      	{% else %}
+                			<span class="default-logo">{{ shop.name }}</span>
+                            <span class="mobile-logo">{{ shop.name }}</span>
+						{% endif %}
+                	</a>
+				{% if template.name == 'index' %}
+                	</h1>
+              	{% else %}
+              		</div>
+				{% endif %}
+            
+            </ul>
+          </div>
+          
+          <!-- Navigation menu -->
+          <div id="AccessibleNav" class="site-nav nav-containers nav-container-menu">
+            <ul class="inner-nav-containers">         
+                {% for link in linklists[section.settings.main_menu_link_list].links %}
+                  {% if link.links != blank %}
+                  {% assign parent_index = forloop.index %}
+                    <li
+                      class="site-nav__item site-nav--has-dropdown {% if link.active %}site-nav--active{% endif %}"
+                      aria-haspopup="true"
+                      data-meganav-type="parent">
+                      <a
+                        href="{{ link.url }}"
+                        class="site-nav__link"
+                        data-meganav-type="parent"
+                        aria-controls="MenuParent-{{ parent_index }}"
+                        aria-expanded="false"
+                        {% unless template.name == 'index' %}{% if link.active %}aria-current="page"{% endif %}{% endunless%}>
+                          {{ link.title | escape }}
+                          <span class="fas fa-angle-down" aria-hidden="true"></span>
+                      </a>
+                      <ul
+                        id="MenuParent-{{ parent_index }}"
+                        class="site-nav__dropdown {% if link.levels == 2 %}site-nav--has-grandchildren{% endif %}"
+                        data-meganav-dropdown>
+                        {% for childlink in link.links %}
+                          {% if childlink.links != blank %}
+                          {% assign child_index = forloop.index %}
+                            <li
+                              class="site-nav__item site-nav--has-dropdown site-nav--has-dropdown-grandchild {% if childlink.active %}site-nav--active{% endif %}"
+                              aria-haspopup="true">
+                              <a
+                                href="{{ childlink.url }}"
+                                class="site-nav__dropdown-link"
+                                aria-controls="MenuChildren-{{ parent_index }}-{{ child_index }}"
+                                data-meganav-type="parent"
+                                {% unless template.name == 'index' %}{% if childlink.active %}aria-current="page"{% endif %}{% endunless%}
+                                tabindex="-1">
+                                  {{ childlink.title | escape }}
+                                  <span class="fas fa-angle-right" aria-hidden="true"></span>
+                              </a>
+                              <div class="site-nav__dropdown-grandchild">
+                                <ul
+                                  id="MenuChildren-{{ parent_index }}-{{ child_index }}"
+                                  data-meganav-dropdown>
+                                  {% for grandchildlink in childlink.links %}
+                                    <li{% if grandchildlink.active %} class="site-nav--active"{% endif %}>
+                                      <a
+                                        href="{{ grandchildlink.url }}"
+                                        class="site-nav__dropdown-link"
+                                        data-meganav-type="child"
+                                        {% unless template.name == 'index' %}{% if grandchildlink.active %}aria-current="page"{% endif %}{% endunless %}
+                                        tabindex="-1">
+                                          {{ grandchildlink.title | escape }}
+                                        </a>
+                                    </li>
+                                  {% endfor %}
+                                </ul>
+                              </div>
+                            </li>
+                          {% else %}
+                            <li{% if childlink.active %} class="site-nav--active"{% endif %}>
+                              <a
+                                href="{{ childlink.url }}"
+                                class="site-nav__dropdown-link"
+                                data-meganav-type="child"
+                                {% if childlink.active %}aria-current="page"{% endif %}
+                                tabindex="-1">
+                                  {{ childlink.title | escape }}
+                              </a>
+                            </li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    </li>
+                  {% else %}
+                    <li class="site-nav__item{% if link.active %} site-nav--active{% endif %}">
+                      <a
+                        href="{{ link.url }}"
+                        class="site-nav__link"
+                        data-meganav-type="child"
+                        {% unless template.name == 'index' %}{% if link.active %}aria-current="page"{% endif %}{% endunless%}>
+                          {{ link.title | escape }}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+            </ul>
+          </div>
+            
+          <!-- right icons -->
+          <div class="nav-containers nav-container-right-icons">
+            <ul class="inner-nav-containers">
+                {% if shop.customer_accounts_enabled %}
+                  <li class="site-nav__item small--hide medium--hide {% if section.settings.navigation_type == "hidden" %}large--hide {% endif %}">
+                    <a class="site-nav__link site-nav__link--icon" href="/account">
+                      <span class="icon-fallback-text">
+                        <span class="fas fa-user" aria-hidden="true"></span>
+                        <span class="fallback-text">
+                          {% if customer %}
+                            {{ 'layout.customer.account' | t }}
+                          {% else %}
+                            {{ 'layout.customer.log_in' | t }}
+                          {% endif %}
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                {% endif %}
+
+              	{% if settings.search_enabled %}
+                  <li class="site-nav__item">
+                    <a href="/search" class="site-nav__link site-nav__link--icon js-drawer-open-button-top" aria-controls="SearchDrawer">
+                      <span class="icon-fallback-text">
+                        <span class="fas fa-search" aria-hidden="true"></span>
+                        <span class="fallback-text">{{ 'general.search.title' | t }}</span>
+                      </span>
+                    </a>
+                  </li>
+                {% endif %}
+
+                <li class="site-nav__item">
+                  <a href="/cart" class="site-nav__link site-nav__link--icon cart-link js-drawer-open-button-right" aria-controls="CartDrawer">
+                    <span class="icon-fallback-text">
+                      <span class="fas fa-shopping-{{ settings.cart_icon }}" aria-hidden="true"></span>
+                      <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
+                    </span>
+                    <span class="cart-link__bubble animated infinite rubberBand {% if cart.item_count > 0 %} cart-link__bubble--visible{% endif %} "></span>
+                  </a>
+                </li>
+            </ul>
+          </div>
+
+        </div>
+      </header>
+
+</div>
+
+{% schema %}
+  {
+    "name": "Header",
+	"class": "header-section",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "default_logo",
+        "label": "Logo"
+      },
+	  {
+        "type": "image_picker",
+        "id": "inverted_logo",
+        "label": "Transparent header logo"
+      },
+	  {
+        "type": "range",
+        "id": "height_logo",
+        "label": "Logo height",
+        "min": 40,
+        "max": 60,
+        "step": 2,
+        "unit": "px",
+        "default": 50
+      },
+	  {
+        "type": "header",
+        "content": "Navigation"
+      },
+	  {
+        "type": "select",
+        "id": "navigation_type",
+        "label": "Navigation type",
+        "options": [
+          { "value": "left",
+            "label": "Left"
+          },
+          { "value": "right",
+            "label": "Right"
+          },
+          { "value": "center",
+            "label": "Center"
+          },
+          { "value": "center-logo",
+            "label": "Logo center"
+          },
+          { "value": "hidden",
+            "label": "Hidden"
+          }
+        ]
+      },
+	  {
+        "type": "link_list",
+        "id": "main_menu_link_list",
+        "label": "Menu",
+        "default": "main-menu"
+      },
+	  {
+        "type": "header",
+        "content": "Mobile header"
+      },
+	  {
+        "type": "select",
+        "id": "header_mobile",
+        "label": "Position",
+		"default": "top",
+        "options": [
+		   { "value": "top",
+             "label": "Top"
+           },
+		   { "value": "bottom",
+             "label": "Bottom"
+           }
+        ]
+      },
+	  {
+        "type": "range",
+        "id": "height_logo_mobile",
+        "label": "Logo height",
+        "min": 20,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "default": 28
+      }
+    ]
+  }
+{% endschema %}

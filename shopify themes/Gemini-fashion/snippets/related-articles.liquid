@@ -1,0 +1,37 @@
+{%- assign blogs_list = blogs[blog.handle] -%}
+{%- if settings.blog_show_related_articles and blogs_list.articles_count > 1 -%}
+  {%- assign image_size = '570x407' -%}
+
+  <div class="related-posts">
+    <h3 class="has-line">{{ settings.blog_title_related_articles }}</h3>
+    <div class="related-posts-carousel">
+      {%- assign f_article = blogs_list.f_article | sort: 'title' -%}
+      {%- assign number_limit = 3 -%}
+      {%- assign counter = 0 -%}
+
+      {%- for f_article in blogs_list.articles -%}
+        {%- if counter >= number_limit -%}
+          {%- break -%}
+        {%- else -%}
+          {%- if article.id != f_article.id -%}
+            {%- assign counter = counter | plus: 1 -%}
+
+            <div class="related__item">
+              {%- if f_article.image -%}
+                <div class="blog__media">
+                  <img src="{{ f_article | img_url: image_size, format: 'pjpg', crop: 'center' | split:'?' | first }}" width="{{ image_size | split: 'x'| first }}" height="{{ image_size | split: 'x'| last }}" alt="{{ f_article.title }}">
+                  <a class="blog__link" href="{{ f_article.url }}">
+                    {% include 'icon-search' %}
+                  </a>
+                </div>
+              {%- endif -%}
+              <h4 class="blog__title">
+                <a href="{{ f_article.url }}" tabindex="0">{{ f_article.title }}</a>
+              </h4>
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}

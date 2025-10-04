@@ -1,532 +1,560 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { ArrowLeftIcon } from '@heroicons/react/24/outline'
-import strapiService from '@/lib/strapi'
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { 
+  ArrowLeftIcon, 
+  ArrowRightIcon, 
+  CheckIcon,
+  PhotoIcon,
+  CubeIcon,
+  TagIcon,
+  TruckIcon,
+  SparklesIcon 
+} from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 interface ProductFormData {
-  name: string
-  description: string
-  short_description: string
-  price: number
-  sale_price?: number
-  sku: string
-  stock_quantity: number
-  stock_status: string
-  category?: number
-  subcategory?: number
-  tags: number[]
-  colors: string[]
-  sizes: string[]
-  materials: string[]
-  weight?: number
-  care_instructions: string
-  featured: boolean
-  new_arrival: boolean
-  bestseller: boolean
-  on_sale: boolean
-  seo_title: string
-  seo_description: string
-  seo_keywords: string
+  // Basic Info
+  title: string;
+  description: string;
+  category: string;
+  tags: string[];
+  
+  // Pricing & Inventory
+  price: number;
+  comparePrice?: number;
+  cost?: number;
+  sku: string;
+  trackInventory: boolean;
+  quantity: number;
+  
+  // Images & Media
+  images: File[];
+  
+  // Variants
+  variants: ProductVariant[];
+  
+  // SEO & Organization
+  handle: string;
+  metaTitle: string;
+  metaDescription: string;
+  
+  // Shipping & Logistics
+  weight?: number;
+  requiresShipping: boolean;
+  taxable: boolean;
 }
 
+interface ProductVariant {
+  id: string;
+  title: string;
+  price: number;
+  sku: string;
+  inventory: number;
+  options: { [key: string]: string };
+}
+
+const steps = [
+  { id: 1, name: 'Basic Info', icon: CubeIcon, description: 'Product details and description' },
+  { id: 2, name: 'Pricing', icon: TagIcon, description: 'Pricing and inventory settings' },
+  { id: 3, name: 'Images', icon: PhotoIcon, description: 'Upload product images' },
+  { id: 4, name: 'Variants', icon: SparklesIcon, description: 'Size, color, and other options' },
+  { id: 5, name: 'SEO', icon: TruckIcon, description: 'Search and shipping settings' }
+];
+
 export default function NewProductPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
-  const [categories, setCategories] = useState<any[]>([])
-  const [subcategories, setSubcategories] = useState<any[]>([])
-  const [tags, setTags] = useState<any[]>([])
-  
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<ProductFormData>({
-    name: '',
+    title: '',
     description: '',
-    short_description: '',
-    price: 0,
-    sale_price: undefined,
-    sku: '',
-    stock_quantity: 0,
-    stock_status: 'in_stock',
-    category: undefined,
-    subcategory: undefined,
+    category: '',
     tags: [],
-    colors: [],
-    sizes: [],
-    materials: [],
-    weight: undefined,
-    care_instructions: '',
-    featured: false,
-    new_arrival: false,
-    bestseller: false,
-    on_sale: false,
-    seo_title: '',
-    seo_description: '',
-    seo_keywords: ''
-  })
+    price: 0,
+    sku: '',
+    trackInventory: true,
+    quantity: 0,
+    images: [],
+    variants: [],
+    handle: '',
+    metaTitle: '',
+    metaDescription: '',
+    requiresShipping: true,
+    taxable: true
+  });
 
-  useEffect(() => {
-    loadDropdownData()
-  }, [])
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
 
-  const loadDropdownData = async () => {
-    try {
-      const [categoriesRes] = await Promise.all([
-        strapiService.getCategories()
-      ])
+  const categories = [
+    'Hoodies & Sweatshirts',
+    'T-Shirts & Tops', 
+    'Jackets & Outerwear',
+    'Pants & Bottoms',
+    'Accessories',
+    'Footwear'
+  ];
 
-      setCategories(categoriesRes.data || [])
-      // Mock data for subcategories and tags
-      setSubcategories([
-        { id: 1, name: 'T-Shirts', category: 'Apparel' },
-        { id: 2, name: 'Hoodies', category: 'Apparel' },
-        { id: 3, name: 'Accessories', category: 'Other' }
-      ])
-      setTags([
-        { id: 1, name: 'streetwear' },
-        { id: 2, name: 'urban' },
-        { id: 3, name: 'limited-edition' },
-        { id: 4, name: 'trending' }
-      ])
-    } catch (error) {
-      console.error('Error loading dropdown data:', error)
+  const handleNext = () => {
+    if (currentStep < steps.length) {
+      setCurrentStep(currentStep + 1);
     }
-  }
+  };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target
-    
-    if (type === 'checkbox') {
-      const checked = (e.target as HTMLInputElement).checked
-      setFormData(prev => ({ ...prev, [name]: checked }))
-    } else if (type === 'number') {
-      setFormData(prev => ({ ...prev, [name]: parseFloat(value) || 0 }))
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }))
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
     }
-  }
+  };
 
-  const handleArrayInputChange = (field: string, value: string) => {
-    const items = value.split(',').map(item => item.trim()).filter(Boolean)
-    setFormData(prev => ({ ...prev, [field]: items }))
-  }
+  const handleSubmit = async () => {
+    // TODO: Implement product creation API call
+    console.log('Creating product:', formData);
+  };
 
-  const handleTagsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(e.target.selectedOptions, option => parseInt(option.value))
-    setFormData(prev => ({ ...prev, tags: selectedOptions }))
-  }
+  const generateAIDescription = async () => {
+    setIsGeneratingAI(true);
+    // Simulate AI description generation
+    setTimeout(() => {
+      setFormData(prev => ({
+        ...prev,
+        description: `Elevate your streetwear game with this premium ${formData.title}. Crafted from high-quality materials with attention to detail, this piece combines contemporary design with urban functionality. Perfect for fashion-forward individuals who appreciate authentic street style and superior comfort.`,
+        metaTitle: `${formData.title} - Premium Streetwear | FASHUN.CO`,
+        metaDescription: `Shop the ${formData.title} from FASHUN.CO. Premium streetwear with modern design and superior quality. Free shipping on orders over ₹1500.`
+      }));
+      setIsGeneratingAI(false);
+    }, 2000);
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-
-    try {
-      // Generate SEO fields if not provided
-      const productData = {
-        ...formData,
-        category: formData.category ? String(formData.category) : undefined,
-        subcategory: formData.subcategory ? String(formData.subcategory) : undefined,
-        tags: formData.tags ? formData.tags.map(tag => String(tag)) : [],
-        slug: formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-        seo_title: formData.seo_title || formData.name,
-        seo_description: formData.seo_description || formData.short_description || formData.description.substring(0, 160),
-        seo_keywords: formData.seo_keywords || formData.name.toLowerCase()
-      }
-
-      await strapiService.createProduct(productData)
-      router.push('/admin/products')
-    } catch (error) {
-      console.error('Error creating product:', error)
-      alert('Failed to create product. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <div className="p-6">
-      {/* Header */}
-      <div className="flex items-center mb-6">
-        <button
-          onClick={() => router.back()}
-          className="mr-4 p-2 text-gray-600 hover:text-gray-900"
-        >
-          <ArrowLeftIcon className="h-5 w-5" />
-        </button>
-        <h1 className="text-3xl font-bold text-gray-900">Add New Product</h1>
-      </div>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow p-6 space-y-6">
-          {/* Basic Information */}
-          <div className="border-b border-gray-200 pb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Product Name *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  SKU *
-                </label>
-                <input
-                  type="text"
-                  name="sku"
-                  required
-                  value={formData.sku}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Short Description
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Product Title *
               </label>
               <input
                 type="text"
-                name="short_description"
-                value={formData.short_description}
-                onChange={handleInputChange}
-                placeholder="Brief product description for listings"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={formData.title}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                placeholder="Enter product title..."
               />
             </div>
 
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description *
-              </label>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-white">
+                  Product Description *
+                </label>
+                <button
+                  onClick={generateAIDescription}
+                  disabled={!formData.title || isGeneratingAI}
+                  className="inline-flex items-center gap-2 text-xs bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-3 py-1 rounded-full transition-all duration-300"
+                >
+                  <SparklesIcon className="w-3 h-3" />
+                  {isGeneratingAI ? 'Generating...' : 'AI Generate'}
+                </button>
+              </div>
               <textarea
-                name="description"
-                required
-                rows={4}
+                rows={6}
                 value={formData.description}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                placeholder="Describe your product..."
               />
             </div>
-          </div>
 
-          {/* Pricing & Inventory */}
-          <div className="border-b border-gray-200 pb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Pricing & Inventory</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Regular Price *
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  required
-                  min="0"
-                  step="0.01"
-                  value={formData.price}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Sale Price
-                </label>
-                <input
-                  type="number"
-                  name="sale_price"
-                  min="0"
-                  step="0.01"
-                  value={formData.sale_price || ''}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Stock Quantity *
-                </label>
-                <input
-                  type="number"
-                  name="stock_quantity"
-                  required
-                  min="0"
-                  value={formData.stock_quantity}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Stock Status
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Category *
               </label>
               <select
-                name="stock_status"
-                value={formData.stock_status}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={formData.category}
+                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-purple-400"
               >
-                <option value="in_stock">In Stock</option>
-                <option value="low_stock">Low Stock</option>
-                <option value="out_of_stock">Out of Stock</option>
+                <option value="">Select category...</option>
+                {categories.map(category => (
+                  <option key={category} value={category} className="bg-gray-900">
+                    {category}
+                  </option>
+                ))}
               </select>
             </div>
-          </div>
 
-          {/* Categories & Tags */}
-          <div className="border-b border-gray-200 pb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Categories & Tags</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category
-                </label>
-                <select
-                  name="category"
-                  value={formData.category || ''}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.attributes?.name || category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Subcategory
-                </label>
-                <select
-                  name="subcategory"
-                  value={formData.subcategory || ''}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Select Subcategory</option>
-                  {subcategories.map((subcategory) => (
-                    <option key={subcategory.id} value={subcategory.id}>
-                      {subcategory.attributes?.name || subcategory.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Product Attributes */}
-          <div className="border-b border-gray-200 pb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Product Attributes</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Colors (comma-separated)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Red, Blue, Green"
-                  value={formData.colors.join(', ')}
-                  onChange={(e) => handleArrayInputChange('colors', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Sizes (comma-separated)
-                </label>
-                <input
-                  type="text"
-                  placeholder="S, M, L, XL"
-                  value={formData.sizes.join(', ')}
-                  onChange={(e) => handleArrayInputChange('sizes', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Materials (comma-separated)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Cotton, Polyester"
-                  value={formData.materials.join(', ')}
-                  onChange={(e) => handleArrayInputChange('materials', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Weight (grams)
-                </label>
-                <input
-                  type="number"
-                  name="weight"
-                  min="0"
-                  value={formData.weight || ''}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Care Instructions
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Tags (comma separated)
               </label>
-              <textarea
-                name="care_instructions"
-                rows={3}
-                value={formData.care_instructions}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              <input
+                type="text"
+                onChange={(e) => setFormData(prev => ({ 
+                  ...prev, 
+                  tags: e.target.value.split(',').map(tag => tag.trim()).filter(Boolean)
+                }))}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                placeholder="streetwear, hoodie, premium, urban..."
               />
             </div>
           </div>
+        );
 
-          {/* Product Flags */}
-          <div className="border-b border-gray-200 pb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Product Flags</h2>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  name="featured"
-                  checked={formData.featured}
-                  onChange={handleInputChange}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">Featured</span>
-              </label>
+      case 2:
+        return (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Price *
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-3 text-white/70">₹</span>
+                  <input
+                    type="number"
+                    value={formData.price || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
 
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  name="new_arrival"
-                  checked={formData.new_arrival}
-                  onChange={handleInputChange}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">New Arrival</span>
-              </label>
-
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  name="bestseller"
-                  checked={formData.bestseller}
-                  onChange={handleInputChange}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">Bestseller</span>
-              </label>
-
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  name="on_sale"
-                  checked={formData.on_sale}
-                  onChange={handleInputChange}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="text-sm text-gray-700">On Sale</span>
-              </label>
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Compare Price (Optional)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-3 text-white/70">₹</span>
+                  <input
+                    type="number"
+                    value={formData.comparePrice || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, comparePrice: parseFloat(e.target.value) || undefined }))}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                    placeholder="0.00"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* SEO */}
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">SEO Settings</h2>
-            
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                SKU *
+              </label>
+              <input
+                type="text"
+                value={formData.sku}
+                onChange={(e) => setFormData(prev => ({ ...prev, sku: e.target.value }))}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                placeholder="PRODUCT-SKU-001"
+              />
+            </div>
+
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  SEO Title
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-white">
+                  Track Inventory
                 </label>
-                <input
-                  type="text"
-                  name="seo_title"
-                  value={formData.seo_title}
-                  onChange={handleInputChange}
-                  placeholder="Will use product name if empty"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, trackInventory: !prev.trackInventory }))}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    formData.trackInventory ? 'bg-purple-600' : 'bg-gray-600'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      formData.trackInventory ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  SEO Description
-                </label>
-                <textarea
-                  name="seo_description"
-                  rows={3}
-                  value={formData.seo_description}
-                  onChange={handleInputChange}
-                  placeholder="Will use short description if empty"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
+              {formData.trackInventory && (
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Quantity
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.quantity || ''}
+                    onChange={(e) => setFormData(prev => ({ ...prev, quantity: parseInt(e.target.value) || 0 }))}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                    placeholder="0"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        );
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  SEO Keywords
+      case 3:
+        return (
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Product Images
+              </label>
+              <div className="border-2 border-dashed border-white/20 rounded-lg p-8 text-center hover:border-white/40 transition-colors">
+                <PhotoIcon className="w-12 h-12 text-white/50 mx-auto mb-4" />
+                <p className="text-white/70 mb-2">Drop images here or click to upload</p>
+                <p className="text-xs text-white/50">PNG, JPG, GIF up to 10MB each</p>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files || []);
+                    setFormData(prev => ({ ...prev, images: files }));
+                  }}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <label
+                  htmlFor="image-upload"
+                  className="mt-4 inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2 rounded-lg cursor-pointer transition-all duration-300"
+                >
+                  <PhotoIcon className="w-4 h-4" />
+                  Choose Images
                 </label>
+              </div>
+              
+              {formData.images.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm text-white/80 mb-2">
+                    {formData.images.length} image(s) selected
+                  </p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {formData.images.map((file, index) => (
+                      <div key={index} className="bg-white/5 rounded-lg p-2 text-xs text-white/70">
+                        {file.name}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
+      case 4:
+        return (
+          <div className="space-y-6">
+            <div className="text-center">
+              <SparklesIcon className="w-12 h-12 text-purple-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-white mb-2">Product Variants</h3>
+              <p className="text-white/70">Add size, color, or other variant options</p>
+            </div>
+
+            <div className="bg-white/5 rounded-lg p-6">
+              <p className="text-white/80 text-center">
+                Variant creation wizard coming soon...
+              </p>
+              <p className="text-white/60 text-sm text-center mt-2">
+                For now, continue to create a simple product without variants
+              </p>
+            </div>
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Product Handle (URL)
+              </label>
+              <div className="flex">
+                <span className="inline-flex items-center px-3 text-white/70 bg-white/5 border border-r-0 border-white/10 rounded-l-lg text-sm">
+                  /products/
+                </span>
                 <input
                   type="text"
-                  name="seo_keywords"
-                  value={formData.seo_keywords}
-                  onChange={handleInputChange}
-                  placeholder="fashion, clothing, trendy"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={formData.handle}
+                  onChange={(e) => setFormData(prev => ({ ...prev, handle: e.target.value }))}
+                  className="flex-1 bg-white/5 border border-white/10 rounded-r-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                  placeholder="product-handle"
                 />
               </div>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Meta Title
+              </label>
+              <input
+                type="text"
+                value={formData.metaTitle}
+                onChange={(e) => setFormData(prev => ({ ...prev, metaTitle: e.target.value }))}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                placeholder="SEO title for search engines..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-white mb-2">
+                Meta Description
+              </label>
+              <textarea
+                rows={3}
+                value={formData.metaDescription}
+                onChange={(e) => setFormData(prev => ({ ...prev, metaDescription: e.target.value }))}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:border-purple-400"
+                placeholder="Brief description for search results..."
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-white">
+                  Requires Shipping
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, requiresShipping: !prev.requiresShipping }))}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    formData.requiresShipping ? 'bg-purple-600' : 'bg-gray-600'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      formData.requiresShipping ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-white">
+                  Taxable
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, taxable: !prev.taxable }))}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    formData.taxable ? 'bg-purple-600' : 'bg-gray-600'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      formData.taxable ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <div className="mb-8">
+          <Link
+            href="/admin/dashboard"
+            className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-4"
+          >
+            <ArrowLeftIcon className="w-4 h-4" />
+            Back to Dashboard
+          </Link>
+          
+          <h1 className="text-3xl font-bold text-white mb-2">Create New Product</h1>
+          <p className="text-white/70">Add a new product to your store with our intelligent product wizard</p>
+        </div>
+
+        {/* Progress Steps */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            {steps.map((step) => (
+              <div key={step.id} className="flex flex-col items-center flex-1">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
+                  currentStep >= step.id
+                    ? 'bg-purple-600 border-purple-600 text-white'
+                    : 'border-white/20 text-white/50'
+                }`}>
+                  {currentStep > step.id ? (
+                    <CheckIcon className="w-5 h-5" />
+                  ) : (
+                    <step.icon className="w-5 h-5" />
+                  )}
+                </div>
+                <span className={`text-xs mt-2 text-center ${
+                  currentStep >= step.id ? 'text-white' : 'text-white/50'
+                }`}>
+                  {step.name}
+                </span>
+              </div>
+            ))}
+          </div>
+          
+          <div className="w-full bg-white/10 rounded-full h-2">
+            <motion.div
+              className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full"
+              initial={{ width: '0%' }}
+              animate={{ width: `${(currentStep / steps.length) * 100}%` }}
+              transition={{ duration: 0.5 }}
+            />
           </div>
         </div>
 
-        {/* Submit Buttons */}
-        <div className="mt-6 flex justify-end space-x-4">
+        {/* Step Content */}
+        <motion.div
+          key={currentStep}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+          className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 mb-8"
+        >
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-white mb-2">
+              {steps[currentStep - 1].name}
+            </h2>
+            <p className="text-white/70">
+              {steps[currentStep - 1].description}
+            </p>
+          </div>
+
+          {renderStepContent()}
+        </motion.div>
+
+        {/* Navigation */}
+        <div className="flex items-center justify-between">
           <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+            onClick={handlePrevious}
+            disabled={currentStep === 1}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed border border-white/20 rounded-lg text-white transition-all duration-300"
           >
-            Cancel
+            <ArrowLeftIcon className="w-4 h-4" />
+            Previous
           </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? 'Creating...' : 'Create Product'}
-          </button>
+
+          {currentStep === steps.length ? (
+            <button
+              onClick={handleSubmit}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg font-medium transition-all duration-300"
+            >
+              <CheckIcon className="w-4 h-4" />
+              Create Product
+            </button>
+          ) : (
+            <button
+              onClick={handleNext}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white rounded-lg font-medium transition-all duration-300"
+            >
+              Next
+              <ArrowRightIcon className="w-4 h-4" />
+            </button>
+          )}
         </div>
-      </form>
+      </div>
     </div>
-  )
+  );
 }

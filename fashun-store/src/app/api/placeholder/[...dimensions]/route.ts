@@ -5,8 +5,7 @@ export async function GET(
   { params }: { params: { dimensions: string[] } }
 ) {
   try {
-    const resolvedParams = await params;
-    const [width, height] = resolvedParams.dimensions;
+    const [width, height] = params.dimensions;
     
     if (!width || !height) {
       return new NextResponse('Invalid dimensions', { status: 400 });

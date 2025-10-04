@@ -1,0 +1,339 @@
+<style>
+{% if section.settings.switch_account_search_position %}
+.section-header .header-search__wrapper{float: right!important}
+.section-header .user-account{float: left!important}
+{% endif %}
+.section-header .with-menu-word::before{content: '{{ section.settings.menu_word_mobile }}' !important}
+@media screen and (min-width: 1024px){.section-header__logo-link img {margin-top:{{ section.settings.logo_margin }}rem}.section-header .logo-cell{padding-left:{{ section.settings.logo_margin_left }}px}}
+.section-header__logo-link.mobile-logo img{margin-top:{{ section.settings.logo_margin_mobile }}rem}
+</style>
+
+{% if section.settings.logo_image != blank %}
+  {%- assign custom_logo = true -%}
+{% endif %}
+{% if section.settings.logo_image_mobile != blank %}
+  {%- assign custom_mobile_logo = true -%}
+{% endif %}
+
+{% assign menu_type = section.settings.menu_type %}
+<div class="grid--full section-header__wrapper" data-section-id="{{ section.id }}" data-section-type="header-section" data-menu-type="{{ menu_type }}" {% if menu_type == "product-menu"%}id="cbp-hsmenu-wrapper"{% endif %}>
+  <div class="grid__item two-twelfths large--hide text-center {% if section.settings.display_menu_word_mobile %}with-menu-word{% endif %}">
+    <div class="section-header__hamburger js-drawer-open-left">
+      <div class="hamburger">
+        <div class="hamburger__bar hamburger__bar--diagonal part-1"></div>
+        <div class="hamburger__bar hamburger__bar--horizontal"></div>
+        <div class="hamburger__bar hamburger__bar--diagonal part-2"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="grid__item medium-down--eight-twelfths logo-cell">
+    {% if template == 'index' %}
+      {% if custom_logo and custom_mobile_logo == blank %}
+        <h1 class="section-header__logo section-header__logo--image" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-desktop' %}
+        </h1>
+      {% elsif custom_mobile_logo and custom_logo == blank %}
+        <h1 class="section-header__logo medium-down--hide" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-text' %}
+        </h1>
+        <h1 class="section-header__logo large--hide section-header__logo--image" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-mobile' %}
+        </h1>
+      {% elsif custom_mobile_logo == blank and custom_logo == blank %}
+        <h1 class="section-header__logo" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-text' %}
+        </h1>
+      {% elsif custom_mobile_logo and custom_logo %}
+        <h1 class="section-header__logo section-header__logo--image" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-desktop' %}
+          {% include 'logo-mobile' %}
+        </h1>
+      {% endif %}
+    {% else %}
+      {% if custom_logo and custom_mobile_logo == blank %}
+        <div class="h1 section-header__logo section-header__logo--image" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-desktop' %}
+        </div>
+      {% elsif custom_mobile_logo and custom_logo == blank %}
+        <div class="h1 section-header__logo medium-down--hide" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-text' %}
+        </div>
+        <div class="h1 section-header__logo large--hide section-header__logo--image" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-mobile' %}
+        </div>
+      {% elsif custom_mobile_logo == blank and custom_logo == blank %}
+        <div class="h1 section-header__logo" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-text' %}
+        </div>
+      {% elsif custom_mobile_logo and custom_logo %}
+        <div class="h1 section-header__logo section-header__logo--image" itemscope itemtype="http://schema.org/Organization">
+          {% include 'logo-desktop' %}
+          {% include 'logo-mobile' %}
+        </div>
+      {% endif %}
+    {% endif %}
+
+  </div>
+  <div class="grid__item medium-down--hide menu-cell">
+    {% include 'main-menu' %}
+
+    {% if section.settings.switch_account_search_position %}
+      {% if shop.customer_accounts_enabled and section.settings.hide_account_link == false %}
+        <div class="user-account medium-down--hide">
+          <a class="header-icon icon-fallback-text" href="/account">
+            {% if section.settings.display_profile_icon %}
+              <span class="icon icon-user" aria-hidden="true"></span>
+            {% endif %}
+            {{ 'customer.account.title' | t | remove: "My"}}
+          </a>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="header-search__wrapper">
+        <div class="header-search {% if section.settings.switch_account_search_position %} header-search__position-right {% endif %}">
+          <button type="button" class="header-icon icon-fallback-text js-expand-search">
+            <span class="icon icon-search" aria-hidden="true"></span>
+            <span class="fallback-text" aria-hidden="true">Search</span>
+          </button>
+          {% include 'search-bar' %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+  <div class="right-side__wrapper">
+
+    <div class="grid__item two-twelfths cart-cell cart-{{ section.settings.cart_button_type }} ">
+      <a href="/cart" id="CartIcon" class="h1 section-header__cart-link {% if settings.ajax_cart_method == 'drawer' %}js-drawer-open-right{% elsif settings.ajax_cart_method == 'popup' %}js-modal-open-CartModal {% endif %}" aria-controls="CartDrawer" aria-expanded="false">
+        <span class="section-header__cart-count js-cart-count">
+          <span>{{ cart.item_count }} </span>
+        </span>
+        <span class="section-header__cart-text ">
+          {{ 'layout.cart.items_count' | t: count: cart.item_count }}
+          <span class="icon icon-cart"></span>
+
+        </span>
+        <span class="icon icon-cart " aria-hidden="true">
+          <span class="icon-cart__badge js-cart-count">
+            <span>{{ cart.item_count }}</span>
+          </span>
+        </span>
+      </a>
+    </div>
+    {% include 'deal-of-the-day-navbar-desktop' %}
+
+    {% if section.settings.switch_account_search_position %}
+      <div class="header-search__wrapper medium-down--hide">
+        <div class="header-search {% if section.settings.switch_account_search_position %} header-search__position-right {% endif %}">
+          <button type="button" class="header-icon icon-fallback-text js-expand-search">
+            <span class="icon icon-search" aria-hidden="true"></span>
+            <span class="fallback-text" aria-hidden="true">Search</span>
+          </button>
+          {% include 'search-bar' %}
+        </div>
+      </div>
+    {% else %}
+      {% if shop.customer_accounts_enabled and section.settings.hide_account_link == false %}
+        <div class="user-account medium-down--hide">
+          <a class="header-icon icon-fallback-text" href="/account">
+            {% if section.settings.display_profile_icon %}
+              <span class="icon icon-user" aria-hidden="true"></span>
+            {% endif %}
+            {{ 'customer.account.title' | t | remove: "My"}}
+          </a>
+        </div>
+      {% endif %}
+
+    {% endif %}
+
+  </div>
+
+
+</div>
+
+{% schema %}
+  {
+    "name": "Header",
+    "class": "section-header",
+    "settings": [
+      {
+        "type": "text",
+        "id": "logo_text",
+        "label": "Custom Text",
+        "info": "Shop name by default. Limited to 18 characters"
+      },
+      {
+        "type": "url",
+        "id": "logo_link",
+        "label": "Custom Logo Link"
+      },
+      {
+        "type": "header",
+        "content": "Logo (Desktop)"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_image",
+        "label": "Use custom logo",
+        "info": "If your logo is more vertical than horizontal, you might want to change the header height from standard to tall in General Settings > Layout > Header"
+      },
+      {
+        "type":      "range",
+        "id":        "logo_max_width_desktop",
+        "min":        100,
+        "max":        500,
+        "step":       25,
+        "label":     "Image max width ",
+        "default":   200
+      },
+      {
+        "type":      "range",
+        "id":        "logo_margin",
+        "min":        0,
+        "max":        1.2,
+        "step":       0.1,
+        "unit":       "rem",
+        "label":     "Image top margin",
+        "default":   0,
+        "info": "Use it to fine-tune the logo image position"
+      },
+      {
+        "type":      "range",
+        "id":        "logo_margin_left",
+        "min":        0,
+        "max":        40,
+        "step":       1,
+        "unit":       "px",
+        "label":     "Image left margin",
+        "default":   30
+      },
+      {
+        "type": "header",
+        "content": "Logo (Mobile)"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_image_mobile",
+        "label": "Use custom logo on mobile"
+      },
+      {
+        "type":      "range",
+        "id":        "logo_max_width_mobile",
+        "min":        100,
+        "max":        500,
+        "step":       25,
+        "label":     "Image max width",
+        "default":   200,
+        "info": "Defined in pixels. Do not add the 'px' unit."
+      },
+      {
+        "type":      "range",
+        "id":        "logo_margin_mobile",
+        "min":        0,
+        "max":        1.2,
+        "step":       0.1,
+        "unit":       "rem",
+        "label":     "Image top margin",
+        "default":   0,
+        "info": "Use it to fine-tune the logo image position"
+      },
+      {
+        "type": "header",
+        "content": "Main Menu"
+      },
+      {
+        "type": "radio",
+        "id": "menu_type",
+        "label": "Main menu type",
+        "default": "text-menu",
+        "options": [
+          {"value": "text-menu", "label": "Text menu"},
+          {"value": "product-menu", "label": "Product menu"}
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "display_product_price",
+        "label": "Display product price in Product menu",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "submenu_columns",
+        "label": "Display submenu items in columns",
+        "options": [
+          {"value": "1", "label": "1"},
+          {"value": "2", "label": "2"},
+          {"value": "3", "label": "3"},
+          {"value": "4", "label": "4"},
+          {"value": "5", "label": "5"},
+          {"value": "6", "label": "6"}
+        ],
+        "default": "1",
+        "info": "This will only work if the submenu has more than 6 items."
+      },
+      {
+        "type": "checkbox",
+        "id": "display_menu_word_mobile",
+        "label": "Display 'MENU' word",
+        "info": "Display 'MENU' word at the right of the menu button on mobile version.",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "menu_word_mobile",
+        "label": "Menu Word",
+        "default": "MENU"
+      },
+      {
+        "type": "header",
+        "content": "Customer accounts"
+      },
+      {
+        "type": "paragraph",
+        "content": "Learn more about [Customer accounts](https://help.shopify.com/manual/customers/customer-accounts)"
+      },
+      {
+        "type": "checkbox",
+        "id": "display_profile_icon",
+        "label": "Display user profile icon",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_account_link",
+        "label": "Hide the 'Account' link",
+        "default": false
+      },
+      {
+      "type": "header",
+      "content": "Switch position"
+      },
+      {
+      "type": "checkbox",
+      "id": "switch_account_search_position",
+      "label": "Switch 'Search' field position with 'Account' ",
+      "default": false
+      },
+      {
+        "type": "header",
+        "content": "Cart button"
+      },
+      {
+        "type": "radio",
+        "id": "cart_button_type",
+        "label": "Button type",
+        "default": "text-icon",
+        "options": [
+          {"value": "icon", "label": "Icon"},
+          {"value": "text", "label": "Text"},
+          {"value": "text-icon", "label": "Text & Icon"}
+        ]
+      }
+    ]
+  }
+{% endschema %}

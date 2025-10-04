@@ -1,0 +1,76 @@
+{%- if settings.blog_layout != 'fullwidth' -%}
+  {%- assign block_width = 'medium-up--three-quarters' -%}
+{%- endif -%}
+
+{%- case settings.blog_articles_per_row -%}
+  {%- when '1' -%}
+    {%- assign element_width = '' -%}
+    {%- assign image_size = '1170x' -%}
+    {%- assign truncate_words = 100 -%}
+  {%- when '2' -%}
+    {%- assign element_width = 'medium-up--one-half' -%}
+    {%- assign image_size = '590x' -%}
+    {%- assign truncate_words = 50 -%}
+  {%- when '3' -%}
+    {%- assign image_size = '390x' -%}
+    {%- assign element_width = 'medium-up--one-third' -%}
+    {%- assign truncate_words = 33 -%}
+  {%- when '4' -%}
+    {%- assign element_width = 'medium-up--one-quarter' -%}
+    {%- assign image_size = '300x' -%}
+    {%- assign truncate_words = 25 -%}
+  {%- when '5' -%}
+    {%- assign element_width = 'medium-up--one-fifth' -%}
+    {%- assign image_size = '240x' -%}
+    {%- assign truncate_words = 15 -%}
+  {%- else -%}
+    {%- assign element_width = '' -%}
+    {%- assign image_size = '1170x' -%}
+    {%- assign truncate_words = 100 -%}
+{%- endcase -%}
+
+<div class="page__header" {% if settings.blog_header_image %}style="background-image: url({{ settings.blog_header_image | img_url: 'master' }});"{% endif %}>
+  <div class="page-width">
+    <header>
+      <h2 class="page__title">{{ blog.title }}</h2>
+      {% include 'breadcrumbs' %}
+    </header>
+  </div>
+</div>
+
+{% paginate blog.articles by settings.blog_articles_per_page %}
+<div class="page-width">
+  <div class="grid">
+    <div class="grid__item {{ block_width }} {% if settings.blog_layout == 'sidebar_left'%}medium-up--push-one-quarter{% endif %} one-whole">
+      {% if settings.blog_grid_type == 'masonry' %}
+      <div class="grid posts post--masonry" data-masonry='{"selector":".post"}'>
+      {% else %}
+      <div class="grid posts">
+      {% endif %}
+        {% for article in blog.articles %}
+          <div class="grid__item {{ element_width }} post">
+            {%- include 'blog-item' -%}
+          </div>
+          {% assign current_index = forloop.index | modulo: settings.blog_articles_per_row %}
+          {% if current_index == 0 %}
+            <div class="clearfix"> </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <!-- .posts -->
+
+      {% if paginate.pages > 1 %}
+        {% include 'pagination' %}
+      {% endif %}
+      <!-- .page-nav -->
+    </div><!-- .{{ block_width }} -->
+
+    {%- if settings.blog_layout != 'fullwidth' %}
+    <div class="grid__item medium-up--one-quarter {% if settings.blog_layout == 'sidebar_left'%}medium-up--pull-three-quarters{% endif %} one-whole">
+      {%- section 'blog-sidebar' -%}
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endpaginate %}

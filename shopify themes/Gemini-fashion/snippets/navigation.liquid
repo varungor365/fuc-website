@@ -1,0 +1,16 @@
+<nav class="nav">
+  {% if block.settings.title and block.settings.title != ''  %}
+  <h3 class="nav__title">{{ block.settings.title }}</h3>
+  {% endif %}
+
+  {%- assign menu_links = block.settings.menu -%}
+  {% if linklists[menu_links].links.size > 0 %}
+  <ul class="nav__menu">
+    {% for link in linklists[menu_links].links %}
+    <li{% if link.active %} class="nav__item--current"{% endif %}><a href="{{ link.url }}">{{ link.title }}</a></li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p><em>Add link to menu and select menu in settings</em></p>
+  {% endif %}
+</nav>

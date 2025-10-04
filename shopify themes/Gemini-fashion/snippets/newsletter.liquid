@@ -1,0 +1,13 @@
+<div class="newsletter">
+  {% if block.settings.title %}
+    <h3 class="newsletter__title">{{ block.settings.title }}</h3>
+  {% endif %}
+  <p>{{ 'newsletter.newsletter_email' | t }}</p>
+  <form role="form" action="{{ settings.mailchimp_url }}" method="post" target="_blank" class="js-newsletter-form">
+    <div class="newsletter__input">
+      <input type="text" class="newsletter__input--text js-newsletter-input" name="EMAIL" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'newsletter.email_placeholder' | t }}">
+      <div class="newsletter-popup__response js-newsletter-response"></div>
+      <input type="submit" class="newsletter__input--btn" value="{{ section.settings.btn_label }}">
+    </div>
+  </form>
+</div>
