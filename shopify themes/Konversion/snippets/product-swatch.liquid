@@ -1,0 +1,36 @@
+{%- assign option_index = forloop.index -%}
+{%- assign color_options = settings.option_color_swatches | split: ',' -%}
+<div class="swatches swatches--{{ option.name | handleize }}{% if color_options contains option.name %} swatches--color{% endif %}" data-index="{{ option_index }}">
+  <label {% if option.name == 'default' or section.settings.display_option_labels == false and show_label != true %} class="hidden-label"{% endif %}>
+    {{ option.name }}
+  </label>
+  <div class="swatches__options" >
+  {% for value in option.values %}
+
+    {% if color_options contains option.name %}
+      <style>
+        .swatches__option.swatches__option--{{ value | handleize }} {
+          background-color: {{ value | handleize }};
+          {% for block in section.blocks %}
+            {% if block.type == 'custom_color' and block.settings.title == value %}
+              /* {{ block.settings.color_name }} == {{ value }} */
+              {% if block.settings.color_image != blank %}
+                background-image: url('{{ block.settings.color_image | img_url: '40x40' }}');
+              {% else %}
+                background-color: {{ block.settings.color_code }};
+              {% endif %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        }
+      </style>
+    {% endif %}
+    <label class="swatches__option swatches__option-index-{{ option_index }} swatches__option--{{ value | handleize }}{% if option.selected_value == value %} swatches__option--selected{% endif %}" data-value="{{ value | escape }}" {% if color_options contains option.name %} data-color-tooltip="{{ value }}"{% endif %}>
+      <input type="radio" name="option-{{ option_index }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %} />
+      {% unless color_options contains option.name %}
+        {{ value }}
+      {% endunless %}
+    </label>
+  {% endfor %}
+  </div>
+</div>

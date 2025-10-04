@@ -1,0 +1,262 @@
+<ul id="mm-menu-1" class="mobile-nav">
+  <li class="mobile-nav__item mobile-nav__search">
+    {% include 'search-bar' %}
+  </li>
+
+  {% assign linklist = 1 %}
+  {% for link in linklists[settings.header_linklist_1].links %}
+    {% assign child_list_handle = link.title | handleize %}
+    {% if linklists[child_list_handle].links != blank %}
+      {% assign text = 'megamenu_link_' | append:linklist  | append:"_text" %}
+      {% assign linklist = linklist | plus: 1 %}
+      <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}" aria-haspopup="true">
+        <div class="mobile-nav__has-sublist">
+          <a href="{{ link.url }}" data-id="#mobile-{{text}}" class="mobile-nav__link mobile-nav__toggle-open-slide_a">{{ link.title }}</a>
+          <div class="mobile-nav__toggle-slide">
+            <button type="button" data-id="#mobile-{{text}}" class="icon-fallback-text mobile-nav__toggle-open-slide"><i class="fa fa-angle-right"></i></button>
+          </div>
+        </div>
+      </li>
+    {% else %}
+      <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}">
+        <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+
+  {% if settings.enable_megamenu %}
+    {% for i in (1..5) %}
+      {% assign enable = 'megamenu_' | append:i  | append:"_enable" %}
+      {% if settings[enable] %}
+        {% assign text = 'megamenu_' | append:i  | append:"_text" %}
+        {% assign default_collection = 'megamenu_' | append:i  | append:"_default_collection" %}
+        {% assign totalEnable = 0 %}
+        {% for j in (1..9) %}
+          {% assign submenu_heading = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:"_heading"  %}
+          {% assign submenu_menu = 'megamenu_' | append:i | append:"_submenu_" | append:j %}
+          {% if settings[submenu_menu] != "" %}
+            {% assign totalEnable = totalEnable | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+        {% if totalEnable == 0 %}
+          <li class="mobile-nav__item">
+            <a href="/collections/{{ collections[settings[default_collection]].handle }}" class="mobile-nav__link">{{ settings[text] }}</a>
+          </li>
+        {% else %}
+          <li class="mobile-nav__item" aria-haspopup="true">
+            <div class="mobile-nav__has-sublist">
+              <a href="/collections/{{ collections[settings[default_collection]].handle }}" data-id="#mobile-{{ text }}" class="mobile-nav__link mobile-nav__toggle-open-slide_a">{{ settings[text] }}</a>
+              <div class="mobile-nav__toggle-slide">
+                <button type="button" data-id="#mobile-{{ text }}" class="icon-fallback-text mobile-nav__toggle-open-slide"><i class="fa fa-angle-right"></i></button>
+              </div>
+            </div>
+          </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% for link in linklists[settings.header_linklist_2].links %}
+    {% assign child_list_handle = link.title | handleize %}
+    {% if linklists[child_list_handle].links != blank %}
+      {% assign text = 'megamenu_link_' | append:linklist  | append:"_text" %}
+      {% assign linklist = linklist | plus: 1 %}
+      <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}" aria-haspopup="true">
+        <div class="mobile-nav__has-sublist">
+          <a href="{{ link.url }}" data-id="#mobile-{{text}}" class="mobile-nav__link mobile-nav__toggle-open-slide_a">{{ link.title }}</a>
+          <div class="mobile-nav__toggle-slide">
+            <button type="button" data-id="#mobile-{{text}}" class="icon-fallback-text mobile-nav__toggle-open-slide"> > </button>
+          </div>
+        </div>
+      </li>
+    {% else %}
+      <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}">
+        <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+
+  {% for link in linklists[settings.strip_linklist].links %}
+      <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}">
+        <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+      </li>
+  {% endfor %}
+  
+  {% if shop.customer_accounts_enabled %}
+    {% if customer %}
+      <li class="mobile-nav__item">
+        {% if customer.first_name != blank %}
+        {% capture first_name %}{{ customer.first_name }}{% endcapture %}
+        <a href="/account">{{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}</a>
+        {% else %}
+        <a href="/account">{{ 'layout.customer.account' | t }}</a>
+        {% endif %}
+      </li>
+      <li class="mobile-nav__item">
+        {{ 'layout.customer.log_out' | t | customer_logout_link }}
+      </li>
+    {% else %}
+      <li class="mobile-nav__item">
+        {{ 'layout.customer.log_in' | t | customer_login_link }}
+      </li>
+      <li class="mobile-nav__item">
+        {{ 'layout.customer.create_account' | t | customer_register_link }}
+      </li>
+    {% endif %}
+  {% endif %}
+</ul>
+
+{% assign linklist = 1 %}
+{% for link in linklists[settings.header_linklist_1].links %}
+  {% assign child_list_handle = link.title | handleize %}
+  {% if linklists[child_list_handle].links != blank %}
+    {% assign text = 'megamenu_link_' | append:linklist  | append:"_text" %}
+    {% assign linklist = linklist | plus: 1 %}
+	<ul id="mobile-{{text}}" class="mobile-nav mm-hidden">
+      <li class="mobile-nav__item open-parent" aria-haspopup="true">
+        <div class="mobile-nav__has-sublist">
+          <div class="mobile-nav__toggle-slide open-parent">
+            <button type="button" data-id="#mm-menu-1" class="icon-fallback-text mobile-nav__toggle-open-parent open-parent"><i class="fa fa-angle-left"></i></button>
+          </div>
+          <a href="#mm-menu-1" class="mobile-nav__link open-parent">{{ link.title }}</a>
+        </div>
+      </li>
+      {% for childlink in linklists[child_list_handle].links %}
+      	<li class="mobile-nav__item{% if childlink.active %} mobile-nav__item--active{% endif %}">
+          <a href="{{ childlink.url }}" class="mobile-nav__link">{{ childlink.title | escape }}</a>
+        </li>
+      {% endfor %}
+	</ul>
+  {% endif %}
+{% endfor %}
+{% comment %}
+{% if settings.megamenu_custom_link_enable %}
+  {% assign customLinkHTML = "" %}
+  {% for i in (1..5) %}
+    {% assign custom_link_heading = 'megamenu_custom_link_' | append:i | append:"_text"  %}
+    {% assign custom_link_collection = 'megamenu_custom_link_' | append:i | append:"_collection"  %}
+    {% if settings[custom_link_heading] != "" %}
+      {% if settings[custom_link_collection] != "" %}
+        {% capture customLinkHTML %}
+		{{ customLinkHTML }}
+        <li class="mobile-nav__item">
+          <a href="{{ settings[custom_link_collection] }}" class="mobile-nav__link">{{ settings[custom_link_heading] }}</a>
+        </li>
+		{% endcapture %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% endcomment %}
+{% if settings.enable_megamenu %}
+  {% for i in (1..5) %}
+    {% assign enable = 'megamenu_' | append:i  | append:"_enable" %}
+    {% if settings[enable] %}
+    {% assign text = 'megamenu_' | append:i  | append:"_text" %}
+    {% assign default_collection = 'megamenu_' | append:i  | append:"_default_collection" %}
+    <ul id="mobile-{{text}}" class="mobile-nav mm-hidden">
+      <li class="mobile-nav__item open-parent" aria-haspopup="true">
+        <div class="mobile-nav__has-sublist">
+          <div class="mobile-nav__toggle-slide open-parent">
+            <button type="button" data-id="#mm-menu-1" class="icon-fallback-text mobile-nav__toggle-open-parent open-parent"><i class="fa fa-angle-left"></i></button>
+          </div>
+          <a href="#mm-menu-1" class="mobile-nav__link open-parent">{{ settings[text] }}</a>
+        </div>
+      </li>
+      {% for j in (1..9) %}
+        {% assign submenu_heading = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:"_heading"  %}
+        {% assign submenu_menu = 'megamenu_' | append:i | append:"_submenu_" | append:j %}
+        {% if settings[submenu_menu] != "" %}
+          {% if settings[submenu_heading] != "" %}
+      		{% comment %}
+      		<li class="mobile-nav__item" aria-haspopup="true">
+              <div class="mobile-nav__has-sublist">
+                <a href="#" data-id="#mobile-{{submenu_heading}}" class="mobile-nav__link mobile-nav__toggle-open-slide_a">{{ settings[submenu_heading] }}</a>
+                <div class="mobile-nav__toggle-slide">
+                  <button type="button" data-id="#mobile-{{submenu_heading}}" class="icon-fallback-text mobile-nav__toggle-open-slide"><i class="fa fa-angle-right"></i></button>
+                </div>
+              </div>
+            </li>
+      		{% endcomment %}
+      		<li class="mobile-nav__item mobile-nav__heading">
+              <div class="mobile-nav__has-sublist">
+                <a href="javascript:void(0);" class="mobile-nav__link">{{ settings[submenu_heading] }}</a>
+              </div>
+            </li>
+      		{% for link in linklists[settings[submenu_menu]].links %}
+              <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}">
+                <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title | escape }}</a>
+              </li>     
+            {% endfor %}
+          {% else %}
+            {% for link in linklists[settings[submenu_menu]].links %}
+      		  <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}">
+                <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+              </li>   
+            {% endfor %}
+          {% endif %}
+      	{% endif %}
+      {% endfor %}
+      {{ customLinkHTML }}
+    </ul>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% for link in linklists[settings.header_linklist_2].links %}
+  {% assign child_list_handle = link.title | handleize %}
+  {% if linklists[child_list_handle].links != blank %}
+    {% assign text = 'megamenu_link_' | append:linklist  | append:"_text" %}
+    {% assign linklist = linklist | plus: 1 %}
+    <ul id="mobile-{{text}}" class="mobile-nav mm-hidden">
+      <li class="mobile-nav__item open-parent" aria-haspopup="true">
+        <div class="mobile-nav__has-sublist">
+          <div class="mobile-nav__toggle-slide open-parent">
+            <button type="button" data-id="#mm-menu-1" class="icon-fallback-text mobile-nav__toggle-open-parent open-parent"><i class="fa fa-angle-left"></i></button>
+          </div>
+          <a href="#mm-menu-1" class="mobile-nav__link open-parent">{{ link.title }}</a>
+        </div>
+      </li>
+      {% for childlink in linklists[child_list_handle].links %}
+      	<li class="mobile-nav__item{% if childlink.active %} mobile-nav__item--active{% endif %}">
+          <a href="{{ childlink.url }}" class="mobile-nav__link">{{ childlink.title | escape }}</a>
+        </li>
+      {% endfor %}
+	</ul>
+  {% endif %}
+{% endfor %}
+{% comment %}
+{% if settings.enable_megamenu %}
+  {% for i in (1..5) %}
+    {% assign enable = 'megamenu_' | append:i  | append:"_enable" %}
+    {% if settings[enable] %}
+      {% assign text = 'megamenu_' | append:i  | append:"_text" %}
+      {% assign default_collection = 'megamenu_' | append:i  | append:"_default_collection" %}
+      {% assign totalEnable = 0 %}
+      {% for j in (1..9) %}
+        {% assign submenu_heading = 'megamenu_' | append:i | append:"_submenu_" | append:j | append:"_heading"  %}
+        {% assign submenu_menu = 'megamenu_' | append:i | append:"_submenu_" | append:j %}
+        {% if settings[submenu_menu] != "" %}
+          {% if settings[submenu_heading] != "" %}
+			<ul id="mobile-{{submenu_heading}}" class="mobile-nav mm-hidden">
+              <li class="mobile-nav__item open-parent" aria-haspopup="true">
+                <div class="mobile-nav__has-sublist">
+                  <div class="mobile-nav__toggle-slide open-parent">
+                    <button type="button" data-id="#mobile-{{text}}" class="icon-fallback-text mobile-nav__toggle-open-parent open-parent"><i class="fa fa-angle-left"></i></button>
+                  </div>
+                  <a href="#mobile-{{text}}" class="mobile-nav__link open-parent">{{ settings[submenu_heading] }}</a>
+                </div>
+              </li>
+              {% for link in linklists[settings[submenu_menu]].links %}
+              <li class="mobile-nav__item{% if link.active %} mobile-nav__item--active{% endif %}">
+                <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title | escape }}</a>
+              </li>     
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% endcomment %}

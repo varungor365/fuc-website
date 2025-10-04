@@ -1,0 +1,181 @@
+{% if settings[style_dropdown_mega_menu] == "style_1" %}  
+  <div class="col-3">
+    {% capture style_1_section_1_menu_title %}style_1_section_1_menu_{{ indexOf }}_title{% endcapture %}
+    {% capture style_1_section_1_menu_content_col %}style_1_section_1_menu_{{ indexOf }}_content_col{% endcapture %}
+    {% if settings[style_1_section_1_menu_title] != blank %}
+    <div class="widget-title">  
+      <h6>{% include 'multilang' with settings[style_1_section_1_menu_title] %}</h6>
+    </div>
+    {% endif %}
+    
+    {% if settings[style_1_section_1_menu_content_col] != blank %}
+    <div class="widget-content">      
+      {% if settings.enable_multilang %}
+      <div class="lang1">{{ settings[style_1_section_1_menu_content_col] | split: '|' | first | strip }}</div>
+      <div class="lang2">{{ settings[style_1_section_1_menu_content_col] | split: '|' | last | strip }}</div>
+      {% else %}
+      <div>{{ settings[style_1_section_1_menu_content_col] | split: '|' | first }}</div>
+      {% endif %}
+    </div>
+    {% endif %}
+    
+    {% capture show_style_1_section_1_menu %}show_style_1_section_1_menu_{{ indexOf }}{% endcapture %}
+    {% if settings[show_style_1_section_1_menu] %}
+    {% capture style_1_section_1_menu_image %}style_1_section_1_menu_{{ indexOf }}_image.jpg{% endcapture %}
+    {% capture style_1_section_1_menu_link_image %}style_1_section_1_menu_{{ indexOf }}_link_image{% endcapture %}
+
+    <a href="{{ settings[style_1_section_1_menu_link_image] }}">
+      <img src="{{ style_1_section_1_menu_image | asset_url }}" alt=""/>
+    </a>
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="col-1">
+  {% for l in linklists[link_child].links %}
+  <div class="inner">
+    <!-- Menu level 2 -->
+    <a href="{{ l.url }}">
+      {% include 'multilang' with l.title %}
+      
+      {% if settings[style_dropdown_mega_menu] == "style_2" %}
+      {% for collection in collections %}
+        {% if collection.handle ==  l.handle %}
+          {{ collection.image.src | collection_img_url: 'medium' | img_tag: collection_title }}
+        {% endif %}
+      {% endfor %}
+      {% endif %}
+    </a>
+    {% if  linklists[l.handle] != empty %}
+      <ul class="dropdown">
+      {% for child_l in linklists[l.handle].links %}
+      <!-- Menu level 3 -->
+        <li>
+          <a href="{{ child_l.url }}" {% if child_l.active %}class="current"{% endif %}>
+            {% include 'multilang' with child_l.title %}
+          </a>
+        </li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+  {% endfor %}
+  
+  {% if settings[style_dropdown_mega_menu] == "style_5" %}
+    {% capture show_image_1_menu %}show_image_1_menu_{{ indexOf }}{% endcapture %}
+    {% if settings[show_image_1_menu] %}
+    <div class="block-image">
+      {% capture image_1_menu %}image_1_menu_{{ indexOf }}.jpg{% endcapture %}
+      {% capture image_1_link_menu %}image_1_link_menu_{{ indexOf }}_link{% endcapture %}
+      <a href="{{ settings[image_1_link_menu] }}">
+        <img src="{{ image_1_menu | asset_url }}" alt=""/>
+      </a>
+    </div>
+    {% endif %}
+  {% endif %}
+</div>
+
+{% if settings[style_dropdown_mega_menu] == "style_1" %}
+  <!-- mega menu featured product -->
+  {% capture show_style_1_section_3_menu_featured_product %}show_style_1_section_3_menu_{{ indexOf }}_featured_product{% endcapture %}
+  {% if settings[show_style_1_section_3_menu_featured_product] %}
+    <div class="col-2">
+      {% include 'mega-menu-featured-product' %}
+    </div>
+  {% endif %}
+{% endif %}
+
+{% if settings[style_dropdown_mega_menu] == "style_2" %}
+  {% capture style_2_section_2_menu_text %}style_2_section_2_menu_{{ indexOf }}_text{% endcapture %}
+  {% if settings[style_2_section_2_menu_text] != blank %}
+    <div class="col-2">
+      <span>{% include 'multilang' with settings[style_2_section_2_menu_text] %}</span>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% if settings[style_dropdown_mega_menu] == "style_3" %}
+  {% capture show_style_3_section_2_menu %}show_style_3_section_2_menu_{{ indexOf }}{% endcapture %}    
+  {% if settings[show_style_3_section_2_menu] %}
+  <div class="col-2">
+    {% capture style_3_section_2_menu_image %}style_3_section_2_menu_{{ indexOf }}_image.jpg{% endcapture %}
+    {% capture style_3_section_2_menu_link_image %}style_3_section_2_menu_{{ indexOf }}_link_image{% endcapture %}
+    <a href="{{ settings[style_3_section_2_menu_link_image] }}">
+      <img src="{{ style_3_section_2_menu_image | asset_url }}" alt=""/>
+    </a>
+  </div>
+  {% endif %}
+{% endif %}
+
+{% if settings[style_dropdown_mega_menu] == "style_3" %}
+{% capture show_style_3_section_3_menu %}show_style_3_section_3_menu_{{ indexOf }}{% endcapture %}
+  {% if settings[show_style_3_section_3_menu] %}  
+  <div class="col-3">
+    {% capture style_3_section_3_menu_image %}style_3_section_3_menu_{{ indexOf }}_image.jpg{% endcapture %}
+    {% capture style_3_section_3_menu_link_image %}style_3_section_3_menu_{{ indexOf }}_link_image{% endcapture %}
+    <a href="{{ settings[style_3_section_3_menu_link_image] }}">
+      <img src="{{ style_3_section_3_menu_image | asset_url }}" alt=""/>
+    </a>
+
+    {% capture style_3_section_3_menu_text_content %}style_3_section_3_menu_{{ indexOf }}_text_content{% endcapture %}
+    {% if settings[style_3_section_3_menu_text_content] != blank %}
+    <div class="content">
+      {% if settings.enable_multilang %}
+      <div class="lang1">{{ settings[style_3_section_3_menu_text_content] | split: '|' | first | strip }}</div>
+      <div class="lang2">{{ settings[style_3_section_3_menu_text_content] | split: '|' | last | strip }}</div>
+      {% else %}
+      <div>{{ settings[style_3_section_3_menu_text_content] | split: '|' | first }}</div>
+      {% endif %}
+
+
+      {% capture style_3_section_3_menu_text %}style_3_section_3_menu_{{ indexOf }}_text{% endcapture %}
+      {% capture style_3_section_3_menu_link %}style_3_section_3_menu_{{ indexOf }}_link{% endcapture %}
+      {% if settings[style_3_section_3_menu_text] != blank %}
+      <p>
+        <a href="{{ settings[style_3_section_3_menu_link] }}">
+          {% include 'multilang' with settings[style_3_section_3_menu_text] %}
+        </a>
+      </p>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+{% endif %}
+
+{% if settings[style_dropdown_mega_menu] == "style_3" %}
+  {% capture show_style_3_section_4_menu %}show_style_3_section_4_menu_{{ indexOf }}{% endcapture %}
+  {% if settings[show_style_3_section_4_menu] %}
+  <div class="col-4">
+    {% capture style_3_section_4_menu_image %}style_3_section_4_menu_{{ indexOf }}_image.jpg{% endcapture %}
+    {% capture style_3_section_4_menu_link_image %}style_3_section_4_menu_{{ indexOf }}_link_image{% endcapture %}
+    <a href="{{ settings[style_3_section_4_menu_link_image] }}">
+      <img src="{{ style_3_section_4_menu_image | asset_url }}" alt=""/>
+    </a>
+  </div>
+  {% endif %}
+{% endif %}
+
+{% if settings[style_dropdown_mega_menu] == "style_4" %}
+  {% capture show_image_1_menu %}show_image_1_menu_{{ indexOf }}{% endcapture %}
+  {% capture show_image_2_menu %}show_image_2_menu_{{ indexOf }}{% endcapture %}
+  {% if settings[show_image_1_menu] or settings[show_image_2_menu] %}
+  <div class="col-2">
+    {% if settings[show_image_1_menu] %}
+      {% capture image_1_menu %}image_1_menu_{{ indexOf }}.jpg{% endcapture %}
+      {% capture image_1_link_menu %}image_1_link_menu_{{ indexOf }}_link{% endcapture %}
+      <a href="{{ settings[image_1_link_menu] }}">
+        <img src="{{ image_1_menu | asset_url }}" alt=""/>
+      </a>
+    {% endif %}
+
+    {% if settings[show_image_2_menu] %}
+      {% capture image_2_menu %}image_2_menu_{{ indexOf }}.jpg{% endcapture %}
+      {% capture image_2_link_menu %}image_2_link_menu_{{ indexOf }}_link{% endcapture %}
+      <a href="{{ settings[image_2_link_menu] }}">
+        <img src="{{ image_2_menu | asset_url }}" alt=""/>
+      </a>
+    {% endif %}
+  </div>
+  {% endif %}
+{% endif %}

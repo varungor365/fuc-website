@@ -1,0 +1,145 @@
+{% comment %}
+  The contents of the product.liquid template can be found in /snippets/product-template.liquid
+{% endcomment %}
+<div id="ProductSection--{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="product-template" data-image-zoom-type="{{ section.settings.zoom_enable }}" data-enable-history-state="true" data-scroll-to-image="{% if section.settings.image_layout == "stacked" %}true{% else %}false{% endif %}">
+  {% include 'product-template' %}
+</div>
+
+{% unless product.empty == empty %}
+  <script type="application/json" id="ProductJson-{{ section.id }}">
+    {{ product | json }}
+  </script>
+{% endunless %}
+
+{% schema %}
+  {
+    "name": "Product pages",
+	"class": "product-section",
+    "settings": [
+	  {
+        "type": "header",
+        "content": "Product photos"
+      },
+	  {
+        "type": "select",
+        "id": "image_layout",
+        "label": "Image display",
+        "default": "stacked",
+        "options": [
+		  {
+            "value": "stacked",
+            "label": "Stacked"
+          },
+ 			{
+            "value": "thumbnail",
+            "label": "Thumbnail"
+          }
+        ]
+      },
+	  {
+        "type": "select",
+        "id": "product_photo_alignement",
+        "label": "Product photo alignement",
+        "default": "left",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "zoom_enable",
+        "label": "Enable image zoom"
+      },
+	  {
+        "type": "header",
+        "content": "Product details"
+      },
+	  {
+        "type": "select",
+        "id": "product_detail_alignement",
+        "label": "Product detail alignement",
+        "default": "left",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          }
+        ]
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_breadcrumbs",
+        "label": "Show breadcrumbs",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "product_vendor",
+        "label": "Enable vendor",
+        "default": false
+      },
+	  {
+        "type": "checkbox",
+        "id": "product_title_size",
+        "label": "Big product tite",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "product_selector",
+        "label": "Variant picker type",
+        "options": [
+          {
+            "value": "radio",
+            "label": "Button"
+          },
+          {
+            "value": "select",
+            "label": "Dropdown"
+          }
+        ]
+      },
+	  {
+        "type": "checkbox",
+        "id": "quantity_enabled",
+        "label": "Show quantity picker"
+      },
+	  {
+        "type": "checkbox",
+        "id": "add_to_cart_button_full",
+        "label": "Full width button",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "enable_payment_button",
+        "label": "Show dynamic checkout button",
+        "info": "Lets customers check out directly using a familiar payment method. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+        "default": false
+      },
+  	  {
+        "type": "checkbox",
+        "id": "show_description",
+        "label": "Show description",
+        "default": true
+      },
+	  {
+        "type": "checkbox",
+        "id": "social_sharing_products",
+        "label": "Enable product sharing",
+        "default": true
+      }
+    ]
+  }
+{% endschema %}

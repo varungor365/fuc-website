@@ -1,0 +1,389 @@
+{
+  "timestamp": "2025-09-25T21:58:50.083Z",
+  "duration": "25s",
+  "summary": {
+    "imagesFound": 29,
+    "imagesProcessed": 10,
+    "errors": 0
+  },
+  "foundImages": [
+    {
+      "type": "image",
+      "path": "stock\\hero-background.jpg",
+      "fullPath": "public\\stock\\hero-background.jpg",
+      "fileName": "hero-background",
+      "reason": "Filename matches stock image pattern",
+      "priority": 8
+    },
+    {
+      "type": "image",
+      "path": "stock\\hero-background.svg",
+      "fullPath": "public\\stock\\hero-background.svg",
+      "fileName": "hero-background",
+      "reason": "Filename matches stock image pattern",
+      "priority": 8
+    },
+    {
+      "type": "image",
+      "path": "stock\\icons\\social-media.svg",
+      "fullPath": "public\\stock\\icons\\social-media.svg",
+      "fileName": "social-media",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\lifestyle\\urban-scene-1.jpg",
+      "fullPath": "public\\stock\\lifestyle\\urban-scene-1.jpg",
+      "fileName": "urban-scene-1",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-1.jpg",
+      "fullPath": "public\\stock\\models\\model-1.jpg",
+      "fileName": "model-1",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-2.jpg",
+      "fullPath": "public\\stock\\models\\model-2.jpg",
+      "fileName": "model-2",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-3.jpg",
+      "fullPath": "public\\stock\\models\\model-3.jpg",
+      "fileName": "model-3",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-4.jpg",
+      "fullPath": "public\\stock\\models\\model-4.jpg",
+      "fileName": "model-4",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-5.jpg",
+      "fullPath": "public\\stock\\models\\model-5.jpg",
+      "fileName": "model-5",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-6.jpg",
+      "fullPath": "public\\stock\\models\\model-6.jpg",
+      "fileName": "model-6",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-7.jpg",
+      "fullPath": "public\\stock\\models\\model-7.jpg",
+      "fileName": "model-7",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-8.jpg",
+      "fullPath": "public\\stock\\models\\model-8.jpg",
+      "fileName": "model-8",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-01.png",
+      "fullPath": "public\\stock\\products\\tshirt-01.png",
+      "fileName": "tshirt-01",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-01.svg",
+      "fullPath": "public\\stock\\products\\tshirt-01.svg",
+      "fileName": "tshirt-01",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-010.png",
+      "fullPath": "public\\stock\\products\\tshirt-010.png",
+      "fileName": "tshirt-010",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-011.png",
+      "fullPath": "public\\stock\\products\\tshirt-011.png",
+      "fileName": "tshirt-011",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-012.png",
+      "fullPath": "public\\stock\\products\\tshirt-012.png",
+      "fileName": "tshirt-012",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-02.png",
+      "fullPath": "public\\stock\\products\\tshirt-02.png",
+      "fileName": "tshirt-02",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-03.png",
+      "fullPath": "public\\stock\\products\\tshirt-03.png",
+      "fileName": "tshirt-03",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-04.png",
+      "fullPath": "public\\stock\\products\\tshirt-04.png",
+      "fileName": "tshirt-04",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-05.png",
+      "fullPath": "public\\stock\\products\\tshirt-05.png",
+      "fileName": "tshirt-05",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-06.png",
+      "fullPath": "public\\stock\\products\\tshirt-06.png",
+      "fileName": "tshirt-06",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-07.png",
+      "fullPath": "public\\stock\\products\\tshirt-07.png",
+      "fileName": "tshirt-07",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-08.png",
+      "fullPath": "public\\stock\\products\\tshirt-08.png",
+      "fileName": "tshirt-08",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "stock\\products\\tshirt-09.png",
+      "fullPath": "public\\stock\\products\\tshirt-09.png",
+      "fileName": "tshirt-09",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "templates\\hoodie-back.png",
+      "fullPath": "public\\templates\\hoodie-back.png",
+      "fileName": "hoodie-back",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "templates\\hoodie-front.png",
+      "fullPath": "public\\templates\\hoodie-front.png",
+      "fileName": "hoodie-front",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "templates\\tshirt-back.png",
+      "fullPath": "public\\templates\\tshirt-back.png",
+      "fileName": "tshirt-back",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    },
+    {
+      "type": "image",
+      "path": "templates\\tshirt-front.png",
+      "fullPath": "public\\templates\\tshirt-front.png",
+      "fileName": "tshirt-front",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5
+    }
+  ],
+  "processedImages": [
+    {
+      "type": "image",
+      "path": "stock\\hero-background.jpg",
+      "fullPath": "public\\stock\\hero-background.jpg",
+      "fileName": "hero-background",
+      "reason": "Filename matches stock image pattern",
+      "priority": 8,
+      "prompt": "Professional fashion model wearing trendy streetwear, urban background, natural lighting, modern aesthetic, high-quality commercial photography",
+      "newImageUrl": "mock-generated-1758837506576.jpg",
+      "processedAt": "2025-09-25T21:58:26.576Z"
+    },
+    {
+      "type": "image",
+      "path": "stock\\hero-background.svg",
+      "fullPath": "public\\stock\\hero-background.svg",
+      "fileName": "hero-background",
+      "reason": "Filename matches stock image pattern",
+      "priority": 8,
+      "prompt": "Professional fashion model wearing trendy streetwear, urban background, natural lighting, modern aesthetic, high-quality commercial photography",
+      "newImageUrl": "mock-generated-1758837508843.jpg",
+      "processedAt": "2025-09-25T21:58:28.843Z"
+    },
+    {
+      "type": "image",
+      "path": "stock\\icons\\social-media.svg",
+      "fullPath": "public\\stock\\icons\\social-media.svg",
+      "fileName": "social-media",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5,
+      "prompt": "Modern streetwear fashion photography, urban setting, professional quality, clean aesthetic, brand-appropriate styling",
+      "newImageUrl": "mock-generated-1758837511195.jpg",
+      "processedAt": "2025-09-25T21:58:31.195Z"
+    },
+    {
+      "type": "image",
+      "path": "stock\\lifestyle\\urban-scene-1.jpg",
+      "fullPath": "public\\stock\\lifestyle\\urban-scene-1.jpg",
+      "fileName": "urban-scene-1",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5,
+      "prompt": "Modern streetwear fashion photography, urban setting, professional quality, clean aesthetic, brand-appropriate styling",
+      "newImageUrl": "mock-generated-1758837513481.jpg",
+      "processedAt": "2025-09-25T21:58:33.482Z"
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-1.jpg",
+      "fullPath": "public\\stock\\models\\model-1.jpg",
+      "fileName": "model-1",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5,
+      "prompt": "Modern streetwear fashion photography, urban setting, professional quality, clean aesthetic, brand-appropriate styling",
+      "newImageUrl": "mock-generated-1758837515933.jpg",
+      "processedAt": "2025-09-25T21:58:35.933Z"
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-2.jpg",
+      "fullPath": "public\\stock\\models\\model-2.jpg",
+      "fileName": "model-2",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5,
+      "prompt": "Modern streetwear fashion photography, urban setting, professional quality, clean aesthetic, brand-appropriate styling",
+      "newImageUrl": "mock-generated-1758837518206.jpg",
+      "processedAt": "2025-09-25T21:58:38.207Z"
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-3.jpg",
+      "fullPath": "public\\stock\\models\\model-3.jpg",
+      "fileName": "model-3",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5,
+      "prompt": "Modern streetwear fashion photography, urban setting, professional quality, clean aesthetic, brand-appropriate styling",
+      "newImageUrl": "mock-generated-1758837521199.jpg",
+      "processedAt": "2025-09-25T21:58:41.200Z"
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-4.jpg",
+      "fullPath": "public\\stock\\models\\model-4.jpg",
+      "fileName": "model-4",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5,
+      "prompt": "Modern streetwear fashion photography, urban setting, professional quality, clean aesthetic, brand-appropriate styling",
+      "newImageUrl": "mock-generated-1758837523446.jpg",
+      "processedAt": "2025-09-25T21:58:43.447Z"
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-5.jpg",
+      "fullPath": "public\\stock\\models\\model-5.jpg",
+      "fileName": "model-5",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5,
+      "prompt": "Modern streetwear fashion photography, urban setting, professional quality, clean aesthetic, brand-appropriate styling",
+      "newImageUrl": "mock-generated-1758837525720.jpg",
+      "processedAt": "2025-09-25T21:58:45.720Z"
+    },
+    {
+      "type": "image",
+      "path": "stock\\models\\model-6.jpg",
+      "fullPath": "public\\stock\\models\\model-6.jpg",
+      "fileName": "model-6",
+      "reason": "Filename matches stock image pattern",
+      "priority": 5,
+      "prompt": "Modern streetwear fashion photography, urban setting, professional quality, clean aesthetic, brand-appropriate styling",
+      "newImageUrl": "mock-generated-1758837528069.jpg",
+      "processedAt": "2025-09-25T21:58:48.069Z"
+    }
+  ],
+  "errors": [],
+  "config": {
+    "scanDirectories": [
+      "src",
+      "public"
+    ],
+    "excludeDirectories": [
+      "node_modules",
+      ".next",
+      "build",
+      ".git"
+    ],
+    "imageExtensions": [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".webp",
+      ".svg"
+    ],
+    "stockImagePatterns": [
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {},
+      {}
+    ],
+    "maxImagesPerRun": 10,
+    "dryRun": true,
+    "verbose": false,
+    "skipGit": false
+  }
+}

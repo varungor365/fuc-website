@@ -1,0 +1,64 @@
+{% assign number_of_related_products_to_show = settings.number_of_related_products | plus:1 %}
+ 
+{% assign current_product = product %}
+{% assign current_product_tags = product.tags %}
+{% assign found_first_match = false %}
+{% assign found_second_match = false %}
+{% assign first_related_product = true %}
+ 
+{% assign product_count = 1 %}
+
+{% paginate collections.all.products by 1000 %}
+{% for product in collections.all.products %}
+  {% unless product.handle == current_product.handle %}
+    {% for tag in product.tags %}
+      {% if current_product_tags contains tag and tag != 'Made in USA' %}
+        {% if found_first_match == false %}
+          {% assign found_first_match = true %}
+          {% assign first_match = tag %}
+        {% elsif found_second_match == false %}
+          {% assign found_second_match = true %}
+          {% assign second_match = tag %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+ 
+    {% if found_first_match == true %}
+      {% if first_related_product == true %}
+        {% assign first_related_product = false %}
+
+        <section class="related-products text-center container">
+          {% if settings.related_products_title != blank %}
+            <h2>{% include 'multilang' with settings.related_products_title %}</h2>
+          {% endif %}
+
+        <div class="products-grid">
+ 
+      {% endif %}
+      
+      {% if product_count < number_of_related_products_to_show %}    
+        {% if product.tags contains first_match or product.tags contains second_match %}          
+          {% include 'related-product-grid-item' with collection.handle %}
+          {% assign product_count = product_count | plus:1 %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endunless %}
+{% endfor %}
+{% if first_related_product == false %} </div> {% endif %}
+{% endpaginate %}
+</section>
+<script>
+  jQuery(document).ready(function() {
+    jQuery(".related-products .products-grid").owlCarousel({
+      scrollPerPage: true,
+      stopOnHover: true,     
+      navigation: true,
+      items: {{ settings.related_products_per_row }},
+      itemsDesktopSmall: [991, 3],
+      itemsTablet: [768, 3],
+      itemsTabletSmall: [767, 2],
+      itemsMobile : [479, 2]
+    });
+  });
+</script>

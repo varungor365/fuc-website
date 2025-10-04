@@ -1,0 +1,126 @@
+<div class="product-gallery">
+  {%- if product.images.size < 1 -%}
+    <div class="product-gallery__item">
+      <div class="rec-fill placeholder-background">
+        {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    </div>
+  {%- else -%}
+
+    {% comment %}
+      [dev] Loop through product.variants to pin the variant id to corresponding
+      slick-item which contains variant featured image
+      [dev] Really don't know why item.featured_image.variant_ids can't be
+      accessed. Always returns empty array even when product-data-json is not.
+    {% endcomment %}
+    {%- assign variant_feature_imgs = '' -%}
+    {%- assign variant_corresponding_ids = '' -%}
+    {%- for item in product.variants -%}
+      {%- if item.featured_image != null -%}
+        {%- assign variant_feature_imgs = variant_feature_imgs | append: ',' | append: item.featured_image.position -%}
+        {%- assign variant_corresponding_ids = variant_corresponding_ids | append: ',' | append: item.id -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- assign variant_feature_imgs = variant_feature_imgs | split: ',' -%}
+    {%- assign variant_corresponding_ids = variant_corresponding_ids | split: ',' -%}
+
+    {%- capture product_gallery_items -%}
+      {%- for image in product.images -%}
+        {%- assign parent_loop_index = forloop.index | append: '' -%}
+        {%- assign variant_ids = '' -%}
+        <div
+          class="product-gallery__item"
+          {%- for ind in variant_feature_imgs -%}
+            {%- assign child_loop_index = forloop.index -%}
+            {%- if variant_feature_imgs[child_loop_index] == parent_loop_index -%}
+              {%- assign variant_ids = variant_ids | append: variant_corresponding_ids[child_loop_index] | append: ',' -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {% if variant_ids != blank %}
+            data-variant-id="{{ variant_ids }}"
+          {% endif %}
+          >
+          <div
+            class="rec-fill"
+            style="background-image: url({{ image | product_img_url: product_image_size }})"
+            data-product-single-thumbnail
+            >
+            <img
+              class="img--semantic"
+              src="{{ image | product_img_url: '2048x' }}"
+              alt="{{ image.alt | escape }}">
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- case gallery_type -%}
+      {%- when 'single_slider' -%}
+        {%- assign gallery_slider_style = 'gallery-slider--single' -%}
+      {%- when 'syncing_slider_left' -%}
+        {%- assign gallery_slider_style = 'gallery-slider--sync-left' -%}
+      {%- when 'syncing_slider_right' -%}
+        {%- assign gallery_slider_style = 'gallery-slider--sync-right' -%}
+      {%- when 'syncing_slider_bottom' -%}
+        {%- assign gallery_slider_style = 'gallery-slider--sync-bottom' -%}
+      {%- when 'center_mode_slider' -%}
+        {%- assign gallery_slider_style = 'gallery-slider--center' -%}
+    {%- endcase -%}
+
+    <div
+      class="gallery-slider js-gallery-slider-{{ zoom_type }} {{ gallery_slider_style }} {% if is_single_slider %}js-product-slider{% endif %}"
+      {% if is_single_slider %}
+        data-fade="{{ settings.product_slideshow_fade }}"
+        data-infinite="{{ settings.product_slideshow_infinite }}"
+        data-arrows="{{ settings.product_slideshow_arrows }}"
+        {% if settings.product_slideshow_arrows %}
+          data-arrow-type="{{ settings.product_slideshow_arrow_type }}"
+        {% endif %}
+        data-dots="{{ settings.product_slideshow_dots }}"
+        {% if settings.product_slideshow_dots %}
+          data-dots-bottom-margin="{{ settings.product_slideshow_dots_margin_bottom }}"
+        {% endif %}
+        data-autoplay="{{ settings.product_slideshow_autoplay }}"
+        {% if settings.product_slideshow_autoplay %}
+          data-autoplay-speed="{{ settings.product_slideshow_autoplay_speed }}"
+        {% endif %}
+        {% if gallery_type == 'center_mode_slider' %}
+          data-center-padding="{{ settings.product_slideshow_center_padding }}"
+        {% endif %}
+      {% endif %}
+      >
+      {%- unless is_single_slider -%}
+        <div
+          class="slider-for js-slider-for"
+          data-fade="{{ settings.product_slideshow_fade }}"
+          data-infinite="{{ settings.product_slideshow_infinite }}"
+          data-arrows="{{ settings.product_slideshow_arrows }}"
+          {% if settings.product_slideshow_arrows %}
+            data-arrow-type="{{ settings.product_slideshow_arrow_type }}"
+          {% endif %}
+          data-dots="{{ settings.product_slideshow_dots }}"
+          data-autoplay="{{ settings.product_slideshow_autoplay }}"
+          {% if settings.product_slideshow_autoplay %}
+            data-autoplay-speed="{{ settings.product_slideshow_autoplay_speed }}"
+          {% endif %}
+          {% if gallery_type == 'center_mode_slider' %}
+            data-center-padding="{{ settings.product_slideshow_center_padding }}"
+          {% endif %}
+          >
+          {{ product_gallery_items }}
+        </div>
+        <div class="slider-nav js-slider-nav">
+          {{ product_gallery_items }}
+        </div>
+      {%- else -%}
+        {{ product_gallery_items }}
+      {%- endunless -%}
+    </div>
+  {%- endif -%}
+</div>
+
+<style>
+  .slick-dots {
+    margin-bottom: {{ settings.product_slideshow_dots_margin_bottom }};
+  }
+</style>

@@ -1,0 +1,37 @@
+/*================ Content Section ================*/
+
+.section-content {
+
+  .section-content__wrapper {
+    margin: $gutter;
+  }
+
+  .section-custom-content--alt {
+    @include inverted-section();
+  }
+
+  .custom__item-content--text {
+    @extend .normal-section-padding;
+    .custom__item-heading,
+    .custom__item-text {
+      margin-bottom: $gutter;
+    }
+  }
+  @include at-query($min, $medium) {
+    .custom__item-content--text {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .large--one-whole .custom__item-content--text {
+      margin-left: $gutter * 3;
+      margin-right: $gutter * 3;
+    }
+  }
+
+  .custom__item-content--image {
+    img {
+      width: 100%;
+      margin-bottom: -6px;
+    }
+  }
+}

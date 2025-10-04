@@ -1,0 +1,14 @@
+<div class="page__header" {% if settings.page_header_image %}style="background-image: url({{ settings.page_header_image | img_url: 'master' }});"{% endif %}>
+  <div class="page-width">
+    <header>
+      <h2 class="page__title">{{ page.title }}</h2>
+      {% include 'breadcrumbs' %}
+    </header>
+  </div>
+</div>
+
+<div class="page-width">
+  <div class="rte">
+    {{ page.content }}
+  </div>
+</div>

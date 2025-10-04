@@ -1,0 +1,27 @@
+{% capture style_1_section_3_menu_featured_product_title %}style_1_section_3_menu_{{ indexOf }}_featured_product_title{% endcapture %}
+{% capture style_1_section_3_menu_featured_product_collection %}style_1_section_3_menu_{{ indexOf }}_featured_product_collection{% endcapture %}
+
+<div class="widget-featured-product">
+  {% if settings[style_1_section_3_menu_featured_product_title] != blank %}
+  <div class="widget-title">   
+    <h6>
+      {% include 'multilang' with settings[style_1_section_3_menu_featured_product_title] %}
+    </h6>
+  </div>
+  {% endif %}
+  
+  {% assign t = settings[style_1_section_3_menu_featured_product_collection] %}
+  
+  {% if settings[style_1_section_3_menu_featured_product_collection] == blank %}
+  <p style="margin-bottom: 30px;">Please select a collection in Theme Setting to display the products (Navigation -> Featured Product in Mega Menu)</p>
+  {% else %}
+  <div class="widget-product">
+	<div class="products-grid">
+      {% capture index %}{{ 'now' | date: '%S' | times: collections[t].products.size | divided_by: 60 }}{% endcapture %}
+	  {% for product in collections[t].products offset:index limit:1 %}
+        {% include 'mega-menu-product-grid' %}
+  	  {% endfor %}
+    </div> 
+  </div>
+  {% endif %}
+</div>

@@ -1,0 +1,113 @@
+<div class="page__header" {% if settings.page_account_header_image %}style="background-image: url({{ settings.page_account_header_image | img_url: 'master' }});"{% endif %}>
+  <div class="page-width">
+    <header class="text-center">
+      <h2 class="page__title">{{ 'customer.login.title' | t }}</h2>
+      {% include 'breadcrumbs' %}
+    </header>
+  </div>
+</div>
+
+<div class="page-width">
+  <div class="grid">
+    <div class="grid__item medium-up--three-quarters medium-up--push-one-sixth large-up--one-half large-up--push-one-quarter">
+      <div class="text-center">
+        <div class="form-success hide" id="ResetSuccess">
+          {{ 'customer.recover_password.success' | t }}
+        </div>
+
+        <div id="CustomerLoginForm" class="form form-login">
+          {% form 'customer_login' %}
+            {{ form.errors | default_errors }}
+
+            <label for="CustomerEmail" class="label-hidden">
+              {{ 'customer.login.email' | t }}
+            </label>
+            <input type="email"
+                   name="customer[email]"
+                   id="CustomerEmail"
+                   class="{% if form.errors contains 'email' %}input-error{% endif %}"
+                   placeholder="{{ 'customer.login.email' | t }}"
+                   spellcheck="false"
+                   autocomplete="off"
+                   autocapitalize="off"
+                   autofocus>
+
+            {% if form.password_needed %}
+              <label for="CustomerPassword" class="label-hidden">
+                {{ 'customer.login.password' | t }}
+              </label>
+              <input type="password"
+                     name="customer[password]"
+                     id="CustomerPassword"
+                     class="{% if form.errors contains 'password' %}input-error{% endif %}"
+                     placeholder="{{ 'customer.login.password' | t }}">
+            {% endif %}
+
+            <div class="form__submit">
+              <input type="submit" class="btn" value="{{ 'customer.login.sign_in' | t }}">
+            </div>
+            <div class="form__divider"></div>
+
+            <div class="form__link">
+              <a href="/">{{ 'customer.login.cancel' | t }}</a>
+            </div>
+
+            <div class="form__link">
+              <a href="/account/register">
+                {{ 'layout.customer.create_account' | t }}
+              </a>
+            </div>
+
+            {% if form.password_needed %}
+            <div class="form__link">
+              <a href="#recover" id="RecoverPassword">{{ 'customer.login.forgot_password' | t }}</a>
+            </div>
+            {% endif %}
+          {% endform %}
+
+        </div>
+
+        <div id="RecoverPasswordForm" class="hide">
+          <h2>{{ 'customer.recover_password.title' | t }}</h2>
+          <p>{{ 'customer.recover_password.subtext' | t }}</p>
+
+          <div class="form form-recover-password">
+            {% form 'recover_customer_password' %}
+              {{ form.errors | default_errors }}
+
+              {% if form.posted_successfully? %}
+                <span class="hide reset-password-success"></span>
+              {% endif %}
+
+              <label for="RecoverEmail" class="label-hidden">
+                {{ 'customer.recover_password.email' | t }}
+              </label>
+              <input type="email"
+                     name="email"
+                     id="RecoverEmail"
+                     placeholder="{{ 'customer.recover_password.email' | t }}"
+                     spellcheck="false"
+                     autocomplete="off"
+                     autocapitalize="off">
+
+              <div class="form__submit">
+                <input type="submit" class="btn" value="{{ 'customer.recover_password.submit' | t }}">
+              </div>
+
+              <button type="button" id="HideRecoverPasswordLink" class="form__reset-password">
+                {{ 'customer.recover_password.cancel' | t }}
+              </button>
+            {% endform %}
+          </div>
+        </div>
+
+        {% if shop.checkout.guest_login %}
+          <h2>{{ 'customer.login.guest_title' | t }}</h2>
+          {% form 'guest_login' %}
+            <input type="submit" class="btn" value="{{ 'customer.login.guest_continue' | t }}">
+          {% endform %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+{% if settings.font_family == 'google_font' %}
+
+  var font_family = 'Lato';
+  var font_family_title = 'Montserrat';
+
+  {% if settings.font_family == 'google_font' and settings.font_name != '' %}
+    font_family = "{{ settings.font_name }}";
+  {% endif %}
+
+  {% if settings.font_family_title == 'google_font' and settings.font_name_title != '' %}
+    font_family_title = "{{ settings.font_name_title }}";
+  {% endif %}
+
+  WebFontConfig = {
+    google: { families: [
+      font_family + ":400,400i,700",
+      font_family_title + ":400,700,900",
+    ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+
+{% endif %}

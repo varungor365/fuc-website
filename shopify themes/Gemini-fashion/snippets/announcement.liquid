@@ -1,0 +1,46 @@
+<div class="announcement">
+  <div class="grid">
+    <div class="grid__item one-quarter medium-down--hide">
+      {%- if section.settings.show_social -%}
+        {% include 'social-connect' %}
+      {%- else -%}
+        &nbsp;
+      {%- endif -%}
+    </div>
+    <div class="grid__item one-half small--one-whole">
+      {%- if section.settings.announcement_text != blank -%}
+        <div class="announcement__text text-center medium--text-left">
+          {%- if section.settings.message_link == blank -%}
+            {{ section.settings.announcement_text }}
+          {%- else -%}
+            <a
+              href="{{ section.settings.message_link }}"
+              {% if section.settings.open_new_window %}
+                target="_blank"
+              {% endif %}
+              >
+              {{ section.settings.announcement_text }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        &nbsp;
+      {%- endif -%}
+    </div>
+    <div class="grid__item one-quarter medium--one-half small--hide text-right">
+      {%- if section.settings.show_currency -%}
+        {% include 'currency-picker', additional_class: 'medium-down--hide' %}
+      {%- endif -%}
+
+      {%- if shop.customer_accounts_enabled and section.settings.show_account -%}
+      <div class="dropdown announcement__customer">
+        <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ 'customer.account.title' | t }}
+          <i class="fa fa-caret-down"></i>
+        </a>
+        {% include 'account-dropdown' %}
+      </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

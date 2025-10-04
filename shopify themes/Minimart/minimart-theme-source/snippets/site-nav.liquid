@@ -1,0 +1,42 @@
+<ul class="site-nav">
+  {% for link in linklists.main-menu.links %}  
+  	
+  	<!-- check is mega menu -->
+  	{% if settings.display_megamenu %}
+  	  {% assign is_megamenu = false %}
+      {% for i in (1..10) %}
+        {% capture megamenu_item %}megamenu_item_{{ i }}{% endcapture %}
+  		{% if settings[megamenu_item] != blank %}
+          {% assign megamenu_item_text = settings[megamenu_item] | handleize %}
+          {% assign cat = link.title | handleize %}
+          {% if megamenu_item_text == cat %}
+  			{% assign is_megamenu = true %}
+  			{% assign indexOf = i %}
+          {% endif %}
+  		{% endif %}
+      {% endfor %}
+    {% endif %}
+  	<!-- end check is mega menu -->
+  
+    {% capture style_dropdown_mega_menu %}style_dropdown_mega_menu_{{ indexOf }}{% endcapture %}
+  
+    <li class="{% if forloop.length == forloop.index %}last{% endif %}{% if linklists[link.handle] != empty %} dropdown{% if is_megamenu %} mega-menu{% endif %}{% endif %}">
+      <a href="{{ link.url }}" {% if link.active %}class="current"{% endif %}>
+        <span>
+          {% include 'multilang' with link.title %}
+        </span>
+        {% if linklists[link.handle] != empty and settings.show_dropdown_arrow %}<span class="icon-dropdown"></span>{% endif %}
+      </a>
+      {% if linklists[link.handle] != empty %}
+      	{% assign link_child = link.handle %}
+        {% if is_megamenu %}
+          <div class="site-nav-dropdown {% if settings[style_dropdown_mega_menu] == "style_1" %}style_1{% elsif settings[style_dropdown_mega_menu] == "style_2" %}style_2{% elsif settings[style_dropdown_mega_menu] == "style_3" %}style_3{% elsif settings[style_dropdown_mega_menu] == "style_4" %}style_4{% else %}style_5{% endif %}">
+            <div class="content">{% include 'mega-menu' with link_child %}</div>
+          </div>
+        {% else %}
+          {% include 'dropdown-menu' with link_child %}
+        {% endif %}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

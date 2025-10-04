@@ -1,0 +1,78 @@
+<div class="copyright">
+  <div class="page-width">
+    <div class="grid">
+      <div class="grid__item medium-up--one-half">
+        <div class="copyright__text medium-up--text-left small--text-center">
+          <small>{{ section.settings.copyright_text }}</small>
+        </div>
+      </div>
+      <div class="grid__item medium-up--one-half">
+        <div class="medium-up--text-right small--text-center">
+          {% for block in section.blocks %}
+          {%- case block.type -%}
+            {%- when 'menu' -%}
+              {% include 'navigation' %}
+            {%- when 'social' -%}
+              {% include 'social-connect' %}
+            {%- when 'image' -%}
+              {% include 'image' %}
+          {%- endcase -%}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Bottom bar",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "copyright_text",
+        "label": "Copyright",
+        "default": "Copyright &copy; 2017, <a href=\"#\">AdartStudio</a>. Powered by <a href=\"#\">AdartStudio</a>"
+      }
+    ],
+    "max_blocks": 1,
+    "blocks": [
+      {
+        "type": "menu",
+        "name": "Bottom bar Menu",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Add menu"
+          }
+        ]
+      },
+      {
+        "type": "social",
+        "name": "Social Connected",
+        "limit": 1
+      },
+      {
+        "type": "image",
+        "name": "Image",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Add image",
+            "info": "Pick your custom image"
+          },
+          {
+            "type": "text",
+            "id": "image_width",
+            "label": "Image width"
+          }
+        ]
+      }
+    ]
+  }
+
+{% endschema %}

@@ -1,0 +1,36 @@
+<header class="page-header">
+  <div class="container">
+    <h2 {% if settings.enable_multilang %}data-translate="collections.general.title"{% endif %}>
+      {{ 'collections.general.title' | t }}
+    </h2>
+    {% include 'breadcrumb' %}
+  </div>
+</header>
+
+<div class="container">
+  <div class="list-category row">    
+    {% if settings.style_collections == 'style_show_all' %}
+      {% for collection in collections %}
+        {% if collection.handle != 'frontpage' %}
+          {% include 'collection-grid-item' %}
+        {% endif %}
+      {% endfor %}
+    {% else %}
+    
+    {% assign items = settings.collections_items | strip | downcase | split:"," %}
+      {% for item_text in items %}
+      {% assign item_final = item_text | strip %}    
+        {% for collection in collections %}
+        {% assign cat = collection.title | downcase %}
+        {% if item_final contains cat %}
+          {% include 'collection-grid-item' %}
+        {% endif %}
+        {% endfor %}    
+      {% endfor %}
+    {% endif %}
+    
+  </div>
+</div>
+
+{% comment %} Block Brands Slider {% endcomment %}
+{% include 'brands' %}

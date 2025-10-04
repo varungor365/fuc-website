@@ -1,0 +1,16 @@
+<header class="page-header">
+  <div class="container">
+    <h2>{% include 'multilang' with page.title %}</h2>
+    
+    {% include 'breadcrumb' %}
+  </div>
+</header>
+
+<div class="container">
+  {% if settings.enable_multilang %}
+  <div class="rte lang1">{{ page.content | split: '[lang2]' | first }}</div>
+  <div class="rte lang2">{{ page.content | split: '[lang2]' | last }}</div>
+  {% else %}
+  <div class="rte">{{ page.content | split: '[lang2]' | first }}</div>
+  {% endif %}
+</div>

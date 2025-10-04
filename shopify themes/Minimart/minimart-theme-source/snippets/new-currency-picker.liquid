@@ -1,0 +1,14 @@
+<select id="currencies">
+  {% for i in (1..4) %}
+    {% capture currency_unit %}currency_{{ i }}_unit{% endcapture %}
+  	{% assign currency_length = settings[currency_unit] | size %}
+  
+  	{% if currency_length > 0 %}
+      <option data-currency="{{ settings[currency_unit] }}" {% if shop.currency == settings[currency_unit] %} selected {% endif %} value="{{ settings[currency_unit] }}">{{ settings[currency_unit] }}</option>
+    {% endif %}
+  
+  {% endfor %}
+</select>
+<div id="currencies-modal" style="display:none">
+  <div {% if settings.enable_multilang %}data-translate="general.currency.change_text"{% endif %}>{{ 'general.currency.change_text' | t }}</div><span></span>
+</div>

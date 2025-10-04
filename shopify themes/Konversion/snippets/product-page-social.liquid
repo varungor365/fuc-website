@@ -1,0 +1,32 @@
+{% if settings.share_facebook or settings.share_twitter or settings.share_pinterest or settings.share_gplus %}
+
+  {% if template contains 'article' or template contains 'blog' %}
+    {% capture permalinkURL %}{{ shop.url }}{{ article.url }}{% endcapture %}
+  {% elsif template contains 'product' %}
+    {% capture permalinkURL %}{{ shop.url }}{{ product.url }}{% endcapture %}
+  {% endif %}
+
+  <div class="social-sharing" data-permalink="{{ permalinkURL }}">
+    {% if settings.share_facebook %}
+      <a target="_blank" href="//www.facebook.com/sharer.php?u={{ permalinkURL }}" class="social-sharing__link">
+        <div class="social-sharing__icon social-sharing__icon--facebook"></div>
+    </a>
+    {% endif %}
+    {% if settings.share_twitter %}
+      <a target="_blank" href="//twitter.com/share?url={{ permalinkURL }}" class="social-sharing__link">
+        <div class="social-sharing__icon social-sharing__icon--twitter"></div>
+    </a>
+    {% endif %}
+    {% if settings.share_pinterest %}
+      <a target="_blank" href="//pinterest.com/pin/create/button/?url={{ permalinkURL }}&amp;media={{ product.featured_image | product_img_url: 'original' }}&amp;description={{ product.title | escape }}" class="social-sharing__link">
+        <div class="social-sharing__icon social-sharing__icon--pinterest"></div>
+    </a>
+    {% endif %}
+    {% if settings.share_gplus %}
+      <a target="_blank" href="//plus.google.com/share?url={{ permalinkURL }}" class="social-sharing__link">
+        <!-- Cannot get Google+ share count with JS yet -->
+        <div class="social-sharing__icon social-sharing__icon--gplus"></div>
+      </a>
+    {% endif %}
+  </div>
+{% endif %}

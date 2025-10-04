@@ -1,0 +1,98 @@
+<div class="col-xs-12 col-sm-3 sidebar collection-sidebar">
+  {% if current_tags == blank %}
+  {% assign has_refined = false %}
+  {% else %}
+  {% assign has_refined = true %} 
+  {% endif %}
+  
+  <div class="refined-widgets">
+    <h5 {% if settings.enable_multilang %}data-translate="collections.sidebar.shop_by"{% endif %}>{{ 'collections.sidebar.shop_by' | t}}</h5>
+    <a href="javascript:void(0)" class="clear-all" {% if has_refined == false %}style="display:none"{% endif %} {% if settings.enable_multilang %}data-translate="collections.sidebar.clear_all"{% endif %}>
+      {{ 'collections.sidebar.clear_all' | t }}
+    </a>
+  </div>
+  
+  {% if settings.shop_by_text != blank %}
+  <p class="shop-by-text">{% include 'multilang' with settings.shop_by_text %}</p>
+  {% endif %}
+  
+  {% if settings.display_sidebar_categories %}
+  <div class="widget sidebar-links">
+    <div class="widget-title">
+      <h6>
+        {% include 'multilang' with settings.sidebar_categories_title %}
+      </h6>
+    </div>
+    <div class="widget-content">
+      <ul>
+        {% if settings.style_categories == 'style_show_all' %}
+          {% for category in collections %}
+          <li>
+            <a href="{{ category.url }}" {% if collection.handle == category.handle %}class="active"{% endif %}>              
+              {% include 'multilang' with category.title %}
+              <span class="count-products">({{ category.all_products_count }})</span>
+            </a>
+          </li>     
+          {% endfor %}
+        {% else %}
+
+          {% assign cat_link_list = settings.categories_link_list | handleize %}
+          {% for link in linklists[cat_link_list].links %}
+        
+          <li {% if linklists[link.handle] != empty %}class="dropdown"{% endif %}>
+            <a href="{{ link.url }}" {% if collection.handle == link.handle %}class="active"{% endif %}>
+              {% include 'multilang' with link.title %}
+              {% for col in collections %}
+                {% if link.title == col.title %}
+                <span class="count-products">({{ col.all_products_count }})</span>
+                {% endif %}
+              {% endfor %}
+            </a>
+            {% if linklists[link.handle] != empty %}
+              <span class="caret"></span>
+              {% assign link_child = link.handle %}
+              <ul class="cat-dropdown">
+                {% for link_child_item in linklists[link_child].links %}
+                <li>
+                  <a href="{{ link_child_item.url }}" {% if collection.handle == link_child_item.handle %}class="active"{% endif %}>
+                    {% include 'multilang' with link_child_item.title %}
+                    {% for col in collections %}
+                      {% if link_child_item.title == col.title %}
+                      <span class="count-products">({{ col.all_products_count }})</span>
+                      {% endif %}
+                    {% endfor %}
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        
+          {% endfor %}
+        
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  
+  
+  {% include 'collection-sidebar-shop-by-blocks' %}
+  
+  {% if settings.show_featured_product %}
+  {% include 'collection-sidebar-featured-products' %}
+  {% endif %}
+  
+  {% if settings.display_banner_sidebar %}
+  {% include 'sidebar-banner-block' %}
+  {% endif %}
+  
+  {% if settings.display_banner_sidebar_2 %}
+  {% include 'sidebar-banner-block-2' %}
+  {% endif %}
+  
+  {% if settings.display_sidebar_custom %}
+  {% include 'sidebar-custom-cms-block' %}
+  {% endif %}
+  
+</div>

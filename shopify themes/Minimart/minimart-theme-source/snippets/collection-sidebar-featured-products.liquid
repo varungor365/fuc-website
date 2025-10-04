@@ -1,0 +1,26 @@
+<section class="widget-featured-product">
+  {% if settings.featured_product_title != blank %}
+  <div class="widget-title">   
+    <h5>{% include 'multilang' with settings.featured_product_title %}</h5>
+  </div>
+  {% endif %}
+  {% if settings.featured_product_list_collection == blank %}
+  <p style="margin-bottom: 30px;">Please select a collection in Theme Setting to display the products (Sidebar -> Featured Products Sidebar)</p>
+  {% else %}
+  <div class="widget-product">
+    <div class="products-grid">
+      {% for product in collections.[settings.featured_product_list_collection].products limit:settings.featured_product_limit_all %}
+      {% include 'product-grid-item-sidebar' %}	  
+  	  {% endfor %}
+    </div> 
+  </div>
+  {% endif %}
+</section>
+<script>
+jQuery(document).ready(function() {
+  jQuery(".sidebar .widget-featured-product .products-grid").owlCarousel({
+	singleItem:true,
+    navigation : true
+  });
+});
+</script>

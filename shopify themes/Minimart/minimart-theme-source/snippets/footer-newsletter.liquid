@@ -1,0 +1,13 @@
+{% if settings.footer_display_newsletter %}
+<section class="newsletter">
+  {% if settings.footer_newsletter_title != blank %}
+  <div class="block-title">
+    <h6>{% include 'multilang' with settings.footer_newsletter_title %}</h6>    
+    {% include 'multilang' with settings.footer_newsletter_text %}
+  </div>
+  {% endif %}
+  <div class="block-content">
+    {% include 'newsletter-form' %}
+  </div>
+</section>
+{% endif %}

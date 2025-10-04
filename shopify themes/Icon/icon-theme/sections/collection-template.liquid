@@ -1,0 +1,129 @@
+<div data-section-id="{{ section.id }}">
+{% assign number = section.settings.products_per_page %}
+{% paginate collection.products by number %}
+
+<div class="section-title desktop-12 mobile-3">
+  <h1>{% if collection.handle == 'all' %}{{ 'collections.general.all_products' | t }}{% else %}{{ collection.title }}{% endif %}</h1>
+</div>
+
+{% if section.settings.show_collection_sidebar %}
+{% include 'collection-sidebar' %}
+{% endif %}
+
+<div class="{% if section.settings.show_collection_sidebar %}desktop-10{% else %}desktop-12{% endif %} tablet-6 mobile-3" id="bside">
+
+  {% if collection.description != blank %}
+  <div id="collection-description"> 
+    <div class="rte">{{ collection.description | remove: "[banner]" }}</div>  
+  </div>  
+  {% endif %}
+
+  <div class="clear"></div>  
+
+  <div id="product-loop">
+    {% for product in collection.products %}
+    <div class="product {% if section.settings.products_per_row  == '3' %}desktop-4{% cycle ' first', '', ' last' %}{% elsif section.settings.products_per_row == '4' %}desktop-3{% cycle ' first', '', '', ' last' %}{% endif %} tablet-half mobile-half" id="prod-{{ product.id }}" data-alpha="{{ product.title }}" data-price="{{ product.price }}">
+    {% include 'product-listing' %}
+    </div>
+    {% endfor %} 
+  </div>
+</div>
+
+<div class="clear"></div>
+
+{% include 'pagination' %}
+
+{% endpaginate %}
+
+</div>
+{% schema %}
+{
+    "name": "Collection Page",
+  	"max_blocks":5,
+    "settings": [
+      {
+        "type": "select",
+        "id": "products_per_row",
+        "label": "How many products per row",
+        "options": [
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "products_per_page",
+        "label": "How many products per page",
+        "options": [
+          {
+            "value": "24",
+            "label": "24"
+          },
+          {
+            "value": "36",
+            "label": "36"
+          },
+          {
+            "value": "48",
+            "label": "48"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "show_collection_sidebar",
+        "label": "Enable sidebar",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "sticky-sidebar",
+        "label": "Make sidebar sticky"
+      },
+      {
+        "type": "checkbox",
+        "id": "sort_by",
+        "label": "Show sort by",
+        "default": true
+      }
+    ],
+   "blocks":[  
+      {  
+         "type":"menu",
+         "name":"Menu",
+         "settings":[  
+            {
+               "type": "link_list",
+               "id": "side_nav",
+               "label": "Sidebar menu"
+            },
+           {
+            "type": "text",
+            "id": "title",
+            "label": "Menu title",
+            "default": "Explore"
+           }
+         ]
+      },
+      {  
+         "type":"vendor_list",
+         "name":"Vendor list",
+		 "limit": 1,
+         "settings":[  
+          {
+          "type": "text",
+          "id": "shop_by_designer_title",
+          "label": "Vendor list title",
+          "default": "Shop by Designer"
+          }
+         ]
+      }
+   ]
+  }
+{% endschema %} 

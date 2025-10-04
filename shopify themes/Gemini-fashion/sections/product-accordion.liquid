@@ -1,0 +1,236 @@
+{%- assign accordion_style = section.settings.accordion_style -%}
+{%- assign accordion_style_ind = accordion_style | plus: 0 -%}
+
+{%- if section.blocks.size > 0 -%}
+  <div
+    class="product-accordion {% if accordion_style != blank %}product-accordion--style{{ accordion_style }}{% endif %} panel-group"
+    id="{{- section.id -}}"
+    role="tablist"
+    aria-multiselectable="true"
+    >
+    {%- for block in section.blocks -%}
+      <div class="panel panel-default">
+        <div
+          class="panel-heading"
+          id="heading-{{- block.id -}}"
+          role="tab"
+          >
+          <h4 class="panel-title">
+            <a
+              class="panel-title__link {% unless forloop.index == 1 %}collapsed{% endunless %}"
+              href="#collapse-{{- block.id -}}"
+              role="button"
+              data-toggle="collapse"
+              data-parent="#{{- section.id -}}"
+              aria-expanded="{% if forloop.index == 1 %}true{% else %}false{% endif %}"
+              aria-controls="collapse-{{- block.id -}}"
+              >
+              {%- if accordion_style_ind > 4 -%}
+                <i class="fa fa-caret-up"></i>
+              {%- else -%}
+                <i class="fa fa-minus"></i>
+              {%- endif -%}
+              {{ block.settings.title }}
+            </a>
+          </h4>
+        </div>
+        <div
+          class="panel-collapse collapse {% if forloop.index == 1 %}in{% endif %}"
+          id="collapse-{{- block.id -}}"
+          role="tabpanel"
+          aria-labelledby="heading-{{- block.id -}}"
+          >
+          <div class="panel-body">
+            {% include 'product-details' %}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+
+{% include 'section-spacing' %}
+
+{% schema %}
+{
+  "name": "Details - Accordion",
+  "settings": [
+    {
+      "type": "select",
+      "id": "accordion_style",
+      "options": [
+        {
+          "value": "1",
+          "label": "Style 01"
+        },
+        {
+          "value": "2",
+          "label": "Style 02"
+        },
+        {
+          "value": "3",
+          "label": "Style 03"
+        },
+        {
+          "value": "4",
+          "label": "Style 04"
+        },
+        {
+          "value": "5",
+          "label": "Style 05"
+        },
+        {
+          "value": "6",
+          "label": "Style 06"
+        }
+      ],
+      "default": "1",
+      "label": "Accordion style",
+      "info": "Choose style for detail information block. Only apply when you choose displaying type as accordion."
+    },
+    {
+      "type": "header",
+      "content": "Design options"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "margin",
+      "label": "Margin (top right bottom left)",
+      "info": "60px auto 60px auto"
+    },
+    {
+      "type": "text",
+      "id": "padding",
+      "label": "Padding (top right bottom left)",
+      "info": "60px 0 60px 0"
+    }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Description"
+        }
+      ]
+    },
+    {
+      "type": "additional_description",
+      "name": "Additional description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Additional description title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Additional description content",
+          "default": "<p>Detail information</p>"
+        }
+      ]
+    },
+    {
+      "type": "size_guide",
+      "name": "Size guide",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Size guide title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Description for size guide</p>"
+        },
+        {
+          "type": "radio",
+          "id": "type",
+          "label": "Size guide display",
+          "options": [
+            {
+              "value": "link",
+              "label": "Use external link"
+            },
+            {
+              "value": "image",
+              "label": "Upload a size guide image"
+            }
+          ]
+        },
+        {
+          "type": "url",
+          "id": "size_guide_url",
+          "label": "Link to size guide"
+        },
+        {
+          "type": "text",
+          "id": "size_guide_url_text",
+          "label": "Link text",
+          "default": "See size guide",
+          "info": "Enter text to display for size guide URL"
+        },
+        {
+          "type": "image_picker",
+          "id": "size_guide_image",
+          "label": "Size guide image"
+        }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Review title",
+          "default": "Review"
+        }
+      ]
+    },
+    {
+      "type": "custom",
+      "name": "Custom block",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom block title",
+          "default": "Custom block"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Custom block content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

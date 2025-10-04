@@ -1,0 +1,51 @@
+/*================ Common page elements ================*/
+
+.page-header {
+  padding: 1rem 0 0.5rem;
+  font-size: 1.1rem;
+  h2 {
+    text-align: center;
+  }
+  @include at-query($min, $large) {
+    padding: 0 0 0 $gutter;
+    border-bottom: 1px solid $color-border;
+  }
+}
+body.template-collection {
+  .page-header {
+    border: none;
+  }
+}
+
+.breadcrumb {
+  text-align: center;
+  &>span:last-child {
+    color: $color-special;
+  }
+  @include at-query($min, $large) {
+    padding: 5px 0;
+    text-align: left;
+  }
+}
+
+.pagination {
+  margin-bottom: 1em;
+  text-align: center;
+
+  > span {
+    display: inline-block;
+    line-height: 1;
+    &.current {
+      border-bottom: 2px solid $color-special;
+    }
+  }
+
+  a {
+    display: block;
+  }
+
+  a,
+  .page.current {
+    padding: 8px;
+  }
+}

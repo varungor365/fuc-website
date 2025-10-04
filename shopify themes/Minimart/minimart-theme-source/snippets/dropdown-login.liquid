@@ -1,0 +1,57 @@
+{% if shop.customer_accounts_enabled %}
+<div class="dropdown-login dropdown hidden-xs">
+  <a href="/account/login" id="dropdownLogin" data-toggle="dropdown">
+    
+    <span class="first">
+      {% if customer %}
+      <span {% if settings.enable_multilang %}data-translate="layout.customer.log_out"{% endif %}>
+        {{ 'layout.customer.log_out' | t }}
+      </span>
+      {% else %}
+      <span {% if settings.enable_multilang %}data-translate="customer.login.login"{% endif %}>
+        {{ 'customer.login.login' | t }}
+      </span>
+      /
+      <span {% if settings.enable_multilang %}data-translate="layout.customer.create_account"{% endif %}>
+        {{ 'layout.customer.create_account' | t }}
+      </span>
+      {% endif %}
+    </span>
+    <span class="last">
+      <span {% if settings.enable_multilang %}data-translate="customer.account.title"{% endif %}>
+        {{ 'customer.account.title' | t }}
+      </span>
+      <span class="caret"></span>
+    </span>
+  </a>
+  <div class="dropdown-menu" aria-labelledby="dropdownLogin">
+    {% if customer %}
+      <p><a href="/account" {% if settings.enable_multilang %}data-translate="customer.account.title"{% endif %}>{{ 'customer.account.title' | t }}</a></p>
+      <p><a href="/account/logout" {% if settings.enable_multilang %}data-translate="layout.customer.log_out"{% endif %}>{{ 'layout.customer.log_out' | t }}</a></p>
+    {% else %}
+    <form accept-charset="UTF-8" action="/account/login" method="post">
+      <input name="form_type" type="hidden" value="customer_login" />
+      <input name="utf8" type="hidden" value="✓" />
+
+      <div class="returning-customer">
+        <h6 {% if settings.enable_multilang %}data-translate="customer.dropdown_login.returning_customer"{% endif %}>
+           {{ 'customer.dropdown_login.returning_customer' | t }}
+        </h6>
+        <input type="email" value="" name="customer[email]" {% if settings.enable_multilang %}data-translate="customer.login.email" translate-item="placeholder"{% endif %} placeholder="{{ 'customer.login.email' | t }}">
+        <input type="password" value="" name="customer[password]" {% if settings.enable_multilang %}data-translate="customer.login.password" translate-item="placeholder"{% endif %} placeholder="{{ 'customer.login.password' | t }}">
+
+        <input type="submit" {% if settings.enable_multilang %}data-translate="customer.login.sign_in"{% endif %} class="btn" value="{{ 'customer.login.sign_in' | t }}">
+        <a href="#" onclick="showRecoverPasswordForm();return false;" {% if settings.enable_multilang %}data-translate="customer.login.forgot_password"{% endif %}>{{ 'customer.login.forgot_password' | t }}</a>
+      </div>
+       
+      <div class="new-customer">
+        <h6 {% if settings.enable_multilang %}data-translate="customer.dropdown_login.new_customer"{% endif %}>
+          {{ 'customer.dropdown_login.new_customer' | t }}
+        </h6>
+        <a href="/account/register" {% if settings.enable_multilang %}data-translate="layout.customer.create_account"{% endif %}>{{ 'layout.customer.create_account' | t }}</a>
+      </div>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

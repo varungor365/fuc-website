@@ -1,0 +1,44 @@
+{%- if settings.cookies_law_show -%}
+<div class="cookies-law">
+  <div class="cookies-law__inner">
+    <div class="cookies-law__text">{{ settings.cookies_law_text }}</div>
+    <div class="cookies-law__buttons">
+      <a
+        href="javascript:;"
+        class="cookies-law__button cookies-law__button--accept"
+        >
+        {{ 'cookies_law.accept' | t }}
+      </a>
+      {%- if settings.cookies_law_info and settings.cookies_law_info_link != blank -%}
+        <a
+          href="{{ settings.cookies_law_info_link }}"
+          class="cookies-law__button cookies-law__button--accept"
+          >
+          {{ 'cookies_law.more' | t }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+<script>
+  jQuery(document).ready(function($) {
+    var popup = $( '.cookies-law' );
+    setTimeout(function() {
+      var acceptCookies = function() {
+        popup.removeClass('cookies-law--show').addClass('cookies-law--hide');
+        Cookies.set('cookies_law', 'accepted', { expires: 60, path: '/' } );
+      };
+
+      if( Cookies.get('cookies_law') == 'accepted' ) {
+        popup.removeClass('cookies-law--show').addClass('cookies-law--hide');
+      } else {
+        popup.addClass('cookies-law--show');
+        popup.on('click', '.cookies-law__button--accept', function(e) {
+          e.preventDefault();
+          acceptCookies();
+        })
+      }
+    }, 2500 );
+  });
+</script>
+{%- endif -%}

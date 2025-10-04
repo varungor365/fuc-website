@@ -1,0 +1,257 @@
+{%- assign base_product_item_wrapper = 'grid__item medium--one-third' -%}
+{%- if section.settings.two_cols_layout_enable -%}
+  {%- assign base_product_item_wrapper = base_product_item_wrapper | append: ' small--one-half' -%}
+  {%- assign mobile_cols_num = 2 -%}
+{%- else -%}
+  {%- assign mobile_cols_num = 1 -%}
+{%- endif -%}
+
+{%- comment -%}
+  Extends from collection.liquid
+{%- endcomment -%}
+
+{%- assign column_number = section.settings.column_number | plus: 0 -%}
+
+{%- case column_number -%}
+  {%- when 2 -%}
+    {%- assign extra_product_item_wrapper = 'large-up--one-half' -%}
+  {%- when 3 -%}
+    {%- assign extra_product_item_wrapper = 'large-up--one-third' -%}
+  {%- when 4 -%}
+    {%- assign extra_product_item_wrapper = 'large-up--one-quarter' -%}
+  {%- when 5 -%}
+    {%- assign extra_product_item_wrapper = 'large-up--one-fifth' -%}
+  {%- when 6 -%}
+    {%- assign extra_product_item_wrapper = 'large-up--one-sixth' -%}
+{%- endcase -%}
+
+{%- if column_number >= 5 -%}
+  {%- assign image_size = '480x480' -%}
+{%- elsif column_number == 4 -%}
+  {%- assign image_size = '600x600' -%}
+{%- else -%}
+  {%- assign image_size = '1024x1024' -%}
+{%- endif -%}
+
+{%- comment -%}
+  end extends
+{%- endcomment -%}
+
+{%- assign display_type = section.settings.display -%}
+
+<div
+  class="product-list"
+  data-section-id="{{ section.id }}"
+  data-section-type="productList"
+  >
+  {% if section.settings.use_container %}
+    <div class="page-width">
+  {% endif %}
+
+    {% include 'section-heading' %}
+
+    <div class="featured-collection--products">
+      <div
+        class="grid grid--normal {% if display_type == 'carousel' %}grid--carousel js-slick-carousel{% else %} grid--uniform{% endif %}"
+        {% if display_type == 'carousel' %}
+          data-arrow-type="{{ section.settings.arrow_type }}"
+          data-slick='{"slidesToShow": {{ column_number }},"responsive":[{"breakpoint": 960,"settings":{"slidesToShow": 2}},{"breakpoint": 480,"settings":{"slidesToShow": {{ mobile_cols_num }} }}]}'
+        {% endif %}
+        >
+        {% for block in section.blocks %}
+          {%- assign product = all_products[block.settings.product] -%}
+
+          {% include 'product-item' %}
+        {% else %}
+          <p class="text-center">
+            {{ 'homepage.onboarding.product_list_no_content' | t }}
+          </p>
+        {% endfor %}
+      </div>
+    </div>
+
+  {% if section.settings.use_container %}
+    </div>
+  {% endif %}
+</div>
+
+{% include 'section-spacing' %}
+
+{% schema %}
+  {
+    "name": "Product List",
+    "class": "gemini-product-list",
+    "settings": [
+      {
+        "type": "header",
+        "content": "General"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Trending this week"
+      },
+      {
+        "type": "text",
+        "id": "subtitle",
+        "label": "SubHeading",
+        "default": "Subtitle"
+      },
+      {
+        "type": "select",
+        "id": "display",
+        "label": "Display type",
+        "options": [
+          {
+            "value": "grid",
+            "label": "Grid"
+          },
+          {
+            "value": "carousel",
+            "label": "Carousel"
+          }
+        ],
+        "default": "grid",
+        "info": "Select display type, grid or carousel."
+      },
+      {
+        "type": "select",
+        "id": "column_number",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          },
+          {
+            "value": "6",
+            "label": "6"
+          }
+        ],
+        "default": "4",
+        "label": "Column number",
+        "info": "The number of columns to display products."
+      },
+      {
+        "type": "header",
+        "content": "Carousel type"
+      },
+      {
+        "type": "select",
+        "id": "arrow_type",
+        "default": "arrow",
+        "label": "Arrows type",
+        "options": [
+          {
+            "value": "arrow",
+            "label": "Default"
+          },
+          {
+            "value": "square",
+            "label": "Squared arrows"
+          },
+          {
+            "value": "circle",
+            "label": "Circle arrows"
+          },
+          {
+            "value": "half-circle",
+            "label": "Half circle arrows"
+          }
+        ],
+        "info": "Choose arrows type to display when using Carousel type. Note that Half circle arrow is unavailable when Use container is checked."
+      },
+      {
+        "type": "header",
+        "content": "Mobile layout"
+      },
+      {
+        "type": "checkbox",
+        "id": "two_cols_layout_enable",
+        "default": false,
+        "label": "Enable 2 columns layout on mobile"
+      },
+      {
+        "type": "header",
+        "content": "Design options"
+      },
+      {
+        "type": "paragraph",
+        "content": "To horizontally center a element use margin: auto;"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_container",
+        "label": "Use container",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margins ( top-right-bottom-left )",
+        "info": "60px-auto-60px-auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Paddings Integer px ( top-right-bottom-left )",
+        "info": "60px-auto-60px-auto"
+      }
+    ],
+    "blocks": [
+      {
+        "type":"product",
+        "name":"Product",
+        "settings": [
+          {
+            "type":"product",
+            "id":"product",
+            "label":"Choose product"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product List",
+        "category": "Product",
+        "blocks": [
+          {
+            "type": "product"
+          },
+          {
+            "type": "product"
+          },
+          {
+            "type": "product"
+          },
+          {
+            "type": "product"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

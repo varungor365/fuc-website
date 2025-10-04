@@ -1,0 +1,40 @@
+# FASHUN.CO Vercel Ignore Configuration
+# Optimize deployment by excluding unnecessary files
+
+# Exclude other services from deployment (only deploying fashun-store)
+fashun-backend/
+ai-mockup-service/
+automation-workflows/
+fashun-cms/
+fashun-cms-new/
+
+# Exclude large asset directories
+fac/
+SEO Audit for fashun.co.in - SEOptimer_files/
+
+# Exclude development files
+*.log
+*.tgz
+*.tar.gz
+.DS_Store
+Thumbs.db
+
+# Exclude documentation files (keep README.md)
+*.md
+!README.md
+
+# Exclude PowerShell scripts
+*.ps1
+*.sh
+
+# Node modules will be installed fresh
+node_modules/
+fashun-store/node_modules/
+
+# Exclude build artifacts (will be generated)
+fashun-store/.next/
+fashun-store/out/
+
+# Exclude environment files (configure in Vercel dashboard)
+.env*
+!.env.example

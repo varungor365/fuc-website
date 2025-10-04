@@ -1,0 +1,187 @@
+{%- assign tpl_suffix = page.template_suffix -%}
+
+{%- if section.settings.use_container and tpl_suffix contains 'contact_layout01' or tpl_suffix contains 'contact_layout02' -%}
+  <div class="page-width">
+{%- endif -%}
+    <div
+      class="gemini-gmap js-gmap-contact"
+      data-address="{{ section.settings.address }}"
+      data-lat="{{ section.settings.lat }}"
+      data-lng="{{ section.settings.lng }}"
+      data-height="{{ section.settings.map_height }}"
+      data-zoom-level="{{ section.settings.zoom_level }}"
+      data-map-type="{{ section.settings.map_type }}"
+      {% if section.settings.custom_style_enable and section.settings.custom_style_snippet != blank %}
+        data-map-style='{{ section.settings.custom_style_snippet }}'
+      {% endif %}
+      data-marker-disable="{{ section.settings.marker_disable }}"
+      data-zoom-control-disable="{{ section.settings.zoom_control_disable }}"
+      data-street-view-control-disable="{{ section.settings.street_view_control_disable }}"
+      data-draggable-control-disable="{{ section.settings.draggable_control_disable }}"
+      data-double-click-zoom-control-disable="{{ section.settings.double_click_zoom_control_disable }}"
+      data-scrollwheel-zoom-control-disable="{{ section.settings.scrollwheel_zoom_control_disable }}"
+      data-map-type-control-disable="{{ section.settings.map_type_control_disable }}"
+    >&nbsp;</div>
+{%- if section.settings.use_container and tpl_suffix contains 'contact_layout01' or tpl_suffix contains 'contact_layout02' -%}
+  </div>
+{%- endif -%}
+
+{% include 'section-spacing' %}
+
+{% schema %}
+{
+  "name": "Google map",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Map center"
+    },
+    {
+      "type": "paragraph",
+      "content": "Enter your address"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Store address",
+      "default": "Sir Matt Busby Way, Stretford, Manchester M16 0RA, UK"
+    },
+    {
+      "type": "paragraph",
+      "content": "Or enter the correct coordinate (latitude, longitude)"
+    },
+    {
+      "type": "text",
+      "id": "lat",
+      "label": "Latitude",
+      "default": "53.4629517"
+    },
+    {
+      "type": "text",
+      "id": "lng",
+      "label": "Longitude",
+      "default": "-2.2911847"
+    },
+    {
+      "type": "header",
+      "content": "Style options"
+    },
+    {
+      "type": "text",
+      "id": "map_height",
+      "label": "Map height (in pixel)",
+      "default": "500"
+    },
+    {
+      "type": "text",
+      "id": "zoom_level",
+      "label": "Zoom level",
+      "default": "14"
+    },
+    {
+      "type": "select",
+      "id": "map_type",
+      "label": "Map type",
+      "options": [
+        {
+          "value": "roadmap",
+          "label": "Roadmap"
+        },
+        {
+          "value": "satellite",
+          "label": "Satellite"
+        },
+        {
+          "value": "hybrid",
+          "label": "Hybrid"
+        },
+        {
+          "value": "terrain",
+          "label": "Terrain"
+        }
+      ],
+      "default": "roadmap"
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_style_enable",
+      "label": "Enable custom style",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "custom_style_snippet",
+      "label": "Custom style snippets",
+      "info": "Use custom style snippets to apply your style to google map. You can go to [Snazzy Maps](https://snazzymaps.com/) to create your own or search for your expected style, then copy and paste snippet here."
+    },
+    {
+      "type": "checkbox",
+      "id": "marker_disable",
+      "label": "Disable map marker",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Control settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "zoom_control_disable",
+      "label": "Disable zoom control",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "street_view_control_disable",
+      "label": "Disable street view control",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "draggable_control_disable",
+      "label": "Disable draggable control",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "double_click_zoom_control_disable",
+      "label": "Disable double click zoom control",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "scrollwheel_zoom_control_disable",
+      "label": "Disable scrollwheel zoom control",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "map_type_control_disable",
+      "label": "Disable Map type control",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Design options"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_container",
+      "label": "Use container",
+      "default": true,
+      "info": "Only available with page.contact_layout01/page.contact_layout02 where the map is standalone."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "text",
+      "id": "margin",
+      "label": "Margins (valid css margin value)",
+      "info": "60px auto 60px auto"
+    }
+  ]
+}
+{% endschema %}

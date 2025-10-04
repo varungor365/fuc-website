@@ -1,0 +1,1008 @@
+openapi: 3.0.3
+info:
+  title: FASHUN.CO API
+  description: |
+    FASHUN.CO Premium Streetwear E-commerce Platform API
+    
+    This API provides comprehensive endpoints for managing products, orders, customers, 
+    and administrative functions for the FASHUN.CO streetwear platform.
+    
+    ## Authentication
+    Most endpoints require API key authentication. Include your API key in the header:
+    ```
+    Authorization: Bearer YOUR_API_KEY
+    ```
+    
+    ## Rate Limiting
+    - Standard endpoints: 1000 requests/hour
+    - Admin endpoints: 500 requests/hour
+    - Public endpoints: 2000 requests/hour
+    
+  version: 1.0.0
+  contact:
+    name: FASHUN.CO API Support
+    email: api@fashun.co
+    url: https://fashun.co/support
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://api.fashun.co/v1
+    description: Production server
+  - url: https://staging-api.fashun.co/v1
+    description: Staging server
+  - url: http://localhost:1337/api
+    description: Development server (Strapi)
+
+paths:
+  # Product Management
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      description: Retrieve a paginated list of products with optional filtering
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+          description: Page number for pagination
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+          description: Number of products per page
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [hoodies, tshirts, oversized-tshirts, sweatshirts, polo-shirts]
+          description: Filter by product category
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [newest, price-low, price-high, popularity, rating]
+            default: newest
+          description: Sort order for products
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search query for product names and descriptions
+      responses:
+        '200':
+          description: List of products retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimit'
+    post:
+      tags:
+        - Products
+      summary: Create a new product
+      description: Create a new product (Admin only)
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get product by ID
+      description: Retrieve a specific product by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      responses:
+        '200':
+          description: Product retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Products
+      summary: Update product
+      description: Update an existing product (Admin only)
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Products
+      summary: Delete product
+      description: Delete a product (Admin only)
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Product deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Order Management
+  /orders:
+    get:
+      tags:
+        - Orders
+      summary: Get orders
+      description: Retrieve orders (Admin gets all, users get their own)
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, confirmed, processing, shipped, delivered, cancelled]
+      responses:
+        '200':
+          description: Orders retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - Orders
+      summary: Create order
+      description: Create a new order
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /orders/{id}:
+    get:
+      tags:
+        - Orders
+      summary: Get order by ID
+      description: Retrieve a specific order
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # Analytics
+  /analytics/dashboard:
+    get:
+      tags:
+        - Analytics
+      summary: Get dashboard metrics
+      description: Retrieve dashboard analytics (Admin only)
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [24h, 7d, 30d, 90d, 1y]
+            default: 7d
+      responses:
+        '200':
+          description: Analytics data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardMetrics'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # Customer Management
+  /customers:
+    get:
+      tags:
+        - Customers
+      summary: Get customers
+      description: Retrieve customer list (Admin only)
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customers retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Customer'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # Shipping Calculator
+  /shipping/calculate:
+    post:
+      tags:
+        - Shipping
+      summary: Calculate shipping cost
+      description: Calculate shipping cost for given address and items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingCalculationRequest'
+      responses:
+        '200':
+          description: Shipping cost calculated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingCalculationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  # Currency Conversion
+  /currency/rates:
+    get:
+      tags:
+        - Currency
+      summary: Get exchange rates
+      description: Get current exchange rates for supported currencies
+      responses:
+        '200':
+          description: Exchange rates retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExchangeRates'
+
+  /currency/convert:
+    post:
+      tags:
+        - Currency
+      summary: Convert currency
+      description: Convert amount from one currency to another
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrencyConversionRequest'
+      responses:
+        '200':
+          description: Currency converted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrencyConversionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Use: Bearer YOUR_API_KEY'
+
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "prod_12345"
+        name:
+          type: string
+          example: "Premium Oversized Hoodie"
+        description:
+          type: string
+          example: "Ultra-comfortable oversized hoodie perfect for streetwear style"
+        price:
+          type: number
+          format: float
+          example: 2999
+        originalPrice:
+          type: number
+          format: float
+          example: 3999
+        images:
+          type: array
+          items:
+            type: string
+          example: ["/images/products/hoodie-1.jpg", "/images/products/hoodie-2.jpg"]
+        category:
+          type: string
+          enum: [hoodies, tshirts, oversized-tshirts, sweatshirts, polo-shirts]
+          example: "hoodies"
+        subcategory:
+          type: string
+          example: "pullover"
+        sizes:
+          type: array
+          items:
+            type: string
+          example: ["XS", "S", "M", "L", "XL", "XXL"]
+        colors:
+          type: array
+          items:
+            type: string
+          example: ["Black", "White", "Gray", "Navy"]
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["streetwear", "premium", "oversized"]
+        isNew:
+          type: boolean
+          example: true
+        isFeatured:
+          type: boolean
+          example: false
+        isLimited:
+          type: boolean
+          example: false
+        inStock:
+          type: boolean
+          example: true
+        stockCount:
+          type: integer
+          example: 25
+        sku:
+          type: string
+          example: "HOO-OS-BLK-001"
+        material:
+          type: string
+          example: "100% Premium Cotton"
+        fit:
+          type: string
+          example: "Oversized"
+        rating:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 5
+          example: 4.8
+        reviews:
+          type: integer
+          example: 127
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateProductRequest:
+      type: object
+      required:
+        - name
+        - description
+        - price
+        - category
+        - images
+        - sizes
+        - colors
+        - sku
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        originalPrice:
+          type: number
+          format: float
+        images:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+          enum: [hoodies, tshirts, oversized-tshirts, sweatshirts, polo-shirts]
+        subcategory:
+          type: string
+        sizes:
+          type: array
+          items:
+            type: string
+        colors:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        sku:
+          type: string
+        material:
+          type: string
+        fit:
+          type: string
+        stockCount:
+          type: integer
+
+    UpdateProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        originalPrice:
+          type: number
+          format: float
+        images:
+          type: array
+          items:
+            type: string
+        sizes:
+          type: array
+          items:
+            type: string
+        colors:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        stockCount:
+          type: integer
+        isNew:
+          type: boolean
+        isFeatured:
+          type: boolean
+        isLimited:
+          type: boolean
+        inStock:
+          type: boolean
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "order_67890"
+        customerId:
+          type: string
+          example: "cust_12345"
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        totalAmount:
+          type: number
+          format: float
+          example: 8997
+        currency:
+          type: string
+          example: "INR"
+        status:
+          type: string
+          enum: [pending, confirmed, processing, shipped, delivered, cancelled]
+          example: "confirmed"
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+        billingAddress:
+          $ref: '#/components/schemas/Address'
+        paymentMethod:
+          type: string
+          example: "razorpay"
+        trackingNumber:
+          type: string
+          example: "TRK123456789"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    OrderItem:
+      type: object
+      properties:
+        productId:
+          type: string
+        productName:
+          type: string
+        size:
+          type: string
+        color:
+          type: string
+        quantity:
+          type: integer
+        unitPrice:
+          type: number
+          format: float
+        totalPrice:
+          type: number
+          format: float
+
+    CreateOrderRequest:
+      type: object
+      required:
+        - items
+        - shippingAddress
+        - paymentMethod
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+              size:
+                type: string
+              color:
+                type: string
+              quantity:
+                type: integer
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+        billingAddress:
+          $ref: '#/components/schemas/Address'
+        paymentMethod:
+          type: string
+        couponCode:
+          type: string
+
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "cust_12345"
+        email:
+          type: string
+          format: email
+          example: "customer@example.com"
+        firstName:
+          type: string
+          example: "John"
+        lastName:
+          type: string
+          example: "Doe"
+        phone:
+          type: string
+          example: "+91 9876543210"
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        orderCount:
+          type: integer
+          example: 5
+        totalSpent:
+          type: number
+          format: float
+          example: 15999
+        createdAt:
+          type: string
+          format: date-time
+        lastOrderAt:
+          type: string
+          format: date-time
+
+    Address:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        company:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        country:
+          type: string
+        phone:
+          type: string
+
+    DashboardMetrics:
+      type: object
+      properties:
+        totalRevenue:
+          type: number
+          format: float
+          example: 125000
+        totalOrders:
+          type: integer
+          example: 89
+        totalCustomers:
+          type: integer
+          example: 156
+        averageOrderValue:
+          type: number
+          format: float
+          example: 1404.49
+        conversionRate:
+          type: number
+          format: float
+          example: 3.2
+        topProducts:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+              name:
+                type: string
+              sales:
+                type: integer
+        recentOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+
+    ShippingCalculationRequest:
+      type: object
+      required:
+        - items
+        - address
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+              quantity:
+                type: integer
+        address:
+          $ref: '#/components/schemas/Address'
+        shippingMethod:
+          type: string
+          enum: [standard, express, overnight]
+
+    ShippingCalculationResponse:
+      type: object
+      properties:
+        options:
+          type: array
+          items:
+            type: object
+            properties:
+              method:
+                type: string
+              name:
+                type: string
+              cost:
+                type: number
+                format: float
+              estimatedDays:
+                type: integer
+              description:
+                type: string
+
+    CurrencyConversionRequest:
+      type: object
+      required:
+        - amount
+        - fromCurrency
+        - toCurrency
+      properties:
+        amount:
+          type: number
+          format: float
+        fromCurrency:
+          type: string
+          example: "INR"
+        toCurrency:
+          type: string
+          example: "USD"
+
+    CurrencyConversionResponse:
+      type: object
+      properties:
+        originalAmount:
+          type: number
+          format: float
+        convertedAmount:
+          type: number
+          format: float
+        fromCurrency:
+          type: string
+        toCurrency:
+          type: string
+        exchangeRate:
+          type: number
+          format: float
+        timestamp:
+          type: string
+          format: date-time
+
+    ExchangeRates:
+      type: object
+      properties:
+        baseCurrency:
+          type: string
+          example: "INR"
+        rates:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+          example:
+            USD: 0.012
+            EUR: 0.011
+            GBP: 0.009
+            AUD: 0.018
+            CAD: 0.016
+        lastUpdated:
+          type: string
+          format: date-time
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 20
+        total:
+          type: integer
+          example: 150
+        pages:
+          type: integer
+          example: 8
+        hasNext:
+          type: boolean
+          example: true
+        hasPrev:
+          type: boolean
+          example: false
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+            name:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+
+  responses:
+    BadRequest:
+      description: Bad request - Invalid input parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 400
+              name: "ValidationError"
+              message: "Invalid input parameters"
+              details:
+                field: "email"
+                issue: "Invalid email format"
+
+    Unauthorized:
+      description: Unauthorized - Invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 401
+              name: "UnauthorizedError"
+              message: "Invalid or missing API key"
+
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 403
+              name: "ForbiddenError"
+              message: "Insufficient permissions to access this resource"
+
+    NotFound:
+      description: Not found - Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 404
+              name: "NotFoundError"
+              message: "The requested resource was not found"
+
+    RateLimit:
+      description: Too many requests - Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error:
+              status: 429
+              name: "RateLimitError"
+              message: "Rate limit exceeded. Please try again later"
+
+tags:
+  - name: Products
+    description: Product management operations
+  - name: Orders
+    description: Order management operations
+  - name: Customers
+    description: Customer management operations (Admin only)
+  - name: Analytics
+    description: Analytics and metrics (Admin only)
+  - name: Shipping
+    description: Shipping calculation operations
+  - name: Currency
+    description: Currency conversion operations

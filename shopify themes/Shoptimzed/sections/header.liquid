@@ -1,0 +1,589 @@
+{% if settings.mobile_currency %}
+
+<style>
+  .div_currency {
+    display: inline-block;
+    float: right;
+    margin-top: 18px;
+  }
+  .div_currency .currencies{
+  	color:#c63;
+    padding-right: 18px;
+  }
+  
+  .div_currency select.currencies {
+	background-image: url('{{ "mobile_ico-select.svg" | asset_url }}');
+    background-position: right;
+  }
+  
+ @media screen and (min-width: 320px) and (max-width: 476px){
+   .site-header__logo-link img{
+     max-width: 160px ;
+   }
+ }
+ @media screen and (min-width: 360px) and (max-width: 400px){
+   .site-header__logo-link img {
+     max-width: 149px;
+   }
+   .site-header__logo-link {
+     margin-left: 5px;
+     margin-right: 5px;
+   }
+   .div_currency .currencies {
+     padding-right: 7px;
+   }
+
+ }
+ @media screen and (min-width: 340px) and (max-width: 360px){
+   .site-header__logo-link img {
+     max-width: 128px;
+   }
+    .site-header__logo-link {
+     margin-right: 0;
+     margin-left: 5px;
+   }
+ }
+ @media screen and (min-width: 320px) and (max-width: 340px){
+   .site-header__logo-link img {
+     max-width: 114px;
+   }
+   
+   .site-header__logo-link {
+     margin-right: 0;
+     margin-left: 5px;
+   }
+   .div_currency .currencies {
+		padding-right: 5px;
+	}
+ }
+</style>
+{% endif %}
+
+<style>
+.site-header .header-stripbar .topstrip-nav .top-nav-link a.site-header__cart-toggle:hover, .site-header .header-stripbar .topstrip-nav .top-nav-link a.site-header__cart-toggle:active {
+	padding-top: 6px;
+}
+.CartCount {
+  background-color: {{ section.settings.main-header-cart-count-background }};
+  color: {{ section.settings.main-header-cart-count-text }};
+}
+  
+  .link--nav-item .CartCount {
+    background-color:  {{ section.settings.main-header-cart-count-background }} !important; 
+    color: {{ section.settings.main-header-cart-count-text }} !important;
+}  
+
+.sticky .CartCount {
+  background-color: {{ section.settings.sticky-header-cart-count-background }};
+  color: {{ section.settings.sticky-header-cart-count-text }};
+}
+
+.site-header .header-stripbar .topstrip-nav .top-nav-link a.site-header__cart-toggle {
+    background: {{ section.settings.header-cart-background }};
+    
+}
+
+.sticky .cart__hover, .sticky .cart__hover:hover {
+    background: {{ section.settings.sticky-header-cart-background }};
+    
+}
+
+ 
+.cart__hover #cart-popup .cart--promo-msg {
+  color:{{ section.settings.popup-cart-text-color }};
+}  
+  
+.site-header__logo {
+	font-size: 2rem;
+    margin-top: 4%;
+}  
+ 
+
+.top-nav-link.site-header__cart-toggle.js-drawer-open-right img.ratina-img-show {
+ display:none;  
+}
+  
+ header .top-nav-link.site-header__cart-toggle.js-drawer-open-right:hover img.ratina-img {
+ display:none !important;  
+}
+
+.top-nav-link.site-header__cart-toggle.js-drawer-open-right:hover img.ratina-img-show {
+ display:block !important;  
+}
+  
+  
+
+</style>
+
+<header class="site-header" role="banner">
+      <div class="header-stripbar medium-down--hide">
+      	<div class="wrapper">
+          <div class="grid--full grid--table">
+          	{% if settings.enable_strip_text %}
+              <div class="navbar-striptext left">
+                <a>{{ settings.strip_text }}{% if settings.strip_display_user_country %}&nbsp;<span class="countryName"></span>&nbsp;<span class="flagImg f32"></span>{% endif %}</a>
+              </div>
+            {% endif %}
+            <ul class="topstrip-nav right">
+              {% if settings.show_multiple_currencies %}
+                <li class="top-nav-link">
+                  {% include 'currencies-switcher' %}
+                </li>
+              {% endif %}
+              {% for link in linklists[settings.strip_linklist].links %}
+              	<li class="top-nav-link"><a  href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+              {% if shop.customer_accounts_enabled %}
+                {% if customer %}
+                  <li class="top-nav-link cust-name">
+                    {% if customer.first_name != blank %}
+                      {% capture first_name %}{{ customer.first_name }}{% endcapture %}
+                      <a href="/account">{{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}</a>
+                    {% else %}
+                      <a href="/account">{{ 'layout.customer.account' | t }}</a>
+                    {% endif %}
+                  </li>
+                  <li class="top-nav-link my-account">
+                    {{ 'layout.customer.log_out' | t | customer_logout_link }}
+                  </li>
+                {% else %}
+                 
+                {% endif %}
+              {% else %}
+              	<li class="top-nav-link my-account {% if template == "cart" %}no-margin{% endif %}">&nbsp;</li>
+              {% endif %}
+              {% if template !="cart" %}
+              <li class="top-nav-link cart__hover">
+              	<a href="/cart" class="top-nav-link site-header__cart-toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
+                  <img src="{{ 'cart_icon_color.png' | asset_url }}" alt="Cart" class="no-border ratina-img cart--icon-desktop" />
+                    <img src="{{ 'cart_icon_color_hover.png' | asset_url }}" alt="Cart" class="no-border ratina-img-show cart--icon-desktop" />
+                  <span class="CartCount">{{ cart.item_count }}</span>
+                </a>
+                {% if cart.item_count > 0 %}
+                  <div id="cart-popup">
+                    <div class="container">
+                      <div class="cartForm">
+                        <ul class="cart-popup-ul-top">
+                          <li class="total-items"><b>{{ 'cart.general.total' | t }}: </b><span class="cart-current-items">{{ cart.item_count }}</span> {{ cart.item_count | pluralize: 'Item', 'Items' }}</li>
+                          <li class="total-price">{{ cart.total_price | money }}</li>
+                        </ul>
+                        <ul class="cart-popup-ul-middle">
+                          {% for item in cart.items %}
+                          <li>
+                            <a href="{{ item.url | within: collections.all }}">
+                              <div class="cart-img-div">
+                                <img src="{{ item | img_url: 'small' }}" alt="Image of {{ item.title | escape }}" class="cart-item-image" />
+                                <span class="pop-qty-crat">{{ item.quantity }}</span>
+                              </div>
+                              <div class="cart-item-info">
+                                <span class="cart-item-title">
+                                  {{ item.product.title }}{% if item.product.variants.size > 1 %} - {{ item.variant.title }}{% endif %}
+                                  {% if settings.product_personalisation %}
+                                    {% assign property_size = item.properties | size %}
+                                    {% if property_size > 0 %}
+                                      {% for p in item.properties %}
+                                        {% unless p.last == blank %}
+                                          {{ p.first }}:
+                                          {% if p.last contains '/uploads/' %}
+                                            <a class="lightbox" href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                                          {% else %}
+                                            {{ p.last }}
+                                          {% endif %}
+                                          <br>
+                                        {% endunless %}
+                                      {% endfor %}
+                                    {% endif %}
+                                  {% endif %}
+                                </span>
+                                <p class="cart-item-price">{{ item.price | money }}</p>
+                              </div>
+                            </a>
+                            <a href="/cart/change?line={{ forloop.index }}&quantity=0" data-line="{{ forloop.index }}" data-variant="{{ item.variant.id }}" class="removeLineCartPop" rel="{{ item.variant.id }}">x</a>
+                          </li>
+                          {% endfor %}
+                        </ul>
+                        <ul class="cart-popup-ul-bottom">
+                          <li><a href="/cart" class="btn--secondary btn--full cart__cartview">{{ 'cart.general.button' | t }}</a></li>
+                          <li>
+                            <a href="/checkout" class="btn btn--full cart__checkout Checkout">
+                              <img src="{{ 'checkout-button-icon.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo" class="no-border ratina-img addIcon" />
+                              <span id="CheckoutText">{{ 'cart.general.checkout' | t }}</span>
+                            </a>
+                            
+                            {% if section.settings.cart_popup_text != "" %} 
+                              <div class="cart--promo-msg">{{ section.settings.cart_popup_text }}{% if section.settings.cart_display_user_country %}&nbsp;<span class="countryName"></span>{% endif %}{% if section.settings.cart_display_user_country_flag %}&nbsp;<span class="flagImg f32"></span>{% endif %}</div>
+                            {% endif %}
+                            {% comment %}
+                            {% endcomment %}
+                            
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  {% else %}
+                  <div id="cart-popup" class="empty-popup">
+                    <div class="container">
+                      <ul class="cart-popup-ul-bottom">
+                        <li class="empty-cart-popup-msg">{{ 'cart.general.empty' | t }}</li>
+                        <li><a href="/collections/all" class="btn btn-large btn-primary">{{ 'cart.general.shop_now' | t }}</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  {% endif %}
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="wrapper main-header medium-down--hide">
+		    <div class="grid--full grid--table">
+          <div class="grid__item {% if settings.enable_header_promotion or settings.enable_header_fb_page %}{% if settings.enable_header_contact %}large--one-quarter{% else %}large--one-third{% endif %}{% else %}large--one-third{% endif %}">
+            {% if template == 'index' %}
+              <h1 class="site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
+            {% else %}
+              <div class="h1 site-header__logo large--left" itemscope itemtype="http://schema.org/Organization">
+            {% endif %}
+              {% if settings.logo_use_image %}
+                <a href="/" itemprop="url" class="site-header__logo-link">
+                  <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo" class="no-border ratina-img" />
+                </a>
+                {% if settings.enable_header_strapline %}
+                  {% if settings.header_strapline_text != "" %}
+                    <span class="strip-line">{{ settings.header_strapline_text }}</span>
+                  {% endif %}
+                {% endif %}
+              {% else %}
+                <a href="/" itemprop="url">{{ shop.name }}</a>
+              {% endif %}
+            {% if template == 'index' %}
+              </h1>
+            {% else %}
+              </div>
+            {% endif %}
+          </div>
+          {% if settings.enable_header_promotion and settings.enable_header_fb_page == false %}
+            <div class="grid__item {% if settings.enable_header_promotion or settings.enable_header_fb_page %}{% if settings.enable_header_contact %}large--one-quarter{% else %}large--one-third{% endif %}{% else %}large--one-third{% endif %} text-left laptop--hide medium-down--hide">
+              {% if template !="cart" %}
+              <div class="header-promotion-image">               
+                {% if settings.header_promotion_link != ''%}
+                <a href="{{settings.header_promotion_link}}">
+                  {% endif %}
+                  <img src="{{ 'header_image.png' | asset_url }}" alt="Image of {{ shop.name | escape }}" />
+                  {% if settings.header_promotion_link != ''%}
+                </a>
+                {% endif %}
+              </div>
+              {% endif %}
+            </div>
+          {% else %}
+            {% if settings.enable_header_fb_page %}
+              {% if settings.header_fb_page_url != "" %}
+                <div class="grid__item {% if settings.enable_header_promotion or settings.enable_header_fb_page %}{% if settings.enable_header_contact %}large--one-quarter{% else %}large--one-third{% endif %}{% else %}large--one-third{% endif %} text-left laptop--hide medium-down--hide">
+                  <div id="fb-root"></div>
+                  <script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.9";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script>
+                  <div class="fb-page" data-href="{{ settings.header_fb_page_url }}" data-width="240" data-height="55" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="{{ settings.header_fb_page_url }}" class="fb-xfbml-parse-ignore"><a href="{{ settings.header_fb_page_url }}">{{ settings.header_fb_page_name }}</a></blockquote></div>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          {% if settings.enable_header_search %}
+            <div class="grid__item {% if settings.enable_header_promotion or settings.enable_header_fb_page %}large--one-quarter{% else %}large--one-third{% endif %} text-right medium-down--hide">
+              {% if template !="cart" %}
+              <div class="site-header__search">
+                {% include 'search-bar' %}
+              </div>
+              {% endif %}
+            </div>
+          {% endif %}
+           
+          {% if settings.enable_header_contact %}
+            <div class="grid__item {% if settings.enable_header_promotion or settings.enable_header_fb_page %}{% if settings.enable_header_contact %}large--one-quarter adj {% else %}large--one-third{% endif %}{% else %}large--one-third{% endif %} text-right medium-down--hide">
+              <div class="header-call-text">
+                <span class="phone-icon">{{ settings.header_question_line }}</span>
+                
+                <a class="phone-number large--hide medium-down--show" href="tel:{{ settings.header_phone }}">{{ settings.header_phone }}</a>
+                <div class="phone-number medium-down--hide"><i class="phone-image"></i>{{ settings.header_phone }}</div>
+                <span class="phone-text">{{ settings.header_time }}</span>
+              </div>
+            </div>
+          {% endif %}
+          
+          {% if template !="cart" %}
+           
+              <div class="top-nav-link cart__hover">
+              	<a href="/cart" class="top-nav-link site-header__cart-toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
+                  <img src="{{ 'cart_icon_color_hover_scroll.png' | asset_url }}" alt="Cart" class="no-border ratina-img cart--icon-desktop" />
+                   <img src="{{ 'cart_icon_color_hover.png' | asset_url }}" alt="Cart" class="no-border ratina-img-show cart--icon-desktop" />
+                 
+                  <span class="CartCount">{{ cart.item_count }}</span>
+                </a>
+                {% if cart.item_count > 0 %}
+                  <div id="cart-popup">
+                    <div class="container">
+                      <div class="cartForm">
+                        <ul class="cart-popup-ul-top">
+                          <li class="total-items"><b>{{ 'cart.general.total' | t }}: </b><span class="cart-current-items">{{ cart.item_count }}</span> {{ cart.item_count | pluralize: 'Item', 'Items' }}</li>
+                          <li class="total-price">{{ cart.total_price | money }}</li>
+                        </ul>
+                        <ul class="cart-popup-ul-middle">
+                          {% for item in cart.items %}
+                          <li>
+                            <a href="{{ item.url | within: collections.all }}">
+                              <div class="cart-img-div">
+                                <img src="{{ item | img_url: 'small' }}" alt="Image of {{ item.title | escape }}" class="cart-item-image" />
+                                <span class="pop-qty-crat">{{ item.quantity }}</span>
+                              </div>
+                              <div class="cart-item-info">
+                                <span class="cart-item-title">
+                                  {{ item.product.title }}{% if item.product.variants.size > 1 %} - {{ item.variant.title }}{% endif %}
+                                  {% if settings.product_personalisation %}
+                                    {% assign property_size = item.properties | size %}
+                                    {% if property_size > 0 %}
+                                      {% for p in item.properties %}
+                                        {% unless p.last == blank %}
+                                          {{ p.first }}:
+                                          {% if p.last contains '/uploads/' %}
+                                            <a class="lightbox" href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                                          {% else %}
+                                            {{ p.last }}
+                                          {% endif %}
+                                          <br>
+                                        {% endunless %}
+                                      {% endfor %}
+                                    {% endif %}
+                                  {% endif %}
+                                </span>
+                                <p class="cart-item-price money">{{ item.price | money }}</p>
+                              </div>
+                            </a>
+                            <a href="/cart/change?line={{ forloop.index }}&quantity=0" data-line="{{ forloop.index }}" data-variant="{{ item.variant.id }}" class="removeLineCartPop" rel="{{ item.variant.id }}">x</a>
+                          </li>
+                          {% endfor %}
+                        </ul>
+                        <ul class="cart-popup-ul-bottom">
+                          <li><a href="/cart" class="btn--secondary btn--full cart__cartview">{{ 'cart.general.button' | t }}</a></li>
+                          <li>
+                            <a href="/checkout" class="btn btn--full cart__checkout Checkout">
+                              <img src="{{ 'checkout-button-icon.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo" class="no-border ratina-img addIcon" />
+                              <span id="CheckoutText">{{ 'cart.general.checkout' | t }}</span>
+                            </a>
+                            
+                            {% if settings.cart_popup_text != "" %} 
+                              <div class="cart--promo-msg">{{ settings.cart_popup_text }}{% if section.settings.cart_display_user_country %}&nbsp;<span class="countryName"></span>{% endif %}{% if section.settings.cart_display_user_country_flag %}&nbsp;<span class="flagImg f32"></span>{% endif %}</div>
+                            {% endif %}
+                            {% comment %}
+                             {% endcomment %}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  {% else %}
+                  <div id="cart-popup" class="empty-popup">
+                    <div class="container">
+                      <ul class="cart-popup-ul-bottom">
+                        <li class="empty-cart-popup-msg">{{ 'cart.general.empty' | t }}</li>
+                        <li><a href="/collections/all" class="btn btn-large btn-primary">{{ 'cart.general.shop_now' | t }}</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  {% endif %}
+          </div>
+          
+          {% endif %}
+       
+        </div>
+      </div>
+      <nav class="nav-bar medium-down--hide" role="navigation">
+        {% if template !="cart" %}
+        <div class="wrapper">
+          <div class="medium-down--hide">
+            <!-- begin site-nav -->
+            <ul class="site-nav" id="AccessibleNav">
+              {% include 'navigation' %}
+            </ul>
+            <!-- //site-nav -->
+          </div>
+          <div class="large--hide medium-down--show">
+            <div class="grid">
+              <div class="grid__item one-sixth">
+                <div class="site-nav--mobile text-center">
+                  <button type="button" class="icon-fallback-text site-nav__link js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                </div>
+              </div>
+              <div class="grid__item four-sixths mobile--search text-center">
+                {% include 'search-bar' %}
+              </div>
+              <div class="grid__item one-sixth text-right">
+                <div class="site-nav--mobile text-center">
+                  <a href="/cart" class="js-drawer-open-right site-nav__link" aria-controls="CartDrawer" aria-expanded="false">
+                    <span class="icon-fallback-text">
+                      <span class="icon icon-cart" aria-hidden="true"></span>
+                      <span class="CartCount">{{ cart.item_count }}</span>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </nav>
+      <nav class="nav-bar large--hide medium-down--show" role="navigation">
+        {% if settings.enable_mobile_topbar %}
+          <div class="top--line">{{ settings.mobile_top_strip }}{% if settings.enable_banner_user_country %}&nbsp;<span class="flagImg f32"></span>&nbsp;<span class="countryName"></span>{% endif %}</div>
+        {% endif %}
+        {% if template != "cart" or settings.cart_logo %}
+        <div class="wrapper">
+          <div class="large--hide medium-down--show">
+            <div class="grid text-center">
+              {% if template != "cart" %}
+                <div class="menu_icons">
+                  <button type="button" class="icon-fallback-text js-drawer-open-left link--nav-item" aria-controls="NavDrawer" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="fallback-text">{{ 'layout.navigation.menu' | t }}</span>
+                  </button>
+                </div>
+              {% endif %}
+              <div class="mobile--search text-center">
+                {% if template != "cart" %}
+                  <a href="/search" class="mobile_search js-drawer-open-left" aria-controls="NavDrawer" aria-expanded="false">
+                    <img src="{{ 'search-icon.png' | asset_url }}" alt="Search" class="no-border ratina-img" />
+                  </a>
+                {% endif %}
+                {% if settings.logo_use_image %}
+                  <a href="/" itemprop="url" class="site-header__logo-link">
+                    <img src="{{ 'mobile_logo.png' | asset_url }}" alt="{{ shop.name }}" itemprop="logo" class="no-border ratina-img" />
+                  </a>
+                {% else %}
+                  <h1 class="site-header__logo" itemscope itemtype="http://schema.org/Organization"><a href="/" itemprop="url">{{ shop.name }}</a></h1>
+                {% endif %}
+                
+                {% if settings.mobile_currency %}
+                <div class='div_currency'>
+                  <select id="currencies" class="currencies" name="currencies">
+                      {% capture codes %},USD,EUR,GBP,CAD,ARS,AUD,ILS,BBD,BDT,BSD,BHD,BRL,BOB,BND,BGN,MMK,KYD,CLP,CNY,COP,CRC,HRK,CZK,DKK,DOP,XCD,EGP,XPF,FJD,GHS,GTQ,GYD,GEL,HKD,HUF,ISK,INR,IDR,NIS,JMD,JPY,JOD,KZT,KES,KWD,LVL,LTL,MXN,MYR,MUR,MDL,MAD,MNT,MZN,ANG,NZD,NGN,NOK,OMR,PKR,PYG,PEN,PHP,PLN,QAR,RON,RUB,SAR,RSD,SCR,SGD,SYP,ZAR,KRW,LKR,SEK,CHF,TWD,THB,TZS,TTD,TRY,UAH,AED,UYU,VEB,VND,ZMK,{% endcapture %}
+                      {% assign supported_codes = settings.supported_currencies | split: ' ' %}
+                      <option value="{{ shop.currency }}" selected="selected">{{ shop.currency }}</option>
+                      {% for code in supported_codes %}
+                        {% if code != shop.currency and codes contains code %}
+                          <option value="{{ code }}">{{ code }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                
+              </div>
+              
+              
+              {% if template != "cart" %}
+                <div class="cart--icon text-right">
+                  <a href="/cart" class="js-drawer-open-right link--nav-item" aria-controls="CartDrawer" aria-expanded="false">
+                    <img src="{{ 'cart_icon_color_hover.png' | asset_url }}" alt="Cart" class="no-border ratina-img" />
+                    <span class="CartCount">{{ cart.item_count }}</span>
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </nav>
+    </header>
+
+
+
+{% schema %}
+{
+  "name": "Header Cart Settings",
+  "settings": [
+    {
+      "type": "color",
+      "id": "main-header-cart-count-background",
+      "label": "Main header cart count background",
+      "default": "#6e797a"
+    },
+    {
+      "type": "color",
+      "id": "main-header-cart-count-text",
+      "label": "Main header cart count text",
+      "default": "#6e797a"
+    },
+    {
+      "type": "color",
+      "id": "sticky-header-cart-count-background",
+      "label": "Sticky header cart count background",
+      "default": "#6e797a"
+    },
+    {
+      "type": "color",
+      "id": "sticky-header-cart-count-text",
+      "label": "Sticky header cart count text",
+      "default": "#6e797a"
+      },
+	{
+      "type": "color",
+      "id": "header-cart-background",
+      "label": "Header cart background",
+      "default": "#6e797a"
+    },
+    {
+      "type": "color",
+      "id": "sticky-header-cart-background",
+      "label": "Sticky header cart background",
+      "default": "#6e797a"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Site Header Section",
+      "category": "Header"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+
+{% endstylesheet %}
+
+{% comment %}
+	{
+       "type": "image_picker",
+        "id": "sticky_cart_image",
+        "label": "Sticky Cart Image"
+  },
+     {
+        "type": "text",
+        "id": "cart_popup_text",
+        "label": "Cart Popup Promo",
+        "default": "FREE shipping when you spend over $49."
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_display_user_country",
+        "label": "Display User Country",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_display_user_country_flag",
+        "label": "Display User Country Flag",
+        "default": true
+      },
+	{
+      "type": "color",
+      "id": "popup-cart-text-color",
+      "label": "Popup promo text color",
+      "default": "#000"
+    }
+{% endcomment %}

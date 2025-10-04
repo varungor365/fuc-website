@@ -1,0 +1,28 @@
+<div class="page-width header__main large-up--hide">
+  <div class="grid">
+    <div class="grid__item large-up--one-quarter one-whole">
+      {% include 'header-logo' %}
+    </div>
+
+    {% include 'header-extra' %}
+  </div>
+</div>
+
+<div class="js-sidebar-header sidebar medium-down--hide">
+  <div class="sidebar__content">
+    <div class="sidebar__logo">
+      {% include 'header-logo' %}
+    </div>
+    <div class="sidebar__extra">
+      {% include 'header-extra' %}
+    </div>
+    <div class="sidebar__nav">
+      {% include 'header-nav' %}
+    </div>
+  </div>
+  {% if section.settings.show_social %}
+    <div class="sidebar__footer">
+    {% include 'social-connect' %}
+    </div>
+  {% endif %}
+</div>

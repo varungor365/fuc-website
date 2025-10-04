@@ -1,0 +1,11 @@
+<div class="collection-des">
+  <div class="hidden"></div>
+  {% if collection.description != ''  %}
+    {% if settings.enable_multilang %}      
+      <div class="rte lang1">{{ collection.description | split: '[lang2]' | first }}</div>
+      <div class="rte lang2">{{ collection.description | split: '[lang2]' | last }}</div>
+    {% else %}
+      <div class="rte">{{ collection.description | split: '[lang2]' | first }}</div>
+    {% endif %}
+  {% endif %}
+</div>

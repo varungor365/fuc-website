@@ -1,0 +1,77 @@
+{% comment %}
+Assign some variable from configuration in theme customize
+{% endcomment %}
+
+{%- assign top_banner_is_disabled = settings.top_banner_disable -%}
+{%- assign topbar_is_disabled = settings.collection_top_bar_disable -%}
+{%- assign toolbar_is_disabled = settings.toolbar_disable -%}
+
+{%- assign layout = settings.collection_layout -%}
+{%- assign is_full_layout = false -%}
+{%- if layout == 'fullwidth' -%}
+  {%- assign is_full_layout = true -%}
+{%- endif -%}
+
+{%- assign item_per_page = 10 -%}
+
+{%- assign base_product_item_wrapper = 'grid__item' -%}
+{%- assign image_size = '600x600' -%}
+
+
+{% comment %} ----------*** Markup start here ***---------- {% endcomment %}
+{%- unless top_banner_is_disabled -%}
+  <section class="collection-top-banner">
+    {% section 'collection-slideshow' %}
+  </section>
+{%- endunless -%}
+
+<div class="page-width">
+  <div class="page-content page-content--{{ layout }}">
+  {%- unless is_full_layout -%}
+    <div class="grid">
+      <div class="js-filter-wrapper grid__item large-up--one-quarter medium-down--hide {% if layout == 'right_sidebar' %}large-up--push-three-quarters{% endif %}">
+        {% section 'collection-sidebar' %}
+      </div>
+
+      <div class="grid__item large-up--three-quarters {% if layout == 'right_sidebar' %}large-up--pull-one-quarter{% endif %}">
+  {%- endunless -%}
+
+    {%- unless topbar_is_disabled -%}
+      {% include 'collection-top-bar' %}
+    {%- endunless -%}
+
+    <section class="collection-content">
+      {%- unless toolbar_is_disabled and layout != 'fullwidth' -%}
+        {% include 'collection-toolbar' %}
+      {%- endunless -%}
+
+      {% paginate collection.products by item_per_page %}
+
+        <div class="grid grid--normal">
+          {%- for product in collection.products -%}
+            {% include 'product-list-item' %}
+          {%- else -%}
+            <p>{{ 'general.extras.no_item_available' | t }}</p>
+          {%- endfor -%}
+        </div>
+
+        {% if paginate.pages > 1 %}
+          {% include 'pagination' %}
+        {% endif %}
+      {% endpaginate %}
+    </section>
+  {%- unless is_full_layout -%}
+      </div>
+    </div>
+  {%- endunless -%}
+  </div>
+</div>
+
+<div class="collection-sidebar--full-layout" id="full-layout-filter-drawer">
+  {%- if is_full_layout -%}
+    {% section 'collection-sidebar' %}
+  {%- endif -%}
+  <a class="filter-drawer__close" href="javascript:;">
+    {% include 'icon-close' %}
+  </a>
+</div>

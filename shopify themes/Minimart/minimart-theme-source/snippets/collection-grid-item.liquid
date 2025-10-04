@@ -1,0 +1,40 @@
+{% assign delayTime = settings.time_lazy_load | times : forloop.index %}
+
+{% if settings.collections_per_row != blank and settings.collections_per_row != '5' %}
+{% assign product_grid = 12 | divided_by: settings.collections_per_row %}
+{% assign columns = 12 | divided_by: product_grid %}
+<div class="grid-item wow fadeIn col-xs-6 col-md-4 col-lg-{{product_grid}}" data-wow-delay="{{delayTime}}ms">
+{% else %}
+<div class="grid-item wow fadeIn col-xs-6 col-md-4 col" data-wow-delay="{{delayTime}}ms">
+{% endif %}
+  
+  {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+  <div class="product-top">
+    <a href="{{ collection.url }}" title="{{ collection_title }}">
+      {% if collection.image %}
+      {{ collection.image.src | collection_img_url: 'large' | img_tag: collection_title }}
+      {% else %}
+      {{ collection.products.first.featured_image | product_img_url: 'large' | img_tag: collection_title }}
+      {% endif %}
+    </a>
+  </div>
+  <div class="collection-title-wrapper">
+    <div class="collection-title">
+      <h3 class="title">
+        {% if settings.enable_multilang %}
+        <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" {% if settings.enable_multilang %}data-translate="collections.general.link_title|title:{{collection_title}}" translate-item="title"{% endif %}>
+          <span class="lang1">{{ collection.title | split: '|' | first }}</span>
+          <span class="lang2">{{ collection.title | split: '|' | last }}</span>
+        </a>
+        {% else %}
+        <a href="{{ collection.url }}" title="{{ 'collections.general.link_title' | t: title: collection_title }}" {% if settings.enable_multilang %}data-translate="collections.general.link_title|title:{{collection_title}}" translate-item="title"{% endif %}>
+          {{ collection.title }}
+        </a>
+        {% endif %}
+      </h3>
+      <p class="count-products" {% if settings.enable_multilang %}data-translate="collections.general.items_with_count|count:{{collection.all_products_count}}"{% endif %}>{{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}</p>
+      <p class="desc">{{ collection.description | strip_html | truncatewords: 14 }}</p>
+      <p><a href="{{ collection.url }}" class="btn" {% if settings.enable_multilang %}data-translate="collections.general.shop_the_collection"{% endif %}>{{ 'collections.general.shop_the_collection' | t }}</a></p>
+    </div>
+  </div>
+</div>

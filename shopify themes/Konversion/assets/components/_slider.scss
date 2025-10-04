@@ -1,0 +1,122 @@
+/*================ Slick slider overrides ================*/
+
+$slick-dot-size: 12px;
+$slick-dot-size-small: 10px;
+$z-index-dot: 4;
+
+.slick-dotted.slick-slider {
+  margin-bottom: 0;
+}
+
+/*================ Slick dots and prev/next pagination ================*/
+.slick-slider .slick-dots {
+  margin: 0;
+  width: auto;
+
+  li {
+    // sass-lint:disable SelectorDepth
+    margin: 0;
+    vertical-align: middle;
+    width: $slick-dot-size-small;
+    height: $slick-dot-size-small;
+    margin-left: 6px;
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+
+    @include at-query($min, $medium) {
+      width: $slick-dot-size;
+      height: $slick-dot-size;
+      margin-left: 8px;
+    }
+
+    button {
+      position: relative;
+      padding: 0;
+      width: $slick-dot-size-small;
+      height: $slick-dot-size-small;
+
+      @include at-query($min, $medium) {
+        width: $slick-dot-size;
+        height: $slick-dot-size;
+      }
+    }
+
+    button::before {
+      text-indent: -9999px;
+      background-color: transparent;
+      border-radius: 100%;
+      background-color: currentColor;
+      width: $slick-dot-size-small;
+      height: $slick-dot-size-small;
+      opacity: 0.4;
+      transition: all 0.2s;
+
+      @include at-query($min, $medium) {
+        width: $slick-dot-size;
+        height: $slick-dot-size;
+      }
+    }
+
+    &.slick-active button::before {
+      opacity: 1;
+    }
+
+    button:active::before {
+      opacity: 0.7;
+    }
+  }
+}
+
+.slick-prev,
+.slick-next {
+  top: 35%;
+  &:before {
+    color: $color-primary;
+  }
+}
+
+@include at-query($max, $small) {
+  .slick-prev {
+    left: $gutter / 2;
+  }
+  .slick-next {
+    right: $gutter / 2;
+  }
+  .slick-prev,
+  .slick-next,
+  .slick-prev:hover,
+  .slick-next:hover,
+  .slick-prev:focus,
+  .slick-next:focus {
+    background-color: $color-bg-alt;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 30px;
+    opacity: 0.3;
+    top: 35%;
+    width: 30px;
+    z-index: $z-index-dot;
+    &:before {
+      color: $color-text-alt;
+      // Fixes mobile safari positioning problem. Check in IOS safari before change;
+      position: absolute;
+      top: 20%;
+    }
+  }
+  .slick-prev,
+  .slick-prev:hover,
+  .slick-prev:focus {
+    &:before {
+      right: 40%;
+    }
+  }
+  .slick-next,
+  .slick-next:hover,
+  .slick-next:focus {
+    &:before {
+      left: 40%;
+    }
+  }
+}

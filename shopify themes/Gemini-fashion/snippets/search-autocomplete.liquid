@@ -1,0 +1,64 @@
+<script>
+$(function() {
+  // Current Ajax request.
+  var currentAjaxRequest = null;
+  // Grabbing all search forms on the page, and adding a .search-results list to each.
+  var searchForms = $('form[action="/search"]').css('position','relative').each(function() {
+    // Grabbing text input.
+    var input = $(this).find('input[name="q"]');
+    // Adding a list for showing search results.
+    var offSet = input.position().top + input.innerHeight();
+    // Listening to keyup and change on the text field within these search forms.
+    var timeout;
+
+    input.attr('autocomplete', 'off').bind('keyup change', function() {
+      // What's the search term?
+      var term = $(this).val();
+      // What's the search form?
+      var form = $(this).closest('form');
+      // What's the search URL?
+      var searchURL = '/search?type=product&q=' + term;
+      // What's the search results list?
+      var resultsList = $('#search-results');
+      var loading = $('#js-search-loading');
+
+      function doSearch() {
+        // If that's a new term and it contains at least 3 characters.
+        if (term.length > 0 && term != $(this).attr('data-old-term')) {
+          loading.css('opacity', 1);
+
+          // Saving old query.
+          $(this).attr('data-old-term', term);
+          // Killing any Ajax request that's currently being processed.
+          if (currentAjaxRequest != null) currentAjaxRequest.abort();
+          // Pulling results.
+          currentAjaxRequest = $.get(searchURL + '&view=json', function(data) {
+            // Reset results.
+            resultsList.html(data).fadeIn(200);
+            loading.css('opacity', 0);
+          });
+        }
+      }
+
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+
+      timeout = setTimeout(function() {
+        doSearch();
+        clearTimeout(timeout);
+        timeout = null;
+      }, 750);
+    });
+  });
+
+  // Clicking outside makes the results disappear.
+  document.addEventListener('keyup', function(ev) {
+    // escape key.
+    if( ev.keyCode == 27 ) {
+      $('.search-results').hide();
+      $('#js-search-loading').css('opacity', 0);
+    }
+  });
+});
+</script>

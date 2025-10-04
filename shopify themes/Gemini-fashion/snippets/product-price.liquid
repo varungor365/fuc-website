@@ -1,0 +1,18 @@
+<span class="product-price" data-price-wrapper>
+  {%- if product.price_varies -%}
+    {{ 'general.extras.from' | t }}&nbsp;
+    <span class="product-price--current">{{ product.price_min | money }}</span>
+  {%- elsif sale_percent != 0 -%}
+    {%- if available_variant -%}
+      {%- assign prod = available_variant -%}
+    {%- else -%}
+      {%- assign prod = product -%}
+    {%- endif -%}
+    <span class="product-price--current" data-product-price>{{ prod.price | money }}</span>
+    <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+    <s class="product-price--origin" data-compare-price>{{ prod.compare_at_price | money }}</s>
+  {%- else -%}
+    <span class="product-price--current">{{ product.price | money }}</span>
+  {%- endif -%}
+</span>
+

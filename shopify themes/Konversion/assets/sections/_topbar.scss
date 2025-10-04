@@ -1,0 +1,97 @@
+/*================ Topbar Section ================*/
+
+.section-topbar {
+  background-color: #191919;
+  height: $topbar-height;
+  
+  @include at-query($max, $small) {
+    height: auto;
+
+    overflow: inherit;
+    padding: 5px 10px
+
+  }
+  overflow: hidden;
+
+  .section-topbar__message {
+    color: $color-text-alt;
+    font-size: 0.70rem;
+    line-height: 1.5rem;
+    text-align: center;
+    padding: 0.3rem 0;
+    .section-topbar__message--phone {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+  }
+
+  .section-topbar__button {
+    font-size: 0.65rem;
+    padding: 3px 5px;
+    margin-left: 3px;
+    @include at-query($min, $small) {
+
+    }
+  }
+
+  .section-topbar__controls {
+    text-align: right;
+  }
+
+  .social-icons {
+    margin: 0 $gutter 0 0;
+
+    @include at-query($max, $xlarge) {
+      margin: 0 ($gutter - 20px) 0 0;
+    }
+    // Vlad: Removed that because it's too confusing when icons disappear at non-standard breakpoint
+    // @include at-query($max, $wide) {
+    //   display: none;
+    // }
+    li {
+      @include at-query($max, $xlarge) {
+        margin-left: 20px
+      }
+      .icon {
+        line-height: $topbar-height;
+      }
+    }
+  }
+
+  .currency-picker__wrapper {
+    color: $color-text-alt;
+    display: block;
+    float: right;
+    height: $topbar-height;
+  }
+
+  .currency-picker {
+    background-image: none;
+    color: $color-text-alt;
+    font-size: 1rem;
+    padding: 7px 10px 0;
+    border: none;
+    margin: 0;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  @include at-query($min, $medium) {
+    .section-topbar__message {
+      font-size: 0.9rem;
+      line-height: 1.7rem;
+      white-space: nowrap;
+      .section-topbar__message--phone {
+        font-size: 1.1rem;
+      }
+    }
+    .section-topbar__button {
+      font-size: 0.9rem;
+      padding: 3px 10px;
+      margin-left: 5px;
+      margin-top: -3px;
+    }
+  }
+
+}

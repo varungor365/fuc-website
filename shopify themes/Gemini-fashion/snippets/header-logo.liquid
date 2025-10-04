@@ -1,0 +1,16 @@
+<div role="banner">
+  <h1 itemscope itemtype="http://schema.org/Organization" class="logo">
+    <a href="/" itemprop="url" class="site-logo{% if settings.logo != blank %} site-header__logo-image{% endif %}">
+      {% if settings.logo != blank %}
+        {% capture image_size %}{{ settings.logo_max_width }}x{% endcapture %}
+        <span>&nbsp;
+        </span><img src="{{ settings.logo | img_url: image_size }}"
+          srcset="{{ settings.logo | img_url: image_size }} 1x, {{ settings.logo | img_url: image_size, scale: 2 }} 2x"
+          alt="{{ settings.logo.alt | default: shop.name }}"
+          itemprop="logo">
+      {% else %}
+        {{ shop.name }}
+      {% endif %}
+    </a>
+  </h1>
+</div>

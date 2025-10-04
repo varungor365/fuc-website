@@ -1,0 +1,901 @@
+{% if section.settings.gallery_zoom_type == 'none' %}
+  <script>
+    var turnOnZoom = false;
+  </script>
+{% else %}
+  <script>
+    var turnOnZoom = true;
+  </script>
+{% endif %}
+
+{% if section.settings.add_to_cart_bar_enabled %}
+  {% include 'product-add-to-cart-bar' %}
+{% endif %}
+
+{% include 'product-banner' %}
+
+<style>
+.product-info__description{height:{{ section.settings.limit_description }}}
+{% comment %}
+  *** Don't shorten mobile description if the tab is closed by default ***
+{% endcomment %}
+{% if section.settings.use_tabs and section.settings.description_tab_closed %}
+@media screen and (max-width: 1023px){.product-info__description{height:auto}}
+{% endif %}
+</style>
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{% unless product.options.size == 1 and product.variants[0].title == 'Default Title' %}
+  {%- assign has_variants = true -%}
+{% else %}
+  {%- assign has_variants = false -%}
+{% endunless %}
+
+<header class="page-header">
+  {% if section.settings.breadcrumbs %}
+    {% include 'breadcrumb' %}
+  {% endif %}
+</header>
+
+{% include "product-description-split",
+  product_description: product.description,
+  excerpt_size: section.settings.excerpt_word_count,
+  product_short_desc: blank
+%}
+
+<div class="product-template page-width--large" id="product_{{ product.id }}" data-lock-atc-btn="{{ section.settings.lock_add_to_cart_btn }}" data-section-id="product_{{ product.id }}" data-section-type="product-template" itemscope itemtype="http://schema.org/Product">
+
+  {% if settings.show_multiple_currencies and has_variants %}
+    {% comment %}
+      Used to replace currency when changing variants and it has a different price
+    {% endcomment %}
+    <ul class="product-variant-prices-ref hide">
+      {% for _prod_var in product.variants %}
+        {% if _prod_var.available %}
+          <li data-variant-id="{{ _prod_var.id }}">{{ _prod_var.price | money }}|{{ _prod_var.compare_at_price | money }}</li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <meta itemprop="name" content="{{ product.title }}">
+  <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+  <meta itemprop="image" content="https:{{ product.featured_image.src | img_url: '800x' }}">
+
+  <div class="grid">
+    <div class="grid__item one-whole large--two-thirds">
+
+      {% include 'product-gallery' %}
+
+      {% if section.settings.use_tabs %}
+        {% include 'product-tabs' %}
+      {% else %}
+        <div class="medium-down--hide product-description rte">
+          {{ product_description }}
+        </div>
+        {% if section.settings.product_reviews %}
+          {% if settings.app_product_reviews_enabled == "product_reviews" %}
+      		  <div class="medium-down--hide">
+              <div id="shopify-product-reviews" class="js-delete--mobile" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+            </div>
+      		{% elsif settings.app_product_reviews_enabled == "loox_reviews" %}
+      		  <div class="medium-down--hide">
+              <div id="looxReviews" class="js-delete--mobile" data-product-id="{{product.id}}">{{ product.metafields.loox.reviews }}</div>
+            </div>
+          {% elsif settings.app_product_reviews_enabled == "ryviu_reviews" %}
+            <div class="medium-down--hide">
+              <script src="https://ryviu-app.firebaseapp.com/client/reviews.js?shop={{ permanent_domain }}"></script>
+              <div class="ryviu-show-reviews medium-down--hide" product-handle="{{product.handle}}">{{product.metafields.ryviu.reviews}}</div>
+            </div>
+          {% elsif settings.app_product_reviews_enabled == "yotpo_reviews" %}
+      		  <div class="medium-down--hide">
+              <div class="yotpo yotpo-main-widget js-delete--mobile"
+                  data-product-id="{{ product.id }}"
+                  data-name="{{ product.title | escape }}"
+                  data-url="{{ shop.url }}{{ product.url }}"
+                  data-image-url="{{ product.featured_image | product_img_url: "large" |replace: '?', '%3F' | replace: '&','%26'}}"
+                  data-description="{{ product_description | escape }}">
+              </div>
+            </div>
+          {% else  %}
+            <div class="medium-down--hide">
+              <h3 class="text-meta text-center">Product Reviews app integration required</h3>
+              <p class="text-meta text-center">Please enable integration in General Settings > Apps</p>
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+
+    </div>
+
+    <div class="grid__item one-whole large--one-third">
+      <div class="product-info">
+        <div class="deal-of-day-product-wrapper medium-down--hide">
+          {% include 'deal-of-the-day-product' %}
+        </div>
+        <!-- desktop title wrapper -->
+        <div class="product-info__title medium-down--hide">
+          {% if featured_product_section %}
+            <h3><a href="{{ product_url }}">{{ product.title }}</a></h3>
+          {% else %}
+            <h3 itemprop="name">{{ product.title }}</h3>
+          {% endif %}
+        </div>
+        <!-- mobile title & review wrapper -->
+        <div class="product-info__title clearfix large--hide">
+          {% if section.settings.price_location %}
+            <h3>{{ product.title }}</h3>
+            <div class="product-price clearfix">
+              {% include 'product-page-price' %}
+            </div>
+          {% else %}
+            <div class="product-price clearfix">
+              {% include 'product-page-price' %}
+            </div>
+            <h3>{{ product.title }}</h3>
+          {% endif %}
+
+          {% if settings.app_product_reviews_enabled != blank %}
+            {% if settings.app_product_reviews_enabled == "product_reviews" %}
+              <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+            {% elsif settings.app_product_reviews_enabled == "loox_reviews" %}
+              <a href="#looxReviews">
+                <div class="loox-rating" data-id="{{ product.id }}" data-rating="{{ product.metafields.loox.avg_rating }}" data-raters="{{ product.metafields.loox.num_reviews }}"></div>
+              </a>
+            {% elsif settings.app_product_reviews_enabled == "yotpo_reviews" %}
+              <div class="yotpo bottomLine"
+                   data-appkey="{{ settings.yotpo_app_key }}"
+                   data-domain="{{shop.permanent_domain | escape }}"
+                   data-product-id="{{ product.id }}"
+                   data-product-models="{{ product.id }}"
+                   data-name="{{ product.title | escape }}"
+                   data-url="{{ shop.url }}{{ product.url }}"
+                   data-image-url="{{ product.featured_image | product_img_url: 'large' |replace: '?', '%3F' | replace: '&','%26'}}"
+                   data-description="{{ product_description | escape }}"
+                   data-bread-crumbs="{% for tag in product.tags %}{{ tag | escape }};{% endfor %}">
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+        <!-- desktop review wrapper -->
+        <div class="product-review-wrapper medium-down--hide">
+          {% if settings.app_product_reviews_enabled != blank %}
+            {% if settings.app_product_reviews_enabled == "product_reviews" %}
+              <a href="#" class="open-reviews-tab">
+                <div class="product-rating">
+                  <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+                </div>
+              </a>
+            {% elsif settings.app_product_reviews_enabled == "loox_reviews" %}
+                <div class="product-rating">
+                  <a href="#" class="open-reviews-tab">
+                    <div class="loox-rating" data-id="{{ product.id }}" data-rating="{{ product.metafields.loox.avg_rating }}" data-raters="{{ product.metafields.loox.num_reviews }}"></div>
+                  </a>
+                </div>
+            {% elsif settings.app_product_reviews_enabled == "yotpo_reviews" %}
+              <a href="#" class="open-reviews-tab">
+                <div class="product-rating">
+                  <div class="yotpo bottomLine"
+                       data-appkey="{{ settings.yotpo_app_key }}"
+                       data-domain="{{shop.permanent_domain | escape }}"
+                       data-product-id="{{ product.id }}"
+                       data-product-models="{{ product.id }}"
+                       data-name="{{ product.title | escape }}"
+                       data-url="{{ shop.url }}{{ product.url }}"
+                       data-image-url="{{ product.featured_image | product_img_url: 'large' |replace: '?', '%3F' | replace: '&','%26'}}"
+                       data-description="{{ product_description | escape }}"
+                       data-bread-crumbs="{% for tag in product.tags %}{{ tag | escape }};{% endfor %}">
+                  </div>
+                </div>
+              </a>
+            {% endif %}
+          {% endif %}
+        </div>
+        <!-- desktop price wrapper -->
+        <div class="product-price medium-down--hide">
+          {% include 'product-page-price' %}
+        </div>
+        <!-- desktop short description wrapper -->
+        <div class="product-short-description-wrapper medium-down--hide">
+          {% if product_short_desc != blank %}
+            <div class="product-short-description">
+              {{ product_short_desc }}
+            </div>
+          {% else %}
+            <br>
+          {% endif %}
+        </div>
+        {% include 'product-page-form' %}
+        <!-- desktop product icons -->
+        <div class="product-icons medium-down--hide">
+          {% include 'product-icons' %}
+        </div>
+        <div class="product-meta-wrapper medium-down--hide">
+          {% include 'product-meta' %}
+        </div>
+        {% if section.settings.display_share_icons %}
+        <div class="product-social-wrapper medium-down--hide">
+          {% include 'product-page-social' %}
+        </div>
+        {% endif %}
+
+        <!-- mobile product description and review -->
+        <div class="product-info-bottom large--hide">
+          {% include 'product-description' %}
+          {% if settings.app_product_reviews_enabled == "ryviu_reviews" %}
+            <div class="large--hide">
+              <div class="ryviu-show-reviews medium-down--hide" product-handle="{{product.handle}}">{{product.metafields.ryviu.reviews}}</div>
+            </div>
+          {% endif %}
+        </div>
+        <div class="product-form-position-bottom"></div>
+        <input type="hidden" name="product-form-mobile-position" id="product-form-mobile-position" value="{{ section.settings.product_form_location }}">
+      </div>
+    </div>
+
+    <div class="grid__item one-whole large--two-thirds">
+
+      {% if section.settings.related_products %}
+      <div class="related-products">
+        {% include 'related-products' %}
+      </div>
+      {% endif %}
+
+      {% if section.settings.display_icons %}
+        <div class="large--hide">
+          {% include 'product-icons' %}
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div> <!-- end grid -->
+  {% if section.settings.sticky_add_to_cart %}
+    {% include 'cart-sticky-button' %}
+  {% endif %}
+
+  {% capture jsonld_brand_url %}https://{{ shop.domain }}{{ product.vendor | url_for_vendor }}{% endcapture %}
+  <script type="application/ld+json"> { "@context": "https://schema.org", "@type": "Product", "@id": {{ canonical_url | json }}, "brand": { "@type": "Brand", "name": {{ product.vendor | json }}, "url": {{ jsonld_brand_url | json }} }, "sku": {{ product.selected_or_first_available_variant.sku | json }}, "description": {{ product_description | strip_html | json }}, "url": {{ canonical_url | json }}, "name": {{ product.title | json }}, {% if product.featured_image %} "image": "https:{{ product.featured_image | product_img_url: 'grande' }}", {% endif %} "offers": [{% for variant in product.variants %}{ "@type": "Offer", "price": "{{ variant.price | divided_by: 100.0 }}", "priceCurrency": "{{ shop.currency }}",{% unless shop.metafields.jsonld.itemCondition == blank %} "itemCondition": "http://schema.org/{{ shop.metafields.jsonld.itemCondition }}",{% endunless %} "availability": "{% if variant.available %}InStock{% else %}OutOfStock{% endif %}" }{% unless forloop.last %},{% endunless %}{% endfor %}] } </script>
+</div>
+
+{% unless product.empty? %}
+<script type="application/json" id="ProductJson-product_{{ product.id }}">{{ product | json }}</script>
+{% endunless %}
+
+{% schema %}
+  {
+    "name": "Product page",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "checkbox",
+        "id": "breadcrumbs",
+        "label": "Display breadcrumbs",
+        "default": true
+      },
+
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "paragraph",
+        "content": "The last product image will be used as a banner. You need to have at least 2 images in your product, the last image will be hidden from the product gallery."
+      },
+      {
+        "type": "checkbox",
+        "id": "display_banner",
+        "label": "Display banner",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "display_banner_product_title",
+        "label": "Display product title on banner",
+        "default": true,
+        "info": "This will also hide the normal product title"
+      },
+      {
+        "type": "select",
+        "id": "display_banner_on",
+        "label": "Display",
+        "default": "all",
+        "options": [
+          {"value": "desktop", "label": "Desktop only"},
+          {"value": "all", "label": "Desktop & Mobile"},
+          {"value": "mobile", "label": "Mobile only"}
+        ]
+      },
+      {
+        "type": "select",
+        "id": "banner_image_height",
+        "label": "Image height",
+        "default": "xsmall",
+        "options": [
+          {
+            "label": "Extra small",
+            "value": "xsmall"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "banner_image_alignment",
+        "label": "Image alignment",
+        "default": "center",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "center",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "banner_color_title",
+        "label": "Title color",
+        "default": "#fff"
+      },
+      {
+        "type": "select",
+        "id": "banner_gradient_color",
+        "label": "Gradient color",
+        "options": [
+          {
+            "value": "none",
+            "label": "None (disable gradient)"
+          },
+          {
+            "value": "white",
+            "label": "White (left)"
+          },
+          {
+            "value": "black",
+            "label": "Black (left)"
+          },
+          {
+            "value": "white_bottom",
+            "label": "White (bottom)"
+          }
+        ],
+        "default": "black"
+      },
+
+      {
+        "type": "header",
+        "content": "Product Gallery"
+      },
+      {
+        "type": "select",
+        "id": "gallery_zoom_type",
+        "label": "Zoom type",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "mouseover",
+            "label": "On mouse over"
+          },
+          {
+            "value": "grab",
+            "label": "On click/touch"
+          }
+        ],
+        "default": "mouseover"
+      },
+      {
+        "type": "checkbox",
+        "id": "gallery_arrows",
+        "label": "Display arrows",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "thumbs_arrows",
+        "label": "Display Thumbs arrows",
+        "default": true
+      },
+      {
+        "type": "radio",
+        "id": "gallery_direction",
+        "label": "Gallery type",
+        "default": "vertical",
+        "options": [
+          {"value": "vertical", "label": "Vertical gallery"},
+          {"value": "horizontal", "label": "Horizontal gallery"}
+        ]
+      },
+      {
+        "type": "paragraph",
+        "content": "NOTE: To apply changes, please click Save"
+      },
+      {
+        "type": "header",
+        "content": "Short Description"
+      },
+      {
+        "type": "select",
+        "id": "excerpt_word_count",
+        "label": "Excerpt size",
+        "options": [
+          {"value": "0", "label": "Disable automatic excerpts"},
+          {"value": "10", "label": "10 words"},
+          {"value": "15", "label": "15 words"},
+          {"value": "20", "label": "20 words"},
+          {"value": "25", "label": "25 words"},
+          {"value": "30", "label": "30 words"},
+          {"value": "35", "label": "35 words"},
+          {"value": "40", "label": "40 words"},
+          {"value": "45", "label": "45 words"},
+          {"value": "50", "label": "50 words"}
+        ],
+        "default": "15",
+        "info": "Maximum amount of words to excerpt from product description"
+      },
+      {
+        "type": "paragraph",
+        "content": "NOTE: HTML is stripped from short description. If you want to format short description text (eg. Add bullet points), insert [end-short-description] in the product content, and all the content above will be considered as a short description, the rest as a product description."
+      },
+      {
+        "type": "header",
+        "content": "Product properties"
+      },
+      {
+        "type": "select",
+        "id": "product_options_style",
+        "label": "Product options (variants) style",
+        "options": [
+          {
+            "value": "dropdown",
+            "label": "Dropdown"
+          },
+          {
+            "value": "swatches",
+            "label": "Swatches"
+          }
+        ],
+        "default": "dropdown"
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_variant_with_one_option",
+        "label": "Hide variants with only one option",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "display_quantity_selector",
+        "label": "Display quantity selector",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "display_vendor",
+        "label": "Display vendor",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "display_collections",
+        "label": "Display collections",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "display_tags",
+        "label": "Display tags",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "display_sku",
+        "label": "Display SKU",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "display_product_type",
+        "label": "Display product type",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "display_share_icons",
+        "label": "Display share icons",
+        "default": false,
+        "info": "Configure your social accounts at General Settings > Social media"
+      },
+      {
+        "type": "header",
+        "content": "Icons"
+      },
+      {
+        "type": "checkbox",
+        "id": "display_icons",
+        "label": "Display icons",
+        "default": true
+      },
+      {
+        "type": "radio",
+        "id": "options_icons",
+        "label": "Use icons from:",
+        "default": "default",
+        "options": [
+          {"value": "default", "label": "default"},
+          {"value": "icon", "label": "Font Awesome Icons"},
+          {"value": "image", "label": "Image"}
+        ]
+      },
+      {
+        "type": "text",
+        "id": "icon_1_text",
+        "label": "Icon 1 text",
+        "default": "[STOCK_QTY] left in stock",
+        "info": "Variable [STOCK_QTY] replaced with actual number"
+      },
+      {
+        "type": "text",
+        "id": "icon_1_symbol",
+        "label": "Icon 1 [Font Awesome Symbol](http://fontawesome.io/icons/)",
+        "default": "fa fa-home",
+        "info": "Font Awesome Icon like: fa fa-home"
+      },
+      {
+        "type": "image_picker",
+        "id": "icon_1_image",
+        "label": "Upload image",
+        "info": "Upload 40x40 image"
+      },
+      {
+        "type": "text",
+        "id": "icon_2_text",
+        "label": "Icon 2 text",
+        "default": "Free returns"
+      },
+      {
+        "type": "text",
+        "id": "icon_2_symbol",
+        "label": "Icon 2 [Font Awesome Symbol](http://fontawesome.io/icons/)",
+        "default": "fa fa-plane",
+        "info": "Font Awesome Icon like: fa fa-plane"
+      },
+      {
+        "type": "image_picker",
+        "id": "icon_2_image",
+        "label": "Upload image",
+        "info": "Upload 40x40 image"
+      },
+      {
+        "type": "text",
+        "id": "icon_3_text",
+        "label": "Icon 3 text",
+        "default": "Best quality"
+      },
+      {
+        "type": "text",
+        "id": "icon_3_symbol",
+        "label": "Icon 3 [Font Awesome Symbol](http://fontawesome.io/icons/)",
+        "default": "fa fa-certificate",
+        "info": "Font Awesome Icon like: fa fa-certificate"
+      },
+      {
+        "type": "image_picker",
+        "id": "icon_3_image",
+        "label": "Upload image",
+        "info": "Upload 40x40 image"
+      },
+      {
+        "type": "text",
+        "id": "icon_4_text",
+        "label": "Icon 4 text",
+        "default": "Safe checkout"
+      },
+      {
+        "type": "text",
+        "id": "icon_4_symbol",
+        "label": "Icon 4 [Font Awesome Symbol](http://fontawesome.io/icons/)",
+        "default": "fa fa-lock",
+        "info": "Font Awesome Icon like: fa fa-lock"
+      },
+      {
+        "type": "image_picker",
+        "id": "icon_4_image",
+        "label": "Upload image",
+        "info": "Upload 40x40 image"
+      },
+      {
+        "type": "header",
+        "content": "Related products"
+      },
+      {
+        "type": "checkbox",
+        "id": "related_products",
+        "label": "Display related products",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "related_products_title",
+        "label": "Widget title",
+        "default": "Related products"
+      },
+      {
+         "type": "select",
+         "id": "related_products_count",
+         "label": "Max number of products",
+         "options": [
+            {"value": "3", "label": "3"},
+            {"value": "4", "label": "4"},
+            {"value": "5", "label": "5"},
+            {"value": "6", "label": "6"},
+            {"value": "7", "label": "7"},
+            {"value": "8", "label": "8"},
+            {"value": "9", "label": "9"},
+            {"value": "10", "label": "10"}
+          ],
+         "default": "4"
+      },
+      {
+        "type": "select",
+        "id": "related_products_button",
+        "label": "Add to cart button type",
+        "options": [
+          {"value": "hover", "label": "Show on hover"},
+          {"value": "bottom", "label": "Bottom"},
+          {"value": "none", "label": "No button"}
+          ],
+        "default": "hover"
+      },
+      {
+        "type": "paragraph",
+        "content": "By default, products from the same collection are displayed in the related products section. Here's how to manually select related products for each product page:"
+      },
+      {
+        "type": "paragraph",
+        "content": "1. Create a menu called Related products (with a handle related-products)"
+      },
+      {
+        "type": "paragraph",
+        "content": "2. Add menu item(s) with product/product-handle (eg. product/cool-shirt)"
+      },
+      {
+        "type": "paragraph",
+        "content": "3. Select product(s) to be displayed on the product page defined in #2 above. [Learn more](https://desk.zoho.com/portal/tabarnapp/kb/articles/related-products-how-to-manually-select-the-related-products-in-each-product-page)"
+      },
+      {
+        "type": "checkbox",
+        "id": "second_image_on_hover",
+        "label": "Display a second product image on hover",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Mobile version tweaks"
+      },
+      {
+        "type": "paragraph",
+        "content": "NOTE: you can see these options to take effect only in mobile version (switch to \"Small screen\" below)"
+      },
+      {
+         "type": "select",
+         "id": "product_form_location",
+         "label": "Product form location",
+         "options": [
+            {"value": "top", "label": "Before tabs/description"},
+            {"value": "bottom", "label": "After tabs/description"}
+          ],
+         "default": "top"
+      },
+      {
+         "type": "select",
+         "id": "limit_description",
+         "label": "Product description excerpt",
+         "options": [
+            {"value": "5rem", "label": "Show 3 lines"},
+            {"value": "8rem", "label": "Show 5 lines"},
+            {"value": "15rem", "label": "Show 10 lines"},
+            {"value": "19rem", "label": "Show 12 lines"},
+            {"value": "24rem", "label": "Show 15 lines"},
+            {"value": "none", "label": "Show full text"}
+          ],
+         "default": "8rem",
+         "info": "If the hidden part is less than 20% then full text will be shown"
+      },
+      {
+        "type": "checkbox",
+        "id": "display_option_labels",
+        "label": "Display label above variant option selectors",
+        "default": true
+      },
+      {
+        "type": "radio",
+        "id": "options_layout",
+        "label": "Variant options layout",
+        "default": "2-column",
+        "options": [
+          {"value": "1-column", "label": "1-column"},
+          {"value": "2-column", "label": "2-column"}
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "sticky_add_to_cart",
+        "label": "Enable a sticky Add to cart button",
+        "info": "(on mobile only)",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "display_normal_add_to_cart",
+        "label": "Display normal ‘Add to cart’ button",
+        "info": "When sticky ‘Add to cart’ button is enabled",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "lock_add_to_cart_btn",
+        "label": "Lock sticky 'Add to cart' button",
+        "default": false,
+        "info": "By default, the sticky Add to cart button will disappear when users scroll up."
+      },
+      {
+        "type": "checkbox",
+        "id": "price_location",
+        "label": "Display price below the title",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "'Add to cart' sticky bar (Desktop version)"
+      },
+      {
+        "type": "checkbox",
+        "id": "add_to_cart_bar_enabled",
+        "label": "Add to cart bar (on desktop only)",
+        "info": "Display the Add to cart bar on the product pages. This bar appears after customers scroll below the default Add to cart button on the product pages.",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "add_to_cart_bar_background_color",
+        "label": "Background color",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "add_to_cart_bar_text_color",
+        "label": "Product title color",
+        "default": "#000"
+      },
+      {
+        "type": "color",
+        "id": "add_to_cart_bar_price_color",
+        "label": "Price color",
+        "default": "#000"
+      },
+      {
+        "type": "header",
+        "content": "Tabs"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_tabs",
+        "label": "Use tabs",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "description_tab_closed",
+        "label": "Description tab closed on mobile",
+        "default": false
+      },
+      {
+        "type": "paragraph",
+        "content": "1. Create navigation menu with a handle `product-tabs`"
+      },
+      {
+        "type": "paragraph",
+        "content": "2. Add menu item and select page"
+      },
+      {
+        "type": "paragraph",
+        "content": "3. Name your menu item as follows: \"collection/collection-handle\" to display a tab for all products in particular collection; \"product/product-handle\" particular product; \"global\" display tab on all product pages"
+      },
+      {
+        "type": "paragraph",
+        "content": "[Click here to learn more](https://desk.zoho.com/portal/tabarnapp/kb/articles/content-tabs-in-product-pages) then scroll down to 'Content tabs' section"
+      },
+      {
+        "type": "header",
+        "content": "Reviews"
+      },
+      {
+        "type": "paragraph",
+        "content": "Product Reviews app requires integration (see General Settings > Apps)"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_reviews",
+        "label": "Display product reviews",
+        "default": false,
+        "info": "If content tabs are disabled, product reviews will be displayed under the product description section. If tabs are enabled, product reviews will be inside the tab called Reviews."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "tab",
+        "name": "Tab (LEGACY)",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "This is an old way of adding tabs to your product page, that we left for backward compatibility. Please use the new and better way. See details above in the \"Tabs\" section or [here](https://desk.zoho.com/portal/tabarnapp/kb/articles/content-tabs-in-product-pages)."
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Tab title"
+          },
+          {
+             "type": "blog",
+             "id": "blog",
+             "label": "Blog"
+          },
+          {
+            "type": "checkbox",
+            "id": "display_in_mobile",
+            "label": "Display tab content in mobile version",
+            "default": true
+          }
+        ]
+      },
+      {
+        "type": "custom_color",
+        "name": "Custom color",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Color option name",
+            "info": "NOTE: specify exact color name used for variant"
+          },
+          {
+             "type": "color",
+             "id": "color_code",
+             "label": "Choose color"
+          },
+          {
+            "type": "image_picker",
+            "id": "color_image",
+            "label": "Or upload image",
+            "info": "Upload 40x40 image of color/material"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

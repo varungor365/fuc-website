@@ -1,0 +1,944 @@
+{
+  "current": {
+    "back_to_top": true,
+    "wishlist_page_handle": "",
+    "mailchimp_url": "http:\/\/eepurl.com\/cN1tzD",
+    "accessToken": "5593239394.96af6d7.ec66784b760e4123b22cd6fbb5b5c99f",
+    "page_header_image": "shopify:\/\/shop_images\/igor-ovsyannykov-174012.jpg",
+    "page_account_header_image": "shopify:\/\/shop_images\/hannah-morgan-39891.jpg",
+    "page_cart_header_image": "shopify:\/\/shop_images\/hannah-morgan-39891.jpg",
+    "page_notfound_header_image": "shopify:\/\/shop_images\/jazmin-quaynor-97778.jpg",
+    "blog_header_image": "shopify:\/\/shop_images\/priscilla-du-preez-228220.jpg",
+    "logo": "shopify:\/\/shop_images\/gemini-logo_cc681109-a11f-41e2-b8ca-323ca22c7608.png",
+    "logo_max_width": "500",
+    "favicon": "shopify:\/\/shop_images\/gemini-logo2.png",
+    "font_family": "google_font",
+    "font_name": "Lato",
+    "type_base_size": "16",
+    "font_family_title": "google_font",
+    "font_name_title": "Montserrat",
+    "font_letter_spacing": "1px",
+    "color_primary": "#78cccd",
+    "color_secondary": "#888888",
+    "color_body_text": "#2d2d2d",
+    "color_text_light": "#999999",
+    "color_info": "#31708f",
+    "color_success": "#3c763d",
+    "color_error": "#a94442",
+    "color_warning": "#f0ad4e",
+    "color_disable": "#767676",
+    "color_badge_soldout_bg": "#595959",
+    "color_badge_soldout_text": "#ffffff",
+    "color_badge_percent_bg": "#ffa0d4",
+    "color_badge_percent_text": "#fff",
+    "color_badge_saleoff_bg": "#ffa0d4",
+    "color_badge_saleoff_text": "#fff",
+    "color_badge_hot_bg": "#fe00a1",
+    "color_badge_hot_text": "#fff",
+    "color_badge_new_bg": "#78cccd",
+    "color_badge_new_text": "#ffffff",
+    "header_bg_opacity": "90",
+    "color_announcement_bg": "#78cccd",
+    "color_announcement_text": "#ffffff",
+    "color_footer_bg": "#232323",
+    "color_footer_text": "#e1e1e1",
+    "color_copyright_bg": "#0f0f0f",
+    "color_copyright_text": "#818181",
+    "show_multiple_currencies": true,
+    "currency_format": "money_with_currency_format",
+    "supported_currencies": "INR GBP CAD USD AUD EUR JPY",
+    "default_currency": "USD",
+    "newsletter_poupup_show": true,
+    "newsletter_poupup_only_homepage": true,
+    "newsletter_poupup_show_social": true,
+    "newsletter_poupup_image": "shopify:\/\/shop_images\/chifan-wang-364494.jpg",
+    "newsletter_poupup_description": "Subscribe and get notified at first on the latest update and offers!",
+    "newsletter_poupup_delay_first": "6000",
+    "newsletter_poupup_delay": "1",
+    "social_sharing_blog": true,
+    "share_facebook": true,
+    "share_twitter": true,
+    "share_pinterest": false,
+    "share_google": true,
+    "share_tumblr": true,
+    "share_email": true,
+    "social_twitter_link": "https:\/\/twitter.com\/AdartStudio",
+    "social_facebook_link": "https:\/\/www.facebook.com\/adartthemes\/",
+    "social_pinterest_link": "https:\/\/www.pinterest.com\/adartstudio",
+    "social_instagram_link": "https:\/\/www.instagram.com\/adart.studio\/",
+    "social_snapchat_link": "",
+    "social_tumblr_link": "",
+    "social_youtube_link": "",
+    "social_vimeo_link": "",
+    "cart_notes_enable": true,
+    "minicart": "dropdown",
+    "display_style": "style04",
+    "product_image_ratio": "4x5",
+    "direct_link_on_img": false,
+    "image_swap_enable": false,
+    "image_swap_animation": "fade",
+    "interactive_group_align": "horizontal",
+    "interactive_group_theme": "light",
+    "product_view_style": "quick",
+    "add_to_cart_enable": true,
+    "add_to_wishlist_enable": true,
+    "quick_view_modal_maxwidth": "md",
+    "quick_view_modal_custom_maxwidth": "",
+    "cookies_law_show": true,
+    "cookies_law_text": "We use cookies to improve your experience on our website. By browsing this website, you agree to our use of cookies.",
+    "cookies_law_info": true,
+    "cookies_law_info_link": "http:\/\/google.com",
+    "blog_layout": "fullwidth",
+    "blog_grid_type": "masonry",
+    "blog_articles_per_page": "8",
+    "blog_articles_per_row": "2",
+    "single_layout": "fullwidth",
+    "blog_show_related_articles": true,
+    "blog_title_related_articles": "Related Articles",
+    "collection_layout": "fullwidth",
+    "collection_grid_style": "metro",
+    "column_number_with_sidebar": "4",
+    "column_number_without_sidebar": "3",
+    "top_banner_disable": false,
+    "collection_top_bar_disable": false,
+    "collection_top_bar_style": "show_all_collections",
+    "collection_link_list": "",
+    "toolbar_disable": false,
+    "product_page_layout": "left_side_gallery",
+    "product_page_detail_displaying_type": "tab",
+    "product_page_detail_info_position": "outside_info_col",
+    "product_page_gallery_type": "syncing_slider_left",
+    "product_page_zoom_type": "popup",
+    "product_page_image_ratio": "4x6",
+    "product_slideshow_fade": true,
+    "product_slideshow_arrows": true,
+    "product_slideshow_arrow_type": "circle",
+    "product_slideshow_dots": false,
+    "product_slideshow_dots_margin_bottom": "100px",
+    "product_slideshow_infinite": true,
+    "product_slideshow_autoplay": true,
+    "product_slideshow_autoplay_speed": "6000",
+    "product_slideshow_center_padding": "0px",
+    "product_availability_disable": false,
+    "product_type_disable": false,
+    "product_vendor_disable": false,
+    "product_sku_disable": false,
+    "product_page_show_share_buttons": true,
+    "color_swatch_image_extension": "png",
+    "color_swatch_shape": "square",
+    "checkout_header_image": "",
+    "checkout_logo_image": "",
+    "checkout_logo_position": "left",
+    "checkout_logo_size": "large",
+    "checkout_body_background_image": "",
+    "checkout_body_background_color": "#ebebeb",
+    "checkout_input_background_color_mode": "white",
+    "checkout_sidebar_background_image": "",
+    "checkout_sidebar_background_color": "#fafafa",
+    "checkout_heading_font": "Helvetica Neue",
+    "checkout_body_font": "Helvetica Neue",
+    "checkout_accent_color": "#ee2761",
+    "checkout_button_color": "#ee2761",
+    "checkout_error_color": "#ff6d6d",
+    "product_slideshow_height": "300px",
+    "product_slideshow_background": "#e8e8e8",
+    "comparing_enable": "true",
+    "blog_number_related_articles": "4",
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "layout": "header05",
+          "sticky_enabled": true,
+          "main_linklist": "main-menu",
+          "mega_image": "",
+          "mega_link": "shopify:\/\/collections\/all",
+          "announcement_enabled": true,
+          "announcement_text": "Your announcement text",
+          "message_link": "shopify:\/\/collections",
+          "open_new_window": false,
+          "show_social": true,
+          "show_currency": true,
+          "show_account": true,
+          "search_autocomplete": true,
+          "wishlist": true,
+          "account": false
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "blocks": {
+          "1497516270218": {
+            "type": "text",
+            "settings": {
+              "logo": "shopify:\/\/shop_images\/Untitled-1_ab2e597e-1639-49ff-ae5f-bba56a69e965.png",
+              "textarea": "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed\ndiam nonummy nibh euismod tincidunt ut laoreet dolore magna\naliquam erat volutpat diam nonummy nibh euismod tincidunt ut laoreet dolore magna\naliquam erat volutpat.\n<\/p>",
+              "social_enabled": false,
+              "width": "33%"
+            }
+          },
+          "1499743274457": {
+            "type": "image",
+            "settings": {
+              "title": "We accept",
+              "image": "shopify:\/\/shop_images\/payment-01.png",
+              "image_width": "150",
+              "width": "25%"
+            }
+          },
+          "1497516353906": {
+            "type": "newsletter",
+            "settings": {
+              "title": "Subscribe",
+              "width": "33%"
+            }
+          },
+          "1505125372540": {
+            "type": "social",
+            "settings": {
+              "title": "Keep Connected",
+              "width": "25%"
+            }
+          }
+        },
+        "block_order": [
+          "1497516270218",
+          "1499743274457",
+          "1497516353906",
+          "1505125372540"
+        ],
+        "settings": {
+        }
+      },
+      "copyright": {
+        "type": "copyright",
+        "settings": {
+          "copyright_text": "Copyright © 2017, <a href=\"http:\/\/adart.co\">Adart Studio<\/a>. Powered by <a href=\"http:\/\/adart.co\">Adart Studio<\/a>"
+        }
+      },
+      "collection-slideshow": {
+        "type": "collection-slideshow",
+        "blocks": {
+          "1500364838277": {
+            "type": "image",
+            "settings": {
+              "image": "shopify:\/\/shop_images\/nik-macmillan-358520a_e3dce576-4819-408b-a02c-9811cd6d5d69.jpg",
+              "color_scheme": "light",
+              "alignment": "center",
+              "subheading": "Tips for",
+              "heading": "HOME PARTY",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br> Quisque vel ornare magna.",
+              "link": "shopify:\/\/blogs\/latest-trend",
+              "link_label": "Learn More"
+            }
+          },
+          "collection-slideshow-0": {
+            "type": "image",
+            "settings": {
+              "image": "shopify:\/\/shop_images\/1_2048x_11c6760f-fb43-4bbe-9df1-050632cc003d.jpg",
+              "color_scheme": "dark",
+              "alignment": "right",
+              "subheading": "New Collection",
+              "heading": "LIGHT GRACE",
+              "description": "Lorem ipsum dolor sit amet, consectetur adipiscing.<br> Quisque vel ornare magna.",
+              "link": "shopify:\/\/collections\/queen-of-femininity",
+              "link_label": "Shop Now"
+            }
+          }
+        },
+        "block_order": [
+          "1500364838277",
+          "collection-slideshow-0"
+        ],
+        "settings": {
+          "fade": true,
+          "arrows": false,
+          "arrow_type": "arrow",
+          "dots": true,
+          "dots_margin_bottom": "15px",
+          "infinite": true,
+          "autoplay": true,
+          "autoplay_speed": "5000",
+          "use_container": false,
+          "height": "400px",
+          "background": "#ffffff"
+        }
+      },
+      "collection-sidebar": {
+        "type": "collection-sidebar",
+        "blocks": {
+          "1498033978714": {
+            "type": "color",
+            "settings": {
+              "title": "Color",
+              "color_selector": "bg_image",
+              "color_list": "red, black, white, navy, lightcyan"
+            }
+          },
+          "1498034151840": {
+            "type": "category",
+            "settings": {
+              "title": "Category",
+              "display": "default",
+              "category_list": "women's tops, women's skirts"
+            }
+          },
+          "1498034101346": {
+            "type": "vendor",
+            "settings": {
+              "title": "Vendor",
+              "display": "default",
+              "vendor_list": "Mango, ASOS, Zara"
+            }
+          },
+          "1500541072934": {
+            "type": "others",
+            "settings": {
+              "title": "Tags",
+              "filter_list": "SALE, new, hot, woman, newman, cardigan, dresses, visible, tops, bottoms"
+            }
+          }
+        },
+        "block_order": [
+          "1498033978714",
+          "1498034151840",
+          "1498034101346",
+          "1500541072934"
+        ],
+        "settings": {
+          "default_state": "open"
+        }
+      },
+      "product-togglable-tabs": {
+        "type": "product-togglable-tabs",
+        "blocks": {
+          "1498810483581": {
+            "type": "description",
+            "settings": {
+              "title": "Description"
+            }
+          },
+          "1498810552676": {
+            "type": "size_guide",
+            "settings": {
+              "title": "Size guide title",
+              "description": "<p>You can use external link or upload a size guide image here.<\/p>",
+              "type": "link",
+              "size_guide_url": "",
+              "size_guide_url_text": "See size guide",
+              "size_guide_image": ""
+            }
+          },
+          "1498810563166": {
+            "type": "review",
+            "settings": {
+              "title": "Review"
+            }
+          }
+        },
+        "block_order": [
+          "1498810483581",
+          "1498810552676",
+          "1498810563166"
+        ],
+        "settings": {
+          "tabs_style": "style03",
+          "title_align": "left",
+          "background": "",
+          "background_image": "",
+          "margin": "",
+          "padding": ""
+        }
+      },
+      "related-product": {
+        "type": "related-product",
+        "settings": {
+          "show_related_products": true,
+          "exclusion_list": "best-selling,new-arrivals",
+          "related_title": "Recommend",
+          "related_col_num": "4",
+          "related_row_num": "1",
+          "background": "",
+          "background_image": "",
+          "margin": "",
+          "padding": ""
+        }
+      },
+      "1497516113045": {
+        "type": "slideshow",
+        "blocks": {
+          "1497516113045-0": {
+            "type": "image",
+            "settings": {
+              "image": "shopify:\/\/shop_images\/tanja-heffne_f0ab0a6c-8ecf-4de2-926e-7e4aad2b341e.jpg",
+              "color_scheme": "dark",
+              "alignment": "right",
+              "sub_heading": "HOTTEST TREND",
+              "heading": "BE UNIQUE",
+              "description": "",
+              "button_text": "Shop now",
+              "link": ""
+            }
+          },
+          "1498472351639": {
+            "type": "image",
+            "settings": {
+              "image": "shopify:\/\/shop_images\/tanja-heffner-204193_c316a5fd-b723-462a-98ad-2193285acf32.jpg",
+              "color_scheme": "dark",
+              "alignment": "left",
+              "sub_heading": "SUNNY COLLECTION",
+              "heading": "ENJOY SUMMER",
+              "description": "Lorem ipsum dolor sit amet, elit diam\nconsecctertuer adipiscing nonummy nbih.",
+              "button_text": "View Collection",
+              "link": ""
+            }
+          }
+        },
+        "block_order": [
+          "1497516113045-0",
+          "1498472351639"
+        ],
+        "settings": {
+          "fullheight": false,
+          "animated": true,
+          "fade": true,
+          "arrows": false,
+          "arrow_type": "half-circle",
+          "dots": true,
+          "infinite": true,
+          "autoplay": true,
+          "autoplay_speed": "7000",
+          "responsive_type": "auto",
+          "overlap_nav": false,
+          "background": "#e8e8e8",
+          "margin": "",
+          "padding": ""
+        }
+      },
+      "1497520591179": {
+        "type": "collection-list",
+        "blocks": {
+          "1497520591179-0": {
+            "type": "collection",
+            "settings": {
+              "width": "3",
+              "image": "shopify:\/\/shop_images\/mark-adriane-272672a.jpg",
+              "collection": "elegance"
+            }
+          },
+          "1497520591179-2": {
+            "type": "collection",
+            "settings": {
+              "width": "3",
+              "image": "shopify:\/\/shop_images\/christopher-campbell-322961a_f4eb7f9f-60f8-480d-bf99-0452253e1315.jpg",
+              "collection": "rebel"
+            }
+          }
+        },
+        "block_order": [
+          "1497520591179-0",
+          "1497520591179-2"
+        ],
+        "settings": {
+          "use_container": true,
+          "disable_spacing": false,
+          "background": "",
+          "background_image": "",
+          "margin": "",
+          "padding": "",
+          "collection_title_position": "bottom"
+        }
+      },
+      "blog-sidebar": {
+        "type": "blog-sidebar",
+        "blocks": {
+          "blog-sidebar-0": {
+            "type": "search",
+            "settings": {
+              "title": "Search"
+            }
+          },
+          "blog-sidebar-1": {
+            "type": "categories",
+            "settings": {
+              "title": "Categories",
+              "sidebar_blogs": "Beauty, Fashion, Food, Life-Style, Travel, Latest trend"
+            }
+          },
+          "blog-sidebar-2": {
+            "type": "instagram",
+            "settings": {
+              "title": "Instagram"
+            }
+          },
+          "blog-sidebar-3": {
+            "type": "recent",
+            "settings": {
+              "title": "Recent Post"
+            }
+          },
+          "blog-sidebar-4": {
+            "type": "collection",
+            "settings": {
+              "title": "Sale Products",
+              "featured_product_list_collection": "",
+              "featured_product_limit_all": "5"
+            }
+          },
+          "blog-sidebar-5": {
+            "type": "tags",
+            "settings": {
+              "title": "Blog Tags"
+            }
+          }
+        },
+        "block_order": [
+          "blog-sidebar-0",
+          "blog-sidebar-1",
+          "blog-sidebar-2",
+          "blog-sidebar-3",
+          "blog-sidebar-4",
+          "blog-sidebar-5"
+        ],
+        "settings": {
+        }
+      },
+      "1498213516783": {
+        "type": "image-text-overlay",
+        "settings": {
+          "image": "shopify:\/\/shop_images\/nik-macmillan-358520a_e3dce576-4819-408b-a02c-9811cd6d5d69.jpg",
+          "title": "",
+          "content": "<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed<\/p>\n<p>diam nonummy nibh euismod tincidunt ut laoreet dolore magna<\/p>\n<p>aliquam erat volutpat.<\/p>",
+          "btn_label": "OUR STORES",
+          "btn_shape": "squared",
+          "link": "shopify:\/\/blogs\/demos\/lorem-ipsum-5",
+          "use_container": false,
+          "height_type": "auto",
+          "height": "100px",
+          "background": "#ffffff",
+          "margin": "",
+          "padding": "",
+          "content_alignment": "center"
+        }
+      },
+      "1498473250154": {
+        "type": "banner",
+        "blocks": {
+          "1498473250154-0": {
+            "type": "banner",
+            "settings": {
+              "width": "3",
+              "image": "shopify:\/\/shop_images\/OSVMIC1_Converted_-01_28944900-0091-46c5-8225-b0cb2b1b8985.jpg",
+              "title": "",
+              "sub_title": "",
+              "link": "shopify:\/\/collections\/american-blues"
+            }
+          },
+          "1498473250154-1": {
+            "type": "banner",
+            "settings": {
+              "width": "1",
+              "image": "shopify:\/\/shop_images\/A-01_54975d39-fd5b-40aa-8918-337da5a06677.jpg",
+              "title": "",
+              "sub_title": "",
+              "link": "shopify:\/\/collections\/bend-the-trend"
+            }
+          },
+          "1504777761861": {
+            "type": "banner",
+            "settings": {
+              "width": "1",
+              "image": "shopify:\/\/shop_images\/allyson-johnson-73023aa_8991dc7d-3d86-4870-b92f-b97d6cbb492e.jpg",
+              "title": "",
+              "sub_title": "",
+              "link": "shopify:\/\/collections\/elegance"
+            }
+          },
+          "1504777770997": {
+            "type": "banner",
+            "settings": {
+              "width": "1",
+              "image": "shopify:\/\/shop_images\/paige-muller-343286A.jpg",
+              "title": "",
+              "sub_title": "",
+              "link": "shopify:\/\/collections\/rebel"
+            }
+          },
+          "1504777749121": {
+            "type": "banner",
+            "settings": {
+              "width": "1",
+              "image": "shopify:\/\/shop_images\/allyson-johnson-73023a.jpg",
+              "title": "",
+              "sub_title": "",
+              "link": "shopify:\/\/collections\/elegance"
+            }
+          }
+        },
+        "block_order": [
+          "1498473250154-0",
+          "1498473250154-1",
+          "1504777761861",
+          "1504777770997",
+          "1504777749121"
+        ],
+        "settings": {
+          "use_container": false,
+          "background": "",
+          "background_image": "",
+          "margin": "",
+          "padding": "0 0 60px 0"
+        }
+      },
+      "product-accordion": {
+        "type": "product-accordion",
+        "blocks": {
+          "1499677403885": {
+            "type": "description",
+            "settings": {
+              "title": "Description"
+            }
+          },
+          "1499677413085": {
+            "type": "additional_description",
+            "settings": {
+              "title": "Additional description title",
+              "description": "<p>Detail information<\/p>"
+            }
+          }
+        },
+        "block_order": [
+          "1499677403885",
+          "1499677413085"
+        ],
+        "settings": {
+          "accordion_style": "5",
+          "background": "",
+          "background_image": "",
+          "margin": "",
+          "padding": ""
+        }
+      },
+      "list-collections": {
+        "type": "list-collections",
+        "settings": {
+          "collection_src": "all",
+          "sort": "title",
+          "column_number": "4",
+          "background": "",
+          "background_image": "",
+          "margin": "",
+          "padding": ""
+        }
+      },
+      "1499758595965": {
+        "type": "shop-information",
+        "blocks": {
+          "1499758595965-0": {
+            "type": "iconbox",
+            "settings": {
+              "image": "",
+              "icon": "fa-paper-plane",
+              "heading": "Free Shipping",
+              "describe": "Free shipping on all US orders",
+              "link": "https:\/\/gemini-fashion-03.myshopify.com"
+            }
+          },
+          "1499758595965-1": {
+            "type": "iconbox",
+            "settings": {
+              "image": "",
+              "icon": "fa-gift",
+              "heading": "Money gurantee",
+              "describe": "30 days money back guarantee",
+              "link": "https:\/\/gemini-fashion-03.myshopify.com"
+            }
+          },
+          "1499758595965-2": {
+            "type": "iconbox",
+            "settings": {
+              "image": "",
+              "icon": "fa-life-ring",
+              "heading": "Online Support",
+              "describe": "We support online 24\/24 on day",
+              "link": "https:\/\/gemini-fashion-03.myshopify.com"
+            }
+          }
+        },
+        "block_order": [
+          "1499758595965-0",
+          "1499758595965-1",
+          "1499758595965-2"
+        ],
+        "settings": {
+          "title": "",
+          "subtitle": "",
+          "background": "",
+          "background_image": "",
+          "margin": "0 0 0 0",
+          "padding": ""
+        }
+      },
+      "1499763276784": {
+        "type": "instafeed",
+        "settings": {
+          "title": "Instagram Feed",
+          "subtitle": "hashtag #adartstudio",
+          "sort": "none",
+          "autoplay": false,
+          "arrows": true,
+          "arrow_type": "arrow",
+          "speed": "300",
+          "slidetoshow": "3",
+          "tablet_slidetoshow": "2",
+          "mobile_slidetoshow": "1",
+          "use_container": false,
+          "disable_spacing": true,
+          "background": "rgba(0,0,0,0)",
+          "margin": "",
+          "padding": "60px 0 30px 0"
+        }
+      },
+      "1505123878804": {
+        "type": "featured-collection",
+        "settings": {
+          "title": "Featured Collection",
+          "subtitle": "Hot Trend 2017",
+          "collection": "rebel",
+          "display": "grid",
+          "column_number": "3",
+          "row_number": "2",
+          "show_all": true,
+          "button_shape": "circled",
+          "show_all_text": "See more",
+          "carousel_items_limit": "10",
+          "arrow_type": "arrow",
+          "use_container": true,
+          "background": "#ffffff",
+          "background_image": "",
+          "margin": "",
+          "padding": ""
+        }
+      }
+    },
+    "content_for_index": [
+      "1497516113045",
+      "1497520591179",
+      "1498473250154",
+      "1498213516783",
+      "1505123878804",
+      "1499763276784",
+      "1499758595965"
+    ]
+  },
+  "presets": {
+    "Default": {
+      "font_family": "google_font",
+      "font_name": "Lato",
+      "type_base_size": "16",
+      "font_family_title": "google_font",
+      "font_name_title": "Montserrat",
+      "font_letter_spacing": "1px",
+      "color_primary": "#ee2761",
+      "color_secondary": "#888",
+      "color_body_text": "#2d2d2d",
+      "color_text_light": "#999999",
+      "color_info": "#31708f",
+      "color_success": "#3c763d",
+      "color_error": "#a94442",
+      "color_warning": "#f0ad4e",
+      "color_disable": "#767676",
+      "color_badge_soldout_bg": "#393939",
+      "color_badge_soldout_text": "#ffffff",
+      "color_badge_percent_bg": "#d20000",
+      "color_badge_percent_text": "#fff",
+      "color_badge_saleoff_bg": "#d20000",
+      "color_badge_saleoff_text": "#fff",
+      "color_badge_hot_bg": "#ff8000",
+      "color_badge_hot_text": "#fff",
+      "color_badge_new_bg": "#7bcaff",
+      "color_badge_new_text": "#2f2f2f",
+      "color_announcement_bg": "#1b1b1b",
+      "color_announcement_text": "#ffffff",
+      "color_footer_bg": "#232323",
+      "color_footer_text": "#e1e1e1",
+      "color_copyright_bg": "#0f0f0f",
+      "color_copyright_text": "#818181",
+      "checkout_body_background_color": "#ededed",
+      "checkout_input_background_color_mode": "white",
+      "checkout_sidebar_background_image": "",
+      "checkout_sidebar_background_color": "#fafafa",
+      "checkout_heading_font": "Helvetica Neue",
+      "checkout_body_font": "Helvetica Neue",
+      "checkout_accent_color": "#ee2761",
+      "checkout_button_color": "#ee2761",
+      "checkout_error_color": "#ff6d6d"
+    },
+    "Black": {
+      "font_family": "google_font",
+      "font_name": "Lato",
+      "type_base_size": "14",
+      "font_family_title": "google_font",
+      "font_name_title": "Oswald",
+      "font_letter_spacing": "0px",
+      "color_primary": "#232323",
+      "color_secondary": "#00b8e6",
+      "color_body_text": "#333",
+      "color_text_light": "#999",
+      "color_info": "#31708f",
+      "color_success": "#3c763d",
+      "color_error": "#a94442",
+      "color_warning": "#f0ad4e",
+      "color_disable": "#767676",
+      "color_badge_soldout_bg": "#757575",
+      "color_badge_soldout_text": "#fff",
+      "color_badge_percent_bg": "#ff5722",
+      "color_badge_percent_text": "#fff",
+      "color_badge_saleoff_bg": "#ef6c00",
+      "color_badge_saleoff_text": "#fff",
+      "color_badge_hot_bg": "#d50000",
+      "color_badge_hot_text": "#fff",
+      "color_badge_new_bg": "#0091ea",
+      "color_badge_new_text": "#fff",
+      "color_announcement_bg": "#222222",
+      "color_announcement_text": "#ffffff",
+      "color_footer_bg": "#0d0d0d",
+      "color_footer_text": "#bfbfbf",
+      "color_copyright_bg": "#1b1b1b",
+      "color_copyright_text": "#818181",
+      "checkout_body_background_color": "#ededed",
+      "checkout_input_background_color_mode": "transparent",
+      "checkout_sidebar_background_image": "",
+      "checkout_sidebar_background_color": "#fafafa",
+      "checkout_heading_font": "Helvetica Neue",
+      "checkout_body_font": "Helvetica Neue",
+      "checkout_accent_color": "#00344c",
+      "checkout_button_color": "#232323",
+      "checkout_error_color": "#ff6d6d"
+    },
+    "Purple": {
+      "font_family": "google_font",
+      "font_name": "Montserrat",
+      "type_base_size": "14",
+      "font_family_title": "google_font",
+      "font_name_title": "Cormorant Garamond",
+      "font_letter_spacing": "0px",
+      "color_primary": "#3b0049",
+      "color_secondary": "#888",
+      "color_body_text": "#333",
+      "color_text_light": "#999",
+      "color_info": "#31708f",
+      "color_success": "#3c763d",
+      "color_error": "#a94442",
+      "color_warning": "#f0ad4e",
+      "color_disable": "#767676",
+      "color_badge_soldout_bg": "#d0d0d0",
+      "color_badge_soldout_text": "#626262",
+      "color_badge_percent_bg": "#5b137c",
+      "color_badge_percent_text": "#fff",
+      "color_badge_saleoff_bg": "#ef6c00",
+      "color_badge_saleoff_text": "#fff",
+      "color_badge_hot_bg": "#3b0049",
+      "color_badge_hot_text": "#fff",
+      "color_badge_new_bg": "#e7ccff",
+      "color_badge_new_text": "#000000",
+      "color_announcement_bg": "#250040",
+      "color_announcement_text": "#ffffff",
+      "color_footer_bg": "#090010",
+      "color_footer_text": "#c7c7c7",
+      "color_copyright_bg": "#120020",
+      "color_copyright_text": "#818181",
+      "checkout_body_background_color": "#fff",
+      "checkout_input_background_color_mode": "white",
+      "checkout_sidebar_background_image": "",
+      "checkout_sidebar_background_color": "#fafafa",
+      "checkout_heading_font": "Helvetica Neue",
+      "checkout_body_font": "Helvetica Neue",
+      "checkout_accent_color": "#1990c6",
+      "checkout_button_color": "#1990c6",
+      "checkout_error_color": "#ff6d6d"
+    },
+    "Light Blue": {
+      "font_family": "default_font",
+      "font_name": "",
+      "type_base_size": "14",
+      "font_family_title": "default_font",
+      "font_name_title": "",
+      "font_letter_spacing": "0px",
+      "color_primary": "#53bbf4",
+      "color_secondary": "#ff85cb",
+      "color_body_text": "#333",
+      "color_text_light": "#999",
+      "color_info": "#53bbf4",
+      "color_success": "#b1eb00",
+      "color_error": "#ff432e",
+      "color_warning": "#ffac00",
+      "color_disable": "#9f9f9f",
+      "color_badge_soldout_bg": "#757575",
+      "color_badge_soldout_text": "#fff",
+      "color_badge_percent_bg": "#ff5722",
+      "color_badge_percent_text": "#fff",
+      "color_badge_saleoff_bg": "#ef6c00",
+      "color_badge_saleoff_text": "#fff",
+      "color_badge_hot_bg": "#d50000",
+      "color_badge_hot_text": "#fff",
+      "color_badge_new_bg": "#0091ea",
+      "color_badge_new_text": "#fff",
+      "color_footer_bg": "#ffffff",
+      "color_footer_text": "#333333",
+      "color_copyright_bg": "#1b1b1b",
+      "color_copyright_text": "#818181",
+      "checkout_body_background_color": "#fff",
+      "checkout_input_background_color_mode": "white",
+      "checkout_sidebar_background_image": "",
+      "checkout_sidebar_background_color": "#fafafa",
+      "checkout_heading_font": "Helvetica Neue",
+      "checkout_body_font": "Helvetica Neue",
+      "checkout_accent_color": "#1990c6",
+      "checkout_button_color": "#1990c6",
+      "checkout_error_color": "#ff6d6d"
+    },
+    "Spring Green": {
+      "font_family": "default_font",
+      "font_name": "",
+      "type_base_size": "14",
+      "font_family_title": "default_font",
+      "font_name_title": "",
+      "font_letter_spacing": "0px",
+      "color_primary": "#00d1b2",
+      "color_secondary": "#888",
+      "color_body_text": "#333",
+      "color_text_light": "#999",
+      "color_info": "#3273dc",
+      "color_success": "#23d160",
+      "color_error": "#ff3860",
+      "color_warning": "#ffdd57",
+      "color_disable": "#8f8f8f",
+      "color_badge_soldout_bg": "#757575",
+      "color_badge_soldout_text": "#fff",
+      "color_badge_percent_bg": "#ff5722",
+      "color_badge_percent_text": "#fff",
+      "color_badge_saleoff_bg": "#ef6c00",
+      "color_badge_saleoff_text": "#fff",
+      "color_badge_hot_bg": "#d50000",
+      "color_badge_hot_text": "#fff",
+      "color_badge_new_bg": "#0091ea",
+      "color_badge_new_text": "#fff",
+      "color_announcement_bg": "#222222",
+      "color_announcement_text": "#ffffff",
+      "color_footer_bg": "#262626",
+      "color_footer_text": "#818181",
+      "color_copyright_bg": "#1b1b1b",
+      "color_copyright_text": "#999",
+      "checkout_body_background_color": "#fff",
+      "checkout_input_background_color_mode": "white",
+      "checkout_sidebar_background_image": "",
+      "checkout_sidebar_background_color": "#fafafa",
+      "checkout_heading_font": "Helvetica Neue",
+      "checkout_body_font": "Helvetica Neue",
+      "checkout_accent_color": "#1990c6",
+      "checkout_button_color": "#1990c6",
+      "checkout_error_color": "#ff6d6d"
+    }
+  }
+}

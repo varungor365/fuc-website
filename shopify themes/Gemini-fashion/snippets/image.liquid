@@ -1,0 +1,11 @@
+<div class="widget__item">
+  {% if block.settings.title and block.settings.title != ''  %}
+  <h3 class="widget__title">{{ block.settings.title }}</h3>
+  {% endif %}
+
+  {% if block.settings.image %}
+    <img src="{{ block.settings.image | img_url: 'master' }}"
+     srcset="{{ block.settings.image | img_url: 'master' }} 1x, {{ block.settings.image | img_url: 'master', scale: 2 }} 2x"
+     alt="{{ block.settings.image.alt | default: shop.name }}" width="{{ block.settings.image_width }}">
+  {% endif %}
+</div>

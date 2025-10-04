@@ -1,0 +1,61 @@
+{% if settings.display_three_banner_bottom %}
+<section class="banner-home-bottom widget-block text-center container">
+  {% if settings.banner_home_bottom_title != blank %}
+  <div class="widget-title wow fadeIn">   
+    <h3>{% include 'multilang' with settings.banner_home_bottom_title %}</h3>
+  </div>
+  {% endif %}
+  
+  <ul class="row">
+    {% for i in (1..6) %}
+      {% capture display_banner_slider %}display_banner_slider_{{ i }}{% endcapture %}
+      {% capture banner_home_bottom %}banner-home-bottom-{{ i }}.jpg{% endcapture %}
+      {% capture three_banner_bottom_title %}three_banner_bottom_title_{{ i }}{% endcapture %}
+      {% capture three_banner_bottom_description %}three_banner_bottom_description_{{ i }}{% endcapture %}
+      {% capture three_banner_bottom_link %}three_banner_bottom_link_{{ i }}{% endcapture %}
+      {% capture three_banner_bottom_button_text %}three_banner_bottom_button_text_{{ i }}{% endcapture %}
+    
+      {% assign repeat = forloop.index | minus: 1 %}
+      {% assign delayTime = settings.time_lazy_load | times : repeat %}
+    
+      {% if settings[display_banner_slider] %}
+      <li class="wow fadeInUp" data-wow-delay="{{ delayTime }}ms">
+        <a href="{{ settings[three_banner_bottom_link] }}">
+          <img src="{{ banner_home_bottom | asset_url }}" alt="" />
+        </a>
+        <div class="des">
+          {% if settings[three_banner_bottom_title] != blank %}
+            <h3>{% include 'multilang' with settings[three_banner_bottom_title] %}</h3>
+          {% endif %}
+          
+          {% if settings[three_banner_bottom_description] != blank %}
+            <p>{% include 'multilang' with settings[three_banner_bottom_description] %}</p>
+          {% endif %}
+          
+          {% if settings[three_banner_bottom_button_text] != blank %}
+            <a href="{{ settings[three_banner_bottom_link] }}" class="btn">
+              {% include 'multilang' with settings[three_banner_bottom_button_text] %}              
+            </a>
+          {% endif %}
+        </div>
+      </li>
+      {% endif %}
+    
+    {% endfor %}
+  </ul>
+</section>
+
+<script>
+jQuery(document).ready(function() {
+  jQuery(".banner-home-bottom ul").owlCarousel({
+    navigation : true,
+    items: 3,
+    itemsDesktop: [1199, 3],
+    itemsDesktopSmall: [991, 3],
+    itemsTablet: [768, 2],
+    itemsTabletSmall: [767, 2],
+    itemsMobile : [479, 1]
+  });
+});
+</script>
+{% endif %}

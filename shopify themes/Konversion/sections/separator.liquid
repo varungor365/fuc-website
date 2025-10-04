@@ -1,0 +1,75 @@
+<style>
+#separator_{{ section.id }}{background-color:{{ section.settings.color }};height:{{ section.settings.height }};{% if section.settings.no_margin %}margin-bottom: 0;{% endif %}}
+</style>
+{% case section.settings.display %}
+  {% when "mobile" %}
+    {%- assign visibility_classes = "large--hide" -%}
+  {% when "desktop" %}
+    {%- assign visibility_classes = "medium-down--hide" -%}
+{% endcase %}
+<div id="separator_{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="separator-section" class="separator-inner {{ visibility_classes }}">
+</div>
+
+{% schema %}
+  {
+    "name": "Separator",
+    "class": "section-separator",
+    "settings": [
+      {
+        "type": "select",
+        "id": "display",
+        "label": "Display",
+        "default": "all",
+        "options": [
+          {"value": "all", "label": "Desktop & Mobile"},
+          {"value": "mobile", "label": "Mobile only"},
+          {"value": "desktop", "label": "Desktop only"}
+        ]
+      },
+      {
+        "type": "color",
+        "id": "color",
+        "label": "Color",
+        "default": "#41cd62"
+      },
+      {
+        "type": "select",
+        "id": "height",
+        "label": "Size",
+        "options": [
+          {
+            "value": "1px",
+            "label": "Ultra Thin"
+          },
+          {
+            "value": "5px",
+            "label": "Thin"
+          },
+          {
+            "value": "10px",
+            "label": "Normal"
+          },
+          {
+            "value": "15px",
+            "label": "Bold"
+          }
+        ],
+        "default": "10px"
+      },
+      {
+        "type": "checkbox",
+        "id": "no_margin",
+        "label": "Remove margin",
+        "default": false
+      }
+    ],
+    "presets": [{
+      "name": "Separator",
+      "category": "Misc",
+      "settings": {
+        "color": "#41cd62",
+        "height": "10px"
+      }
+    }]
+  }
+{% endschema %}

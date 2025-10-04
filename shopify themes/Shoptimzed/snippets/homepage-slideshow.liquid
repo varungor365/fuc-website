@@ -1,0 +1,70 @@
+{% if settings.enabled_slideshow %}
+
+  {% if settings.slideshow_full_width %}
+  	<div class="one-whole slideshow">
+  {% else %}
+    <div class="wrapper slideshow">
+  {% endif %}
+
+  {% capture video_slide %}
+    {% if settings.video_slide_embed_code != blank %}
+      {% if settings.video_max_width == 'set' %}
+        <li>
+          <div class="video-wrapper" style="width: {{ settings.video_max_width_px }}px; margin: 0 auto;">
+            <div class="slideshow-video-container">
+              {{ settings.video_slide_embed_code }}
+            </div>
+          </div>
+        </li>
+      {% else %}
+        <li>
+          <div class="slideshow-video-container">
+            {{ settings.video_slide_embed_code }}
+          </div>
+        </li>
+      {% endif %}
+    {% endif %}
+  {% endcapture %}
+
+  <div id="homepage_slider" class="flexslider slideshow">
+    <ul class="slides">
+      {% for i in (1..6) %}
+        {% assign video_slide_position = settings.video_slide_position | times: 1 %}
+        {% assign current_slide_position = i | times: 1 %}
+        {% if video_slide_position == current_slide_position %}{{ video_slide }}{% endif %}
+        {% assign enabled = 'slide_' | append: i | append: '_enabled' %}
+        {% assign link = 'slide_' | append: i | append: '_link' %}
+        {% assign image = 'slide_' | append: i | append: '.jpg' %}
+        {% assign alt_text = 'slide_' | append: i | append: '_alt_text' %}
+        {% assign heading = 'slide_' | append: i | append: '_heading' %}
+        {% assign subheading = 'slide_' | append: i | append: '_subheading' %}
+        {% assign button_text = 'slide_' | append: i | append: '_button_text' %}
+        {% assign text_align = 'slide_' | append: i | append: '_text_align' %}
+      	{% assign text_align_v = 'slide_' | append: i | append: '_text_align_v' %}
+        {% if settings[enabled] %}
+          <li>
+            <a href="{{ settings[link] }}"><img src="{{ image | asset_img_url: 'master' }}" alt="{{ settings[alt_text] | escape }}" /></a>
+            {% if settings[heading] != blank or settings[subheading] != blank or settings[button_text] != blank %}
+              <div class="flex-caption {% if settings[text_align_v] == 'top' %} caption--top{% elsif settings[text_align_v] == 'bottom' %} caption--bottom{% endif %}{% if settings[text_align] == 'left' %} caption--left{% elsif settings[text_align] == 'right' %} caption--right{% endif %}">
+                <div class="container">
+                  <div class="columns sixteen">
+                    <h1 class="headline" style="color:{{ settings.slider_banner_color }}">{{ settings[heading] }}</h1>
+                    <p class="subtitle" style="color:{{ settings.slider_banner_color }}">{{ settings[subheading] }}</p>
+                    {% if settings[button_text] != blank %}
+                    <a href="{{ settings[link] }}" class="action_button">{{ settings[button_text] }}</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  {% if settings.slideshow_full_width %}
+    </div>
+  {% else %}
+    </div>
+  {% endif %}
+{% endif %}

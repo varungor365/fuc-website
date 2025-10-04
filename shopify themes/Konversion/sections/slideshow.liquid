@@ -1,0 +1,647 @@
+{% if section.blocks.size > 0 %}
+
+<!--Desktop-->
+<div data-section-id="{{ section.id }}" data-section-type="slideshow-section" class="medium-down--hide">
+  <div class="slideshow-wrapper">
+    <div class="slideshow slideshow--{{ section.settings.slideshow_height }}" id="slideshow_{{ section.id }}" data-autoplay="{{ section.settings.autoplay }}" data-speed="{{ section.settings.autoplay_speed }}">
+      {% for block in section.blocks %}
+        {% if block.settings.display_on == "desktop_mobile" or block.settings.display_on == "desktop" %}
+          <div class="slideshow__slide slideshow__slide--{{ block.id }} " {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+<style>
+.slideshow__image--{{ block.id }}{background-position: center {{ block.settings.alignment }}}
+@media screen and (max-width: 400px){.slideshow__image--{{ block.id }}{background-image:url('{{ block.settings.image | img_url: '800x' }}')}}
+@media screen and (min-width: 401px) and (max-width: 800px){.slideshow__image--{{ block.id }}{background-image:url('{{ block.settings.image | img_url: '1000x' }}')}}
+@media screen and (min-width: 801px) and (max-width: 1000px){.slideshow__image--{{ block.id }}{background-image:url('{{ block.settings.image | img_url: '1200x' }}')}}
+@media screen and (min-width: 1001px){.slideshow__image--{{ block.id }}{background-image:url('{{ block.settings.image | img_url: '2000x' }}')}}
+</style>
+          {% else %}
+            {% capture demo_slide_image %}{% cycle 'demo-slide-1.svg', 'demo-slide-2.svg' %}{% endcapture %}
+<style>
+.slideshow__image--{{ block.id }}{background-image: url('{{ demo_slide_image | asset_url }}');background-position: center {{ block.settings.alignment }}}
+</style>
+          {% endif %}
+
+          <div class="slideshow__image slideshow__image--{{ block.id }}">
+            {% if block.settings.image == blank %}
+            {% endif %}
+          </div>
+
+          {% if block.settings.title != blank or block.settings.text != blank %}
+<style>
+.slideshow__slide--{{ block.id }} .slideshow__title{color:{{ block.settings.color_title }};text-align:{{ block.settings.text_alignment }} !important}
+.slideshow__slide--{{ block.id }} .slideshow__subtitle{color:{{ block.settings.color_subtitle }};text-align:{{ block.settings.text_alignment }} !important}
+.slideshow__slide--{{ block.id }} .slideshow__content{color:{{ block.settings.color_text }};text-align:{{ block.settings.text_alignment }} !important}
+.slideshow__slide--{{ block.id }} .slideshow__buttons{text-align:{{ block.settings.text_alignment }} !important}
+.slideshow__slide--{{ block.id }} .slideshow__button:hover,.slideshow__slide--{{ block.id }} .slideshow__button:active,.slideshow__slide--{{ block.id }} .slideshow__button:focus,.slideshow__slide--{{ block.id }} .slideshow__button {color:{{ block.settings.primary_button_text_color }};border-color:{{ block.settings.primary_button_border_color }};background-color:{{ block.settings.primary_button_bg_color }}}
+.slideshow__slide--{{ block.id }} .slideshow__button--secondary:hover,.slideshow__slide--{{ block.id }} .slideshow__button--secondary:active,.slideshow__slide--{{ block.id }} .slideshow__button--secondary:focus,.slideshow__slide--{{ block.id }} .slideshow__button--secondary {color:{{ block.settings.secondary_button_text_color }};border-color:{{ block.settings.secondary_button_border_color }};background-color:{{ block.settings.secondary_button_bg_color }}}
+.slideshow__slide--{{ block.id }} .slideshow__overlay::before{background-color:{{ block.settings.color_image_overlay }};opacity:{{ block.settings.image_overlay_opacity }}}
+</style>
+          {% endif %}
+
+          {% case block.settings.text_location %}
+            {% when 'left' %}
+              {%- assign grid_cell_classes = 'four-sixths' -%}
+            {% when 'right' %}
+              {%- assign grid_cell_classes = 'four-sixths push--two-sixths' -%}
+            {% when 'center' %}
+              {%- assign grid_cell_classes = 'one-whole' -%}
+          {% endcase %}
+
+          <div class="slideshow__text{% if block.settings.title != blank or block.settings.text != blank %} slideshow__overlay{% endif %}">
+            <div class="slideshow__text-content">
+              <div class="grid">
+                <div class="grid__item {{ grid_cell_classes }}">
+                  {% unless block.settings.title == blank %}
+                    <div class="slideshow__title slideshow__title--{{ section.settings.title_text_size }}">
+                      {{ block.settings.title }}
+                    </div>
+                  {% endunless %}
+                  {% unless block.settings.subtitle == blank %}
+                    <div class="slideshow__subtitle slideshow__subtitle--{{ section.settings.subtitle_text_size }}">
+                      {{ block.settings.subtitle }}
+                    </div>
+                  {% endunless %}
+                  {% unless block.settings.text == blank %}
+                    <div class="slideshow__content slideshow__content--{{ section.settings.content_text_size }}">{{ block.settings.text }}</div>
+                  {% endunless %}
+                  <div class="slideshow__buttons">
+                    {% if block.settings.primary_button_label != blank and block.settings.primary_button_link != blank %}
+                      <a href="{{ block.settings.primary_button_link }}" class="btn slideshow__button {% if section.settings.text_size contains 'large' %} btn--large{% endif %}">
+                        {{ block.settings.primary_button_label }}
+                      </a>
+                    {% endif %}
+                    {% if block.settings.secondary_button_label != blank and block.settings.secondary_button_link != blank %}
+                      <a href="{{ block.settings.secondary_button_link }}" class="btn slideshow__button slideshow__button--secondary {% if section.settings.text_size contains 'large' %} btn--large{% endif %}">
+                        {{ block.settings.secondary_button_label }}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!--Mobile-->
+<div data-section-id="{{ section.id }}_mobile" data-section-type="slideshow-section" class="medium-down--show large--hide">
+  <div class="slideshow-wrapper">
+    <div class="slideshow slideshow--{{ section.settings.slideshow_height }}" id="slideshow_{{ section.id }}_mobile" data-autoplay="{{ section.settings.autoplay }}" data-speed="{{ section.settings.autoplay_speed }}">
+      {% for block in section.blocks %}
+        {% if block.settings.display_on == "desktop_mobile" or block.settings.display_on == "mobile" %}
+          <div class="slideshow__slide slideshow__slide--{{ block.id }} " {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <style>
+              .slideshow__image--{{ block.id }}{background-position: center {{ block.settings.alignment }}}
+              @media screen and (max-width: 400px){.slideshow__image--{{ block.id }}{background-image:url('{{ block.settings.image | img_url: '800x' }}')}}
+              @media screen and (min-width: 401px) and (max-width: 800px){.slideshow__image--{{ block.id }}{background-image:url('{{ block.settings.image | img_url: '1000x' }}')}}
+              @media screen and (min-width: 801px) and (max-width: 1000px){.slideshow__image--{{ block.id }}{background-image:url('{{ block.settings.image | img_url: '1200x' }}')}}
+              @media screen and (min-width: 1001px){.slideshow__image--{{ block.id }}{background-image:url('{{ block.settings.image | img_url: '2000x' }}')}}
+            </style>
+          {% else %}
+            {% capture demo_slide_image %}{% cycle 'demo-slide-1.svg', 'demo-slide-2.svg' %}{% endcapture %}
+            <style>
+              .slideshow__image--{{ block.id }}{background-image: url('{{ demo_slide_image | asset_url }}');background-position: center {{ block.settings.alignment }}}
+            </style>
+          {% endif %}
+
+          <div class="slideshow__image slideshow__image--{{ block.id }}">
+            {% if block.settings.image == blank %}
+            {% endif %}
+          </div>
+
+          {% if block.settings.title != blank or block.settings.text != blank %}
+            <style>
+              .slideshow__slide--{{ block.id }} .slideshow__title{color:{{ block.settings.color_title }};text-align:{{ block.settings.text_alignment }} !important}
+              .slideshow__slide--{{ block.id }} .slideshow__subtitle{color:{{ block.settings.color_subtitle }};text-align:{{ block.settings.text_alignment }} !important}
+              .slideshow__slide--{{ block.id }} .slideshow__content{color:{{ block.settings.color_text }};text-align:{{ block.settings.text_alignment }} !important}
+              .slideshow__slide--{{ block.id }} .slideshow__buttons{text-align:{{ block.settings.text_alignment }} !important}
+              .slideshow__slide--{{ block.id }} .slideshow__button:hover,.slideshow__slide--{{ block.id }} .slideshow__button:active,.slideshow__slide--{{ block.id }} .slideshow__button:focus,.slideshow__slide--{{ block.id }} .slideshow__button {color:{{ block.settings.primary_button_text_color }};border-color:{{ block.settings.primary_button_border_color }};background-color:{{ block.settings.primary_button_bg_color }}}
+              .slideshow__slide--{{ block.id }} .slideshow__button--secondary:hover,.slideshow__slide--{{ block.id }} .slideshow__button--secondary:active,.slideshow__slide--{{ block.id }} .slideshow__button--secondary:focus,.slideshow__slide--{{ block.id }} .slideshow__button--secondary {color:{{ block.settings.secondary_button_text_color }};border-color:{{ block.settings.secondary_button_border_color }};background-color:{{ block.settings.secondary_button_bg_color }}}
+              .slideshow__slide--{{ block.id }} .slideshow__overlay::before{background-color:{{ block.settings.color_image_overlay }};opacity:{{ block.settings.image_overlay_opacity }}}
+            </style>
+          {% endif %}
+
+          {% case block.settings.text_location %}
+          {% when 'left' %}
+          {%- assign grid_cell_classes = 'four-sixths' -%}
+          {% when 'right' %}
+          {%- assign grid_cell_classes = 'four-sixths push--two-sixths' -%}
+          {% when 'center' %}
+          {%- assign grid_cell_classes = 'one-whole' -%}
+          {% endcase %}
+
+          <div class="slideshow__text{% if block.settings.title != blank or block.settings.text != blank %} slideshow__overlay{% endif %}">
+            <div class="slideshow__text-content">
+              <div class="grid">
+                <div class="grid__item {{ grid_cell_classes }}">
+                  {% unless block.settings.title == blank %}
+                  <div class="slideshow__title slideshow__title--{{ section.settings.title_text_size }}">
+                    {{ block.settings.title }}
+                  </div>
+                  {% endunless %}
+                  {% unless block.settings.subtitle == blank %}
+                  <div class="slideshow__subtitle slideshow__subtitle--{{ section.settings.subtitle_text_size }}">
+                    {{ block.settings.subtitle }}
+                  </div>
+                  {% endunless %}
+                  {% unless block.settings.text == blank %}
+                  <div class="slideshow__content slideshow__content--{{ section.settings.content_text_size }}">{{ block.settings.text }}</div>
+                  {% endunless %}
+                  <div class="slideshow__buttons">
+                    {% if block.settings.primary_button_label != blank and block.settings.primary_button_link != blank %}
+                      <a href="{{ block.settings.primary_button_link }}" class="btn slideshow__button {% if section.settings.text_size contains 'large' %} btn--large{% endif %}">
+                        {{ block.settings.primary_button_label }}
+                      </a>
+                    {% endif %}
+                    {% if block.settings.secondary_button_label != blank and block.settings.secondary_button_link != blank %}
+                      <a href="{{ block.settings.secondary_button_link }}" class="btn slideshow__button slideshow__button--secondary {% if section.settings.text_size contains 'large' %} btn--large{% endif %}">
+                        {{ block.settings.secondary_button_label }}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% else %}
+<div data-section-id="{{ section.id }}" data-section-type="slideshow-section" class="medium-down--hide">
+  <div class="empty-section">
+    {{ 'homepage.onboarding.no_slides' | t }}
+  </div>
+</div>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Slideshow",
+    "class": "section-slideshow",
+    "max_blocks": 5,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Slideshow"
+      },
+      {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Autoplay",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "autoplay_speed",
+        "label": "Change slides every",
+        "options": [
+          { "value": "3000", "label": "3 seconds" },
+          { "value": "4000", "label": "4 seconds" },
+          { "value": "5000", "label": "5 seconds" },
+          { "value": "6000", "label": "6 seconds" },
+          { "value": "7000", "label": "7 seconds" },
+          { "value": "8000", "label": "8 seconds" },
+          { "value": "9000", "label": "9 seconds" },
+          { "value": "10000", "label": "10 seconds" }
+        ],
+        "default": "5000"
+      },
+      {
+        "type": "header",
+        "content": "Styling"
+      },
+      {
+        "type": "select",
+        "id": "slideshow_height",
+        "label": "Section height",
+        "default": "medium",
+        "options": [
+          {
+            "label": "Extra small",
+            "value": "xsmall"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "title_text_size",
+        "label": "Title text size",
+        "default": "large",
+        "options": [
+          {
+            "label": "Tiny",
+            "value": "tiny"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra Large",
+            "value": "xlarge"
+          },
+          {
+            "label": "Gigantic",
+            "value": "gigantic"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "subtitle_text_size",
+        "label": "Subtitle text size",
+        "default": "large",
+        "options": [
+          {
+            "label": "Tiny",
+            "value": "tiny"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra Large",
+            "value": "xlarge"
+          },
+          {
+            "label": "Gigantic",
+            "value": "gigantic"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "content_text_size",
+        "label": "Content text size",
+        "default": "small",
+        "info": "Tip: don't forget to check both mobile and desktop versions of your slides",
+        "options": [
+          {
+            "label": "Tiny",
+            "value": "tiny"
+          },
+          {
+            "label": "Small",
+            "value": "small"
+          },
+          {
+            "label": "Medium",
+            "value": "medium"
+          },
+          {
+            "label": "Large",
+            "value": "large"
+          },
+          {
+            "label": "Extra Large",
+            "value": "xlarge"
+          },
+          {
+            "label": "Gigantic",
+            "value": "gigantic"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image slide",
+        "settings": [
+          {
+            "type": "header",
+            "content": "Slide content"
+          },
+          {
+            "type": "paragraph",
+            "content": "[Recommended image dimensions](https:\/\/desk.zoho.com\/portal\/tabarnapp\/kb\/articles\/recommended-image-sizes-for-the-slideshow)"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "select",
+            "id": "display_on",
+            "label": "Display on",
+            "default": "desktop_mobile",
+            "options": [
+              {
+                "value": "desktop_mobile",
+                "label": "Desktop & Mobile"
+              },
+              {
+                "value": "desktop",
+                "label": "Desktop only"
+              },
+              {
+                "value": "mobile",
+                "label": "Mobile only"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Slide Heading"
+          },
+          {
+            "type": "richtext",
+            "id": "subtitle",
+            "label": "Subtitle",
+            "default": "<p>Tell your brand's story through video and images</p>"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p></p>"
+          },
+          {
+            "type": "text",
+            "id": "primary_button_label",
+            "label": "Primary button label"
+          },
+          {
+            "type": "url",
+            "id": "primary_button_link",
+            "label": "Primary button link"
+          },
+          {
+            "type": "text",
+            "id": "secondary_button_label",
+            "label": "Secondary button label"
+          },
+          {
+            "type": "url",
+            "id": "secondary_button_link",
+            "label": "Secondary button link"
+          },
+          {
+            "type": "header",
+            "content": "Slide styles"
+          },
+          {
+            "type": "select",
+            "id": "alignment",
+            "label": "Image alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "top",
+                "label": "Top"
+              },
+              {
+                "value": "center",
+                "label": "Middle"
+              },
+              {
+                "value": "bottom",
+                "label": "Bottom"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "text_location",
+            "label": "Text location",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left column"
+              },
+              {
+                "value": "center",
+                "label": "Center full-width"
+              },
+              {
+                "value": "right",
+                "label": "Right column"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left align"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right align"
+              }
+            ]
+          },
+          {
+            "type": "color",
+            "id": "color_title",
+            "label": "Title color",
+            "default": "#fff"
+          },
+          {
+            "type": "color",
+            "id": "color_subtitle",
+            "label": "Subtitle color",
+            "default": "#fff"
+          },
+          {
+            "type": "color",
+            "id": "color_text",
+            "label": "Text color",
+            "default": "#fff"
+          },
+          {
+            "type": "select",
+            "id": "image_overlay_opacity",
+            "label": "Image overlay opacity",
+            "default": "0.25",
+            "options": [
+              {
+                "label": "90%",
+                "value": "0.9"
+              },
+              {
+                "label": "85%",
+                "value": "0.85"
+              },
+              {
+                "label": "80%",
+                "value": "0.8"
+              },
+              {
+                "label": "75%",
+                "value": "0.75"
+              },
+              {
+                "label": "70%",
+                "value": "0.7"
+              },
+              {
+                "label": "65%",
+                "value": "0.65"
+              },
+              {
+                "label": "60%",
+                "value": "0.6"
+              },
+              {
+                "label": "55%",
+                "value": "0.55"
+              },
+              {
+                "label": "50%",
+                "value": "0.5"
+              },
+              {
+                "label": "45%",
+                "value": "0.45"
+              },
+              {
+                "label": "40%",
+                "value": "0.4"
+              },
+              {
+                "label": "35%",
+                "value": "0.35"
+              },
+              {
+                "label": "30%",
+                "value": "0.3"
+              },
+              {
+                "label": "25%",
+                "value": "0.25"
+              },
+              {
+                "label": "20%",
+                "value": "0.2"
+              },
+              {
+                "label": "15%",
+                "value": "0.15"
+              },
+              {
+                "label": "10%",
+                "value": "0.1"
+              },
+              {
+                "label": "0%",
+                "value": "0"
+              }
+            ],
+            "info": "Image overlay is a transparent layer applied on top of slideshow images and banners to create a fade effect for the picture to make text more visible. Set to 0% to disable"
+          },
+          {
+            "type": "color",
+            "id": "color_image_overlay",
+            "label": "Image overlay color",
+            "default": "#000000"
+          },
+          {
+            "type": "color",
+            "id": "primary_button_border_color",
+            "label": "Primary button border color",
+            "default": "#fff"
+          },
+          {
+            "type": "color",
+            "id": "primary_button_bg_color",
+            "label": "Primary button background color",
+            "default": "transparent"
+          },
+          {
+            "type": "color",
+            "id": "primary_button_text_color",
+            "label": "Primary button text color",
+            "default": "#fff"
+          },
+          {
+            "type": "color",
+            "id": "secondary_button_border_color",
+            "label": "Secondary button border color",
+            "default": "#fff"
+          },
+          {
+            "type": "color",
+            "id": "secondary_button_bg_color",
+            "label": "Secondary button background color",
+            "default": "transparent"
+          },
+          {
+            "type": "color",
+            "id": "secondary_button_text_color",
+            "label": "Secondary button text color",
+            "default": "#fff"
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "Slideshow",
+      "category": "Images",
+      "settings": {
+      },
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }]
+  }
+{% endschema %}

@@ -1,0 +1,124 @@
+.page-template {
+  h2 {
+    @extend .standard-page__title;
+  }
+  /*================ Desktop Version ================*/
+  @include at-query($min, $large) {
+    .page-size--standard,
+    .page-size--narrow,
+    .page-size--narrower {
+      margin: 0 auto;
+    }
+    .page-size--standard {
+      width: 90%;
+    }
+    .page-size--narrow {
+      width: 80%;
+    }
+    .page-size--narrower {
+      width: 65%;
+    }
+  }
+  @include at-query($min, $wide) {
+    .page-size--standard {
+      width: 80%;
+    }
+    .page-size--narrow {
+      width: 70%;
+    }
+    .page-size--narrower {
+      width: 55%;
+    }
+  }
+}
+.page-sidebar h2 {
+  @extend .standard-page__title;
+}
+.sidebar {
+  padding: $gutter;
+  &.sidebar--clearfix {
+    padding: 0;
+    margin: 0;
+    @include clearfix();
+  }
+  .sidebar__title {
+    @extend .standard-page__title;
+  }
+  .sidebar__body {
+  }
+  .sidebar__section {
+    margin-bottom: $gutter;
+  }
+  .sidebar__linklist {
+    @extend .no-bullets;
+    margin-left: 0;
+    .sidebar__linklist-item {
+      text-transform: uppercase;
+    }
+  }
+}
+.sidebar--contact, .sidebar__section-content--contact {
+  .contact-form__submit {
+    width: 50%;
+    margin: 0 auto;
+  }
+  .contact-form__button-wrapper--left .contact-form__submit {
+    margin: 0 auto 0 0;
+  }
+  .contact-form__button-wrapper--right .contact-form__submit {
+    margin: 0 0 0 auto;
+  }
+}
+.contact-page {
+  .contact-form {
+    .contact-form__submit {
+      margin: 1rem auto;
+    }
+  }
+  .map {
+    margin-bottom: $gutter;
+    &.map--bottom {
+      margin-bottom: -5px;
+    }
+    &.map--top {
+    }
+    .map__title, .map__description {
+      padding: 0 $gutter;
+    }
+    iframe{
+      pointer-events: none;
+    }
+  }
+  .map__title {
+    @extend .standard-page__title;
+  }
+  /*================ Desktop Version ================*/
+  @include at-query($min, $large) {
+    .product-card {
+      &.product-card--hoverable {
+        .product-form {
+          width: 65%;
+        }
+      }
+    }
+    .contact-form__wrapper {
+      width: 90%;
+      margin: 0 auto;
+    }
+    .contact-promo {
+      .product-card {
+        border: 1px solid $color-border;
+        border-radius: $radius;
+        padding: $gutter;
+        margin: $gutter auto;
+        width: 70%;
+      }
+    }
+    .map {
+      .map__title, .map__description {
+        max-width: $site-width !important;
+        margin: 0 auto !important;
+      }
+    }
+  }
+}

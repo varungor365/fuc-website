@@ -1,0 +1,25 @@
+<div class="mini-cart mini-cart--dropdown">
+  <div class="shopping-cart">
+    <div class="shopping-cart-header">
+      <span class="cart-icon">
+        {% include 'icon-cart' %}
+        <span>{{ cart.item_count }}</span>
+      </span>
+      <div class="shopping-cart-total">
+        <span class="shopping-cart-total-label">{{ 'cart.general.subtotal' | t }}:</span>
+        <span class="shopping-cart-total-value">{{ cart.total_price | money }}</span>
+      </div>
+    </div> <!--end shopping-cart-header -->
+
+    {% include 'minicart-items' %}
+
+    <div class="shopping-cart-footer">
+      <a href="/cart" class="btn btn--rounded btn--block shopping-cart-checkout">{{ 'cart.general.view_cart' | t }}</a>
+      <a href="/checkout" class="btn btn--rounded btn--block btn--outline">{{ 'cart.general.checkout' | t }}</a>
+    </div>
+
+    <div class="shopping-cart__loading">
+      <i class="fa fa-spinner"></i>
+    </div>
+  </div>
+</div>

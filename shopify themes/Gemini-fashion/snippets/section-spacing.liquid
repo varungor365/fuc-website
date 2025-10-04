@@ -1,0 +1,19 @@
+{%- if section.settings.padding != blank or section.settings.margin != blank or section.settings.background != blank or section.settings.background_image != blank -%}
+{% assign margin = section.settings.margin %}
+{% assign padding = section.settings.padding %}
+{% assign bg_color = section.settings.background %}
+{% assign bg_image = section.settings.background_image %}
+<style>
+  #shopify-section-{{ section.id }} {
+    {%- if section.settings.margin != blank -%}margin: {{margin}}; {%- endif -%}
+    {%- if section.settings.padding != blank -%}padding: {{padding}}; {%- endif -%}
+    {%- if section.settings.background != blank -%}background-color: {{ bg_color }}; {%- endif -%}
+    {%- if bg_image != blank -%}
+      background-image: url({{ bg_image | img_url: '2048x' }});
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    {%- endif -%}
+  }
+</style>
+{%- endif -%}

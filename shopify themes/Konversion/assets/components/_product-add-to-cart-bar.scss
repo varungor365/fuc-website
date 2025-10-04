@@ -1,0 +1,111 @@
+/**
+ * Top fixed add to cart bar
+ **/
+.product-add-to-cart-bar{
+  position: fixed;
+  background: #fff;
+  height: 0;
+  width: 100%;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 2;
+  color: #000;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+  @include transition(0.3s);
+  top: $top-add-to-cart-bar;
+  border-top: 1px rgba(0, 0, 0, 0.11) solid;
+
+
+  &.shown{
+    height: $product-add-to-cart-bar-height;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .product-title{
+    font-size: 18px;
+    font-weight: 500;
+    float: left;
+    text-align: left;
+    padding: 15px 0px;
+    margin: 0;
+    width: 300px;
+    max-width: 400px;
+    overflow: hidden;
+    height: 45px;
+    position: relative;
+
+    .dimmer {
+      display: block;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 100px;
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 );
+      background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 56%, rgba(255,255,255,1) 100%);
+      background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(56%,rgba(255,255,255,1)), color-stop(100%,rgba(255,255,255,1)));
+      background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 56%,rgba(255,255,255,1) 100%);
+      background: -o-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 56%,rgba(255,255,255,1) 100%);
+      background: -ms-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 56%,rgba(255,255,255,1) 100%);
+      background: linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 56%,rgba(255,255,255,1) 100%);
+      content: "";
+    }
+  }
+
+  .product-price{
+    font-size: 21px;
+    font-weight: 600;
+    float: right;
+    text-align: right;
+    padding: 13px 15px;
+    color: #3e3e3e;
+  }
+
+  .btn--add-to-cart{
+    float: right;
+    height: $product-add-to-cart-bar-height;
+    text-transform: uppercase;
+    padding: 0px 50px
+
+  }
+
+  .content-inputs{
+    margin-top: 12px;
+  }
+
+  .product-quantity{
+    border: 1px solid #efefef;
+    text-align: center;
+    width: 125px;
+    float: right;
+    .js-qty__num{
+      margin: 2px 7px;
+      width: 50px;
+      border: 1px solid #efefef;
+      border-top: none;
+      border-bottom: none;
+      border-radius: 0;
+      box-sizing: border-box;
+      height: 30px;
+      text-align: center;
+    }
+    button{
+      outline: none;
+    }
+  }
+
+  .product-variants{
+    float: right;
+    .variant{
+      margin-right: 5px;
+      float: right;
+      .product-options__selector{
+        padding: 5px 25px 5px 8px;
+      }
+    }
+  }
+
+
+}

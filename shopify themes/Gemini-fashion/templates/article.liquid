@@ -1,0 +1,84 @@
+{%- if settings.single_layout != 'fullwidth' -%}
+  {%- assign block_width = 'medium-up--three-quarters' -%}
+{%- endif -%}
+
+<div class="page__header" {% if settings.blog_header_image %}style="background-image: url({{ settings.blog_header_image | img_url: 'master' }});"{% endif %}>
+  <div class="page-width">
+    <header>
+      <h2 class="page__title">{{ blog.title }}</h2>
+      {% include 'breadcrumbs' %}
+    </header>
+  </div>
+</div>
+
+<div class="page-width">
+  <div class="grid">
+    <div class="grid__item {{ block_width }} {% if settings.single_layout == 'sidebar_left'%}medium-up--push-one-quarter{% endif %} one-whole">
+      <article class="single-post" role="article" itemscope itemtype="http://schema.org/Article">
+        <header role="banner">
+          <div class="entry__featured-image">
+            {% if article.image %}
+              {{ article | img_url: '1024x1024' | img_tag: article.title }}
+            {% endif %}
+          </div>
+          <h2 class="entry__title">{{ article.title }}</h2>
+          <div class="entry__meta">
+            <div class="grid">
+              <div class="grid__item two-thirds">
+                {% capture date %}{{ article.published_at | time_tag: format: 'month_day_year' }}{% endcapture %}
+                <p>{{ 'blogs.article.author_on_date_html' | t: author: article.author, date: date }}</p>
+              </div>
+              <div class="grid__item one-third">
+
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="rte" itemprop="articleBody">
+          {{ article.content }}
+        </div>
+
+        <div class="entry__footer">
+          <div class="grid">
+            <div class="grid__item one-half">
+              {% if article.tags.size > 0 %}
+                <div class="blog__tags">
+                  <span>{% include 'icon-ios-pricetags-outline' %}</span>
+                  <ul>
+                    {% for tag in article.tags %}
+                      <li>
+                        <a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% else %}
+                &nbsp;
+              {% endif %}
+            </div>
+            <div class="grid__item one-half">
+              {% if settings.social_sharing_blog %}
+                {% include 'social-sharing', share_title: article.title, share_permalink: article.url, share_image: article.image %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="entry__related">
+          {%- include 'related-articles' -%}
+        </div>
+
+        <div class="entry__comment">
+          {%- include 'comment' -%}
+        </div>
+      </article>
+    </div>
+
+    {%- if settings.single_layout != 'fullwidth' %}
+    <div class="grid__item medium-up--one-quarter {% if settings.single_layout == 'sidebar_left'%}medium-up--pull-three-quarters{% endif %} one-whole">
+      {%- section 'blog-sidebar' -%}
+    </div>
+    {% endif %}
+  </div>
+</div>

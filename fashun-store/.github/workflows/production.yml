@@ -1,0 +1,462 @@
+name: Production Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (commit hash or tag)'
+        required: true
+        type: string
+      rollback_version:
+        description: 'Rollback version (if deployment fails)'
+        required: false
+        type: string
+      skip_approval:
+        description: 'Skip manual approval (emergency hotfix)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '18'
+  PRODUCTION_URL: ${{ secrets.PRODUCTION_URL }}
+
+jobs:
+  pre-production-validation:
+    name: Pre-Production Validation
+    runs-on: ubuntu-latest
+    
+    outputs:
+      deployment-id: ${{ steps.deployment.outputs.deployment-id }}
+      backup-id: ${{ steps.backup.outputs.backup-id }}
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.version }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Generate Deployment ID
+      id: deployment
+      run: echo "deployment-id=prod-$(date +%s)-${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+      
+    - name: Generate Backup ID
+      id: backup
+      run: echo "backup-id=backup-$(date +%s)" >> $GITHUB_OUTPUT
+      
+    - name: Install Dependencies
+      run: npm ci
+      
+    - name: Run Complete Test Suite
+      run: npm run test:all
+      
+    - name: Security Audit (High Level)
+      run: npm audit --audit-level high
+      
+    - name: Build Production Application
+      run: npm run build:production
+      env:
+        NODE_ENV: production
+        
+    - name: Bundle Size Analysis
+      run: |
+        npm run analyze:bundle
+        npm run analyze:bundle:report
+        
+    - name: Security Scan
+      uses: securecodewarrior/github-action-add-sarif@v1
+      with:
+        sarif-file: 'security-scan-results.sarif'
+        
+    - name: Upload Production Build
+      uses: actions/upload-artifact@v3
+      with:
+        name: production-build-${{ github.event.inputs.version }}
+        path: |
+          .next/
+          out/
+          package.json
+          package-lock.json
+          Dockerfile
+        retention-days: 30
+
+  approval:
+    name: Production Deployment Approval
+    runs-on: ubuntu-latest
+    needs: pre-production-validation
+    environment: production-approval
+    if: ${{ github.event.inputs.skip_approval != 'true' }}
+    
+    steps:
+    - name: Request Deployment Approval
+      uses: trstringer/manual-approval@v1
+      with:
+        secret: ${{ github.TOKEN }}
+        approvers: ${{ secrets.PRODUCTION_APPROVERS }}
+        minimum-approvals: 2
+        issue-title: "Production Deployment Approval Required"
+        issue-body: |
+          ## Production Deployment Request
+          
+          **Version:** ${{ github.event.inputs.version }}
+          **Deployment ID:** ${{ needs.pre-production-validation.outputs.deployment-id }}
+          **Rollback Version:** ${{ github.event.inputs.rollback_version || 'Previous stable version' }}
+          
+          ### Pre-deployment Validation
+          - ✅ All tests passed
+          - ✅ Security audit completed
+          - ✅ Production build successful
+          - ✅ Bundle analysis completed
+          
+          ### Deployment Plan
+          1. Create database backup
+          2. Deploy to blue environment
+          3. Run health checks
+          4. Switch traffic to blue
+          5. Monitor for 15 minutes
+          6. Complete deployment
+          
+          **Please review and approve this production deployment.**
+          
+          /approve or /deny
+
+  database-backup:
+    name: Database Backup
+    runs-on: ubuntu-latest
+    needs: [pre-production-validation, approval]
+    if: always() && (needs.approval.result == 'success' || github.event.inputs.skip_approval == 'true')
+    environment: production
+    
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        
+    - name: Create Database Backup
+      run: |
+        echo "📦 Creating production database backup..."
+        
+        # Create RDS snapshot
+        aws rds create-db-snapshot \
+          --db-instance-identifier fashun-production \
+          --db-snapshot-identifier ${{ needs.pre-production-validation.outputs.backup-id }}
+          
+        # Wait for snapshot to complete
+        echo "⏳ Waiting for backup to complete..."
+        aws rds wait db-snapshot-completed \
+          --db-snapshot-identifier ${{ needs.pre-production-validation.outputs.backup-id }}
+          
+        echo "✅ Database backup completed: ${{ needs.pre-production-validation.outputs.backup-id }}"
+
+  blue-green-deployment:
+    name: Blue-Green Deployment
+    runs-on: ubuntu-latest
+    needs: [pre-production-validation, database-backup]
+    environment: production
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.version }}
+        
+    - name: Download Production Build
+      uses: actions/download-artifact@v3
+      with:
+        name: production-build-${{ github.event.inputs.version }}
+        
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        
+    - name: Deploy to Blue Environment
+      run: |
+        echo "🔵 Deploying to blue environment..."
+        
+        # Build and push Docker image
+        docker build -t fashun-production:${{ github.event.inputs.version }} .
+        
+        # Tag for ECR
+        docker tag fashun-production:${{ github.event.inputs.version }} \
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fashun-production:${{ github.event.inputs.version }}
+        
+        # Push to ECR
+        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+          docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        
+        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fashun-production:${{ github.event.inputs.version }}
+        
+        # Update blue ECS service
+        aws ecs update-service \
+          --cluster fashun-production \
+          --service fashun-production-blue \
+          --force-new-deployment \
+          --task-definition fashun-production-blue:${{ github.event.inputs.version }}
+          
+        echo "✅ Blue environment deployment completed"
+        
+    - name: Wait for Blue Environment
+      run: |
+        echo "⏳ Waiting for blue environment to stabilize..."
+        aws ecs wait services-stable \
+          --cluster fashun-production \
+          --services fashun-production-blue
+        echo "✅ Blue environment is stable"
+
+  health-verification:
+    name: Health Verification
+    runs-on: ubuntu-latest
+    needs: [pre-production-validation, blue-green-deployment]
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install Dependencies
+      run: npm ci
+      
+    - name: Health Check Blue Environment
+      run: |
+        echo "🔍 Running health checks on blue environment..."
+        
+        # Wait for blue environment to be ready
+        for i in {1..30}; do
+          if curl -f ${{ secrets.BLUE_ENVIRONMENT_URL }}/api/health > /dev/null 2>&1; then
+            echo "✅ Blue environment health check passed"
+            break
+          fi
+          echo "Attempt $i/30: Blue environment not ready, waiting 10 seconds..."
+          sleep 10
+        done
+        
+    - name: Run Production Smoke Tests
+      run: |
+        npm run test:smoke:production -- --baseURL=${{ secrets.BLUE_ENVIRONMENT_URL }}
+      env:
+        BLUE_ENVIRONMENT_URL: ${{ secrets.BLUE_ENVIRONMENT_URL }}
+        
+    - name: Load Testing
+      run: |
+        npm run test:load -- --baseURL=${{ secrets.BLUE_ENVIRONMENT_URL }}
+      env:
+        BLUE_ENVIRONMENT_URL: ${{ secrets.BLUE_ENVIRONMENT_URL }}
+
+  traffic-switch:
+    name: Switch Production Traffic
+    runs-on: ubuntu-latest
+    needs: [pre-production-validation, health-verification]
+    environment: production
+    
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        
+    - name: Switch Load Balancer to Blue
+      run: |
+        echo "🔄 Switching production traffic to blue environment..."
+        
+        # Update ALB target group to point to blue environment
+        aws elbv2 modify-target-group \
+          --target-group-arn ${{ secrets.PRODUCTION_TARGET_GROUP_ARN }} \
+          --health-check-path /api/health
+          
+        # Register blue environment targets
+        aws elbv2 register-targets \
+          --target-group-arn ${{ secrets.PRODUCTION_TARGET_GROUP_ARN }} \
+          --targets Id=${{ secrets.BLUE_INSTANCE_ID }}
+          
+        # Deregister green environment targets
+        aws elbv2 deregister-targets \
+          --target-group-arn ${{ secrets.PRODUCTION_TARGET_GROUP_ARN }} \
+          --targets Id=${{ secrets.GREEN_INSTANCE_ID }}
+          
+        echo "✅ Traffic switched to blue environment"
+        
+    - name: Monitor Traffic Switch
+      run: |
+        echo "📊 Monitoring traffic switch for 5 minutes..."
+        
+        for i in {1..30}; do
+          # Check error rate
+          ERROR_RATE=$(curl -s "${{ secrets.MONITORING_API_URL }}/error-rate" | jq -r '.error_rate')
+          
+          if (( $(echo "$ERROR_RATE < 1.0" | bc -l) )); then
+            echo "✅ Error rate is acceptable: $ERROR_RATE%"
+          else
+            echo "❌ High error rate detected: $ERROR_RATE%"
+            exit 1
+          fi
+          
+          sleep 10
+        done
+        
+        echo "✅ Traffic switch monitoring completed successfully"
+
+  post-deployment:
+    name: Post-Deployment Tasks
+    runs-on: ubuntu-latest
+    needs: [pre-production-validation, traffic-switch]
+    environment: production
+    if: always()
+    
+    steps:
+    - name: Database Migration
+      run: |
+        echo "🗄️ Running production database migrations..."
+        
+        # Run migrations
+        npm run db:migrate:production
+      env:
+        DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+        
+    - name: Cache Invalidation
+      run: |
+        echo "🌐 Invalidating CDN cache..."
+        
+        # CloudFront cache invalidation
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ secrets.PRODUCTION_CLOUDFRONT_DISTRIBUTION_ID }} \
+          --paths "/*"
+          
+        echo "✅ CDN cache invalidated"
+        
+    - name: Update Monitoring
+      run: |
+        echo "📊 Updating production monitoring..."
+        
+        # Update deployment metrics
+        curl -X POST "${{ secrets.MONITORING_WEBHOOK_URL }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "deployment_id": "${{ needs.pre-production-validation.outputs.deployment-id }}",
+            "environment": "production",
+            "version": "${{ github.event.inputs.version }}",
+            "status": "completed",
+            "timestamp": "'$(date -Iseconds)'",
+            "backup_id": "${{ needs.pre-production-validation.outputs.backup-id }}"
+          }'
+          
+        echo "✅ Monitoring updated"
+
+  rollback:
+    name: Automatic Rollback
+    runs-on: ubuntu-latest
+    needs: [pre-production-validation, traffic-switch]
+    if: failure()
+    environment: production
+    
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        
+    - name: Rollback to Previous Version
+      run: |
+        echo "🔄 Initiating automatic rollback..."
+        
+        ROLLBACK_VERSION="${{ github.event.inputs.rollback_version }}"
+        
+        if [ -z "$ROLLBACK_VERSION" ]; then
+          # Get previous stable version
+          ROLLBACK_VERSION=$(aws ecs describe-services \
+            --cluster fashun-production \
+            --services fashun-production-green \
+            --query 'services[0].taskDefinition' \
+            --output text | cut -d':' -f6)
+        fi
+        
+        echo "Rolling back to version: $ROLLBACK_VERSION"
+        
+        # Switch traffic back to green environment
+        aws elbv2 register-targets \
+          --target-group-arn ${{ secrets.PRODUCTION_TARGET_GROUP_ARN }} \
+          --targets Id=${{ secrets.GREEN_INSTANCE_ID }}
+          
+        aws elbv2 deregister-targets \
+          --target-group-arn ${{ secrets.PRODUCTION_TARGET_GROUP_ARN }} \
+          --targets Id=${{ secrets.BLUE_INSTANCE_ID }}
+          
+        echo "✅ Rollback completed to version: $ROLLBACK_VERSION"
+
+  notification:
+    name: Deployment Notification
+    runs-on: ubuntu-latest
+    needs: [pre-production-validation, post-deployment, rollback]
+    if: always()
+    
+    steps:
+    - name: Notify Success
+      if: ${{ needs.post-deployment.result == 'success' }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        channel: '#production-deployments'
+        fields: repo,message,commit,author,action,eventName,ref,workflow
+        text: |
+          🎉 Production Deployment Successful!
+          
+          • Environment: Production
+          • Version: ${{ github.event.inputs.version }}
+          • Deployment ID: ${{ needs.pre-production-validation.outputs.deployment-id }}
+          • Backup ID: ${{ needs.pre-production-validation.outputs.backup-id }}
+          • URL: ${{ env.PRODUCTION_URL }}
+          
+          All health checks passed ✅
+          Traffic successfully switched to new version 🔄
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        
+    - name: Notify Failure
+      if: ${{ needs.post-deployment.result == 'failure' || needs.rollback.result == 'success' }}
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        channel: '#production-deployments'
+        fields: repo,message,commit,author,action,eventName,ref,workflow
+        text: |
+          ❌ Production Deployment Failed!
+          
+          • Environment: Production
+          • Version: ${{ github.event.inputs.version }}
+          • Deployment ID: ${{ needs.pre-production-validation.outputs.deployment-id }}
+          
+          ${{ needs.rollback.result == 'success' && '🔄 Automatic rollback completed successfully' || '⚠️ Manual intervention may be required' }}
+          
+          Please check the deployment logs for details.
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        
+    - name: Create Incident
+      if: ${{ needs.post-deployment.result == 'failure' && needs.rollback.result == 'failure' }}
+      uses: PagerDuty/pagerduty-action@v1
+      with:
+        pagerduty-token: ${{ secrets.PAGERDUTY_TOKEN }}
+        pagerduty-service-id: ${{ secrets.PAGERDUTY_SERVICE_ID }}
+        pagerduty-severity: critical
+        pagerduty-action: trigger
+        pagerduty-description: "Production deployment failed and rollback failed. Manual intervention required."

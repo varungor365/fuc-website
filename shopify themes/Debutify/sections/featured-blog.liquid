@@ -1,0 +1,181 @@
+{%- assign blog = blogs[section.settings.blog] -%}
+{%- assign limit = section.settings.grid | times: section.settings.rows -%}
+
+{% if blog.articles_count == 0 or blog == empty %}
+  {% assign emptyState = true %}
+{% else %}
+  {% assign emptyState = false %}
+{% endif %}
+
+{% paginate blog.articles by limit %}
+  <div id="section-{{ section.id }}" class="{% if section.settings.background_section %}bg-section {% endif %}" data-section-id="{{ section.id }}" data-section-type="blog-template">
+    <div class="box">
+      <div class="wrapper">
+        
+        {% unless section.settings.title == blank and section.settings.subtitle == blank %}
+          <div class="section-header">
+            <h2 class="section-header__title">{{ section.settings.title | escape }}</h2>
+            <p class="section-header__subtitle">{{ section.settings.subtitle | escape }}</p>
+          </div>
+        {% endunless %}
+
+        <div class="grid grid-uniform grid--spacer">
+          {% include 'article-width' %}
+          
+          {% if emptyState %}
+            {% for i in (1..limit) %}
+              {% include 'article-grid-item' %}
+            {% endfor %}
+          {% else %}
+            {% for article in blog.articles %}
+              {% include 'article-grid-item' %}
+            {% endfor %}
+          
+          	{% if section.settings.show_view_all %}
+              <div class="grid__item one-whole text-center">
+                <a href="{{ blog.url }}" class="btn {{ section.settings.button_style }} view-all-link">
+                  {{ 'blogs.article.view_all' | t }}
+                </a>
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endpaginate %}
+
+{% schema %}
+  {
+    "name": "Blog posts",
+	"class": "featured-blog-section",
+    "settings": [
+	  {
+        "type": "checkbox",
+        "id": "background_section",
+        "label": "Add background"
+      },
+	  {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Featured blog"
+      },
+	  {
+        "type": "text",
+        "id": "subtitle",
+        "label": "Subheading"
+      },
+      {
+        "id": "blog",
+        "type": "blog",
+        "label": "Blog"
+      },
+	  {
+		"type": "header",
+		"content": "Grid"
+	  },
+	  {
+        "type": "select",
+        "id": "rows",
+        "label": "Number of rows",
+		"default": "1",
+		"options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+		  {
+            "value": "2",
+            "label": "2"
+          }
+		]
+      },
+	  {
+        "type": "select",
+        "id": "grid",
+        "label": "Articles per row",
+		"default": "2",
+		"options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+		  {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          }
+		]
+      },
+      {
+		"type": "header",
+		"content": "Articles"
+	  },
+	  {
+        "type": "checkbox",
+        "id": "show_image",
+        "label": "Show cover image",
+        "default": true
+      },
+	  {
+		"type": "checkbox",
+		"id": "show_tags",
+		"label": "Show tags",
+		"default": false
+	  },
+	  {
+        "type": "range",
+        "id": "word_count",
+        "label": "Word count",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "default": 20
+      },
+	  {
+		"type": "header",
+		"content": "Footer"
+	  },
+	  {
+        "type": "checkbox",
+        "id": "show_view_all",
+        "label": "Show 'View all' button",
+        "default": true
+      },
+	  {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "default": "btn-outline-primary",
+        "options": [
+          {
+            "value": "",
+			"label": "Default"
+          },
+          {
+            "value": "btn--primary",
+            "label": "Full"
+          },
+		  {
+			"value": "btn-outline-primary",
+            "label": "Outline"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Blog posts",
+        "category": "Blog",
+        "settings": {
+          "blog": "News"
+        }
+      }
+    ]
+  }
+{% endschema %}

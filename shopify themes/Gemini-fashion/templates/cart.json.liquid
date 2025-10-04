@@ -1,0 +1,7 @@
+{% layout none %}
+
+{%- if settings.minicart == 'dropdown' -%}
+  {% include 'minicart-dropdown' %}
+{%- else -%}
+  {% include 'minicart-slide' %}
+{%- endif -%}

@@ -1,0 +1,311 @@
+<div id="hero-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="hero"{% if section.settings.overlap_nav %} class="hero--overlap-nav"{% endif %}>
+  <div
+    class="hero{% if section.settings.fullheight %} hero--full-height{% endif %}{% if section.settings.animated %} hero--animated{% endif %} js-hero {% if section.settings.responsive_type == 'auto' %}js-hero-responsive{% endif %}"
+    data-full-height="{{ section.settings.fullheight }}"
+    data-slick='{ "fade": {{ section.settings.fade }}, "infinite": {{ section.settings.infinite }}, "arrows": {{ section.settings.arrows }}, "dots": {{ section.settings.dots }}, "autoplay": {{ section.settings.autoplay }}, "autoplaySpeed": {{ section.settings.autoplay_speed }}, "swipe": false, "responsive": [{"breakpoint": 1025, "settings": {"swipe": true}}, {"breakpoint": 750, "settings": {"arrows": false, "dots": true, "swipe": true}}] }'
+    {% if section.settings.arrows %}
+      data-arrow-type="{{ section.settings.arrow_type }}"
+    {% endif %}
+    >
+    {% if section.blocks.size > 0 %}
+    {% for block in section.blocks %}
+      <div class="hero__item">
+        {% if block.settings.image != blank %}
+          <div
+            class="hero__image"
+            style="background-image: url({{ block.settings.image | img_url: '2048x' }});">
+            <img
+              src="{{ block.settings.image | img_url: '2048x' }}"
+              alt="Collection slideshow" />
+          </div>
+        {% else %}
+        <div class="hero__placeholder">
+          {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+            {{ 'lifestyle-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+        {% endif %}
+        <div class="hero__text-wrap">
+          <div class="hero__text-align hero__text-align--{{ block.settings.alignment }}">
+            <div class="hero__text-color hero__text-color--{{ block.settings.color_scheme }}">
+              {% unless block.settings.sub_heading == blank %}
+              <h4 class="hero__subtitle">{{ block.settings.sub_heading }}</h4>
+              {% endunless %}
+
+              {% unless block.settings.heading == blank %}
+              <h2 class="hero__title">{{ block.settings.heading }}</h2>
+              {% endunless %}
+
+              {% unless block.settings.description == blank %}
+              <p class="hero__description">{{ block.settings.description | newline_to_br }}</p>
+              {% endunless %}
+
+              {% unless block.settings.button_text == blank %}
+              <a href="{{ block.settings.link }}" class="btn hero__button">
+                {{ block.settings.button_text }}
+              </a>
+              {% endunless %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    {% else %}
+      <div class="page-width">{{ 'homepage.onboarding.no_content' | t }}</div>
+    {% endif %}
+  </div>
+</div>
+
+{% include 'section-spacing' %}
+
+{%- if section.settings.overlap_nav -%}
+<style>
+  #shopify-section-{{ section.id }} {
+    margin-top: -77px !important;
+  }
+</style>
+{%- endif -%}
+
+
+{% schema %}
+  {
+    "name": "Slideshow",
+    "class": "gemini-hero",
+    "max_blocks": 5,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Slideshow Options"
+      },
+      {
+        "type": "checkbox",
+        "id": "fullheight",
+        "default": true,
+        "label": "Enable full height"
+      },
+      {
+        "type": "checkbox",
+        "id": "animated",
+        "default": true,
+        "label": "Enable animation"
+      },
+      {
+        "type": "checkbox",
+        "id": "fade",
+        "default": true,
+        "label": "Fade"
+      },
+      {
+        "type": "checkbox",
+        "id": "arrows",
+        "default": true,
+        "label": "Show arrows",
+        "info": "Show Prev/Next Arrows"
+      },
+      {
+        "type": "select",
+        "id": "arrow_type",
+        "default": "square",
+        "label": "Choose arrows type",
+        "options": [
+          {
+            "value": "square",
+            "label": "Squared arrows"
+          },
+          {
+            "value": "circle",
+            "label": "Circle arrows"
+          },
+          {
+            "value": "half-circle",
+            "label": "Half circle arrows"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "dots",
+        "default": false,
+        "label": "Show dots",
+        "info": "Show dot indicators"
+      },
+      {
+        "type": "checkbox",
+        "id": "infinite",
+        "default": true,
+        "label": "Infinite",
+        "info": "Infinite loop sliding"
+      },
+      {
+        "type": "checkbox",
+        "id": "autoplay",
+        "default": true,
+        "label": "Autoplay",
+        "info": "Enables autoplay mode."
+      },
+      {
+        "type": "select",
+        "id": "autoplay_speed",
+        "default": "5000",
+        "label": "Slide changes every",
+        "options": [
+          {
+            "value": "5000",
+            "label": "5 seconds"
+          },
+          {
+            "value": "7000",
+            "label": "7 seconds"
+          },
+          {
+            "value": "9000",
+            "label": "9 seconds"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Responsiveness"
+      },
+      {
+        "type": "radio",
+        "id": "responsive_type",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          },
+          {
+            "value": "disable",
+            "label": "Manual"
+          }
+        ],
+        "label": "Responsiveness control",
+        "info": "Choose how to control the responsiveness of the slideshow. By default, on small screens, the slideshow will be changed to full-height type automatically. Choose Manual to handle it yourself."
+      },
+      {
+        "type": "header",
+        "content": "Design options"
+      },
+      {
+        "type": "paragraph",
+        "content": "To horizontally center a element use margin: auto;"
+      },
+      {
+        "type": "checkbox",
+        "id": "overlap_nav",
+        "label": "Behind the header",
+        "default": false,
+        "info": "All top spacing applied maybe not correct"
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background",
+        "default": "#e8e8e8"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margin (top right bottom left)",
+        "info": "60px auto 60px auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Padding (top right bottom left)",
+        "info": "60px 0 60px 0"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Slide",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "select",
+            "id": "color_scheme",
+            "label": "Text color",
+            "default": "dark",
+            "options": [
+              {
+                "value": "dark",
+                "label": "Dark"
+              },
+              {
+                "value": "light",
+                "label": "Light"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "alignment",
+            "label": "Text alignment",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "id": "sub_heading",
+            "label": "Subheading text",
+            "default": "An introductory"
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading text",
+            "default": "Hero Banner"
+          },
+          {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description"
+          },
+          {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button text",
+            "default": "Shop now"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Slide link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Slideshow",
+        "category": "Slideshow",
+        "blocks": [
+          {
+            "type": "image"
+          },
+          {
+            "type": "image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

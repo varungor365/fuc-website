@@ -1,0 +1,727 @@
+{
+  "current": {
+    "license_key": "",
+    "app_product_reviews_enabled": "",
+    "yotpo_app_key": "",
+    "ajax_cart_method": "drawer",
+    "cart_font_size": "big",
+    "cart_notes_enable": false,
+    "sticky_add_to_cart": true,
+    "add_to_cart_float_animation": true,
+    "add_to_cart_bar_enabled": true,
+    "add_to_cart_bar_background_color": "#fff",
+    "add_to_cart_bar_text_color": "#000",
+    "add_to_cart_bar_price_color": "#000",
+    "color_primary": "#393939",
+    "color_secondary": "#41cd62",
+    "color_text": "#333333",
+    "color_bg": "#ffffff",
+    "color_borders": "#e0e0e0",
+    "color_menu": "#393939",
+    "color_menu_bg": "#ffffff",
+    "color_submenu": "#393939",
+    "color_submenu_bg": "#ffffff",
+    "color_bg_alt": "#090909",
+    "color_text_alt": "#fff",
+    "color_discount": "#f53333",
+    "show_multiple_currencies": false,
+    "currency_format": "money_with_currency_format",
+    "supported_currencies": "INR GBP CAD USD AUD EUR JPY",
+    "default_currency": "USD",
+    "countdown_offer_enabled": false,
+    "countdown_offer_repeat": true,
+    "deal_of_the_day_enabled": false,
+    "deal_of_the_day_display": "all",
+    "deal_of_the_day_image_position": "right",
+    "deal_of_the_day_discount_percentage_color": "#f53333",
+    "deal_of_the_day_price_color": "#41cd62",
+    "deal_of_the_day_text": "DEAL OF THE DAY",
+    "deal_of_the_day_countdown_color": "#41cd62",
+    "deal_of_the_day_product_text": "DEAL OF THE DAY ENDS IN",
+    "deal_of_the_day_progressbar_color": "#f53333",
+    "favicon": "",
+    "fixed_header": "all",
+    "header_height": "standard",
+    "product_card_title_style": "1_row",
+    "margin_on_mobile": false,
+    "product_card_height": "255px",
+    "password_page_title": "",
+    "custom_scripts": "",
+    "modal_type": "disable",
+    "modal_display_delay_seconds": "2",
+    "modal_days": "2",
+    "modal_display": "all",
+    "modal_border_color": "#000",
+    "modal_border_size": 0,
+    "newsletter_modal_test_mode": false,
+    "newsletter_modal_popup_form": true,
+    "newsletter_modal_image_picker": "",
+    "newsletter_modal_image_position": "left",
+    "newsletter_modal_image_alt_text": "",
+    "newsletter_modal_title": "SIGN UP TODAY!",
+    "newsletter_modal_text": "You can write the headline and text for your newsletter popup in the theme settings (Newsletter section). You can also control how often the popup is displayed or disable it entirely.",
+    "newsletter_modal_btn_text": "SIGN UP!",
+    "newsletter_modal_text_alignment": "left",
+    "pa_modal_size": 700,
+    "pa_modal_product_info_width": 400,
+    "pa_modal_product": "",
+    "pa_modal_text_alignment": "left",
+    "pa_modal_image_position": "center",
+    "pa_modal_title": "Some title",
+    "pa_text_rich": "",
+    "pa_modal_btn_text": "Go to product",
+    "pa_modal_explosive_offer": false,
+    "shipping_calculator": true,
+    "shipping_calculator_heading": "Get shipping estimates",
+    "shipping_calculator_default_country": "United States",
+    "shipping_calculator_submit_button_label": "Calculate shipping",
+    "shipping_calculator_submit_button_label_disabled": "Calculating...",
+    "social_facebook_link": "https:\/\/www.facebook.com\/pages\/Tabarnapp\/292814031076984",
+    "social_twitter_link": "https:\/\/twitter.com\/demoweb_co",
+    "social_instagram_link": "",
+    "social_tumblr_link": "",
+    "social_pinterest_link": "",
+    "social_youtube_link": "https:\/\/www.youtube.com\/user\/derekmorinjob",
+    "social_snapchat_link": "",
+    "social_icons_menu_drawer": true,
+    "share_facebook": true,
+    "share_twitter": true,
+    "share_pinterest": true,
+    "share_gplus": true,
+    "og_image": "",
+    "og_title": "",
+    "og_description": "",
+    "font_family_headings": "Google_Work+Sans_600_sans",
+    "font_family_headings_other": "none",
+    "font_size_headings": "26px",
+    "font_family_base": "Google_Lato_400_sans",
+    "font_family_base_other": "none",
+    "font_size_base": "16px",
+    "option_color_swatches": "Color, Colour",
+    "checkout_header_image": "",
+    "checkout_logo_image": "",
+    "checkout_logo_position": "left",
+    "checkout_logo_size": "medium",
+    "checkout_body_background_image": "",
+    "checkout_body_background_color": "#fff",
+    "checkout_input_background_color_mode": "white",
+    "checkout_sidebar_background_image": "",
+    "checkout_sidebar_background_color": "#fafafa",
+    "checkout_heading_font": "Helvetica Neue",
+    "checkout_body_font": "Helvetica Neue",
+    "checkout_accent_color": "#1990c6",
+    "checkout_button_color": "#1990c6",
+    "checkout_error_color": "#ff6d6d",
+    "deal_of_the_day_hide_title": false,
+    "deal_of_the_day_discount_percentage": true,
+    "deal_of_the_day_ends_in_text": "ENDS IN",
+    "sections": {
+      "topbar": {
+        "type": "topbar",
+        "settings": {
+          "display": "all",
+          "social_icons": true,
+          "facebook_buttons_position": "left",
+          "facebook_page_link": "",
+          "show_facebook_like_button": false,
+          "show_facebook_share_button": false,
+          "message_text": "SITEWIDE ANNOUNCEMENT",
+          "is_phone_number": false,
+          "message_link_text": "SHOP NOW",
+          "message_link": "shopify:\/\/collections",
+          "color_bg": "#191919",
+          "color_text": "#a5a5a5",
+          "color_button_bg": "transparent",
+          "color_button_border": "#a5a5a5",
+          "color_button_text": "#ffffff"
+        }
+      },
+      "header": {
+        "type": "header",
+        "settings": {
+          "logo_text": "",
+          "logo_image": "",
+          "logo_max_width_desktop": 200,
+          "logo_margin": 0,
+          "logo_image_mobile": "",
+          "logo_max_width_mobile": 200,
+          "logo_margin_mobile": 0,
+          "menu_type": "text-menu",
+          "display_product_price": false,
+          "submenu_columns": "1",
+          "display_menu_word_mobile": false,
+          "menu_word_mobile": "MENU",
+          "display_profile_icon": true,
+          "hide_account_link": false,
+          "switch_account_search_position": false
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "display_border": false,
+          "footer_width_size": "normal",
+          "mobile_display_footer_cart_product": false,
+          "color_bg": "#ffffff",
+          "color_headings": "#393939",
+          "color_text": "#393939",
+          "color_links": "#393939",
+          "color_menu_items": "#393939",
+          "color_button_bg": "transparent",
+          "color_button_border": "#393939",
+          "color_button_text": "#393939",
+          "display_social": true,
+          "powered_by": true,
+          "payment_icons": false,
+          "color_social_bg": "#0d0d0d",
+          "color_social_icons": "#ffffff",
+          "theme_copyright": true,
+          "affiliate_link": ""
+        }
+      },
+      "1496645688611": {
+        "type": "slideshow",
+        "blocks": {
+          "1496645688611-0": {
+            "type": "image",
+            "settings": {
+              "image": "",
+              "title": "Slide Heading",
+              "subtitle": "<p>Tell your brand's story through video and images<\/p>",
+              "text": "<p><\/p>",
+              "primary_button_label": "SHOP NOW",
+              "primary_button_link": "shopify:\/\/collections",
+              "secondary_button_label": "",
+              "secondary_button_link": "",
+              "alignment": "center",
+              "text_location": "center",
+              "text_alignment": "center",
+              "color_title": "#ffffff",
+              "color_subtitle": "#fff",
+              "color_text": "#fff",
+              "image_overlay_opacity": "0.35",
+              "color_image_overlay": "#000000",
+              "primary_button_border_color": "rgba(0,0,0,0)",
+              "primary_button_bg_color": "#0ecd69",
+              "primary_button_text_color": "#fff",
+              "secondary_button_border_color": "#fff",
+              "secondary_button_bg_color": "transparent",
+              "secondary_button_text_color": "#fff"
+            }
+          }
+        },
+        "block_order": [
+          "1496645688611-0",
+          "1496645688611-1"
+        ],
+        "settings": {
+          "autoplay": true,
+          "autoplay_speed": "5000",
+          "slideshow_height": "medium",
+          "title_text_size": "large",
+          "subtitle_text_size": "large",
+          "content_text_size": "small"
+        }
+      },
+      "1496656693081": {
+        "type": "icon-list",
+        "blocks": {
+          "1496656693081-0": {
+            "type": "icon_image",
+            "settings": {
+              "image": "",
+              "icon": "icon-plane.png",
+              "text": "Free shipping"
+            }
+          },
+          "1496656693081-1": {
+            "type": "icon_image",
+            "settings": {
+              "image": "",
+              "icon": "icon-truck.png",
+              "text": "Free returns"
+            }
+          },
+          "1496656693081-2": {
+            "type": "icon_image",
+            "settings": {
+              "image": "",
+              "icon": "icon-badge.png",
+              "text": "Best quality"
+            }
+          },
+          "1496656693081-3": {
+            "type": "icon_image",
+            "settings": {
+              "image": "",
+              "icon": "icon-shield.png",
+              "text": "Safe checkout"
+            }
+          }
+        },
+        "block_order": [
+          "1496656693081-0",
+          "1496656693081-1",
+          "1496656693081-2",
+          "1496656693081-3"
+        ],
+        "settings": {
+          "title": "",
+          "inverted": true
+        }
+      },
+      "1497955494101": {
+        "type": "featured-products",
+        "settings": {
+          "title": "DEAL OF THE DAY",
+          "hoverable": true
+        }
+      },
+      "1497958158163": {
+        "type": "separator",
+        "settings": {
+          "display": "all",
+          "color": "#41cd62",
+          "height": "15px",
+          "no_margin": false
+        }
+      },
+      "1497965699291": {
+        "type": "newsletter",
+        "settings": {
+          "inverted": false,
+          "title": "GET OUR DAILY DEAL VIA INBOX",
+          "text": "<p>Receive our promotions to your inbox. Subscribe today!<\/p>",
+          "button_text": "SUBSCRIBE"
+        }
+      },
+      "1497965754298": {
+        "type": "separator",
+        "settings": {
+          "display": "all",
+          "color": "#41cd62",
+          "height": "15px",
+          "no_margin": false
+        }
+      },
+      "1497967594955": {
+        "type": "featured-collection",
+        "settings": {
+          "title": "",
+          "hoverable": true
+        }
+      },
+      "1497970810915": {
+        "type": "slideshow",
+        "blocks": {
+          "1497970810915-0": {
+            "type": "image",
+            "settings": {
+              "image": "",
+              "title": "Slide Heading",
+              "subtitle": "<p>Tell your brand's story through video and images<\/p>",
+              "text": "<p>Tell your brand's story through video and images<\/p>",
+              "primary_button_label": "",
+              "primary_button_link": "",
+              "secondary_button_label": "",
+              "secondary_button_link": "",
+              "alignment": "center",
+              "text_location": "center",
+              "text_alignment": "center",
+              "color_title": "#fff",
+              "color_subtitle": "#fff",
+              "color_text": "#fff",
+              "image_overlay_opacity": "0.25",
+              "color_image_overlay": "#000000",
+              "primary_button_border_color": "#fff",
+              "primary_button_bg_color": "transparent",
+              "primary_button_text_color": "#fff",
+              "secondary_button_border_color": "#fff",
+              "secondary_button_bg_color": "transparent",
+              "secondary_button_text_color": "#fff"
+            }
+          }
+        },
+        "block_order": [
+          "1497970810915-0"
+        ],
+        "settings": {
+          "autoplay": true,
+          "autoplay_speed": "5000",
+          "slideshow_height": "xsmall",
+          "title_text_size": "large",
+          "subtitle_text_size": "large",
+          "content_text_size": "small"
+        }
+      },
+      "1497971134137": {
+        "type": "testimonials",
+        "settings": {
+          "type": "grid",
+          "inverted": true,
+          "effect": "fade",
+          "title": ""
+        }
+      },
+      "1497973148306": {
+        "type": "separator",
+        "settings": {
+          "display": "all",
+          "color": "#41cd62",
+          "height": "15px",
+          "no_margin": false
+        }
+      },
+      "1497973801821": {
+        "type": "featured-product",
+        "settings": {
+          "title": "",
+          "product": "",
+          "btn_action": "add_to_cart",
+          "btn_text": "Add to Cart",
+          "product_options_style": "dropdown",
+          "display_quantity_selector": true,
+          "gallery_zoom_type": "mouseover",
+          "gallery_arrows": true,
+          "excerpt_word_count": "15"
+        }
+      },
+      "1498026043184": {
+        "type": "separator",
+        "settings": {
+          "display": "all",
+          "color": "#41cd62",
+          "height": "5px",
+          "no_margin": true
+        }
+      },
+      "1498056121306": {
+        "type": "featured-collections",
+        "settings": {
+          "title": "",
+          "title_style": "over",
+          "color_title": "#ffffff",
+          "hover_effect": true,
+          "image_overlay_opacity": "0.5",
+          "color_image_overlay": "#000000"
+        }
+      },
+      "1498057229709": {
+        "type": "custom-content",
+        "blocks": {
+          "1498057229709-0": {
+            "type": "text",
+            "settings": {
+              "title": "",
+              "text": "",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "left",
+              "column_width": "one-whole"
+            }
+          }
+        },
+        "block_order": [
+          "1498057229709-0"
+        ],
+        "settings": {
+          "display": "all",
+          "inverted": false,
+          "disable_padding": false
+        }
+      },
+      "1498057558914": {
+        "type": "custom-content",
+        "blocks": {
+          "1498057614924": {
+            "type": "image",
+            "settings": {
+              "image": "",
+              "link": "",
+              "column_width": "one-whole"
+            }
+          }
+        },
+        "block_order": [
+          "1498057614924"
+        ],
+        "settings": {
+          "display": "all",
+          "inverted": false,
+          "disable_padding": false
+        }
+      },
+      "1498058006650": {
+        "type": "separator",
+        "settings": {
+          "display": "all",
+          "color": "#41cd62",
+          "height": "5px",
+          "no_margin": false
+        }
+      },
+      "1498058027811": {
+        "type": "custom-content",
+        "blocks": {
+          "1498058027811-0": {
+            "type": "text",
+            "settings": {
+              "title": "ABOUT US",
+              "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed venenatis ex. Maecenas scelerisque dictum tortor, ac venenatis lacus aliquet sit amet. Fusce molestie diam in tellus condimentum, sed sollicitudin arcu vehicula. Nulla quam neque, volutpat a metus ut, vulputate mollis justo. Nullam eu nisi nec ligula vestibulum euismod.<\/p>",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "center",
+              "column_width": "one-half"
+            }
+          },
+          "1498058034528": {
+            "type": "image",
+            "settings": {
+              "image": "",
+              "link": "",
+              "column_width": "one-half"
+            }
+          }
+        },
+        "block_order": [
+          "1498058027811-0",
+          "1498058034528"
+        ],
+        "settings": {
+          "display": "all",
+          "inverted": false,
+          "disable_padding": true
+        }
+      },
+      "page-constructor": {
+        "type": "page-constructor",
+        "blocks": {
+          "1502234545681": {
+            "type": "content",
+            "settings": {
+              "title": "Columns",
+              "content": "<p>Open this page in the theme editor and click on \"Page Constructor\" configuration in the left menu.<\/p>\n<p>Set the column width to 66.6% which means the content&nbsp;will take two&nbsp;thirds of the page&nbsp;width.<\/p>\n<p>Then create a \"Content Block\" and set its column width to 33.3% (one third).<\/p>\n<p>You will get a two-column page. There are many more column size option so that you can split your page on up to five columns.<\/p>",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "left",
+              "width": "one-third"
+            }
+          },
+          "1502235758390": {
+            "type": "content",
+            "settings": {
+              "title": "Use different type of blocks",
+              "content": "<p>There are different type of content you can display on your page using different blocks.<\/p>",
+              "button_label": "Example Button",
+              "button_link": "shopify:\/\/pages\/custom-1",
+              "align_text": "center",
+              "width": "one-whole"
+            }
+          },
+          "1502235685970": {
+            "type": "image",
+            "settings": {
+              "image": "",
+              "image_size": "768x768",
+              "crop_type": "center",
+              "link": "",
+              "width": "one-half"
+            }
+          },
+          "1502235710320": {
+            "type": "image",
+            "settings": {
+              "image": "",
+              "image_size": "768x768",
+              "crop_type": "center",
+              "link": "",
+              "width": "one-half"
+            }
+          },
+          "1502235915951": {
+            "type": "content",
+            "settings": {
+              "title": "Grid examples",
+              "content": "",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "center",
+              "width": "one-whole"
+            }
+          },
+          "1502235954573": {
+            "type": "content",
+            "settings": {
+              "title": "25% A quarter",
+              "content": "<p>Example text. Can be anything. Really.<\/p>",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "left",
+              "width": "one-quarter"
+            }
+          },
+          "1502235999211": {
+            "type": "content",
+            "settings": {
+              "title": "50% Two Quarters",
+              "content": "<p>Text + call to action<\/p>",
+              "button_label": "Example button",
+              "button_link": "shopify:\/\/collections\/all",
+              "align_text": "center",
+              "width": "two-quarters"
+            }
+          },
+          "1502236076805": {
+            "type": "menu",
+            "settings": {
+              "title": "25% A quarter",
+              "menu": "footer",
+              "align_text": "right",
+              "align_items": "right",
+              "width": "one-quarter"
+            }
+          },
+          "1502751729189": {
+            "type": "clearfix",
+            "settings": {
+            }
+          },
+          "1502236335531": {
+            "type": "content",
+            "settings": {
+              "title": "",
+              "content": "",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "left",
+              "width": "one-quarter"
+            }
+          },
+          "1502236220823": {
+            "type": "content",
+            "settings": {
+              "title": "Page break",
+              "content": "<p>Sometimes you want the next column to be on a new row even if it fits to the grid. Use \"Page break (clear fix)\" block for that. Let me demonstrate this case:<\/p>",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "center",
+              "width": "one-half"
+            }
+          },
+          "1502751722156": {
+            "type": "clearfix",
+            "settings": {
+            }
+          },
+          "1502236376074": {
+            "type": "content",
+            "settings": {
+              "title": "This is a one-third",
+              "content": "<p><em>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<\/em><\/p>",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "left",
+              "width": "one-third"
+            }
+          },
+          "1502236490981": {
+            "type": "content",
+            "settings": {
+              "title": "Two-thirds with less content",
+              "content": "<p><em>Lorem ipsum dolor sit amet, consectetur adipisicing elit.<\/em><\/p>",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "left",
+              "width": "two-thirds"
+            }
+          },
+          "1502236528121": {
+            "type": "content",
+            "settings": {
+              "title": "Another two-thirds",
+              "content": "<p>It fits to the space left on this line. To make the next two-thirds column go on another line. Insert a \"Page break\" block before it.<\/p>",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "left",
+              "width": "two-thirds"
+            }
+          },
+          "1502236776881": {
+            "type": "clearfix",
+            "settings": {
+            }
+          },
+          "1502236785633": {
+            "type": "content",
+            "settings": {
+              "title": "I'm on new line",
+              "content": "<p>Even though I could fit on&nbsp;the line above :P<\/p>",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "left",
+              "width": "two-thirds"
+            }
+          },
+          "1502236860523": {
+            "type": "content",
+            "settings": {
+              "title": "Enjoy!",
+              "content": "",
+              "button_label": "",
+              "button_link": "",
+              "align_text": "center",
+              "width": "one-whole"
+            }
+          }
+        },
+        "block_order": [
+          "1502234545681",
+          "1502235758390",
+          "1502235685970",
+          "1502235710320",
+          "1502235915951",
+          "1502235954573",
+          "1502235999211",
+          "1502236076805",
+          "1502751729189",
+          "1502236335531",
+          "1502236220823",
+          "1502751722156",
+          "1502236376074",
+          "1502236490981",
+          "1502236528121",
+          "1502236776881",
+          "1502236785633",
+          "1502236860523"
+        ],
+        "settings": {
+          "display_page_title": true,
+          "page_width": "wide",
+          "column_width": "two-thirds",
+          "content_location": "left",
+          "page_content": ""
+        }
+      }
+    },
+    "content_for_index": [
+      "1496645688611",
+      "1496656693081",
+      "1497955494101",
+      "1497958158163",
+      "1497965699291",
+      "1497965754298",
+      "1497966686972",
+      "1497967594955",
+      "1497970810915",
+      "1497971134137",
+      "1497973148306",
+      "1497973801821",
+      "1498056121306",
+      "1498026043184",
+      "1498057229709",
+      "1498057558914",
+      "1498058006650",
+      "1498058027811"
+    ]
+  }
+}

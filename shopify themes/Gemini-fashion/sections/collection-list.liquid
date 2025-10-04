@@ -1,0 +1,254 @@
+<div class="collection-list" data-section-id="{{ section.id }}" data-section-type="collectionList">
+  {%- assign min_column = 5 -%}
+  {% for block in section.blocks %}
+    {%- assign width = block.settings.width | plus: 0 -%}
+    {%- if width < min_column -%}
+      {%- assign min_column = width -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- case min_column -%}
+    {% when 1 %}
+      {% assign grid_sizer = 'medium-up--one-quarter' %}
+    {% when 2 %}
+      {% assign grid_sizer = 'medium-up--one-third' %}
+    {% when 3 %}
+      {% assign grid_sizer = 'medium-up--one-half' %}
+    {% when 4 %}
+      {% assign grid_sizer = 'medium-up--two-thirds' %}
+    {% when 5 %}
+      {% assign grid_sizer = 'one-whole' %}
+  {%- endcase -%}
+
+  {% if section.settings.use_container %} <div class="page-width"> {% endif %}
+  <div class="grid js-collection-list {% if section.settings.disable_spacing %} grid--gapless {% endif %}">
+    <div class="grid__sizer {{ grid_sizer }}"></div>
+    {% for block in section.blocks %}
+      {%- assign width = block.settings.width | plus: 0 -%}
+      {%- if width < min_column -%}
+        {%- assign min_column = width -%}
+      {%- endif -%}
+
+      {%- case block.settings.width -%}
+      {% when '1' %}
+        {% assign banner_width = 'medium-up--one-quarter' %}
+        {% if section.settings.use_container %}
+           {% assign image_size = '540x' %}
+        {% else %}
+           {% assign image_size = 'master' %}
+        {% endif %}
+      {% when '2' %}
+        {% assign banner_width = 'medium-up--one-third' %}
+        {% if section.settings.use_container %}
+          {% assign image_size = '740x' %}
+        {% else %}
+          {% assign image_size = 'master' %}
+        {% endif %}
+      {% when '3' %}
+        {% assign banner_width = 'medium-up--one-half' %}
+        {% if section.settings.use_container %}
+          {% assign image_size = '1024x' %}
+        {% else %}
+          {% assign image_size = 'master' %}
+        {% endif %}
+      {% when '4' %}
+        {%- assign banner_width = 'medium-up--two-thirds' -%}
+        {% if section.settings.use_container %}
+          {%- assign image_size = '1024x' -%}
+        {% else %}
+          {% assign image_size = 'master' %}
+        {% endif %}
+      {% when '5' %}
+        {% assign banner_width = '' %}
+        {% if section.settings.use_container %}
+          {% assign image_size = '1170x' %}
+        {% else %}
+          {% assign image_size = 'master' %}
+        {% endif %}
+      {%- endcase -%}
+      {%- assign collection = collections[block.settings.collection] -%}
+      <div class="grid__item {{ banner_width }}">
+        <figure class="collection">
+          {% if block.settings.collection != blank %}<a href="{{ collection.url }}">{% endif %}
+
+          {%- if block.settings.image != blank -%}
+            <img src="{{ block.settings.image | img_url: image_size, format: 'pjpg' | split:'?' | first }}" alt="{{ block.settings.image.alt }}" width="{{ image_size | split: 'x'| first }}" height="{{ image_size | split: 'x'| last }}">
+          {%- else -%}
+            {%- if collection != blank -%}
+              {%- if collection.image -%}
+              <img src="{{ collection | img_url: image_size, format: 'pjpg' | split:'?' | first }}" alt="{{ block.settings.image.alt }}" width="{{ image_size | split: 'x'| first }}" height="{{ image_size | split: 'x'| last }}">
+              {%- elsif collection.products.first -%}
+              <img src="{{ collection.products.first | img_url: image_size | split:'?' | first }}" alt="{{ block.settings.image.alt }}" width="{{ image_size | split: 'x'| first }}" height="{{ image_size | split: 'x'| last }}">
+              {% comment %}{{ collection.products.first | img_url: image_size, crop: 'top' }}{% endcomment %}
+              {%- endif -%}
+            {%- else -%}
+              {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+              {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          {%- endif -%}
+
+          <figcaption class="collection-figcaption collection-figcaption--{{- section.settings.collection_title_position -}}">
+            {% if collection.empty? %}
+              <h2 class="collection-figcaption--title">{{ 'homepage.onboarding.collection_title' | t }}</h2>
+            {% else %}
+              <h2 class="collection-figcaption--title">{{ collection.title }}</h2>
+            {% endif %}
+          </figcaption>
+
+          {% if block.settings.collection != blank %}</a>{% endif %}
+        </figure>
+      </div>
+    {% endfor %}
+  </div>
+  {% if section.settings.use_container %} </div> {% endif %}
+</div>
+
+{% include 'section-spacing' %}
+
+{% schema %}
+  {
+    "name": "Collection list",
+    "class": "gemini-collection-list",
+    "max_blocks": 12,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Design options"
+      },
+      {
+        "type": "paragraph",
+        "content": "To horizontally center a block element use margin: auto;"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_container",
+        "label": "Use container",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "disable_spacing",
+        "label": "Disable spacing",
+        "default": false
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margin (top right bottom left)",
+        "info": "60px auto 60px auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Padding (top right bottom left)",
+        "info": "60px 0 60px 0"
+      },
+      {
+        "type": "header",
+        "content": "Collection list item settings"
+      },
+      {
+        "type": "select",
+        "id": "collection_title_position",
+        "label": "Collection Title position",
+        "options": [
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          },
+          {
+            "value": "middle",
+            "label": "Middle"
+          },
+          {
+            "value": "top",
+            "label": "Top"
+          }
+        ],
+        "default": "bottom"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+           {
+          "type": "select",
+          "id": "width",
+          "label": "width: ",
+          "default": "5",
+          "options": [
+               {
+                 "value": "1",
+                 "label": "25%"
+               },
+               {
+                 "value": "2",
+                 "label": "33.33333333%"
+               },
+               {
+                 "value": "3",
+                 "label": "50%"
+               },
+               {
+                 "value": "4",
+                 "label": "66.66666667%"
+               },
+               {
+                 "value": "5",
+                 "label": "100%"
+               }
+             ]
+           },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type":"collection",
+            "id":"collection",
+            "label":"Choose collection",
+            "info": "Optional"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection list",
+        "category": "Collection",
+        "blocks": [
+          {
+            "type": "collection",
+            "settings": {
+              "width": "2"
+            }
+          },
+          {
+            "type": "collection",
+            "settings": {
+              "width": "4"
+            }
+          },
+          {
+            "type": "collection",
+            "settings": {
+              "width": "2"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

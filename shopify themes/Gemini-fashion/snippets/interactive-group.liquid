@@ -1,0 +1,98 @@
+{%- assign item_class = 'interactive-item' -%}
+{%- assign group_class = '' -%}
+{%- if style_class == 'style05' -%}
+  {%- assign item_class = item_class | append: ' interactive-item--no-outline' -%}
+{%- else -%}
+  {%- assign item_class = item_class | append: ' btn' -%}
+
+  {%- assign group_class = 'interactive-group--horizontal' -%}
+  {%- if settings.interactive_group_align == 'vertical' -%}
+    {%- assign group_class = 'interactive-group--vertical' -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- assign quick_view = false -%}
+{%- if settings.product_view_style == 'quick' -%}
+  {%- assign quick_view = true -%}
+{%- endif -%}
+
+<div class="interactive-group {{ group_class }}">
+
+  {%- unless style_class == 'style05' -%}
+    {%- unless settings.product_view_style == 'disable' -%}
+      {%- if quick_view -%}
+        <button
+          class="js-quick-view {{ item_class }}"
+          data-link="{{- product.url -}}?view=quick-view"
+          >
+          <i class="fa fa-eye"></i>
+          <span class="interactive-item__label">
+            {{- 'products.product.quick_view' | t -}}
+          </span>
+        </button>
+      {%- else -%}
+        <a
+          class="{{ item_class }}"
+          href="{{ product.url }}"
+          >
+          <i class="fa fa-eye"></i>
+          <span class="interactive-item__label">
+            {{- 'products.product.view_detail' | t -}}
+          </span>
+        </a>
+      {%- endif -%}
+    {%- endunless -%}
+  {%- endunless -%}
+
+  {%- if settings.add_to_cart_enable -%}
+    {%- unless sold_out -%}
+      {%- if product.variants.size > 1 -%}
+        <a href="{{ product.url | within: collection }}" class="{{ item_class }}" data-product-id="{{ product.id }}">
+          <i class="fa fa-link"></i>
+          <span class="interactive-item__label">
+            {{- 'products.product.select_option' | t -}}
+          </span>
+        </a>
+      {%- else -%}
+        <a href="/cart" class="js-add-to-cart {{ item_class }}" data-variant-id="{{ product.variants.first.id }}">
+          <span class="add">{%- include 'icon-cart' -%}</span>
+          <span class="adding"><i class="fa fa-spinner"></i></span>
+          <span class="added">{%- include 'icon-cart' -%}</span>
+          <span class="interactive-item__label interactive-item__label--add">
+            {{- 'products.product.add_to_cart' | t -}}
+          </span>
+          <span class="interactive-item__label interactive-item__label--added">
+            {{- 'cart.general.view_cart' | t -}}
+          </span>
+        </a>
+      {%- endif -%}
+    {%- endunless -%}
+  {%- endif -%}
+
+  {%- if settings.add_to_wishlist_enable -%}
+    <a class="add-to-wishlist js-add-to-wishlist {{ item_class }}" data-product-handle="{{ product.handle }}" href="{%- if settings.wishlist_page_handle != blank -%}/pages/{{- settings.wishlist_page_handle -}}{%- endif -%}">
+      <span class="add"><i class="fa fa-heart-o"></i></span>
+      <span class="adding"><i class="fa fa-spinner adding"></i></span>
+      <span class="added"><i class="fa fa-heart added"></i></span>
+      <span class="interactive-item__label interactive-item__label--add">
+        {{- 'products.product.add_to_wishlist' | t -}}
+      </span>
+      <span class="interactive-item__label interactive-item__label--added">
+        {{- 'products.product.open_wishlist' | t -}}
+      </span>
+    </a>
+  {%- endif -%}
+
+  {%- comment -%}
+  {%- if settings.comparing_enable -%}
+    <button class="js-add-to-compare {{ item_class }}">
+      {%- include 'icon-justice' -%}
+      <span class="interactive-item__label">
+        {{- 'products.product.add_to_compare' | t -}}
+      </span>
+    </button>
+  {%- endif -%}
+  {%- endcomment -%}
+
+</div>
+

@@ -1,0 +1,23 @@
+<div class="connect">
+  {%- if block.settings.title and block.settings.title != ''  -%}
+  <h3 class="connect__title">{{ block.settings.title }}</h3>
+  {%- endif -%}
+
+  {%- assign social_accounts = 'Facebook, Twitter, Pinterest, Instagram, Snapchat, Tumblr, YouTube, Vimeo' | split: ', ' -%}
+  <ul class="connect__list">
+    {%- for social in social_accounts -%}
+      {%- assign social_handle = social | handleize -%}
+      {%- capture social_link -%}social_{{ social_handle }}_link{%- endcapture -%}
+      {%- capture social_icon -%}icon-{{ social_handle }}{%- endcapture -%}
+
+      {%- if settings[social_link] != blank -%}
+        <li>
+          <a href="{{ settings[social_link] }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: social }}">
+            {% include social_icon %}
+            <span class="icon-fallback-text">{{ social }}</span>
+          </a>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</div>

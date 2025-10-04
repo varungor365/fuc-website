@@ -1,0 +1,36 @@
+<div class="header__extra">
+  <a class="header__search-btn js_header__search-btn">
+    {% include 'icon-search' %}
+  </a>
+  {%- if section.settings.wishlist -%}
+  <a href="{%- if settings.wishlist_page_handle != blank -%}/pages/{{- settings.wishlist_page_handle -}}{%- endif -%}" class="header__wishlist-btn small--hide">
+    <i class="fa fa-heart-o"></i>
+  </a>
+  {%- endif -%}
+  {%- if shop.customer_accounts_enabled and section.settings.account -%}
+    <a href="/account">
+      <i class="fa fa-user-circle"></i>
+    </a>
+  {%- endif -%}
+  <div class="header__cart__wrapper">
+    <a class="header__cart-btn js-header-cart-btn" href="/cart" 
+      {%- unless section.settings.layout == 'header05' -%}
+        data-cart-type="{{ settings.minicart }}"
+      {%- endunless -%}
+    >
+      {% include 'icon-cart' %}
+      <span class="js-cart-count">{{ cart.item_count }}</span>
+    </a>
+
+    {%- if settings.minicart == 'dropdown' and section.settings.layout != 'header05' -%}
+      <div class="cart-widget js-cart-widget">
+        {% include 'minicart-dropdown' %}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+<div class="header__off-canvas large-up--hide">
+  <a href="javascript:" class="header__off-canvas-btn js-mobile-nav-open">
+    {% include 'icon-bars' %}
+  </a>
+</div>

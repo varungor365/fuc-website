@@ -1,0 +1,38 @@
+{% layout none %}
+{% unless image_size %}
+{%- assign image_size = '70x' -%}
+{% endunless %}
+{% assign current_variant = product.selected_or_first_available_variant %}
+{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+{% if search.terms != blank %}
+  {% if search.results_count == 0 or search.performed == false %}
+     <li>{{ 'general.search.no_results_html' | t: terms: search.terms }}</li>
+  {% else %}
+    {% for item in search.results limit:4 %}
+    {% assign product = item %}
+    <li>
+      <a href="{{ product.url | within: product.collections.first }}" class="ajax-product">
+        <img src="{{ product.featured_image.src | img_url: image_size | split:'?' | first }}"/>
+        <div class="ajax-product__info">
+          <h3>{{ product.title | highlight: search.terms }}</h3>
+          <p>
+            {%- if product.metafields.meta.description_excerpt -%}
+              {{  product.metafields.meta.description_excerpt  }}
+            {%-else-%}
+              {{ product.description | strip_html | truncate: 80 }}
+            {%-endif-%}
+          </p>
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+
+    {% if search.results_count > 1 %}
+    <li>
+      <a href="/search?type=product&q={{ search.terms }}" class="ajax-product-total">{{ 'general.search.search_ajax_results' | t :count: search.results_count }}</a>
+    </li>
+    {% endif %}
+  {% endif %}
+{% else %}
+  <li>{{ 'general.search.placeholder' | t }}</li>
+{% endif %}

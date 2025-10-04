@@ -1,0 +1,26 @@
+<div class="header__search js_header__search">
+  <div class="header__search-bar js_header__search-bar">
+    <div class="header__search-wrap">
+      <form action="/search" method="get" role="search">
+        <label for="Search" class="label-hidden">
+          {{ 'general.search.placeholder' | t }}
+        </label>
+        <input type="search"
+               name="q"
+               id="Search"
+               class="header__search-input js_header__search-input"
+               value="{{ search.terms | escape }}"
+               placeholder="{{ 'general.search.placeholder' | t }}">
+        <a href="javascript:;" class="close">
+          {% include 'icon-close' %}
+        </a>
+      </form>
+      <ul class="header__search-results clearfix" id="search-results"></ul>
+      <div class="header__search-loading">
+        <div class="header__search-loading-icon" id="js-search-loading">
+        {% include 'icon-loading' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

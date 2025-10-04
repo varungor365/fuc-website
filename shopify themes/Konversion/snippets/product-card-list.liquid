@@ -1,0 +1,49 @@
+<div class="grid">
+  <div class="grid__item one-whole large--one-quarter list-view-item__image-column">
+    <div class="list-view-item__image-wrapper">
+      <img class="list-view-item__image" src="{{ product.featured_image.src | img_url: '600x600' }}" alt="{{ product.featured_image.alt | escape }}">
+    </div>
+  </div>
+
+  <div class="grid__item one-whole large--two-quarters list-view-item__title-column">
+    <div class="product-info__title">
+      <h3>{{ product.title }} </h3>
+    </div>
+    {% if settings.app_product_reviews_enabled != blank %}
+      {% if settings.app_product_reviews_enabled == "product_reviews" %}
+        <div class="product-rating">
+          <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+        </div>
+      {% elsif settings.app_product_reviews_enabled == "loox_reviews" %}
+        <div class="product-rating">
+          <div class="loox-rating" data-id="{{ product.id }}" data-rating="{{ product.metafields.loox.avg_rating }}" data-raters="{{ product.metafields.loox.num_reviews }}"></div>
+        </div>
+      {% elsif settings.app_product_reviews_enabled == "yotpo_reviews" %}
+        <div class="product-rating">
+          <div class="yotpo bottomLine"
+            data-product-id="{{ product.id }}">
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+    <div class="product-short-description">
+      {% include "product-description-split",
+        product_description: product.description,
+        excerpt_size: "18",
+        product_short_desc: blank
+      %}
+      {{ product_short_desc }}
+    </div>
+  </div>
+
+  <div class="grid__item one-whole large--one-quarter list-view-item__price-column">
+
+    {% if product.available %}
+      <div class="product-price">
+        {% include 'product-price' %}
+      </div>
+    {% else %}
+      <div class="list-view-item__sold-out">{{ 'products.product.sold_out' | t }}</div>
+    {% endif %}
+  </div>
+</div>

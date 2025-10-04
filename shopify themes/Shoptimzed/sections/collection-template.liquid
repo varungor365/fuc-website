@@ -1,0 +1,106 @@
+<div class="wrapper">
+{% paginate collection.products by settings.collections_pagination_items %}
+{% if settings.collection_breadcrumb %}
+  {% include 'breadcrumb' %}
+{% endif %}
+<div class="grid">
+  {% if settings.collections_left_side %}
+    <div class="grid__item large--one-quarter">
+      {% include 'collection-sidebar' %}
+    </div>
+  {% endif %}
+  <div class="grid__item {% if settings.collections_left_side %}large--three-quarters{% else %}large--one-whole{% endif %}">
+    {% if collection.description != blank %}
+      <header class="section-header">
+        <h1 class="section-header__title">{{ collection.title }}</h1>
+        <div class="rte rte--header">
+          {{ collection.description }}
+        </div>
+      </header>
+      <div class="section-header">
+        <div class="section-header__right">
+          {% include 'collection-sorting' %}
+        </div>
+      </div>
+    {% else %}
+      <header class="section-header">
+        <h1 class="section-header__title section-header__left">{{ collection.title }}</h1>
+        <div class="section-header__right">
+          {% include 'collection-sorting' %}
+        </div>
+      </header>
+    {% endif %}
+
+    <div class="grid-uniform">
+      {% assign product_list_class = "" %}
+      {% assign product_list_class_desk = "" %}
+      {% assign product_list_class_mobile = "" %}
+      {% assign products_per_row = settings.products_per_row %}
+      {% assign products_per_row_mobile = settings.mobile_products_per_row %}
+	  {% if products_per_row == "2" %}
+        {% assign product_list_class_desk = "large--one-half" %}
+      {% elsif products_per_row == "3" %}
+        {% assign product_list_class_desk = "large--one-third" %}
+      {% elsif products_per_row == "4" %}  
+        {% assign product_list_class_desk = "large--one-quarter" %}
+      {% endif %}
+      {% if products_per_row_mobile == "1" %}
+        {% assign product_list_class_mobile = "small--one-whole" %}
+      {% elsif products_per_row_mobile == "2" %}
+        {% assign product_list_class_mobile = "small--one-half" %}
+      {% endif %}
+      {% capture product_list_class %}{{ product_list_class_desk }} medium--one-half margin--bottom-15 {{ product_list_class_mobile }}{% endcapture %}
+      {% for product in collection.products %}
+        {% include 'product-grid-item' %}
+      {% else %}
+        {% if collection.handle == 'all' and current_tags == '' %}
+          {% unless emptyState %}
+            {{ 'theme-onboarding.css' | global_asset_url | stylesheet_tag }}
+            {% assign emptyState = true %}
+          {% endunless %}
+          {% include 'onboarding-empty-collection' %}
+        {% else %}
+          <div class="grid__item">
+            <p>{{ 'collections.general.no_matches' | t }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+      <hr>
+      <div class="pagination">
+        {{ paginate | default_pagination | replace: '&laquo; Previous', '<i class="fa fa-angle-left"></i>' | replace: 'Next &raquo;', '<i class="fa fa-angle-right"></i>' }}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "name": "Collection Page Settings",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Setting 1"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Text",
+      "default": "Setting 2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection page Section",
+      "category": "General"
+    }
+  ]
+}
+{% endschema %}

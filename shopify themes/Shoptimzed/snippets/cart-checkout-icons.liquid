@@ -1,0 +1,29 @@
+<ul class="menu social-media-cc display_cart_property">
+  {% if settings.footer_checkout_display %}
+    {% if settings.ff-checkout-visa-enable %}
+  	<li style="margin-left:0px;" ><a href="javascript:void(0);">
+      <img src="{{ 'visa.png' | asset_url }}" class="cart-payment-icon no-border ratina-img" />
+      </a></li>
+    {% endif %}
+    {% if settings.ff-checkout-mastercard-enable %}
+    <li><a href="javascript:void(0);">
+      	<img src="{{ 'mastercard.png' | asset_url }}" class="cart-payment-icon no-border ratina-img" />
+        </a></li>
+    {% endif %}
+    {% if settings.ff-checkout-americanexp-enable %}
+    <li><a href="javascript:void(0);">
+      <img src="{{ 'amex.png' | asset_url }}" class="cart-payment-icon no-border ratina-img" />
+      </a></li>
+    {% endif %}
+    {% if settings.ff-checkout-discover-enable %}
+    <li><a href="javascript:void(0);">
+      <img src="{{ 'discover.png' | asset_url }}" class="cart-payment-icon no-border ratina-img" />
+      </a></li>
+    {% endif %}
+    {% if settings.ff-checkout-paypal-enable %}
+    <li><a href="javascript:void(0);">
+      <img src="{{ 'paypal.png' | asset_url }}" class="cart-payment-icon no-border ratina-img" />
+      </a></li>
+    {% endif %}
+  {% endif %}
+</ul>

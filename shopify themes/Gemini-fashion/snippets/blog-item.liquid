@@ -1,0 +1,79 @@
+{%- if truncate_words == blank -%}
+  {%- assign truncate_words = 15 -%}
+{%- endif -%}
+
+<article class="blog__item">
+  {%- if article.image -%}
+    <div class="blog__media">
+      <img src="{{ article | img_url: image_size, format: 'pjpg', crop: 'center' | split:'?' | first }}" width="{{ image_size | split: 'x'| first }}" height="{{ image_size | split: 'x'| last }}" alt="{{ article.title }}">
+      <a class="blog__link" href="{{ article.url }}">
+        {% include 'icon-search' %}
+      </a>
+    </div>
+  {%- endif -%}
+
+  <div class="blog__info">
+    <div class="blog__meta">
+      {%- unless section.settings.show_date == false -%}
+        <span>{{ article.published_at | time_tag: format: 'month_day_year' }}</span>
+      {%- endunless -%}
+      {%- unless section.settings.show_date == false or section.settings.show_blog_cat == false -%}
+        &nbsp;/&nbsp;
+      {%- endunless -%}
+      {%- unless section.settings.show_blog_cat == false -%}
+        <a href="{{ blog.url }}">{{ blog.title }}</a>
+      {%- endunless -%}
+    </div>
+    <h3 class="blog__title"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+    {% unless flag_no_tags or article.tags.size == 0 %}
+      <div class="blog__tags">
+        <span>{% include 'icon-ios-pricetags-outline' %}</span>
+        <ul>
+          {%- for tag in article.tags -%}
+          <li>
+            <a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
+            {% unless forloop.last %}, {% endunless %}
+          </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {% endunless %}
+    <div class="blog__content">
+      <div class="rte">
+        {%- if article.excerpt.size > 0 -%}
+          {{ article.excerpt | strip_html }}
+        {%- else -%}
+          <p>{{ article.content | strip_html | truncatewords: truncate_words }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="blog__footer">
+      <div class="grid">
+        <div class="grid__item one-half">
+          {%- if section.settings.show_readmore == false -%}
+            &nbsp;
+          {%- else -%}
+            <div class="blog__readmore">
+              <a class="blog__readmore__btn" href="{{ article.url }}">
+                {{ 'blogs.article.read_more' | t }}
+                {% include 'icon-ios-arrow-right' %}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+        <div class="grid__item one-half text-right">
+          {%- if section.settings.show_comment_counter == false -%}
+            &nbsp;
+          {%- else -%}
+            {%- if blog.comments_enabled? -%}
+              <a href="{{ article.url }}#comments">
+                {% include 'icon-ios-chatboxes-outline' %}
+                {{ article.comments_count }}
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</article>

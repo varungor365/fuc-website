@@ -1,0 +1,166 @@
+<div
+  class="page__header"
+  {% if settings.page_account_header_image %}
+    style="background-image: url({{ settings.page_account_header_image | img_url: 'master' }});"
+  {% endif %}
+  >
+  <div class="page-width">
+    <header class="text-center">
+      <h2 class="page__title">
+        {{ 'customer.account.title' | t }}
+      </h2>
+      {% include 'breadcrumbs' %}
+    </header>
+  </div>
+</div>
+
+<div class="page__body">
+  <div class="page-width">
+    <div class="grid">
+
+      <div class="grid__item medium-up--one-quarter">
+        {% assign account_current = 'account' %}
+        {% include 'account-nav' %}
+      </div>
+
+      <div class="grid__item medium-up--three-quarters">
+        <h3 class="account__title">
+          {{ 'customer.orders.title' | t }}
+        </h3>
+
+        {% paginate customer.orders by 20 %}
+          {% if customer.orders.size != 0 %}
+            <table class="table table--account responsive-table">
+              <thead>
+                <tr>
+                  <th>{{ 'customer.orders.order_number' | t }}</th>
+                  <th>{{ 'customer.orders.date' | t }}</th>
+                  <th>{{ 'customer.orders.payment_status' | t }}</th>
+                  <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                  <th>{{ 'customer.orders.total' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in customer.orders %}
+                  <tr class="responsive-table-row">
+                    <td data-label="{{ 'customer.orders.order_number' | t }}">
+                      {{ order.name | link_to: order.customer_url }}
+                    </td>
+                    <td data-label="{{ 'customer.orders.date' | t }}">
+                      {{ order.created_at | date: format: 'month_day_year' }}
+                    </td>
+                    <td data-label="{{ 'customer.orders.payment_status' | t }}">
+                      {{ order.financial_status_label }}
+                    </td>
+                    <td data-label="{{ 'customer.orders.fulfillment_status' | t }}">
+                      {{ order.fulfillment_status_label }}
+                    </td>
+                    <td data-label="{{ 'customer.orders.total' | t }}">
+                      {{ order.total_price | money }}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <div class="account__no-order">
+              {{ 'customer.orders.none' | t }}
+            </div>
+          {% endif %}
+
+          {% if paginate.pages > 1 %}
+            {% include 'pagination' %}
+          {% endif %}
+        {% endpaginate %}
+
+        <h3 class="account__title">
+          {{ 'customer.account.details' | t }}
+        </h3>
+
+        <table class="table table--border">
+          <tbody>
+            <tr class="responsive-table-row">
+              <td class="text-right">
+                {{ 'customer.account.name' | t }}
+              </td>
+              <td>
+                {{ customer.name }}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-right">
+                {{ 'customer.account.email' | t }}
+              </td>
+              <td>
+                {{ customer.email }}
+              </td>
+            </tr>
+            {% if customer.default_address != nil %}
+              {%- assign addr = customer.default_address -%}
+              {%- capture full_city_addr -%}
+                {{- addr.city -}},&nbsp;
+                {%- if addr.province_code != blank -%}
+                  {{- addr.province_code -}},&nbsp;
+                {%- endif -%}
+                {{- addr.country -}}
+              {%- endcapture -%}
+
+              <tr>
+                <td class="text-right">
+                  {{ 'customer.addresses.address1' | t }}
+                </td>
+                <td>
+                  {{ addr.address1 }}
+                </td>
+              </tr>
+              {% if addr.address2 != "" %}
+                <tr>
+                  <td class="text-right">
+                    {{ 'customer.addresses.address2' | t }}
+                  </td>
+                  <td>
+                    {{ addr.address2 }}
+                  </td>
+                </tr>
+              {% endif %}
+              <tr>
+                <td class="text-right">
+                  {{ 'customer.addresses.country' | t }}
+                </td>
+                <td>
+                  {{ full_city_addr }}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-right">
+                  {{ 'customer.addresses.zip' | t }}
+                </td>
+                <td>
+                  {{ addr.zip }}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-right">
+                  {{ 'customer.addresses.phone' | t }}
+                </td>
+                <td>
+                  {{ addr.phone }}
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+
+        <div class="text-center account__address-counter">
+          <a
+            href="/account/addresses"
+            class="btn btn--sm btn--outline"
+            >
+            {{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

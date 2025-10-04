@@ -1,0 +1,163 @@
+{%- assign image_size = '570x407' -%}
+<div class="blogpost" data-section-id="{{ section.id }}" data-section-type="blogpost" style="background-color: {{ section.settings.background }}">
+  <div class="page-width">
+
+    {% include 'section-heading' %}
+
+    <div class="grid">
+      {%- assign blog = blogs[section.settings.blog] -%}
+      {% unless blog.empty? %}
+        {% assign number_limit = section.settings.number_of_posts | plus:0 %}
+        {% for article in blog.articles limit:number_limit %}
+        <div class="grid__item medium-up--one-third one-whole">
+          {%- assign flag_no_tags = true -%}
+          {% include 'blog-item' %}
+        </div>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..3) %}
+        <div class="grid__item medium-up--one-third one-whole">
+          <article class="blog__item">
+            <div class="blog__media">
+              {{ 'image' | placeholder_svg_tag: 'blogpost__img__onboarding' }}
+              <a class="blog__link" href="/admin/blogs">
+                {% include 'icon-search' %}
+              </a>
+            </div>
+
+            <div class="blog__info">
+              <div class="blog__meta">
+                <span>{{ 'now' | time_tag: format: 'month_day_year' }}</span>
+                <span class="blog__meta_separator"> / </span>
+                <span>
+                  <a href="/admin/blogs">{{ 'homepage.onboarding.blog' | t }}</a>
+                </span>
+              </div>
+              <h4 class="blog__title"><a href="/admin/blogs">{{ 'homepage.onboarding.blog_title' | t }}</a></h4>
+              <div class="blog__content">
+                {{ 'homepage.onboarding.blog_excerpt' | t }}
+              </div>
+              <div class="blog__footer">
+                <div class="grid">
+                  <div class="grid__item one-half blog__author">
+                    <div class="blog__readmore">
+                      <a class="blog__readmore__btn" href="/admin/blogs">
+                        {{ 'blogs.article.read_more' | t }}
+                        {% include 'icon-ios-arrow-right' %}
+                      </a>
+                    </div>
+                  </div>
+                  <div class="grid__item one-half text-right">
+                    <a href="/admin/blogs">
+                      {% include 'icon-ios-chatboxes-outline' %}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+        {% endfor %}
+      {% endunless %}
+    </div>
+  </div>
+</div>
+
+{% include 'section-spacing' %}
+
+{% schema %}
+  {
+    "name": "Blog posts",
+    "class": "gemini-blog",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Blog posts"
+      },
+      {
+        "type": "text",
+        "id": "subtitle",
+        "label": "SubHeading",
+        "default": "Subtitle"
+      },
+      {
+        "id": "blog",
+        "type": "blog",
+        "label": "Blog"
+      },
+      {
+       "type":"text",
+       "id":"number_of_posts",
+       "label":"Number of articles to show ( integer )",
+       "default":"3"
+      },
+      {
+        "type": "header",
+        "content": "Design options"
+      },
+      {
+        "type": "paragraph",
+        "content": "To horizontally center a element use margin: auto;"
+      },
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background",
+        "default": "#f5f6fa"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "text",
+        "id": "margin",
+        "label": "Margin (top right bottom left)",
+        "info": "60px auto 60px auto"
+      },
+      {
+        "type": "text",
+        "id": "padding",
+        "label": "Padding (top right bottom left)",
+        "info": "60px 0 60px 0"
+      },
+      {
+        "type": "header",
+        "content": "Blog item settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_blog_cat",
+        "label": "Show category of article",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_date",
+        "label": "Show published date",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_readmore",
+        "label": "Show Readmore link",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_comment_counter",
+        "label": "Show comment counter",
+        "default": true
+      }
+    ],
+    "presets": [
+      {
+        "name": "Blog posts",
+        "category": "Blog"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,88 @@
+{
+  "timestamp": "2025-09-25T22:02:19.754Z",
+  "overall": "DEGRADED",
+  "checks": [
+    {
+      "name": "Environment Variables",
+      "status": "PASS",
+      "details": {
+        "GEMINI_API_KEY": true,
+        "PERPLEXITY_API_KEY": true
+      },
+      "message": "All AI API keys configured"
+    },
+    {
+      "name": "Automation Scripts",
+      "status": "PASS",
+      "details": {
+        "expectedScripts": 2,
+        "foundScripts": 2
+      },
+      "message": "All automation scripts present"
+    },
+    {
+      "name": "Stock Image Detection",
+      "status": "PASS",
+      "details": {
+        "expectedPaths": 4,
+        "foundPaths": 4,
+        "message": "Stock images detected"
+      },
+      "message": "Found 4 stock directories"
+    },
+    {
+      "name": "Image Generation API - GET",
+      "status": "PASS",
+      "details": {
+        "service": "Gemini AI Image Generation",
+        "status": "Available",
+        "version": "1.0.0",
+        "supportedStyles": [
+          "realistic",
+          "artistic",
+          "minimal",
+          "fashion"
+        ],
+        "supportedAspectRatios": [
+          "1:1",
+          "16:9",
+          "4:3",
+          "3:4"
+        ],
+        "maxPromptLength": 1000
+      },
+      "message": "API responsive - Gemini AI Image Generation v1.0.0"
+    },
+    {
+      "name": "Perplexity API",
+      "status": "WARN",
+      "details": {
+        "statusCode": 400
+      },
+      "message": "API returned 400 (fallback prompts will be used)"
+    },
+    {
+      "name": "Image Generation API - POST",
+      "status": "PASS",
+      "details": {
+        "success": false,
+        "error": "Gemini image generation service is being configured. Please check back soon.",
+        "metadata": {
+          "prompt": "Test streetwear image",
+          "style": "fashion",
+          "aspectRatio": "16:9",
+          "generatedAt": "2025-09-25T22:02:20.860Z"
+        }
+      },
+      "message": "POST endpoint functional"
+    },
+    {
+      "name": "Admin AI Generator Page",
+      "status": "FAIL",
+      "details": {
+        "statusCode": 404
+      },
+      "message": "Interface returned 404"
+    }
+  ]
+}

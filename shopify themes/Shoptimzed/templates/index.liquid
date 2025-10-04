@@ -1,0 +1,49 @@
+{% capture positions %}{{ settings.position_1 }},{{ settings.position_2 }},{{ settings.position_3 }},{{ settings.position_4 }},{{ settings.position_5 }},{{ settings.position_6 }},{{ settings.position_7 }},{{ settings.position_8 }}{% endcapture %}
+{% assign positions = positions | split: ',' %}
+{% include 'homepage-slideshow' %}
+
+<!-- called the banner section -->
+{% section 'creative_banner' %}
+
+{% for position in positions %}
+  {% if position == "2" %}
+	{% include 'homepage-review' %}
+  {% endif %}
+
+  {% if position == "3" %}
+	{% include 'homepage-marketing' %}
+  {% endif %}
+
+  {% if position == "4" %}
+	{% include 'homepage-featured' %}
+  {% endif %}
+
+  {% if position == "5" %}
+	{% include 'homepage-carousel' %}
+  {% endif %}
+
+  {% if position == "6" %}
+	{% include 'homepage-promotion' %}
+  {% endif %}
+
+  {% if position == "7" %}
+	{% include 'homepage-content-1' %}
+  {% endif %}
+
+  {% if position == "8" %}
+	{% include 'homepage-content-2' %}
+  {% endif %}
+{% endfor %}
+{% assign show-all-pro = settings.show-all-product-home %}
+
+{% if show-all-pro == "on" %}
+<div class="wrapper mt15">
+  <div class="grid-uniform">
+    {% if collections.all.products.size > 0 %}
+      {% for product in collections.all.products %}
+        {% include 'product-grid-item' %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+{% endif %}

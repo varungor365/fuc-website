@@ -1,0 +1,232 @@
+{%- assign tabs_style = section.settings.tabs_style -%}
+{%- if tabs_style == 'style03' -%}
+  {%- assign title_align = section.settings.title_align -%}
+{%- endif -%}
+
+{%- if section.blocks.size > 0 -%}
+  <div class="product-tabs {% if tabs_style != blank %}product-tabs--{{ tabs_style }}{% endif %}">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs {% if title_align != blank %}nav-tabs--{{ title_align }}{% endif %}" role="tablist">
+      {%- for block in section.blocks -%}
+        <li
+          role="presentation"
+          {% if forloop.index == 1 %}class="active"{% endif %}
+          >
+          <a
+            href="#block-{{- block.id -}}"
+            role="tab"
+            aria-controls="block-{{- block.id -}}"
+            data-toggle="tab"
+            >
+            {{ block.settings.title }}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      {%- for block in section.blocks -%}
+        <div
+          class="tab-pane fade {% if forloop.index == 1 %}in active{% endif %}"
+          id="block-{{- block.id -}}"
+          role="tabpanel"
+          >
+          {% include 'product-details' %}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% include 'section-spacing' %}
+
+{% schema %}
+{
+  "name": "Details - Tabs",
+  "settings": [
+    {
+      "type": "select",
+      "id": "tabs_style",
+      "label": "Tabs style",
+      "options": [
+        {
+          "value": "style01",
+          "label": "Style 01"
+        },
+        {
+          "value": "style02",
+          "label": "Style 02"
+        },
+        {
+          "value": "style03",
+          "label": "Style 03"
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "id": "title_align",
+      "label": "Tabs title alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "info": "Only apply for Style 03."
+    },
+    {
+      "type": "header",
+      "content": "Design options"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "margin",
+      "label": "Margin (top right bottom left)",
+      "info": "60px auto 60px auto"
+    },
+    {
+      "type": "text",
+      "id": "padding",
+      "label": "Padding (top right bottom left)",
+      "info": "60px 0 60px 0"
+    }
+  ],
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Description"
+        }
+      ]
+    },
+    {
+      "type": "additional_description",
+      "name": "Additional description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Additional description title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Additional description content",
+          "default": "<p>Detail information</p>"
+        }
+      ]
+    },
+    {
+      "type": "size_guide",
+      "name": "Size guide",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Size guide title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Description for size guide</p>"
+        },
+        {
+          "type": "radio",
+          "id": "type",
+          "label": "Size guide display",
+          "options": [
+            {
+              "value": "link",
+              "label": "Use external link"
+            },
+            {
+              "value": "image",
+              "label": "Upload a size guide image"
+            }
+          ]
+        },
+        {
+          "type": "url",
+          "id": "size_guide_url",
+          "label": "Link to size guide"
+        },
+        {
+          "type": "text",
+          "id": "size_guide_url_text",
+          "label": "Link text",
+          "default": "See size guide",
+          "info": "Enter text to display for size guide URL"
+        },
+        {
+          "type": "image_picker",
+          "id": "size_guide_image",
+          "label": "Size guide image"
+        }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Review title",
+          "default": "Review"
+        }
+      ]
+    },
+    {
+      "type": "custom",
+      "name": "Custom block",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom block title",
+          "default": "Custom block"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Custom block content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

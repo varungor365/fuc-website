@@ -1,0 +1,367 @@
+{
+  "name": "Order Processing Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "order-webhook",
+        "options": {}
+      },
+      "id": "webhook-order",
+      "name": "Order Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract order data\nconst orderData = items[0].json;\n\n// Parse order information\nconst order = {\n  id: orderData.id,\n  customer: orderData.customer,\n  items: orderData.items,\n  total: orderData.total,\n  shipping: orderData.shipping_address,\n  billing: orderData.billing_address,\n  payment_status: orderData.payment_status\n};\n\n// Calculate order metrics\norder.item_count = order.items.length;\norder.subtotal = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);\norder.tax_amount = order.total - order.subtotal;\n\n// Generate order number if not exists\nif (!order.order_number) {\n  order.order_number = `FUC-${Date.now()}-${order.id}`;\n}\n\nreturn [{ json: order }];"
+      },
+      "id": "process-order-data",
+      "name": "Process Order Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.payment_status}}",
+              "operation": "equal",
+              "value2": "paid"
+            }
+          ]
+        }
+      },
+      "id": "check-payment",
+      "name": "Check Payment Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "orders@fashun.co.in",
+        "toEmail": "={{$json.customer.email}}",
+        "subject": "Order Confirmation - {{$json.order_number}}",
+        "text": "Dear {{$json.customer.name}},\\n\\nThank you for your order with FASHUN.CO!\\n\\nOrder Details:\\n- Order Number: {{$json.order_number}}\\n- Total: ₹{{$json.total}}\\n- Items: {{$json.item_count}}\\n\\nWe'll process your order and send tracking information soon.\\n\\nBest regards,\\nFASHUN.CO Team",
+        "html": "<!DOCTYPE html>\\n<html>\\n<head>\\n  <style>\\n    body { font-family: Arial, sans-serif; background: #0F0F10; color: #E8E8E8; }\\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\\n    .header { background: #E4C590; color: #0F0F10; padding: 20px; text-align: center; }\\n    .content { padding: 20px; background: #1A1A1A; }\\n    .footer { background: #0F0F10; padding: 20px; text-align: center; font-size: 12px; }\\n  </style>\\n</head>\\n<body>\\n  <div class=\\\"container\\\">\\n    <div class=\\\"header\\\">\\n      <h1>FASHUN.CO</h1>\\n      <h2>Order Confirmation</h2>\\n    </div>\\n    <div class=\\\"content\\\">\\n      <p>Dear {{$json.customer.name}},</p>\\n      <p>Thank you for your order! We're excited to get your streetwear pieces to you.</p>\\n      \\n      <h3>Order Details</h3>\\n      <p><strong>Order Number:</strong> {{$json.order_number}}</p>\\n      <p><strong>Total Amount:</strong> ₹{{$json.total}}</p>\\n      <p><strong>Items Ordered:</strong> {{$json.item_count}}</p>\\n      \\n      <p>We'll process your order within 24 hours and send you tracking information.</p>\\n      \\n      <p>Follow us on social media for style inspiration and updates!</p>\\n    </div>\\n    <div class=\\\"footer\\\">\\n      <p>FASHUN.CO | Premium Streetwear | fashun.co.in</p>\\n    </div>\\n  </div>\\n</body>\\n</html>"
+      },
+      "id": "send-confirmation-email",
+      "name": "Send Confirmation Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        850,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.strapi_url}}/api/inventory",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "populate",
+              "value": "*"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-inventory",
+      "name": "Get Current Inventory",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Update inventory levels for ordered items\nconst orderData = items[0].json;\nconst inventoryData = items[1].json.data;\n\nconst updates = [];\n\nfor (const orderItem of orderData.items) {\n  const inventoryItem = inventoryData.find(inv => inv.attributes.product_id === orderItem.product_id);\n  \n  if (inventoryItem) {\n    const newQuantity = inventoryItem.attributes.quantity - orderItem.quantity;\n    \n    updates.push({\n      id: inventoryItem.id,\n      quantity: Math.max(0, newQuantity),\n      low_stock_alert: newQuantity <= 5\n    });\n  }\n}\n\nreturn updates.map(update => ({ json: update }));"
+      },
+      "id": "calculate-inventory-updates",
+      "name": "Calculate Inventory Updates",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.strapi_url}}/api/inventory/{{$json.id}}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "data",
+              "value": "={{JSON.stringify({quantity: $json.quantity, low_stock_alert: $json.low_stock_alert})}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "update-inventory",
+      "name": "Update Inventory",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.low_stock_alert}}",
+              "operation": "equal",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-low-stock",
+      "name": "Check Low Stock",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "alerts@fashun.co.in",
+        "toEmail": "inventory@fashun.co.in",
+        "subject": "Low Stock Alert - Urgent Reorder Required",
+        "text": "Low stock alert for Product ID: {{$json.product_id}}\\n\\nCurrent quantity: {{$json.quantity}}\\n\\nPlease reorder immediately to avoid stockouts.",
+        "html": "<!DOCTYPE html>\\n<html>\\n<body style=\\\"font-family: Arial, sans-serif; background: #0F0F10; color: #E8E8E8;\\\">\\n  <div style=\\\"max-width: 600px; margin: 0 auto; padding: 20px;\\\">\\n    <div style=\\\"background: #FF4444; color: white; padding: 20px; text-align: center;\\\">\\n      <h2>🚨 LOW STOCK ALERT</h2>\\n    </div>\\n    <div style=\\\"padding: 20px; background: #1A1A1A;\\\">\\n      <p><strong>Product ID:</strong> {{$json.product_id}}</p>\\n      <p><strong>Current Quantity:</strong> {{$json.quantity}}</p>\\n      <p><strong>Action Required:</strong> Immediate reorder</p>\\n      <p>This product has reached critical stock levels. Please reorder immediately to prevent stockouts.</p>\\n    </div>\\n  </div>\\n</body>\\n</html>"
+      },
+      "id": "send-low-stock-alert",
+      "name": "Send Low Stock Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1650,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.ai_service_url}}/generate-invoice",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "order",
+              "value": "={{JSON.stringify($json)}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "generate-invoice",
+      "name": "Generate Invoice PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        850,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "billing@fashun.co.in",
+        "toEmail": "={{$json.customer.email}}",
+        "subject": "Invoice for Order {{$json.order_number}}",
+        "text": "Please find attached your invoice for order {{$json.order_number}}.",
+        "attachments": "={{JSON.stringify([{filename: 'invoice.pdf', content: $json.invoice_pdf}])}}"
+      },
+      "id": "send-invoice",
+      "name": "Send Invoice Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.supplier_api_url}}/orders",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "order",
+              "value": "={{JSON.stringify($json)}}"
+            },
+            {
+              "name": "shipping_address",
+              "value": "={{JSON.stringify($json.shipping)}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "notify-suppliers",
+      "name": "Notify Suppliers",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        1250,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "orders@fashun.co.in",
+        "toEmail": "={{$json.customer.email}}",
+        "subject": "Payment Failed - Order {{$json.order_number}}",
+        "text": "Unfortunately, your payment for order {{$json.order_number}} could not be processed. Please update your payment method to complete your order.",
+        "html": "<!DOCTYPE html>\\n<html>\\n<body style=\\\"font-family: Arial, sans-serif; background: #0F0F10; color: #E8E8E8;\\\">\\n  <div style=\\\"max-width: 600px; margin: 0 auto; padding: 20px;\\\">\\n    <div style=\\\"background: #FF4444; color: white; padding: 20px; text-align: center;\\\">\\n      <h2>Payment Issue</h2>\\n    </div>\\n    <div style=\\\"padding: 20px; background: #1A1A1A;\\\">\\n      <p>Dear {{$json.customer.name}},</p>\\n      <p>We were unable to process your payment for order {{$json.order_number}}.</p>\\n      <p>Please update your payment method and try again.</p>\\n      <p><a href=\\\"https://fashun.co.in/orders/{{$json.id}}/payment\\\" style=\\\"background: #E4C590; color: #0F0F10; padding: 10px 20px; text-decoration: none; border-radius: 5px;\\\">Update Payment</a></p>\\n    </div>\\n  </div>\\n</body>\\n</html>"
+      },
+      "id": "send-payment-failed",
+      "name": "Send Payment Failed Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        850,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "Order Webhook": {
+      "main": [
+        [
+          {
+            "node": "Process Order Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Order Data": {
+      "main": [
+        [
+          {
+            "node": "Check Payment Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Payment Status": {
+      "main": [
+        [
+          {
+            "node": "Send Confirmation Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Current Inventory",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Invoice PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Payment Failed Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current Inventory": {
+      "main": [
+        [
+          {
+            "node": "Calculate Inventory Updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Inventory Updates": {
+      "main": [
+        [
+          {
+            "node": "Update Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Inventory": {
+      "main": [
+        [
+          {
+            "node": "Check Low Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Low Stock": {
+      "main": [
+        [
+          {
+            "node": "Send Low Stock Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Invoice PDF": {
+      "main": [
+        [
+          {
+            "node": "Send Invoice Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Suppliers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1.0"
+}

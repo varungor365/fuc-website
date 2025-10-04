@@ -1,0 +1,48 @@
+{
+  "name": "fuc-website",
+  "version": "1.0.0",
+  "description": "FASHUN.CO - Premium Streetwear Platform with Advanced SEO Optimization",
+  "main": "fashun-store/src/app/page.tsx",
+  "scripts": {
+    "dev": "cd fashun-store && npm run dev",
+    "build": "cd fashun-store && npm install && npm run build",
+    "start": "cd fashun-store && npm run start",
+    "lint": "cd fashun-store && npm run lint",
+    "install-all": "npm run install-backend && npm run install-frontend && npm run install-ai",
+    "install-backend": "cd fashun-backend && npm install",
+    "install-frontend": "cd fashun-store && npm install", 
+    "install-ai": "cd ai-mockup-service && npm install",
+    "install-deps": "powershell -ExecutionPolicy Bypass -File install-dependencies.ps1",
+    "start-platform": "powershell -ExecutionPolicy Bypass -File start-platform.ps1",
+    "health-check": "node scripts/health-check.js",
+    "test:all": "npm run test:backend && npm run test:frontend && npm run test:ai",
+    "test:backend": "cd fashun-backend && npm test",
+    "test:frontend": "cd fashun-store && npm run test",
+    "test:ai": "cd ai-mockup-service && npm test"
+  },
+  "keywords": [
+    "streetwear",
+    "ecommerce",
+    "nextjs",
+    "seo",
+    "performance",
+    "fashion"
+  ],
+  "author": "FASHUN.CO",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/varungor365/fuc-website.git"
+  },
+  "homepage": "https://fashun.co.in",
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.23.21",
+    "sharp": "^0.34.4",
+    "tailwind-merge": "^3.3.1"
+  }
+}

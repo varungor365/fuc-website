@@ -1,0 +1,14 @@
+<ul class="nav nav-pills nav-stacked">
+  <li role="presentation" class="{% if account_current == 'account' %}active{% endif %}">
+    <a href="/account">{{ 'customer.account.dashboard' | t }}</a>
+  </li>
+  <li role="presentation" class="{% if account_current == 'address' %}active{% endif %}">
+    <a href="/account/addresses">{{ 'customer.addresses.title' | t }} ({{ customer.addresses_count }})</a>
+  </li>
+  <li role="presentation">
+    <a href="{%- if settings.wishlist_page_handle != blank -%}/pages/{{- settings.wishlist_page_handle -}}{%- endif -%}">{{ 'general.extras.wishlist' | t }} (<span class="js-wishlist-total">0</span>)</a>
+  </li>
+  <li role="presentation">
+    {{ 'layout.customer.log_out' | t | customer_logout_link }}
+  </li>
+</ul>

@@ -1,0 +1,290 @@
+{
+  "name": "Customer Lifecycle Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-customer-webhook",
+        "options": {}
+      },
+      "id": "customer-webhook",
+      "name": "New Customer Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "welcome@fashun.co.in",
+        "toEmail": "={{$json.email}}",
+        "subject": "Welcome to the FASHUN.CO Family! 🔥",
+        "html": "<!DOCTYPE html>\\n<html>\\n<head>\\n  <style>\\n    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #0F0F10; color: #E8E8E8; margin: 0; padding: 0; }\\n    .container { max-width: 600px; margin: 0 auto; background: #0F0F10; }\\n    .header { background: linear-gradient(135deg, #E4C590, #D4B580); padding: 40px 20px; text-align: center; }\\n    .header h1 { color: #0F0F10; font-size: 32px; font-weight: bold; margin: 0; }\\n    .content { padding: 30px 20px; background: #1A1A1A; }\\n    .welcome-text { font-size: 18px; line-height: 1.6; margin-bottom: 20px; }\\n    .cta-button { display: inline-block; background: #E4C590; color: #0F0F10; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; }\\n    .benefits { background: #252525; padding: 20px; border-radius: 8px; margin: 20px 0; }\\n    .benefit-item { display: flex; align-items: center; margin: 10px 0; }\\n    .benefit-icon { margin-right: 15px; font-size: 20px; }\\n    .footer { background: #0F0F10; padding: 20px; text-align: center; font-size: 14px; color: #888; }\\n    .social-links { margin: 15px 0; }\\n    .social-links a { color: #E4C590; text-decoration: none; margin: 0 10px; }\\n  </style>\\n</head>\\n<body>\\n  <div class=\\\"container\\\">\\n    <div class=\\\"header\\\">\\n      <h1>FASHUN.CO</h1>\\n      <p style=\\\"color: #0F0F10; font-size: 16px; margin: 10px 0 0 0;\\\">PREMIUM STREETWEAR</p>\\n    </div>\\n    \\n    <div class=\\\"content\\\">\\n      <div class=\\\"welcome-text\\\">\\n        <p>Hey {{$json.name}},</p>\\n        \\n        <p>Welcome to the FASHUN.CO family! 🔥</p>\\n        \\n        <p>You've just joined an exclusive community of streetwear enthusiasts who appreciate premium quality, unique designs, and authentic style.</p>\\n        \\n        <p>Here's what makes FASHUN.CO special:</p>\\n      </div>\\n      \\n      <div class=\\\"benefits\\\">\\n        <div class=\\\"benefit-item\\\">\\n          <span class=\\\"benefit-icon\\\">✨</span>\\n          <span>Premium materials and exceptional craftsmanship</span>\\n        </div>\\n        <div class=\\\"benefit-item\\\">\\n          <span class=\\\"benefit-icon\\\">🎨</span>\\n          <span>Custom design tool for personalized pieces</span>\\n        </div>\\n        <div class=\\\"benefit-item\\\">\\n          <span class=\\\"benefit-icon\\\">🚚</span>\\n          <span>Fast shipping and hassle-free returns</span>\\n        </div>\\n        <div class=\\\"benefit-item\\\">\\n          <span class=\\\"benefit-icon\\\">👥</span>\\n          <span>Exclusive access to limited drops and community events</span>\\n        </div>\\n        <div class=\\\"benefit-item\\\">\\n          <span class=\\\"benefit-icon\\\">💎</span>\\n          <span>VIP customer support and styling advice</span>\\n        </div>\\n      </div>\\n      \\n      <div style=\\\"text-align: center;\\\">\\n        <p>Ready to elevate your streetwear game?</p>\\n        <a href=\\\"https://fashun.co.in/collections/new-arrivals\\\" class=\\\"cta-button\\\">SHOP NEW ARRIVALS</a>\\n      </div>\\n      \\n      <p style=\\\"margin-top: 30px;\\\">Follow us on social media for style inspiration, behind-the-scenes content, and exclusive drops:</p>\\n      \\n      <div class=\\\"social-links\\\">\\n        <a href=\\\"https://instagram.com/fashun.co.in\\\">📸 Instagram</a>\\n        <a href=\\\"https://twitter.com/fashunco\\\">🐦 Twitter</a>\\n        <a href=\\\"https://tiktok.com/@fashunco\\\">🎵 TikTok</a>\\n      </div>\\n      \\n      <p>Questions? Just reply to this email - we're here to help!</p>\\n      \\n      <p>Stay fresh,<br>The FASHUN.CO Team</p>\\n    </div>\\n    \\n    <div class=\\\"footer\\\">\\n      <p>FASHUN.CO | Premium Streetwear</p>\\n      <p>This email was sent to {{$json.email}}</p>\\n      <p><a href=\\\"#\\\" style=\\\"color: #888;\\\">Unsubscribe</a> | <a href=\\\"#\\\" style=\\\"color: #888;\\\">Update Preferences</a></p>\\n    </div>\\n  </div>\\n</body>\\n</html>"
+      },
+      "id": "send-welcome-email",
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "delay": 172800000,
+        "unit": "ms"
+      },
+      "id": "wait-2-days",
+      "name": "Wait 2 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "style@fashun.co.in",
+        "toEmail": "={{$json.email}}",
+        "subject": "Your Style Journey Starts Here 🎨",
+        "html": "<!DOCTYPE html>\\n<html>\\n<head>\\n  <style>\\n    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #0F0F10; color: #E8E8E8; margin: 0; padding: 0; }\\n    .container { max-width: 600px; margin: 0 auto; background: #0F0F10; }\\n    .header { background: #1A1A1A; padding: 30px 20px; text-align: center; border-bottom: 3px solid #E4C590; }\\n    .content { padding: 30px 20px; background: #1A1A1A; }\\n    .style-tip { background: #252525; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #E4C590; }\\n    .cta-button { display: inline-block; background: #E4C590; color: #0F0F10; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 15px 0; }\\n    .product-grid { display: flex; flex-wrap: wrap; gap: 15px; margin: 20px 0; }\\n    .product-item { flex: 1; min-width: 150px; text-align: center; background: #252525; padding: 15px; border-radius: 8px; }\\n  </style>\\n</head>\\n<body>\\n  <div class=\\\"container\\\">\\n    <div class=\\\"header\\\">\\n      <h1 style=\\\"color: #E4C590; margin: 0;\\\">FASHUN.CO</h1>\\n      <p style=\\\"margin: 10px 0 0 0;\\\">Style Guide & Recommendations</p>\\n    </div>\\n    \\n    <div class=\\\"content\\\">\\n      <p>Hey {{$json.name}},</p>\\n      \\n      <p>Ready to level up your streetwear game? We've curated some style tips and recommendations just for you.</p>\\n      \\n      <div class=\\\"style-tip\\\">\\n        <h3 style=\\\"color: #E4C590; margin-top: 0;\\\">💡 Pro Tip: Layering Mastery</h3>\\n        <p>The key to great streetwear is layering. Start with a solid base (our premium tees), add a statement piece (hoodies or jackets), and finish with accessories that reflect your personality.</p>\\n      </div>\\n      \\n      <div class=\\\"style-tip\\\">\\n        <h3 style=\\\"color: #E4C590; margin-top: 0;\\\">🎨 Color Theory</h3>\\n        <p>Stick to a cohesive color palette. Our pieces are designed to mix and match effortlessly. Try pairing neutrals with one bold accent color.</p>\\n      </div>\\n      \\n      <h3>Recommended for Your Style:</h3>\\n      \\n      <div class=\\\"product-grid\\\">\\n        <div class=\\\"product-item\\\">\\n          <h4>Essential Hoodie</h4>\\n          <p>₹2,499</p>\\n          <p>Perfect for layering</p>\\n        </div>\\n        <div class=\\\"product-item\\\">\\n          <h4>Graphic Tee</h4>\\n          <p>₹1,299</p>\\n          <p>Statement piece</p>\\n        </div>\\n        <div class=\\\"product-item\\\">\\n          <h4>Cargo Pants</h4>\\n          <p>₹3,299</p>\\n          <p>Utility meets style</p>\\n        </div>\\n      </div>\\n      \\n      <div style=\\\"text-align: center; margin: 30px 0;\\\">\\n        <a href=\\\"https://fashun.co.in/collections/essentials\\\" class=\\\"cta-button\\\">SHOP ESSENTIALS</a>\\n      </div>\\n      \\n      <p><strong>Did you know?</strong> You can customize any of our pieces with our design tool. Add your own graphics, text, or choose from our exclusive design library.</p>\\n      \\n      <div style=\\\"text-align: center;\\\">\\n        <a href=\\\"https://fashun.co.in/customize\\\" class=\\\"cta-button\\\">TRY DESIGN TOOL</a>\\n      </div>\\n      \\n      <p>Questions about styling? Just reply to this email - our style team is here to help!</p>\\n      \\n      <p>Keep it fresh,<br>The FASHUN.CO Style Team</p>\\n    </div>\\n  </div>\\n</body>\\n</html>"
+      },
+      "id": "send-style-guide",
+      "name": "Send Style Guide",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cart-abandoned-webhook",
+        "options": {}
+      },
+      "id": "cart-abandoned-webhook",
+      "name": "Cart Abandoned Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "delay": 3600000,
+        "unit": "ms"
+      },
+      "id": "wait-1-hour-cart",
+      "name": "Wait 1 Hour",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        450,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "cart@fashun.co.in",
+        "toEmail": "={{$json.customer.email}}",
+        "subject": "Don't let these pieces slip away! 🛒",
+        "html": "<!DOCTYPE html>\\n<html>\\n<head>\\n  <style>\\n    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #0F0F10; color: #E8E8E8; margin: 0; padding: 0; }\\n    .container { max-width: 600px; margin: 0 auto; background: #0F0F10; }\\n    .header { background: #E4C590; padding: 30px 20px; text-align: center; }\\n    .header h1 { color: #0F0F10; margin: 0; }\\n    .content { padding: 30px 20px; background: #1A1A1A; }\\n    .cart-item { display: flex; background: #252525; padding: 15px; margin: 10px 0; border-radius: 8px; }\\n    .cart-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; margin-right: 15px; }\\n    .item-details { flex: 1; }\\n    .item-price { color: #E4C590; font-weight: bold; }\\n    .urgency { background: #FF4444; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center; }\\n    .cta-button { display: inline-block; background: #E4C590; color: #0F0F10; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 15px 0; }\\n  </style>\\n</head>\\n<body>\\n  <div class=\\\"container\\\">\\n    <div class=\\\"header\\\">\\n      <h1>FASHUN.CO</h1>\\n      <p style=\\\"color: #0F0F10; margin: 10px 0 0 0;\\\">Your cart is waiting...</p>\\n    </div>\\n    \\n    <div class=\\\"content\\\">\\n      <p>Hey {{$json.customer.name}},</p>\\n      \\n      <p>We noticed you left some fire pieces in your cart. Don't let them slip away! 🔥</p>\\n      \\n      <h3>Items in your cart:</h3>\\n      \\n      {{#each $json.cart_items}}\\n      <div class=\\\"cart-item\\\">\\n        <img src=\\\"{{image_url}}\\\" alt=\\\"{{name}}\\\">\\n        <div class=\\\"item-details\\\">\\n          <h4>{{name}}</h4>\\n          <p>Size: {{size}} | Color: {{color}}</p>\\n          <p class=\\\"item-price\\\">₹{{price}}</p>\\n        </div>\\n      </div>\\n      {{/each}}\\n      \\n      <div class=\\\"urgency\\\">\\n        <h3 style=\\\"margin-top: 0;\\\">⚡ Limited Stock Alert</h3>\\n        <p>These pieces are selling fast! Complete your order now to secure your items.</p>\\n      </div>\\n      \\n      <div style=\\\"text-align: center;\\\">\\n        <p><strong>Cart Total: ₹{{$json.cart_total}}</strong></p>\\n        <a href=\\\"https://fashun.co.in/cart?token={{$json.cart_token}}\\\" class=\\\"cta-button\\\">COMPLETE YOUR ORDER</a>\\n      </div>\\n      \\n      <div style=\\\"background: #252525; padding: 20px; border-radius: 8px; margin: 20px 0;\\\">\\n        <h4 style=\\\"color: #E4C590;\\\">🎁 Special Offer</h4>\\n        <p>Use code <strong>SAVE10</strong> for 10% off your first order!</p>\\n        <p><em>Valid for the next 24 hours only.</em></p>\\n      </div>\\n      \\n      <p>Need help with sizing or have questions? Just reply to this email - we're here to help!</p>\\n      \\n      <p>Don't miss out,<br>The FASHUN.CO Team</p>\\n    </div>\\n  </div>\\n</body>\\n</html>"
+      },
+      "id": "send-cart-recovery-1",
+      "name": "Send Cart Recovery 1",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        650,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "delay": 86400000,
+        "unit": "ms"
+      },
+      "id": "wait-24-hours-cart",
+      "name": "Wait 24 Hours",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        850,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "lastchance@fashun.co.in",
+        "toEmail": "={{$json.customer.email}}",
+        "subject": "Last chance - 15% off your cart! ⏰",
+        "html": "<!DOCTYPE html>\\n<html>\\n<head>\\n  <style>\\n    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #0F0F10; color: #E8E8E8; margin: 0; padding: 0; }\\n    .container { max-width: 600px; margin: 0 auto; background: #0F0F10; }\\n    .header { background: linear-gradient(135deg, #FF4444, #E4C590); padding: 30px 20px; text-align: center; }\\n    .header h1 { color: #0F0F10; margin: 0; }\\n    .content { padding: 30px 20px; background: #1A1A1A; }\\n    .countdown { background: #FF4444; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; }\\n    .discount { background: #E4C590; color: #0F0F10; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; }\\n    .cta-button { display: inline-block; background: #E4C590; color: #0F0F10; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 15px 0; font-size: 18px; }\\n  </style>\\n</head>\\n<body>\\n  <div class=\\\"container\\\">\\n    <div class=\\\"header\\\">\\n      <h1>LAST CHANCE</h1>\\n      <p style=\\\"color: #0F0F10; margin: 10px 0 0 0; font-size: 18px;\\\">Your cart expires soon!</p>\\n    </div>\\n    \\n    <div class=\\\"content\\\">\\n      <p>{{$json.customer.name}},</p>\\n      \\n      <p>This is your final reminder - your cart is about to expire! 🚨</p>\\n      \\n      <div class=\\\"countdown\\\">\\n        <h2 style=\\\"margin-top: 0;\\\">⏰ 6 HOURS LEFT</h2>\\n        <p>Your reserved items will be released to other customers!</p>\\n      </div>\\n      \\n      <div class=\\\"discount\\\">\\n        <h2 style=\\\"margin-top: 0;\\\">🎉 EXCLUSIVE 15% OFF</h2>\\n        <p style=\\\"font-size: 24px; font-weight: bold; margin: 10px 0;\\\">Code: SAVE15</p>\\n        <p style=\\\"margin-bottom: 0;\\\">This offer expires with your cart!</p>\\n      </div>\\n      \\n      <div style=\\\"text-align: center;\\\">\\n        <p><strong>Your Savings: ₹{{$json.discount_amount}}</strong></p>\\n        <p><strong>Final Total: ₹{{$json.final_total}}</strong></p>\\n        <a href=\\\"https://fashun.co.in/cart?token={{$json.cart_token}}&discount=SAVE15\\\" class=\\\"cta-button\\\">CLAIM YOUR DISCOUNT NOW</a>\\n      </div>\\n      \\n      <p style=\\\"text-align: center; margin-top: 30px;\\\">Don't let these pieces go to someone else!</p>\\n      \\n      <p>Last chance,<br>The FASHUN.CO Team</p>\\n      \\n      <p style=\\\"font-size: 12px; color: #888;\\\"><em>This is our final email about this cart. After 6 hours, your items will be released.</em></p>\\n    </div>\\n  </div>\\n</body>\\n</html>"
+      },
+      "id": "send-cart-recovery-2",
+      "name": "Send Final Cart Recovery",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "order-delivered-webhook",
+        "options": {}
+      },
+      "id": "order-delivered-webhook",
+      "name": "Order Delivered Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "delay": 259200000,
+        "unit": "ms"
+      },
+      "id": "wait-3-days-review",
+      "name": "Wait 3 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        450,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "feedback@fashun.co.in",
+        "toEmail": "={{$json.customer.email}}",
+        "subject": "How do you like your FASHUN.CO pieces? ⭐",
+        "html": "<!DOCTYPE html>\\n<html>\\n<head>\\n  <style>\\n    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #0F0F10; color: #E8E8E8; margin: 0; padding: 0; }\\n    .container { max-width: 600px; margin: 0 auto; background: #0F0F10; }\\n    .header { background: #1A1A1A; padding: 30px 20px; text-align: center; border-bottom: 3px solid #E4C590; }\\n    .content { padding: 30px 20px; background: #1A1A1A; }\\n    .review-cta { background: #E4C590; color: #0F0F10; padding: 25px; border-radius: 8px; text-align: center; margin: 20px 0; }\\n    .incentive { background: #252525; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }\\n    .stars { font-size: 30px; margin: 15px 0; }\\n    .cta-button { display: inline-block; background: #0F0F10; color: #E4C590; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 15px 0; }\\n  </style>\\n</head>\\n<body>\\n  <div class=\\\"container\\\">\\n    <div class=\\\"header\\\">\\n      <h1 style=\\\"color: #E4C590; margin: 0;\\\">FASHUN.CO</h1>\\n      <p>We'd love your feedback!</p>\\n    </div>\\n    \\n    <div class=\\\"content\\\">\\n      <p>Hey {{$json.customer.name}},</p>\\n      \\n      <p>How are you liking your new FASHUN.CO pieces? We hope they're everything you expected and more! 🔥</p>\\n      \\n      <div class=\\\"review-cta\\\">\\n        <h2 style=\\\"margin-top: 0;\\\">Share Your Experience</h2>\\n        <div class=\\\"stars\\\">⭐⭐⭐⭐⭐</div>\\n        <p>Your review helps other streetwear enthusiasts discover great pieces!</p>\\n        <a href=\\\"https://fashun.co.in/reviews/{{$json.order_id}}\\\" class=\\\"cta-button\\\">WRITE A REVIEW</a>\\n      </div>\\n      \\n      <div class=\\\"incentive\\\">\\n        <h3 style=\\\"color: #E4C590;\\\">🎁 Thank You Reward</h3>\\n        <p>Leave a review and get <strong>200 loyalty points</strong> (worth ₹200 on your next order)!</p>\\n        <p><em>Plus a chance to be featured on our social media!</em></p>\\n      </div>\\n      \\n      <p>We'd also love to see how you're styling your pieces! Tag us @fashun.co.in on Instagram for a chance to be featured.</p>\\n      \\n      <p>Have any feedback or suggestions? Just reply to this email - we read every message!</p>\\n      \\n      <p>Thanks for being part of the FASHUN.CO family!</p>\\n      \\n      <p>Much love,<br>The FASHUN.CO Team</p>\\n    </div>\\n  </div>\\n</body>\\n</html>"
+      },
+      "id": "send-review-request",
+      "name": "Send Review Request",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        650,
+        700
+      ]
+    }
+  ],
+  "connections": {
+    "New Customer Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Wait 2 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 2 Days": {
+      "main": [
+        [
+          {
+            "node": "Send Style Guide",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cart Abandoned Webhook": {
+      "main": [
+        [
+          {
+            "node": "Wait 1 Hour",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1 Hour": {
+      "main": [
+        [
+          {
+            "node": "Send Cart Recovery 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Cart Recovery 1": {
+      "main": [
+        [
+          {
+            "node": "Wait 24 Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 24 Hours": {
+      "main": [
+        [
+          {
+            "node": "Send Final Cart Recovery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Order Delivered Webhook": {
+      "main": [
+        [
+          {
+            "node": "Wait 3 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 3 Days": {
+      "main": [
+        [
+          {
+            "node": "Send Review Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1.0"
+}

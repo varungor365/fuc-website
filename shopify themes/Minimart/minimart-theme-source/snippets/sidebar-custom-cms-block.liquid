@@ -1,0 +1,13 @@
+<div class="sidebar-cms-custom">
+  {% if settings.custom_cms_title != blank %}
+  <div class="widget-title">
+    <h5>{% include 'multilang' with settings.custom_cms_title %}</h5>
+  </div>
+  {% endif %}
+  {% if settings.enable_multilang %}
+    <div class="widget-content lang1">{{ settings.custom_cms_text | split: '|' | first }}</div>
+    <div class="widget-content lang2">{{ settings.custom_cms_text | split: '|' | last }}</div>
+  {% else %}
+  	<div class="widget-content">{{ settings.custom_cms_text | split: '|' | first }}</div>
+  {% endif %}
+</div>
