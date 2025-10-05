@@ -8,7 +8,7 @@ import {
   XMarkIcon,
   LinkIcon,
   CheckIcon
-} from '@heroicons/24/outline'
+} from '@heroicons/react/24/outline'
 
 interface ShareOption {
   id: string

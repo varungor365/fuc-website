@@ -95,31 +95,31 @@ export function Header() {
     <>
       <motion.header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled 
-            ? 'glass backdrop-blur-xl bg-white/80 shadow-lg border-b border-white/20' 
-            : 'bg-transparent'
+            ? 'glass backdrop-blur-xl bg-white/90 shadow-2xl border-b border-white/30 transform scale-[0.98]' 
+            : 'bg-white/95 backdrop-blur-sm shadow-sm'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        {/* Top Bar */}
-        <div className="border-b border-neutral-200/50 bg-gradient-primary">
+        {/* Top Bar - Enhanced */}
+        <div className="border-b border-yellow-400/30 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between py-2 text-sm text-white">
+            <div className="flex items-center justify-between py-3 text-sm text-white">
               <div className="flex items-center space-x-6">
-                <span>Free shipping on orders over ₹2,999</span>
-                <span className="hidden md:inline">|</span>
-                <span className="hidden md:inline">30-day returns</span>
+                <span className="font-nav font-semibold tracking-wide">✨ FREE SHIPPING ON ORDERS OVER ₹2,999</span>
+                <span className="hidden md:inline text-white/60">|</span>
+                <span className="hidden md:inline font-body-medium">🔄 30-DAY HASSLE-FREE RETURNS</span>
               </div>
               <div className="flex items-center space-x-4">
-                <Link href="/track" className="hover:text-primary-200 transition-colors">
-                  Track Order
+                <Link href="/track" className="font-nav hover:text-yellow-200 transition-colors font-medium">
+                  📦 TRACK ORDER
                 </Link>
-                <span>|</span>
-                <Link href="/contact" className="hover:text-primary-200 transition-colors">
-                  Help
+                <span className="text-white/60">|</span>
+                <Link href="/contact" className="font-nav hover:text-yellow-200 transition-colors font-medium">
+                  💬 HELP
                 </Link>
               </div>
             </div>
@@ -135,15 +135,19 @@ export function Header() {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">F</span>
+              <Link href="/" className="flex items-center space-x-3">
+                <div className="w-12 h-12 rounded-xl overflow-hidden">
+                  <img 
+                    src="/images/logo-black.png" 
+                    alt="FASHUN.CO.IN" 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div className="hidden sm:block">
-                  <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                  <h1 className="text-2xl font-brand bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
                     FASHUN.CO.IN
                   </h1>
-                  <p className="text-xs text-neutral-600 -mt-1">Premium Streetwear</p>
+                  <p className="text-xs font-body text-neutral-600 -mt-1 tracking-wide">PREMIUM STREETWEAR</p>
                 </div>
               </Link>
             </motion.div>
@@ -159,8 +163,8 @@ export function Header() {
                 >
                   <Link
                     href={item.href}
-                    className={`text-neutral-700 hover:text-primary-600 transition-colors font-medium relative py-2 ${
-                      pathname === item.href ? 'text-primary-600' : ''
+                    className={`font-nav text-neutral-700 hover:text-orange-600 transition-colors relative py-2 ${
+                      pathname === item.href ? 'text-orange-600' : ''
                     }`}
                   >
                     {item.name}

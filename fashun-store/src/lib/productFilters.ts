@@ -45,7 +45,7 @@ export function applyFilters(products: Product[], filters: FilterOptions): Produ
 
     // Brands filter
     if (filters.brands && filters.brands.length > 0) {
-      if (!filters.brands.includes(product.brand)) {
+      if (!product.brand || !filters.brands.includes(product.brand)) {
         return false;
       }
     }
@@ -82,7 +82,7 @@ export function sortProducts(products: Product[], sortBy: string): Product[] {
   switch (sortBy) {
     case 'popularity':
       return sortedProducts.sort((a, b) => 
-        (b.rating * b.reviewsCount) - (a.rating * a.reviewsCount)
+        (b.rating * b.reviewCount) - (a.rating * a.reviewCount)
       );
 
     case 'price_asc':
@@ -97,7 +97,7 @@ export function sortProducts(products: Product[], sortBy: string): Product[] {
           return b.rating - a.rating;
         }
         // Tiebreaker: more reviews = higher ranking
-        return b.reviewsCount - a.reviewsCount;
+        return b.reviewCount - a.reviewCount;
       });
 
     case 'newest':
@@ -243,8 +243,8 @@ export function buildFilterGroups(products: Product[]): any[] {
     }
   ].filter(group => {
     // Filter out empty groups
-    if (group.type === 'checkbox' && group.options.length === 0) return false;
-    if (group.type === 'color' && group.options.length === 0) return false;
+    if (group.type === 'checkbox' && (!group.options || group.options.length === 0)) return false;
+    if (group.type === 'color' && (!group.options || group.options.length === 0)) return false;
     return true;
   });
 }

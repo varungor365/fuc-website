@@ -8,7 +8,7 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon
-} from '@heroicons/24/outline'
+} from '@heroicons/react/24/outline'
 
 export interface Toast {
   id: string

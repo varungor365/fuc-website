@@ -1,6 +1,7 @@
 export interface Product {
   id: string;
   name: string;
+  brand?: string;
   price: number;
   originalPrice?: number;
   rating: number;
@@ -20,6 +21,7 @@ export interface Product {
   inStock: boolean;
   stockCount?: number;
   category: string;
+  subcategory?: string;
   tags: string[];
   sku: string;
   weight?: number;
@@ -28,6 +30,15 @@ export interface Product {
     width: number;
     height: number;
   };
+  // Additional properties used by filters
+  isNew?: boolean;
+  isBestseller?: boolean;
+  isOnSale?: boolean;
+  isFeatured?: boolean;
+  isLimited?: boolean;
+  material?: string;
+  fit?: string;
+  reviews?: number;
 }
 
 export const mockProducts: Product[] = [

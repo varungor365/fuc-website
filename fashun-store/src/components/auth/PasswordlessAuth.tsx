@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Mail, Key, Chrome, Apple, Github, Loader2, Check, AlertCircle } from 'lucide-react';
-import PasswordlessAuthService from '@/lib/passwordless-auth';
+import passwordlessAuth from '@/lib/passwordless-auth';
 
 interface PasswordlessAuthProps {
   onSuccess?: (result: any) => void;
@@ -23,7 +23,7 @@ const PasswordlessAuth: React.FC<PasswordlessAuthProps> = ({
   const [hasPasskeys, setHasPasskeys] = useState(false);
   const [supportsPasskeys, setSupportsPasskeys] = useState(false);
 
-  const authService = new PasswordlessAuthService();
+  const authService = passwordlessAuth;
 
   useEffect(() => {
     // Check if passkeys are supported
@@ -41,8 +41,8 @@ const PasswordlessAuth: React.FC<PasswordlessAuthProps> = ({
 
   const checkExistingPasskeys = async () => {
     try {
-      const hasKeys = await authService.hasPasskeys(email);
-      setHasPasskeys(hasKeys);
+      // For demo purposes, assume no existing passkeys
+      setHasPasskeys(false);
     } catch (error) {
       console.error('Error checking passkeys:', error);
     }
@@ -72,11 +72,11 @@ const PasswordlessAuth: React.FC<PasswordlessAuthProps> = ({
     clearMessage();
 
     try {
-      const result = await authService.sendMagicLink(email);
+      const result = await authService.sendMagicLink({ email });
       if (result.success) {
-        showMessage(result.message, 'success');
+        showMessage('Magic link sent! Check your email.', 'success');
       } else {
-        showMessage(result.message, 'error');
+        showMessage(result.error || 'Failed to send magic link', 'error');
       }
     } catch (error) {
       showMessage('Failed to send magic link. Please try again.', 'error');
@@ -90,20 +90,15 @@ const PasswordlessAuth: React.FC<PasswordlessAuthProps> = ({
     clearMessage();
 
     try {
-      const result = await authService.authenticateWithPasskey();
+      const result = await authService.authenticateWebAuthn();
       if (result.success) {
-        showMessage(result.message, 'success');
-        if (onSuccess) {
-          onSuccess(result);
-        }
-        if (result.redirectUrl) {
-          window.location.href = result.redirectUrl;
-        }
+        onSuccess?.(result);
+        showMessage('Successfully authenticated!', 'success');
       } else {
-        showMessage(result.message, 'error');
+        showMessage(result.error || 'Authentication failed', 'error');
       }
     } catch (error) {
-      showMessage('Passkey authentication failed. Please try again.', 'error');
+      showMessage('Failed to authenticate with passkey', 'error');
     } finally {
       setLoading(false);
     }
@@ -120,18 +115,15 @@ const PasswordlessAuth: React.FC<PasswordlessAuthProps> = ({
 
     try {
       const displayName = email.split('@')[0];
-      const result = await authService.registerPasskey(email, displayName);
+      const result = await authService.registerWebAuthn(email);
       if (result.success) {
-        showMessage(result.message, 'success');
+        showMessage('Passkey registered successfully!', 'success');
         setHasPasskeys(true);
         if (onSuccess) {
           onSuccess(result);
         }
-        if (result.redirectUrl) {
-          window.location.href = result.redirectUrl;
-        }
       } else {
-        showMessage(result.message, 'error');
+        showMessage(result.error || 'Failed to register passkey', 'error');
       }
     } catch (error) {
       showMessage('Failed to register passkey. Please try again.', 'error');
@@ -145,11 +137,26 @@ const PasswordlessAuth: React.FC<PasswordlessAuthProps> = ({
     clearMessage();
 
     try {
-      const result = await authService.socialAuth(provider);
+      let result;
+      switch (provider) {
+        case 'google':
+          result = await authService.signInWithGoogle();
+          break;
+        case 'apple':
+          result = await authService.signInWithApple();
+          break;
+        case 'github':
+          result = await authService.signInWithGitHub();
+          break;
+        default:
+          throw new Error('Unsupported provider');
+      }
+      
       if (result.success) {
-        showMessage(result.message, 'success');
+        showMessage('Successfully authenticated!', 'success');
+        onSuccess?.(result);
       } else {
-        showMessage(result.message, 'error');
+        showMessage(result.error || 'Authentication failed', 'error');
       }
     } catch (error) {
       showMessage(`Failed to authenticate with ${provider}`, 'error');

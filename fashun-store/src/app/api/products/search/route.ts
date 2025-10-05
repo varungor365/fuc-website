@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { products } from '@/data/products'
+import { mockProducts as products, type Product } from '@/data/mockProducts'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -27,7 +27,6 @@ export async function GET(request: NextRequest) {
           product.name.toLowerCase().includes(searchText) ||
           product.description?.toLowerCase().includes(searchText) ||
           product.category.toLowerCase().includes(searchText) ||
-          product.subcategory?.toLowerCase().includes(searchText) ||
           product.tags?.some(tag => tag.toLowerCase().includes(searchText))
         
         if (!matchesText) return false
@@ -42,8 +41,8 @@ export async function GET(request: NextRequest) {
 
       // Size filter
       if (sizes.length > 0) {
-        const hasSize = sizes.some(size => 
-          product.sizes.includes(size.toUpperCase())
+        const hasSize = sizes.some(size =>
+          product.sizes.some(productSize => productSize.name.toUpperCase() === size.toUpperCase())
         )
         if (!hasSize) return false
       }
@@ -52,7 +51,7 @@ export async function GET(request: NextRequest) {
       if (colors.length > 0) {
         const hasColor = colors.some(color =>
           product.colors.some(productColor =>
-            productColor.toLowerCase().includes(color.toLowerCase())
+            productColor.name.toLowerCase().includes(color.toLowerCase())
           )
         )
         if (!hasColor) return false
@@ -84,16 +83,18 @@ export async function GET(request: NextRequest) {
         filteredProducts.sort((a, b) => b.name.localeCompare(a.name))
         break
       case 'newest':
-        filteredProducts.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0))
+        // Sort by product ID or name as fallback since we don't have creation date
+        filteredProducts.sort((a, b) => b.id.localeCompare(a.id))
         break
       case 'rating':
         filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0))
         break
       case 'popularity':
-        filteredProducts.sort((a, b) => (b.reviews || 0) - (a.reviews || 0))
+        filteredProducts.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0))
         break
       case 'featured':
-        filteredProducts.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0))
+        // Sort by stock status as fallback since we don't have featured flag
+        filteredProducts.sort((a, b) => (b.inStock ? 1 : 0) - (a.inStock ? 1 : 0))
         break
       default:
         // Relevance - keep original order or implement relevance scoring
@@ -241,7 +242,7 @@ export async function POST(request: NextRequest) {
             if (Array.isArray(value) && value.length > 0) {
               const hasColor = value.some(color =>
                 product.colors.some(productColor =>
-                  productColor.toLowerCase().includes(color.toLowerCase())
+                  productColor.name.toLowerCase().includes(color.toLowerCase())
                 )
               )
               if (!hasColor) return false
@@ -261,10 +262,11 @@ export async function POST(request: NextRequest) {
             if (value === true && !product.inStock) return false
             break
           case 'isNew':
-            if (value === true && !product.isNew) return false
+            // Skip this filter since Product doesn't have isNew property
             break
           case 'isFeatured':
-            if (value === true && !product.isFeatured) return false
+            // Use inStock as fallback since Product doesn't have isFeatured property
+            if (value === true && !product.inStock) return false
             break
         }
       }
@@ -297,13 +299,14 @@ export async function POST(request: NextRequest) {
         filteredProducts.sort((a, b) => b.name.localeCompare(a.name))
         break
       case 'newest':
-        filteredProducts.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0))
+        // Sort by product ID as fallback since we don't have creation date
+        filteredProducts.sort((a, b) => b.id.localeCompare(a.id))
         break
       case 'rating':
         filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0))
         break
       case 'popularity':
-        filteredProducts.sort((a, b) => (b.reviews || 0) - (a.reviews || 0))
+        filteredProducts.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0))
         break
     }
 

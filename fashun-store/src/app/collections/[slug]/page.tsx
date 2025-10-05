@@ -49,10 +49,8 @@ export default function CollectionPage() {
   // Filter products by collection
   const collectionProducts = useMemo(() => {
     return products.filter(product => {
-      // Match by category or subcategory
-      const matchesCategory = product.category === slug || 
-                             product.subcategory === slug ||
-                             collection?.subcategories?.includes(product.subcategory || '')
+      // Match by category
+      const matchesCategory = product.category === slug
       
       if (!matchesCategory) return false
       
@@ -79,17 +77,17 @@ export default function CollectionPage() {
       
       // Size filter
       if (activeFilters.size) {
-        const matchesSize = activeFilters.size.some((size: string) => 
-          product.sizes.includes(size.toUpperCase())
+        const matchesSize = activeFilters.size.some((size: string) =>
+          product.sizes.some(productSize => productSize.name.toUpperCase() === size.toUpperCase())
         )
         if (!matchesSize) return false
       }
       
       // Color filter
       if (activeFilters.color) {
-        const matchesColor = activeFilters.color.some((color: string) => 
-          product.colors.some(productColor => 
-            productColor.toLowerCase().includes(color.toLowerCase())
+        const matchesColor = activeFilters.color.some((color: string) =>
+          product.colors.some(productColor =>
+            productColor.name.toLowerCase().includes(color.toLowerCase())
           )
         )
         if (!matchesColor) return false
@@ -109,14 +107,14 @@ export default function CollectionPage() {
       case 'price-high':
         return sorted.sort((a, b) => b.price - a.price)
       case 'newest':
-        return sorted.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0))
+        return sorted.sort((a, b) => b.id.localeCompare(a.id))
       case 'best-selling':
-        return sorted.sort((a, b) => (b.reviews || 0) - (a.reviews || 0))
+        return sorted.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0))
       case 'rating':
         return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0))
       case 'featured':
       default:
-        return sorted.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0))
+        return sorted.sort((a, b) => (b.inStock ? 1 : 0) - (a.inStock ? 1 : 0))
     }
   }, [collectionProducts, sortBy])
   
@@ -360,14 +358,9 @@ export default function CollectionPage() {
                           
                           {/* Badges */}
                           <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-                            {product.isNew && (
-                              <span className="bg-green-500 text-white px-2 py-1 rounded text-xs font-medium">
-                                New
-                              </span>
-                            )}
-                            {product.isLimited && (
+                            {product.inStock && product.stockCount && product.stockCount < 10 && (
                               <span className="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
-                                Limited
+                                Limited Stock
                               </span>
                             )}
                             {product.originalPrice && (
@@ -422,8 +415,8 @@ export default function CollectionPage() {
                             <div className="flex items-center gap-1 mb-2">
                               <StarIcon className="w-4 h-4 text-yellow-400 fill-current" />
                               <span className="text-sm text-primary-200">{product.rating}</span>
-                              {product.reviews && (
-                                <span className="text-xs text-primary-400">({product.reviews})</span>
+                              {product.reviewCount && (
+                                <span className="text-xs text-primary-400">({product.reviewCount})</span>
                               )}
                             </div>
                           )}

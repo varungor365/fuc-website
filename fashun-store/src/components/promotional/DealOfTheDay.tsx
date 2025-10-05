@@ -22,8 +22,8 @@ interface DealProduct {
 const dealProduct: DealProduct = {
   id: 'deal-of-day-1',
   name: 'Premium Streetwear Hoodie Collection',
-  originalPrice: 199.99,
-  salePrice: 99.99,
+  originalPrice: 8999,
+  salePrice: 4499,
   rating: 4.8,
   reviewCount: 127,
   image: '/images/products/hoodies/deal-hoodie.jpg',
@@ -140,13 +140,13 @@ const DealOfTheDay: React.FC = () => {
               {/* Price */}
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-3xl md:text-4xl font-bold text-primary-400">
-                  ${dealProduct.salePrice}
+                  ₹{dealProduct.salePrice.toLocaleString()}
                 </span>
                 <span className="text-xl text-gray-400 line-through">
-                  ${dealProduct.originalPrice}
+                  ₹{dealProduct.originalPrice.toLocaleString()}
                 </span>
                 <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold">
-                  Save ${(dealProduct.originalPrice - dealProduct.salePrice).toFixed(2)}
+                  Save ₹{(dealProduct.originalPrice - dealProduct.salePrice).toLocaleString()}
                 </span>
               </div>
             </div>
@@ -177,7 +177,7 @@ const DealOfTheDay: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
               <div className="bg-white/5 border border-white/10 rounded-lg p-4">
                 <div className="text-primary-400 font-bold text-lg">Free Shipping</div>
-                <div className="text-gray-400 text-sm">On orders over ₹3,000</div>
+                <div className="text-gray-400 text-sm">On orders over ₹2,999</div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-lg p-4">
                 <div className="text-primary-400 font-bold text-lg">Easy Returns</div>

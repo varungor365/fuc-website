@@ -62,7 +62,9 @@ function transformStrapiProduct(strapiData: any): Product {
     material: attrs.material || undefined,
     fit: attrs.fit || undefined,
     rating: attrs.rating || 0,
+    reviewCount: attrs.reviewsCount || attrs.reviews || 0,
     reviews: attrs.reviewsCount || attrs.reviews || 0,
+    features: attrs.features || [],
   }
 }
 

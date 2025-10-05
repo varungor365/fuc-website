@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 // Trending Products - AI Curated selection inspired by Prestige, Basel themes
 export default function TrendingProducts() {
@@ -219,9 +219,12 @@ export default function TrendingProducts() {
 
                     {/* Quick Actions */}
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button className="bg-white/95 hover:bg-white text-gray-900 font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
+                      <Link 
+                        href={`/products/${product.id}`}
+                        className="bg-white/95 hover:bg-white text-gray-900 font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 cursor-pointer inline-block"
+                      >
                         Quick View
-                      </button>
+                      </Link>
                     </div>
                   </div>
 
@@ -303,7 +306,18 @@ export default function TrendingProducts() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
-                <button className="inline-flex items-center px-8 py-4 bg-purple-500/30 text-white font-bold rounded-full border-2 border-white/30 hover:bg-purple-500/50 transform hover:scale-105 transition-all duration-300">
+                <button 
+                  onClick={() => {
+                    // Scroll to personalized recommendations or trigger AI analysis
+                    const aiSection = document.querySelector('[data-section="ai-recommendations"]');
+                    if (aiSection) {
+                      aiSection.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      window.location.href = '/collections/recommended';
+                    }
+                  }}
+                  className="inline-flex items-center px-8 py-4 bg-purple-500/30 text-white font-bold rounded-full border-2 border-white/30 hover:bg-purple-500/50 transform hover:scale-105 transition-all duration-300 cursor-pointer"
+                >
                   <svg className="mr-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>

@@ -10,7 +10,7 @@ import {
   GiftIcon,
   HeartIcon,
   ShoppingBagIcon
-} from '@heroicons/24/outline'
+} from '@heroicons/react/24/outline'
 
 interface BannerConfig {
   id: string

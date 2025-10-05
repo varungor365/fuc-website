@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { HeartIcon } from '@heroicons/24/outline'
-import { HeartIcon as HeartIconSolid } from '@heroicons/24/solid'
+import { HeartIcon } from '@heroicons/react/24/outline'
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid'
 
 interface WishlistButtonProps {
   productId: string

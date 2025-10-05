@@ -141,7 +141,7 @@ export default function FAQPage() {
       id: 'general-2',
       category: 'general',
       question: 'How can I stay updated with new releases?',
-      answer: 'Subscribe to our newsletter, follow us on social media (@fashun.co), or enable push notifications on our website. We also recommend creating an account to get personalized recommendations.'
+      answer: 'Subscribe to our newsletter, follow us on social media (@fashun.co.in), or enable push notifications on our website. We also recommend creating an account to get personalized recommendations.'
     },
     {
       id: 'general-3',
@@ -317,21 +317,36 @@ export default function FAQPage() {
               <ChatBubbleLeftRightIcon className="w-8 h-8 text-accent-400 mx-auto mb-3" />
               <h3 className="text-white font-semibold mb-2">Live Chat</h3>
               <p className="text-primary-300 text-sm mb-4">Get instant help from our support team</p>
-              <button className="w-full btn btn-glass btn-sm">Start Chat</button>
+              <button 
+                onClick={() => window.open('https://wa.me/919876543210?text=Hi! I need help with FASHUN.CO', '_blank')}
+                className="w-full btn btn-glass btn-sm cursor-pointer hover:scale-105 transition-transform"
+              >
+                Start Chat
+              </button>
             </div>
             
             <div className="bg-primary-900/30 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
               <EnvelopeIcon className="w-8 h-8 text-accent-400 mx-auto mb-3" />
               <h3 className="text-white font-semibold mb-2">Email Support</h3>
               <p className="text-primary-300 text-sm mb-4">Response within 24 hours</p>
-              <button className="w-full btn btn-ghost btn-sm text-white border-white/30">Send Email</button>
+              <button 
+                onClick={() => window.location.href = 'mailto:fashun.co.in@gmail.com?subject=Support Request&body=Hi FASHUN team, I need help with...'}
+                className="w-full btn btn-ghost btn-sm text-white border-white/30 cursor-pointer hover:scale-105 transition-transform"
+              >
+                Send Email
+              </button>
             </div>
             
             <div className="bg-primary-900/30 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
               <PhoneIcon className="w-8 h-8 text-accent-400 mx-auto mb-3" />
               <h3 className="text-white font-semibold mb-2">Phone Support</h3>
               <p className="text-primary-300 text-sm mb-4">Mon-Fri, 9 AM - 6 PM IST</p>
-              <button className="w-full btn btn-ghost btn-sm text-white border-white/30">Call Now</button>
+              <button 
+                onClick={() => window.location.href = 'tel:+919876543210'}
+                className="w-full btn btn-ghost btn-sm text-white border-white/30 cursor-pointer hover:scale-105 transition-transform"
+              >
+                Call Now
+              </button>
             </div>
           </div>
         </motion.div>

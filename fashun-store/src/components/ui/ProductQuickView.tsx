@@ -14,8 +14,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CheckIcon
-} from '@heroicons/24/outline'
-import { HeartIcon as HeartIconSolid, StarIcon as StarIconSolid } from '@heroicons/24/solid'
+} from '@heroicons/react/24/outline'
+import { HeartIcon as HeartIconSolid, StarIcon as StarIconSolid } from '@heroicons/react/24/solid'
 
 interface Product {
   id: string

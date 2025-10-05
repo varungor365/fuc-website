@@ -130,12 +130,29 @@ export default function NewArrivals() {
                       {/* Quick Actions */}
                       <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="flex flex-col space-y-2">
-                          <button className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110">
+                          <button 
+                            onClick={() => {
+                              // Add to wishlist functionality
+                              const existingWishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+                              const productExists = existingWishlist.find((item: any) => item.id === product.id);
+                              if (!productExists) {
+                                existingWishlist.push(product);
+                                localStorage.setItem('wishlist', JSON.stringify(existingWishlist));
+                                alert('Added to wishlist!');
+                              } else {
+                                alert('Already in wishlist!');
+                              }
+                            }}
+                            className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 cursor-pointer"
+                          >
                             <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                           </button>
-                          <button className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110">
+                          <button 
+                            onClick={() => window.location.href = `/products/${product.id}`}
+                            className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 cursor-pointer"
+                          >
                             <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -146,7 +163,25 @@ export default function NewArrivals() {
 
                       {/* Quick Add to Cart */}
                       <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button className="w-full bg-white text-gray-900 font-semibold py-3 rounded-full hover:bg-gray-100 transition-colors duration-200">
+                        <button 
+                          onClick={() => {
+                            // Add to cart functionality
+                            const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                            const cartItem = {
+                              id: product.id,
+                              name: product.name,
+                              price: product.price,
+                              image: product.image,
+                              quantity: 1,
+                              size: 'M', // Default size
+                              color: product.colors?.[0] || 'Default'
+                            };
+                            existingCart.push(cartItem);
+                            localStorage.setItem('cart', JSON.stringify(existingCart));
+                            alert('Added to cart!');
+                          }}
+                          className="w-full bg-white text-gray-900 font-semibold py-3 rounded-full hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
+                        >
                           Quick Add to Cart
                         </button>
                       </div>

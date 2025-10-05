@@ -440,9 +440,9 @@ export default function GiftCardsPage() {
                 Purchase Gift Card
               </button>
 
-              <div className="flex items-center text-primary-300 text-sm">
+              <div className="flex items-center justify-center text-primary-300 text-sm">
                 <CheckCircleIcon className="w-4 h-4 mr-2 text-green-400" />
-                <span>Secure payment • Instant delivery • No expiry</span>
+                <span>Instant delivery • No expiry</span>
               </div>
             </div>
           </motion.div>

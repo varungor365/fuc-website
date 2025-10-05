@@ -29,19 +29,19 @@ export default function ContactPage() {
     {
       icon: MapPinIcon,
       title: 'Our Location',
-      info: 'Mumbai, Maharashtra, India',
+      info: 'Dehradun, Uttarakhand, India',
       details: 'Building the future from the heart of India'
     },
     {
       icon: PhoneIcon,
       title: 'Phone Support',
-      info: '+91 98765 43210',
+      info: '+919310632771',
       details: 'Mon-Fri 9AM-7PM IST'
     },
     {
       icon: EnvelopeIcon,
       title: 'Email Us',
-      info: 'hello@fashun.co.in',
+      info: 'fashun.co.in@gmail.com',
       details: 'We typically respond within 24 hours'
     },
     {
