@@ -1,274 +1,497 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { 
-  CreditCardIcon,
-  BanknotesIcon,
-  ShieldCheckIcon,
-  ArrowLeftIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  LockClosedIcon
-} from '@heroicons/react/24/outline';
-import { useSaleorCheckout, SaleorStatus } from '@/hooks/useSaleor';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useMedusaCart } from '@/hooks/useMedusaCart';
+import { MedusaCheckoutService } from '@/services/medusa';
+import { Check, Lock, CreditCard, Truck, MapPin, Mail, Phone, User } from 'lucide-react';
+import toast from 'react-hot-toast';
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function CheckoutPage() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const router = useRouter();
+  const { cart, loading } = useMedusaCart();
+  const [step, setStep] = useState(1);
+  const [processing, setProcessing] = useState(false);
+
   const [formData, setFormData] = useState({
     email: '',
     firstName: '',
     lastName: '',
+    phone: '',
     address: '',
+    apartment: '',
     city: '',
     state: '',
-    pincode: '',
-    phone: ''
+    postalCode: '',
+    country: 'India',
+    shippingMethod: '',
+    paymentMethod: 'razorpay'
   });
-  const [orderComplete, setOrderComplete] = useState(false);
-  const [createdOrder, setCreatedOrder] = useState<any>(null);
 
-  const { checkout, createCheckout, loading: creating, error: orderError } = useSaleorCheckout();
+  const [errors, setErrors] = useState<any>({});
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  useEffect(() => {
+    if (!loading && (!cart || cart.items?.length === 0)) {
+      router.push('/cart');
+    }
+  }, [cart, loading, router]);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const validateStep = (currentStep: number) => {
+    const newErrors: any = {};
+
+    if (currentStep === 1) {
+      if (!formData.email) newErrors.email = 'Email is required';
+      if (!formData.firstName) newErrors.firstName = 'First name is required';
+      if (!formData.lastName) newErrors.lastName = 'Last name is required';
+      if (!formData.phone) newErrors.phone = 'Phone is required';
+    }
+
+    if (currentStep === 2) {
+      if (!formData.address) newErrors.address = 'Address is required';
+      if (!formData.city) newErrors.city = 'City is required';
+      if (!formData.state) newErrors.state = 'State is required';
+      if (!formData.postalCode) newErrors.postalCode = 'Postal code is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleStepSubmit = async () => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      // Create Saleor checkout
-      const lines = [
-        {
-          variantId: 'UHJvZHVjdFZhcmlhbnQ6MQ==', // Base64 encoded variant ID for demo
-          quantity: 1
-        }
-      ];
+  const handleNext = async () => {
+    if (!validateStep(step)) return;
 
-      const newCheckout = await createCheckout(lines);
-      if (newCheckout) {
-        setCreatedOrder(newCheckout);
-        setOrderComplete(true);
+    if (step === 1) {
+      try {
+        await MedusaCheckoutService.addEmail(cart.id, formData.email);
+        setStep(2);
+      } catch (error) {
+        toast.error('Failed to save contact information');
       }
+    } else if (step === 2) {
+      try {
+        await MedusaCheckoutService.addShippingAddress(cart.id, {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          address_1: formData.address,
+          address_2: formData.apartment,
+          city: formData.city,
+          province: formData.state,
+          postal_code: formData.postalCode,
+          country_code: 'in',
+          phone: formData.phone
+        });
+        
+        const shippingOptions = await MedusaCheckoutService.getShippingOptions(cart.id);
+        if (shippingOptions.length > 0) {
+          await MedusaCheckoutService.addShippingMethod(cart.id, shippingOptions[0].id);
+        }
+        
+        setStep(3);
+      } catch (error) {
+        toast.error('Failed to save shipping address');
+      }
+    } else if (step === 3) {
+      await handlePayment();
     }
   };
 
-  if (orderComplete) {
+  const handlePayment = async () => {
+    setProcessing(true);
+    try {
+      await MedusaCheckoutService.createPaymentSessions(cart.id);
+      await MedusaCheckoutService.setPaymentSession(cart.id, 'razorpay');
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+        amount: cart.total,
+        currency: 'INR',
+        name: 'FASHUN.CO',
+        description: 'Order Payment',
+        image: '/logo.png',
+        order_id: cart.payment_session?.data?.id,
+        handler: async function (response: any) {
+          try {
+            const result = await MedusaCheckoutService.completeCart(cart.id);
+            if (result.type === 'order') {
+              toast.success('Order placed successfully!');
+              router.push(`/payment/success?order_id=${result.order.id}`);
+            }
+          } catch (error) {
+            toast.error('Payment verification failed');
+            router.push('/payment/failure');
+          }
+        },
+        prefill: {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          contact: formData.phone
+        },
+        theme: {
+          color: '#8B5CF6'
+        },
+        modal: {
+          ondismiss: function() {
+            setProcessing(false);
+            toast.error('Payment cancelled');
+          }
+        }
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast.error('Failed to initialize payment');
+      setProcessing(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: '' });
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md mx-auto text-center p-8 bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl"
-        >
-          <CheckCircleIcon className="h-16 w-16 text-green-400 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-4">Order Confirmed!</h1>
-          {createdOrder?.id && (
-            <p className="text-white/80 mb-2">Order ID: #{createdOrder.id}</p>
-          )}
-          <p className="text-white/60 mb-6">Thank you for your purchase. Your order has been successfully created with Saleor GraphQL.</p>
-          <SaleorStatus className="mb-4" />
-          <Link href="/" className="bg-gradient-to-r from-white via-gray-50 to-white text-black px-6 py-3 rounded-xl font-subheading shadow-lg hover:shadow-xl hover:from-gray-50 hover:to-gray-100 transition-all duration-300">
-            Continue Shopping
-          </Link>
-        </motion.div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/cart" className="inline-flex items-center text-white/60 hover:text-white mb-4">
-            <ArrowLeftIcon className="h-5 w-5 mr-2" />
-            Back to Cart
-          </Link>
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-white">Saleor GraphQL Checkout</h1>
-            <SaleorStatus />
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Progress Steps */}
+        <div className="mb-12">
+          <div className="flex items-center justify-center space-x-4">
+            {[1, 2, 3].map((s) => (
+              <div key={s} className="flex items-center">
+                <motion.div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    step >= s ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-500'
+                  }`}
+                  animate={{ scale: step === s ? 1.1 : 1 }}
+                >
+                  {step > s ? <Check className="w-5 h-5" /> : s}
+                </motion.div>
+                {s < 3 && (
+                  <div className={`w-20 h-1 ${step > s ? 'bg-purple-600' : 'bg-gray-200'}`} />
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-center mt-4 space-x-24">
+            <span className={step >= 1 ? 'text-purple-600 font-medium' : 'text-gray-500'}>Contact</span>
+            <span className={step >= 2 ? 'text-purple-600 font-medium' : 'text-gray-500'}>Shipping</span>
+            <span className={step >= 3 ? 'text-purple-600 font-medium' : 'text-gray-500'}>Payment</span>
           </div>
         </div>
 
-        {/* Step Indicator */}
-        <div className="flex items-center justify-center mb-8">
-          {[1, 2, 3].map((step) => (
-            <div key={step} className="flex items-center">
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                step <= currentStep ? 'bg-white text-black' : 'bg-white/20 text-white/60'
-              }`}>
-                {step}
-              </div>
-              {step < 3 && (
-                <div className={`w-16 h-0.5 mx-4 ${
-                  step < currentStep ? 'bg-white' : 'bg-white/20'
-                }`} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column - Form */}
+          <div className="space-y-6">
+            <AnimatePresence mode="wait">
+              {/* Step 1: Contact Information */}
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="bg-white rounded-2xl shadow-xl p-8"
+                >
+                  <div className="flex items-center mb-6">
+                    <Mail className="w-6 h-6 text-purple-600 mr-3" />
+                    <h2 className="text-2xl font-bold">Contact Information</h2>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Email</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-3 rounded-lg border ${
+                          errors.email ? 'border-red-500' : 'border-gray-300'
+                        } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                        placeholder="you@example.com"
+                      />
+                      {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">First Name</label>
+                        <input
+                          type="text"
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
+                          className={`w-full px-4 py-3 rounded-lg border ${
+                            errors.firstName ? 'border-red-500' : 'border-gray-300'
+                          } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                        />
+                        {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Last Name</label>
+                        <input
+                          type="text"
+                          name="lastName"
+                          value={formData.lastName}
+                          onChange={handleInputChange}
+                          className={`w-full px-4 py-3 rounded-lg border ${
+                            errors.lastName ? 'border-red-500' : 'border-gray-300'
+                          } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                        />
+                        {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Phone</label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-3 rounded-lg border ${
+                          errors.phone ? 'border-red-500' : 'border-gray-300'
+                        } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                        placeholder="+91 98765 43210"
+                      />
+                      {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+                    </div>
+                  </div>
+                </motion.div>
               )}
+
+              {/* Step 2: Shipping Address */}
+              {step === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="bg-white rounded-2xl shadow-xl p-8"
+                >
+                  <div className="flex items-center mb-6">
+                    <Truck className="w-6 h-6 text-purple-600 mr-3" />
+                    <h2 className="text-2xl font-bold">Shipping Address</h2>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Address</label>
+                      <input
+                        type="text"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-3 rounded-lg border ${
+                          errors.address ? 'border-red-500' : 'border-gray-300'
+                        } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                        placeholder="Street address"
+                      />
+                      {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Apartment, suite, etc. (optional)</label>
+                      <input
+                        type="text"
+                        name="apartment"
+                        value={formData.apartment}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">City</label>
+                        <input
+                          type="text"
+                          name="city"
+                          value={formData.city}
+                          onChange={handleInputChange}
+                          className={`w-full px-4 py-3 rounded-lg border ${
+                            errors.city ? 'border-red-500' : 'border-gray-300'
+                          } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                        />
+                        {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">State</label>
+                        <input
+                          type="text"
+                          name="state"
+                          value={formData.state}
+                          onChange={handleInputChange}
+                          className={`w-full px-4 py-3 rounded-lg border ${
+                            errors.state ? 'border-red-500' : 'border-gray-300'
+                          } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                        />
+                        {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Postal Code</label>
+                      <input
+                        type="text"
+                        name="postalCode"
+                        value={formData.postalCode}
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-3 rounded-lg border ${
+                          errors.postalCode ? 'border-red-500' : 'border-gray-300'
+                        } focus:ring-2 focus:ring-purple-500 focus:border-transparent`}
+                      />
+                      {errors.postalCode && <p className="text-red-500 text-sm mt-1">{errors.postalCode}</p>}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 3: Payment */}
+              {step === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="bg-white rounded-2xl shadow-xl p-8"
+                >
+                  <div className="flex items-center mb-6">
+                    <CreditCard className="w-6 h-6 text-purple-600 mr-3" />
+                    <h2 className="text-2xl font-bold">Payment Method</h2>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="border-2 border-purple-600 rounded-lg p-4 bg-purple-50">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <CreditCard className="w-6 h-6 text-purple-600 mr-3" />
+                          <div>
+                            <p className="font-medium">Razorpay</p>
+                            <p className="text-sm text-gray-600">Credit/Debit Card, UPI, Net Banking</p>
+                          </div>
+                        </div>
+                        <Lock className="w-5 h-5 text-purple-600" />
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <p className="text-sm text-blue-800">
+                        <Lock className="w-4 h-4 inline mr-2" />
+                        Your payment information is secure and encrypted
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between">
+              {step > 1 && (
+                <button
+                  onClick={() => setStep(step - 1)}
+                  className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+                >
+                  Back
+                </button>
+              )}
+              <button
+                onClick={handleNext}
+                disabled={processing}
+                className="ml-auto px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {processing ? 'Processing...' : step === 3 ? 'Pay Now' : 'Continue'}
+              </button>
             </div>
-          ))}
-        </div>
+          </div>
 
-        <div className="max-w-md mx-auto space-y-6">
-          {/* Step 1: Contact Information */}
-          {currentStep >= 1 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl p-6"
-            >
-              <h2 className="text-xl font-semibold text-white mb-4">Contact Information</h2>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email address"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40"
-              />
-            </motion.div>
-          )}
+          {/* Right Column - Order Summary */}
+          <div className="lg:sticky lg:top-24 h-fit">
+            <div className="bg-white rounded-2xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
 
-          {/* Step 2: Shipping Information */}
-          {currentStep >= 2 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl p-6"
-            >
-              <h2 className="text-xl font-semibold text-white mb-4">Shipping Information</h2>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First name"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40"
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last name"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40"
-                  />
-                </div>
-                <input
-                  type="text"
-                  name="address"
-                  placeholder="Street address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40"
-                />
-                <div className="grid grid-cols-3 gap-4">
-                  <input
-                    type="text"
-                    name="city"
-                    placeholder="City"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40"
-                  />
-                  <input
-                    type="text"
-                    name="state"
-                    placeholder="State"
-                    value={formData.state}
-                    onChange={handleInputChange}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40"
-                  />
-                  <input
-                    type="text"
-                    name="pincode"
-                    placeholder="PIN Code"
-                    value={formData.pincode}
-                    onChange={handleInputChange}
-                    className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40"
-                  />
-                </div>
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone number"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40"
-                />
-              </div>
-            </motion.div>
-          )}
-
-          {/* Step 3: Payment Method */}
-          {currentStep >= 3 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl p-6"
-            >
-              <h2 className="text-xl font-semibold text-white mb-4">Payment Method</h2>
-              <div className="space-y-3">
-                {[
-                  { id: 'saleor', title: 'Saleor GraphQL Payment', icon: ShieldCheckIcon },
-                  { id: 'stripe', title: 'Credit/Debit Card', icon: CreditCardIcon },
-                  { id: 'cod', title: 'Cash on Delivery', icon: BanknotesIcon }
-                ].map((method) => (
-                  <label key={method.id} className="flex items-center p-4 bg-white/5 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-colors">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value={method.id}
-                      checked={paymentMethod === method.id}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="sr-only"
-                    />
-                    <method.icon className="h-6 w-6 text-white mr-3" />
-                    <span className="text-white font-medium">{method.title}</span>
-                    {paymentMethod === method.id && (
-                      <CheckCircleIcon className="h-5 w-5 text-green-400 ml-auto" />
-                    )}
-                  </label>
+              <div className="space-y-4 mb-6">
+                {cart?.items?.map((item: any) => (
+                  <div key={item.id} className="flex items-center space-x-4">
+                    <div className="relative">
+                      <img
+                        src={item.thumbnail || '/placeholder.png'}
+                        alt={item.title}
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                      <span className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
+                        {item.quantity}
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium">{item.title}</p>
+                      <p className="text-sm text-gray-600">{item.variant?.title}</p>
+                    </div>
+                    <p className="font-medium">₹{(item.total / 100).toFixed(2)}</p>
+                  </div>
                 ))}
               </div>
 
-              {orderError && (
-                <div className="mt-4 p-4 bg-red-500/20 border border-red-500/40 rounded-lg flex items-center">
-                  <ExclamationTriangleIcon className="h-5 w-5 text-red-400 mr-2" />
-                  <p className="text-red-400 text-sm">{orderError}</p>
+              <div className="border-t pt-4 space-y-2">
+                <div className="flex justify-between text-gray-600">
+                  <span>Subtotal</span>
+                  <span>₹{((cart?.subtotal || 0) / 100).toFixed(2)}</span>
                 </div>
-              )}
-            </motion.div>
-          )}
-
-          {/* Continue Button */}
-          <button
-            onClick={handleStepSubmit}
-            disabled={creating || (!paymentMethod && currentStep === 3)}
-            className="w-full bg-gradient-to-r from-white via-gray-50 to-white text-black py-4 px-6 rounded-xl font-subheading shadow-lg hover:shadow-xl hover:from-gray-50 hover:to-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-          >
-            {creating ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent mr-2"></div>
-                Creating Order...
+                <div className="flex justify-between text-gray-600">
+                  <span>Shipping</span>
+                  <span>{cart?.shipping_total ? `₹${(cart.shipping_total / 100).toFixed(2)}` : 'Calculated at next step'}</span>
+                </div>
+                <div className="flex justify-between text-gray-600">
+                  <span>Tax</span>
+                  <span>₹{((cart?.tax_total || 0) / 100).toFixed(2)}</span>
+                </div>
+                <div className="border-t pt-2 flex justify-between text-xl font-bold">
+                  <span>Total</span>
+                  <span className="text-purple-600">₹{((cart?.total || 0) / 100).toFixed(2)}</span>
+                </div>
               </div>
-            ) : (
-              <>
-                {currentStep < 3 && 'Continue'}
-                {currentStep === 3 && 'Complete Order with Saleor GraphQL'}
-              </>
-            )}
-          </button>
 
-
+              <div className="mt-6 space-y-2">
+                <div className="flex items-center text-sm text-gray-600">
+                  <Lock className="w-4 h-4 mr-2" />
+                  Secure checkout
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <Truck className="w-4 h-4 mr-2" />
+                  Free shipping on orders over ₹999
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

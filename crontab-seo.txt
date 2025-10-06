@@ -1,0 +1,20 @@
+# Fashun.co.in SEO Automation Cron Jobs
+# Add these to your server's crontab: crontab -e
+
+# AI Product Descriptions - Daily at 2 AM
+0 2 * * * cd /var/www/fashun && npm run seo:products >> /var/log/seo-products.log 2>&1
+
+# AI Alt Text Generation - Daily at 3 AM
+0 3 * * * cd /var/www/fashun && npm run seo:alt-text >> /var/log/seo-alt-text.log 2>&1
+
+# Meta Tag Optimization - Weekly on Sunday at 1 AM
+0 1 * * 0 cd /var/www/fashun && npm run seo:meta >> /var/log/seo-meta.log 2>&1
+
+# Internal Linking - Daily at 4 AM
+0 4 * * * cd /var/www/fashun && npm run seo:links >> /var/log/seo-links.log 2>&1
+
+# Link Checker - Nightly at 1 AM
+0 1 * * * cd /var/www/fashun && npm run seo:check-links >> /var/log/seo-link-check.log 2>&1
+
+# Full SEO Suite - Weekly on Monday at 2 AM
+0 2 * * 1 cd /var/www/fashun && npm run seo:all >> /var/log/seo-full.log 2>&1
