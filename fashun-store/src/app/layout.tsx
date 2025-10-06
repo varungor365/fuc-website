@@ -4,6 +4,8 @@ import ErrorBoundary from '../components/error/ErrorBoundary'
 import NewsletterPopup from '../components/promotional/NewsletterPopup'
 import FloatingCart from '../components/ui/FloatingCart'
 import SearchBar from '../components/ui/SearchBar'
+import MobileBottomNav from '../components/ui/MobileBottomNav'
+import ExitIntentPopup from '../components/promotional/ExitIntentPopup'
 
 export const metadata: Metadata = {
   title: 'FASHUN.CO.IN - Premium Streetwear',
@@ -42,11 +44,13 @@ export default function RootLayout({
         </nav>
         
         <ErrorBoundary>
-          <main className="flex-1">
+          <main className="flex-1 pb-20 md:pb-0">
             {children}
           </main>
           <FloatingCart />
           <NewsletterPopup />
+          <ExitIntentPopup />
+          <MobileBottomNav />
         </ErrorBoundary>
         
         <footer className="bg-gray-900 border-t border-gray-800 px-6 py-12">
