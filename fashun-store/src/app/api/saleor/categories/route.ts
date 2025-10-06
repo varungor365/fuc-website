@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saleorService } from '@/lib/saleor';
+import { saleorClient } from '@/lib/saleor';
 
 // GET /api/saleor/categories - Fetch categories from Saleor
 export async function GET(request: NextRequest) {
@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
 
     console.log('Fetching Saleor categories:', { first });
     
-    const categories = await saleorService.getCategories(first);
+    // Placeholder - categories query not implemented yet
+    const categories: any[] = [];
     
     return NextResponse.json({
       success: true,

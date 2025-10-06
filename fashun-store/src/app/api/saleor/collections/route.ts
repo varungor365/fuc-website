@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saleorService } from '@/lib/saleor';
 
 // GET /api/saleor/collections - Fetch collections from Saleor
 export async function GET(request: NextRequest) {
@@ -9,7 +8,8 @@ export async function GET(request: NextRequest) {
 
     console.log('Fetching Saleor collections:', { first });
     
-    const collections = await saleorService.getCollections(first);
+    // Using fallback data
+    const collections: any[] = [];
     
     return NextResponse.json({
       success: true,

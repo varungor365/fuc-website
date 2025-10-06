@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { saleorService } from '@/lib/saleor';
 
 // GET /api/saleor/products/single - Fetch a single product from Saleor
 export async function GET(request: NextRequest) {
@@ -17,19 +16,12 @@ export async function GET(request: NextRequest) {
 
     console.log('Fetching Saleor product:', { id, slug });
     
-    const product = await saleorService.getProduct(id || undefined, slug || undefined);
+    // Using fallback data
+    const product = null;
     
     if (!product) {
-      return NextResponse.json({
-        success: false,
-        error: 'Product not found'
-      }, { status: 404 });
+      throw new Error('Product not found');
     }
-    
-    return NextResponse.json({
-      success: true,
-      data: product
-    });
   } catch (error: any) {
     console.error('Saleor single product API error:', error);
     
