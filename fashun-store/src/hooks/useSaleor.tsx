@@ -4,7 +4,12 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { SaleorProduct, SaleorCategory, SaleorCollection, SaleorCheckout } from '@/lib/saleor';
+
+// Type definitions
+type SaleorProduct = any;
+type SaleorCategory = any;
+type SaleorCollection = any;
+type SaleorCheckout = any;
 
 // Custom hook for Saleor products
 export const useSaleorProducts = (params?: {
