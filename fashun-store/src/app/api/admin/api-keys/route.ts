@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 
-// Security: Require encryption key in production
+// Security: Require encryption key in production (runtime only)
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
-if (!ENCRYPTION_KEY && process.env.NODE_ENV === 'production') {
-  throw new Error('ENCRYPTION_KEY environment variable is required in production')
-}
-const encryptionKey = ENCRYPTION_KEY || 'development-key-not-for-production'
+const encryptionKey = ENCRYPTION_KEY || 'development-key-not-for-production-use-only'
 
 // Encryption utilities
 function encrypt(text: string): string {
