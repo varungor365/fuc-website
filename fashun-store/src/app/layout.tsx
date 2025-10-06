@@ -6,6 +6,8 @@ import FloatingCart from '../components/ui/FloatingCart'
 import SearchBar from '../components/ui/SearchBar'
 import MobileBottomNav from '../components/ui/MobileBottomNav'
 import ExitIntentPopup from '../components/promotional/ExitIntentPopup'
+import AbandonedCartPopup from '../components/promotional/AbandonedCartPopup'
+import StyleQuiz from '../components/features/StyleQuiz'
 
 export const metadata: Metadata = {
   title: 'FASHUN.CO.IN - Premium Streetwear',
@@ -50,6 +52,8 @@ export default function RootLayout({
           <FloatingCart />
           <NewsletterPopup />
           <ExitIntentPopup />
+          <AbandonedCartPopup />
+          <StyleQuiz />
           <MobileBottomNav />
         </ErrorBoundary>
         
