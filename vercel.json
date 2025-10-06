@@ -1,4 +1,6 @@
 {
+  "buildCommand": "cd fashun-store && npm run build",
+  "installCommand": "cd fashun-store && npm install",
   "redirects": [
     {
       "source": "/shop",
