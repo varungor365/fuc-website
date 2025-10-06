@@ -39,7 +39,7 @@ export const PRODUCTS_QUERY = `
 
 export async function getProducts(limit = 20) {
   try {
-    const data = await saleorClient.request(PRODUCTS_QUERY, {
+    const data: any = await saleorClient.request(PRODUCTS_QUERY, {
       first: limit,
       channel: process.env.SALEOR_CHANNEL_SLUG || 'default-channel',
     });
