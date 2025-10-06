@@ -1,10 +1,4 @@
 {
-  "version": 2,
-  "buildCommand": "cd fashun-store && npm install && npm run build",
-  "outputDirectory": "fashun-store/.next",
-  "installCommand": "cd fashun-store && npm install",
-  "framework": "nextjs",
-  "rootDirectory": "fashun-store",
   "redirects": [
     {
       "source": "/shop",
@@ -16,10 +10,5 @@
       "destination": "/privacy-policy", 
       "permanent": true
     }
-  ],
-  "functions": {
-    "fashun-store/src/app/api/**": {
-      "runtime": "nodejs18.x"
-    }
-  }
+  ]
 }
