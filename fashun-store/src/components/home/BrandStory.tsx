@@ -111,7 +111,7 @@ export default function BrandStory() {
             {/* Main Brand Image */}
             <div className="relative overflow-hidden rounded-3xl shadow-2xl">
               <img
-                src="/images/mock/brand/story-hero.jpg"
+                src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&h=600&fit=crop"
                 alt="FASHUN.CO Brand Story"
                 className="w-full h-[600px] object-cover"
               />
@@ -190,7 +190,7 @@ export default function BrandStory() {
             
             <div className="flex items-center justify-center space-x-4">
               <img
-                src="/images/mock/team/founder.jpg"
+                src="/images/brand/logo.svg"
                 alt="Founder"
                 className="w-16 h-16 rounded-full border-4 border-white shadow-lg"
               />

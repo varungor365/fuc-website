@@ -26,7 +26,7 @@ const dealProduct: DealProduct = {
   salePrice: 4499,
   rating: 4.8,
   reviewCount: 127,
-  image: '/images/products/hoodies/deal-hoodie.jpg',
+  image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=600&fit=crop',
   href: '/products/premium-streetwear-hoodie',
   badge: '50% OFF',
   stockCount: 23

@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { getImagePath } from '@/lib/imageUtils';
 
 // Featured Collections - Inspired by Prestige, Empire themes
 export default function FeaturedCollections() {
@@ -11,7 +12,7 @@ export default function FeaturedCollections() {
       id: 1,
       name: 'Premium Streetwear',
       description: 'Urban fashion meets premium quality',
-      image: '/images/mock/collections/streetwear.jpg',
+      image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=80',
       productCount: 45,
       slug: 'streetwear',
       gradient: 'from-purple-600 to-pink-600'
@@ -20,7 +21,7 @@ export default function FeaturedCollections() {
       id: 2,
       name: 'Essential Basics',
       description: 'Timeless pieces for everyday wear',
-      image: '/images/mock/collections/basics.jpg',
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=80',
       productCount: 32,
       slug: 'basics',
       gradient: 'from-blue-600 to-cyan-600'
@@ -29,7 +30,7 @@ export default function FeaturedCollections() {
       id: 3,
       name: 'Limited Edition',
       description: 'Exclusive drops you won\'t find anywhere else',
-      image: '/images/mock/collections/limited.jpg',
+      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=1000&fit=crop&q=80',
       productCount: 18,
       slug: 'limited-edition',
       gradient: 'from-green-600 to-teal-600'
@@ -38,7 +39,7 @@ export default function FeaturedCollections() {
       id: 4,
       name: 'Seasonal Collection',
       description: 'Perfect for the current season',
-      image: '/images/mock/collections/seasonal.jpg',
+      image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&h=1000&fit=crop&q=80',
       productCount: 28,
       slug: 'seasonal',
       gradient: 'from-orange-600 to-red-600'
@@ -87,7 +88,7 @@ export default function FeaturedCollections() {
                   />
                   
                   {/* Gradient Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-t ${collection.gradient} opacity-60 group-hover:opacity-70 transition-opacity duration-300`} />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${collection.gradient} opacity-40 group-hover:opacity-50 transition-opacity duration-300`} />
                   
                   {/* Content Overlay */}
                   <div className="absolute inset-0 p-6 flex flex-col justify-end text-white">

@@ -38,17 +38,12 @@ if (isClient && (apiKey || isProduction)) {
       debug: isDevelopment
     });
     
-    if (isDevelopment) {
-      console.log('🐛 Honeybadger initialized in development mode (client-side)');
-    }
+    // Honeybadger initialized successfully
   } catch (error) {
     console.warn('⚠️ Failed to initialize Honeybadger:', error);
   }
-} else if (!isClient) {
-  console.log('🚫 Honeybadger not initialized - server-side rendering');
-} else {
-  console.log('🚫 Honeybadger not initialized - missing API key in development mode');
 }
+// Honeybadger initialization skipped (SSR or missing API key)
 
 // Set user information helper
 export const setUserContext = (user: {

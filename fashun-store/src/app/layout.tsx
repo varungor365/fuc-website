@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 import ErrorBoundary from '../components/error/ErrorBoundary'
 import NewsletterPopup from '../components/promotional/NewsletterPopup'
+import FloatingCart from '../components/ui/FloatingCart'
+import SearchBar from '../components/ui/SearchBar'
 
 export const metadata: Metadata = {
   title: 'FASHUN.CO.IN - Premium Streetwear',
@@ -33,8 +35,8 @@ export default function RootLayout({
               <a href="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</a>
             </div>
             <div className="flex items-center space-x-4">
+              <SearchBar />
               <a href="/account" className="text-gray-300 hover:text-white transition-colors">Account</a>
-              <a href="/cart" className="text-gray-300 hover:text-white transition-colors">Cart (0)</a>
             </div>
           </div>
         </nav>
@@ -43,6 +45,7 @@ export default function RootLayout({
           <main className="flex-1">
             {children}
           </main>
+          <FloatingCart />
           <NewsletterPopup />
         </ErrorBoundary>
         

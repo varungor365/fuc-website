@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { getImagePath } from '@/lib/imageUtils';
 
 // New Arrivals - Inspired by Empire, Dawn themes
 export default function NewArrivals() {
@@ -12,8 +13,8 @@ export default function NewArrivals() {
       name: 'Premium Cotton Oversized Tee',
       price: 1299,
       originalPrice: 1699,
-      image: '/images/mock/products/tshirts/oversized-tee.jpg',
-      hoverImage: '/images/mock/products/tshirts/oversized-tee-2.jpg',
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=1000&fit=crop&q=85',
       badge: 'New',
       colors: ['#000000', '#FFFFFF', '#FF6B6B', '#4ECDC4'],
       rating: 4.8,
@@ -25,8 +26,8 @@ export default function NewArrivals() {
       name: 'Streetwear Cargo Pants',
       price: 2499,
       originalPrice: 3199,
-      image: '/images/mock/products/pants/cargo-pants.jpg',
-      hoverImage: '/images/mock/products/pants/cargo-pants-2.jpg',
+      image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&h=1000&fit=crop&q=85',
       badge: 'Trending',
       colors: ['#2D3748', '#68D391', '#F6AD55'],
       rating: 4.9,
@@ -38,8 +39,8 @@ export default function NewArrivals() {
       name: 'Classic Bomber Jacket',
       price: 3999,
       originalPrice: 4999,
-      image: '/images/mock/products/jackets/bomber-jacket.jpg',
-      hoverImage: '/images/mock/products/jackets/bomber-jacket-2.jpg',
+      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=1000&fit=crop&q=85',
       badge: 'Sale',
       colors: ['#1A202C', '#2D3748', '#4A5568'],
       rating: 4.7,
@@ -51,8 +52,8 @@ export default function NewArrivals() {
       name: 'Urban Hoodie Collection',
       price: 2199,
       originalPrice: 2799,
-      image: '/images/mock/products/hoodies/urban-hoodie.jpg',
-      hoverImage: '/images/mock/products/hoodies/urban-hoodie-2.jpg',
+      image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=85',
       badge: 'Limited',
       colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'],
       rating: 4.6,

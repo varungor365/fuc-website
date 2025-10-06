@@ -18,6 +18,9 @@ import InstagramFeed from '@/components/home/InstagramFeed';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import TrustBadges from '@/components/home/TrustBadges';
 import NewsletterSignup from '@/components/home/NewsletterSignup';
+import RecentlyViewed from '@/components/features/RecentlyViewed';
+import SocialProof from '@/components/features/SocialProof';
+import SaleorProducts from '@/components/features/SaleorProducts';
 import CountdownTimer from '@/components/promotional/CountdownTimer';
 import DealOfTheDay from '@/components/promotional/DealOfTheDay';
 
@@ -261,6 +264,9 @@ export default function HomePage() {
       {/* Trending Products with AI */}
       <TrendingProducts />
       
+      {/* Live Saleor Products */}
+      <SaleorProducts />
+      
       {/* AI-Powered Personalized Sections */}
       {/* <PersonalizedSections userId="demo-user" /> */}
       
@@ -327,8 +333,14 @@ export default function HomePage() {
         </div>
       </section>
       
+      {/* Recently Viewed */}
+      <RecentlyViewed />
+      
       {/* Newsletter Signup */}
       <NewsletterSignup />
+      
+      {/* Social Proof */}
+      <SocialProof />
     </main>
   );
 }

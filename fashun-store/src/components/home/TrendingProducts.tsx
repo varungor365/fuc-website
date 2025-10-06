@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { getImagePath } from '@/lib/imageUtils';
 
 // Trending Products - AI Curated selection inspired by Prestige, Basel themes
 export default function TrendingProducts() {
@@ -12,8 +13,8 @@ export default function TrendingProducts() {
       name: 'AI Curated Urban Flex Hoodie',
       price: 2799,
       originalPrice: 3599,
-      image: '/images/mock/products/hoodies/trending-hoodie.jpg',
-      hoverImage: '/images/mock/products/hoodies/trending-hoodie-2.jpg',
+      image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&h=1000&fit=crop&q=85',
       badge: 'AI Pick',
       trendScore: 98,
       weeklyViews: 1247,
@@ -27,8 +28,8 @@ export default function TrendingProducts() {
       name: 'Smart Tech Cargo Shorts',
       price: 1899,
       originalPrice: 2399,
-      image: '/images/mock/products/shorts/tech-cargo.jpg',
-      hoverImage: '/images/mock/products/shorts/tech-cargo-2.jpg',
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=1000&fit=crop&q=85',
       badge: 'Viral',
       trendScore: 95,
       weeklyViews: 2156,
@@ -42,8 +43,8 @@ export default function TrendingProducts() {
       name: 'Neo Street Jacket',
       price: 4499,
       originalPrice: 5999,
-      image: '/images/mock/products/jackets/neo-street.jpg',
-      hoverImage: '/images/mock/products/jackets/neo-street-2.jpg',
+      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=1000&fit=crop&q=85',
       badge: 'Hot',
       trendScore: 92,
       weeklyViews: 987,
@@ -57,8 +58,8 @@ export default function TrendingProducts() {
       name: 'Minimalist Daily Tee',
       price: 999,
       originalPrice: 1299,
-      image: '/images/mock/products/tshirts/minimalist-tee.jpg',
-      hoverImage: '/images/mock/products/tshirts/minimalist-tee-2.jpg',
+      image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=85',
       badge: 'Rising',
       trendScore: 88,
       weeklyViews: 3421,
@@ -72,8 +73,8 @@ export default function TrendingProducts() {
       name: 'Future Denim Jeans',
       price: 3299,
       originalPrice: 4199,
-      image: '/images/mock/products/jeans/future-denim.jpg',
-      hoverImage: '/images/mock/products/jeans/future-denim-2.jpg',
+      image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=85',
       badge: 'Trending',
       trendScore: 90,
       weeklyViews: 1678,
@@ -87,8 +88,8 @@ export default function TrendingProducts() {
       name: 'Cyber Punk Sneakers',
       price: 5999,
       originalPrice: 7999,
-      image: '/images/mock/products/shoes/cyber-sneakers.jpg',
-      hoverImage: '/images/mock/products/shoes/cyber-sneakers-2.jpg',
+      image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=800&h=1000&fit=crop&q=85',
       badge: 'Limited',
       trendScore: 96,
       weeklyViews: 2834,

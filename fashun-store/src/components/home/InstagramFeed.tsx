@@ -10,62 +10,62 @@ export default function InstagramFeed() {
   const instagramPosts = [
     {
       id: 1,
-      image: '/images/mock/instagram/post-1.jpg',
+      image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&h=400&fit=crop',
       likes: 2847,
       comments: 94,
       caption: 'Streetwear vibes on point 🔥 #FASHUNCO #StreetStyle',
       username: '@fashun.co.in',
-      userAvatar: '/images/mock/avatars/brand-avatar.jpg',
+      userAvatar: '/images/brand/logo.svg',
       link: '#'
     },
     {
       id: 2,
-      image: '/images/mock/instagram/post-2.jpg',
+      image: 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=400&h=400&fit=crop',
       likes: 1923,
       comments: 67,
       caption: 'New drop landing tomorrow! Stay tuned 👀 #NewDrop',
       username: '@fashun.co.in',
-      userAvatar: '/images/mock/avatars/brand-avatar.jpg',
+      userAvatar: '/images/brand/logo.svg',
       link: '#'
     },
     {
       id: 3,
-      image: '/images/mock/instagram/post-3.jpg',
+      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop',
       likes: 3456,
       comments: 128,
       caption: 'Behind the scenes at our latest photoshoot 📸',
       username: '@fashun.co.in',
-      userAvatar: '/images/mock/avatars/brand-avatar.jpg',
+      userAvatar: '/images/brand/logo.svg',
       link: '#'
     },
     {
       id: 4,
-      image: '/images/mock/instagram/post-4.jpg',
+      image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=400&fit=crop',
       likes: 2134,
       comments: 89,
       caption: 'Customer spotlight! @alex_styles killing it 💯',
       username: '@fashun.co.in',
-      userAvatar: '/images/mock/avatars/brand-avatar.jpg',
+      userAvatar: '/images/brand/logo.svg',
       link: '#'
     },
     {
       id: 5,
-      image: '/images/mock/instagram/post-5.jpg',
+      image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&h=400&fit=crop',
       likes: 4127,
       comments: 203,
       caption: 'Sustainable fashion meets street culture 🌱 #Sustainability',
       username: '@fashun.co.in',
-      userAvatar: '/images/mock/avatars/brand-avatar.jpg',
+      userAvatar: '/images/brand/logo.svg',
       link: '#'
     },
     {
       id: 6,
-      image: '/images/mock/instagram/post-6.jpg',
+      image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop',
       likes: 1876,
       comments: 76,
       caption: 'Minimalist meets maximum impact ⚡ #MinimalStyle',
       username: '@fashun.co.in',
-      userAvatar: '/images/mock/avatars/brand-avatar.jpg',
+      userAvatar: '/images/brand/logo.svg',
       link: '#'
     }
   ];
