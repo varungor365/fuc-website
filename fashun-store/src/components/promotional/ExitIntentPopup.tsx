@@ -26,7 +26,16 @@ export default function ExitIntentPopup() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Email submitted:', email);
+    localStorage.setItem('discountClaimed', 'true');
     setIsVisible(false);
+  };
+
+  const handleRemindLater = () => {
+    localStorage.setItem('exitPopupSeen', Date.now().toString());
+    setIsVisible(false);
+    setTimeout(() => {
+      localStorage.removeItem('exitPopupSeen');
+    }, 24 * 60 * 60 * 1000); // Remind after 24 hours
   };
 
   return (
@@ -87,9 +96,12 @@ export default function ExitIntentPopup() {
                   </button>
                 </form>
 
-                <p className="text-xs text-purple-300 mt-4">
-                  *Valid for first-time customers only
-                </p>
+                <button
+                  onClick={handleRemindLater}
+                  className="text-sm text-purple-300 hover:text-white mt-4 underline"
+                >
+                  Remind me later
+                </button>
               </div>
             </div>
           </motion.div>

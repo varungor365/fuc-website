@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request';
 
 export const saleorClient = new GraphQLClient(
-  process.env.NEXT_PUBLIC_SALEOR_API_URL || 'https://fashun.co.in/graphql/',
+  'https://fashun.co.in/graphql/',
   {
     headers: {
       'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export async function getProducts(limit = 20) {
   try {
     const data: any = await saleorClient.request(PRODUCTS_QUERY, {
       first: limit,
-      channel: process.env.SALEOR_CHANNEL_SLUG || 'default-channel',
+      channel: 'india-channel',
     });
     return data.products.edges.map((edge: any) => edge.node);
   } catch (error) {

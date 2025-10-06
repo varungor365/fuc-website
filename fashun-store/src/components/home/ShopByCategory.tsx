@@ -10,7 +10,7 @@ const categories = [
     id: 'hoodies',
     name: 'Hoodies',
     description: 'Premium streetwear hoodies',
-    image: '/images/products/hoodies/hoodie-1-main.jpg',
+    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=800&fit=crop&q=85',
     href: '/collections/hoodies',
     color: 'from-purple-500 to-blue-500'
   },
@@ -18,7 +18,7 @@ const categories = [
     id: 't-shirts',
     name: 'T-Shirts',
     description: 'Graphic tees and basics',
-    image: '/images/products/t-shirts/tshirt-1-main.jpg',
+    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=800&fit=crop&q=85',
     href: '/collections/t-shirts',
     color: 'from-pink-500 to-red-500'
   },
@@ -26,7 +26,7 @@ const categories = [
     id: 'jackets',
     name: 'Jackets',
     description: 'Bomber jackets and outerwear',
-    image: '/images/products/jackets/jacket-1-main.jpg',
+    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=800&fit=crop&q=85',
     href: '/collections/jackets',
     color: 'from-green-500 to-teal-500'
   },
@@ -34,7 +34,7 @@ const categories = [
     id: 'accessories',
     name: 'Accessories',
     description: 'Caps, bags, and more',
-    image: '/images/products/accessories/cap-1-main.jpg',
+    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=800&fit=crop&q=85',
     href: '/collections/accessories',
     color: 'from-yellow-500 to-orange-500'
   }

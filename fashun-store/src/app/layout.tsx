@@ -23,14 +23,28 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Source+Sans+Pro:wght@300;400;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-PG5EQP2E0W"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-PG5EQP2E0W', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
       </head>
       <body className="font-sans bg-black text-white min-h-screen">
         <nav className="bg-gray-900 border-b border-gray-800 px-6 py-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-                FASHUN.CO.IN
-              </h1>
+              <a href="/" className="flex items-center">
+                <img src="/logo.png" alt="FASHUN.CO" className="h-12 w-auto" />
+              </a>
             </div>
             <div className="hidden md:flex space-x-8">
               <a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a>

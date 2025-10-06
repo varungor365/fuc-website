@@ -249,48 +249,29 @@ export default function HomePage() {
       {/* Hero Section */}
       <HeroSection />
       
-      {/* Featured Collections */}
-      <FeaturedCollections />
-      
-      {/* New Arrivals */}
-      <NewArrivals />
-      
-      {/* Shop by Category */}
-      <ShopByCategory />
-      
-      {/* Deal of the Day */}
-      <DealOfTheDay />
-      
-      {/* Trending Products with AI */}
-      <TrendingProducts />
-      
-      {/* Live Saleor Products */}
-      <SaleorProducts />
-      
-      {/* AI-Powered Personalized Sections */}
-      {/* <PersonalizedSections userId="demo-user" /> */}
-      
-      {/* Trending AI-Curated Outfits */}
-      <section className="bg-gray-900/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4">
-          <TrendingOutfits 
-            showHeader={true}
-            limit={6}
-            className="py-16"
-          />
+      {/* Main Content - 2 Column Layout */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-2 space-y-8">
+            <FeaturedCollections />
+            <NewArrivals />
+            <SaleorProducts />
+            <TrendingProducts />
+          </div>
+          
+          {/* Right Column - Secondary Content */}
+          <div className="space-y-8">
+            <DealOfTheDay />
+            <ShopByCategory />
+            <TestimonialsSection />
+          </div>
         </div>
-      </section>
+      </div>
       
-      {/* Brand Story */}
+      {/* Full Width Sections */}
       <BrandStory />
-      
-      {/* Instagram Feed */}
       <InstagramFeed />
-      
-      {/* Customer Testimonials */}
-      <TestimonialsSection />
-      
-      {/* Trust Badges */}
       <TrustBadges />
 
       {/* SEO Content Section - Streetwear Fashion in India */}
