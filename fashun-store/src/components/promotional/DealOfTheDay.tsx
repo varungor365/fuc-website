@@ -42,22 +42,19 @@ const DealOfTheDay: React.FC = () => {
   dealExpiry.setHours(dealExpiry.getHours() + 24);
 
   return (
-    <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-black py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-2xl p-6">
+      <div>
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Deal of the Day
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-white mb-2">
+            🔥 Deal of the Day
           </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Exclusive daily deals on premium streetwear. Limited time, limited stock.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="space-y-4">
           {/* Product Image */}
           <div className="relative">
-            <div className="aspect-square bg-gray-800 rounded-2xl overflow-hidden group">
+            <div className="aspect-square bg-gray-800 rounded-xl overflow-hidden group">
               {/* Discount Badge */}
               <div className="absolute top-4 left-4 z-10">
                 <span className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold">

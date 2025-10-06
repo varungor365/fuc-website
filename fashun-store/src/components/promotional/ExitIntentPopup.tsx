@@ -55,7 +55,8 @@ export default function ExitIntentPopup() {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md"
           >
-            <div className="bg-gradient-to-br from-purple-900 to-pink-900 rounded-3xl p-8 shadow-2xl border border-purple-500/50 relative">
+            <div className="bg-gradient-to-br from-gray-900 to-black rounded-3xl p-8 shadow-2xl border-2 border-purple-500 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20" />
               <button
                 onClick={() => setIsVisible(false)}
                 className="absolute top-4 right-4 text-white/70 hover:text-white"
@@ -63,7 +64,7 @@ export default function ExitIntentPopup() {
                 <XMarkIcon className="w-6 h-6" />
               </button>
 
-              <div className="text-center">
+              <div className="text-center relative z-10">
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0] }}
                   transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}

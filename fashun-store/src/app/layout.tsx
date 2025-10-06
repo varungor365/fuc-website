@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Source+Sans+Pro:wght@300;400;600;700;900&family=Montserrat:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-PG5EQP2E0W"></script>
         <script
@@ -42,8 +42,10 @@ export default function RootLayout({
         <nav className="bg-gray-900 border-b border-gray-800 px-6 py-4">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center">
-              <a href="/" className="flex items-center">
-                <img src="/logo.png" alt="FASHUN.CO" className="h-12 w-auto" />
+              <a href="/" className="flex items-center gap-2">
+                <div className="text-2xl font-black bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  FASHUN.CO
+                </div>
               </a>
             </div>
             <div className="hidden md:flex space-x-8">

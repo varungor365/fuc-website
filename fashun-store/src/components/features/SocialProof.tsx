@@ -28,16 +28,16 @@ export default function SocialProof() {
           initial={{ x: -400, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -400, opacity: 0 }}
-          className="fixed bottom-24 left-6 z-40 bg-white rounded-2xl shadow-2xl p-4 max-w-sm"
+          className="fixed bottom-24 left-6 z-40 bg-gradient-to-r from-purple-900 to-pink-900 rounded-xl shadow-2xl p-4 max-w-sm border border-purple-500/50"
         >
           <div className="flex items-start gap-3">
-            <div className="bg-green-100 p-2 rounded-full">
-              <ShoppingBag className="w-5 h-5 text-green-600" />
+            <div className="bg-green-500 p-2 rounded-full">
+              <ShoppingBag className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1">
-              <p className="font-semibold text-sm">{notification.name}</p>
-              <p className="text-sm text-gray-600">purchased {notification.product}</p>
-              <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+              <p className="font-semibold text-sm text-white">{notification.name}</p>
+              <p className="text-sm text-purple-200">purchased <span className="font-semibold">{notification.product}</span></p>
+              <div className="flex items-center gap-1 text-xs text-purple-300 mt-1">
                 <MapPin className="w-3 h-3" />
                 <span>{notification.time}</span>
               </div>
