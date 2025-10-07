@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase-client';
 import Link from 'next/link';
 
 export default function CustomersPage() {
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
