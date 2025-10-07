@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { fabric } from 'fabric';
+import { useRef } from 'react';
 
 interface AdvancedCanvasProps {
   initialPattern: string | null;
@@ -9,28 +8,6 @@ interface AdvancedCanvasProps {
 
 export default function AdvancedCanvas({ initialPattern }: AdvancedCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
-
-  useEffect(() => {
-    if (canvasRef.current && !fabricCanvasRef.current) {
-      fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
-        width: 600,
-        height: 700,
-        backgroundColor: '#ffffff',
-      });
-    }
-
-    if (initialPattern && fabricCanvasRef.current) {
-      fabric.Image.fromURL(initialPattern, (img) => {
-        img.scaleToWidth(600);
-        fabricCanvasRef.current?.setBackgroundImage(img, fabricCanvasRef.current.renderAll.bind(fabricCanvasRef.current));
-      });
-    }
-
-    return () => {
-      fabricCanvasRef.current?.dispose();
-    };
-  }, [initialPattern]);
 
   return (
     <div className="space-y-6">
@@ -41,8 +18,12 @@ export default function AdvancedCanvas({ initialPattern }: AdvancedCanvasProps) 
         </p>
       </div>
 
-      <div className="bg-white rounded-lg p-4">
-        <canvas ref={canvasRef} />
+      <div className="bg-white rounded-lg p-4 min-h-[700px] flex items-center justify-center">
+        {initialPattern ? (
+          <img src={initialPattern} alt="Pattern" className="max-w-full max-h-[700px]" />
+        ) : (
+          <p className="text-gray-400">Canvas will appear here</p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
