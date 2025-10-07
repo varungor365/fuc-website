@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import MainLayout from '@/components/layout/MainLayout';
 import CustomizerCanvas from '@/components/customize/CustomizerCanvas';
 import VirtualTryOn from '@/components/customize/VirtualTryOn';
 
@@ -19,8 +20,16 @@ export default function CustomizePage() {
   };
 
   if (showTryOn && customDesign) {
-    return <VirtualTryOn designImage={customDesign} onBack={handleBackToEditor} />;
+    return (
+      <MainLayout>
+        <VirtualTryOn designImage={customDesign} onBack={handleBackToEditor} />
+      </MainLayout>
+    );
   }
 
-  return <CustomizerCanvas onVirtualTryOn={handleVirtualTryOn} />;
+  return (
+    <MainLayout>
+      <CustomizerCanvas onVirtualTryOn={handleVirtualTryOn} />
+    </MainLayout>
+  );
 }

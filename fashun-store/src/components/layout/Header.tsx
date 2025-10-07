@@ -44,6 +44,7 @@ const navigationItems = [
       ]
     }
   },
+  { name: 'Customize Your Look', href: '/customize', badge: '🎨 NEW' },
   { name: 'Printed Tees', href: '/collections/printed-tshirts' },
   { name: 'Plain & Combos', href: '/collections/plain-tshirts' },
   { name: 'Hoodies', href: '/collections/hoodies' },
@@ -163,11 +164,16 @@ export function Header() {
                 >
                   <Link
                     href={item.href}
-                    className={`font-nav text-neutral-700 hover:text-orange-600 transition-colors relative py-2 ${
+                    className={`font-nav text-neutral-700 hover:text-orange-600 transition-colors relative py-2 flex items-center space-x-2 ${
                       pathname === item.href ? 'text-orange-600' : ''
                     }`}
                   >
-                    {item.name}
+                    <span>{item.name}</span>
+                    {(item as any).badge && (
+                      <span className="text-xs bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-1 rounded-full font-bold animate-pulse">
+                        {(item as any).badge}
+                      </span>
+                    )}
                     {pathname === item.href && (
                       <motion.div
                         className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-primary"
