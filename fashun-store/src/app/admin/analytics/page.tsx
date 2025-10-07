@@ -5,7 +5,13 @@ import { supabase } from '@/lib/supabase-client';
 import Link from 'next/link';
 
 export default function AnalyticsPage() {
-  const [analytics, setAnalytics] = useState({
+  const [analytics, setAnalytics] = useState<{
+    profileViews: number;
+    linkClicks: number;
+    topProfiles: any[];
+    topLinks: any[];
+    recentActivity: any[];
+  }>({
     profileViews: 0,
     linkClicks: 0,
     topProfiles: [],
