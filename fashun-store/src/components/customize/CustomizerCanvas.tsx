@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { fabric } from 'fabric';
+import { useState } from 'react';
 
 const COLORS = [
   { name: 'Black', value: '#000000', image: '/tshirt-mockups/black.png' },
@@ -16,25 +15,10 @@ interface CustomizerCanvasProps {
 }
 
 export default function CustomizerCanvas({ onVirtualTryOn }: CustomizerCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
   const [text, setText] = useState('');
   const [mockupImage, setMockupImage] = useState<string>(COLORS[0].image);
-
-  useEffect(() => {
-    if (canvasRef.current && !fabricCanvasRef.current) {
-      fabricCanvasRef.current = new fabric.Canvas(canvasRef.current, {
-        width: 400,
-        height: 500,
-        backgroundColor: 'transparent',
-      });
-    }
-
-    return () => {
-      fabricCanvasRef.current?.dispose();
-    };
-  }, []);
+  const [designElements, setDesignElements] = useState<Array<{type: 'text' | 'image', content: string}>>([]);
 
   const handleColorChange = (color: typeof COLORS[0]) => {
     setSelectedColor(color);
@@ -42,74 +26,29 @@ export default function CustomizerCanvas({ onVirtualTryOn }: CustomizerCanvasPro
   };
 
   const addText = () => {
-    if (!fabricCanvasRef.current || !text) return;
-
-    const textObj = new fabric.IText(text, {
-      left: 100,
-      top: 200,
-      fontSize: 40,
-      fill: selectedColor.value === '#FFFFFF' ? '#000000' : '#FFFFFF',
-      fontFamily: 'Arial',
-    });
-
-    fabricCanvasRef.current.add(textObj);
-    fabricCanvasRef.current.setActiveObject(textObj);
+    if (!text) return;
+    setDesignElements([...designElements, { type: 'text', content: text }]);
     setText('');
   };
 
   const addImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !fabricCanvasRef.current) return;
+    if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      fabric.Image.fromURL(event.target?.result as string, (img) => {
-        img.scaleToWidth(200);
-        img.set({ left: 100, top: 150 });
-        fabricCanvasRef.current?.add(img);
-      });
+      const result = event.target?.result as string;
+      setDesignElements([...designElements, { type: 'image', content: result }]);
     };
     reader.readAsDataURL(file);
   };
 
   const generateFinalDesign = () => {
-    if (!fabricCanvasRef.current) return;
-
-    // Create composite image
-    const canvas = document.createElement('canvas');
-    canvas.width = 1000;
-    canvas.height = 1200;
-    const ctx = canvas.getContext('2d')!;
-
-    // Load mockup
-    const mockup = new Image();
-    mockup.crossOrigin = 'anonymous';
-    mockup.onload = () => {
-      // Draw mockup
-      ctx.drawImage(mockup, 0, 0, 1000, 1200);
-
-      // Draw design overlay
-      const designData = fabricCanvasRef.current!.toDataURL({
-        format: 'png',
-        quality: 1,
-      });
-
-      const designImg = new Image();
-      designImg.onload = () => {
-        // Position design on chest area
-        ctx.drawImage(designImg, 300, 350, 400, 500);
-
-        // Get final composite
-        const finalImage = canvas.toDataURL('image/png');
-        onVirtualTryOn(finalImage);
-      };
-      designImg.src = designData;
-    };
-    mockup.src = mockupImage;
+    onVirtualTryOn(mockupImage);
   };
 
   const clearCanvas = () => {
-    fabricCanvasRef.current?.clear();
+    setDesignElements([]);
   };
 
   return (
@@ -154,9 +93,24 @@ export default function CustomizerCanvas({ onVirtualTryOn }: CustomizerCanvasPro
                 />
               </div>
 
-              {/* Canvas */}
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
-                <canvas ref={canvasRef} />
+              {/* Design Preview */}
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 min-h-[300px]">
+                <h3 className="text-sm font-medium mb-2">Design Elements:</h3>
+                {designElements.length === 0 ? (
+                  <p className="text-gray-400 text-center py-8">Add text or images to start designing</p>
+                ) : (
+                  <div className="space-y-2">
+                    {designElements.map((element, index) => (
+                      <div key={index} className="bg-white p-3 rounded border">
+                        {element.type === 'text' ? (
+                          <p className="font-medium">{element.content}</p>
+                        ) : (
+                          <img src={element.content} alt="Design" className="max-h-20" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <button
