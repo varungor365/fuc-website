@@ -3,20 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useMedusaCart } from '@/hooks/useMedusaCart';
-import { MedusaCheckoutService } from '@/services/medusa';
-import { Check, Lock, CreditCard, Truck, MapPin, Mail, Phone, User } from 'lucide-react';
-import toast from 'react-hot-toast';
-
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
+import { useCart } from '@/hooks/useCart';
+import { Check, Lock, CreditCard, Truck, Mail } from 'lucide-react';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, loading } = useMedusaCart();
+  const { items, totalPrice, clearCart } = useCart();
   const [step, setStep] = useState(1);
   const [processing, setProcessing] = useState(false);
 
@@ -31,27 +23,15 @@ export default function CheckoutPage() {
     state: '',
     postalCode: '',
     country: 'India',
-    shippingMethod: '',
-    paymentMethod: 'razorpay'
   });
 
   const [errors, setErrors] = useState<any>({});
 
   useEffect(() => {
-    if (!loading && (!cart || cart.items?.length === 0)) {
+    if (items.length === 0) {
       router.push('/cart');
     }
-  }, [cart, loading, router]);
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  }, [items, router]);
 
   const validateStep = (currentStep: number) => {
     const newErrors: any = {};
@@ -77,106 +57,34 @@ export default function CheckoutPage() {
   const handleNext = async () => {
     if (!validateStep(step)) return;
 
-    if (step === 1) {
-      try {
-        await MedusaCheckoutService.addEmail(cart.id, formData.email);
-        setStep(2);
-      } catch (error) {
-        toast.error('Failed to save contact information');
-      }
-    } else if (step === 2) {
-      try {
-        await MedusaCheckoutService.addShippingAddress(cart.id, {
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          address_1: formData.address,
-          address_2: formData.apartment,
-          city: formData.city,
-          province: formData.state,
-          postal_code: formData.postalCode,
-          country_code: 'in',
-          phone: formData.phone
-        });
-        
-        const shippingOptions = await MedusaCheckoutService.getShippingOptions(cart.id);
-        if (shippingOptions.length > 0) {
-          await MedusaCheckoutService.addShippingMethod(cart.id, shippingOptions[0].id);
-        }
-        
-        setStep(3);
-      } catch (error) {
-        toast.error('Failed to save shipping address');
-      }
-    } else if (step === 3) {
+    if (step < 3) {
+      setStep(step + 1);
+    } else {
       await handlePayment();
     }
   };
 
   const handlePayment = async () => {
     setProcessing(true);
-    try {
-      await MedusaCheckoutService.createPaymentSessions(cart.id);
-      await MedusaCheckoutService.setPaymentSession(cart.id, 'razorpay');
-
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-        amount: cart.total,
-        currency: 'INR',
-        name: 'FASHUN.CO',
-        description: 'Order Payment',
-        image: '/logo.png',
-        order_id: cart.payment_session?.data?.id,
-        handler: async function (response: any) {
-          try {
-            const result = await MedusaCheckoutService.completeCart(cart.id);
-            if (result.type === 'order') {
-              toast.success('Order placed successfully!');
-              router.push(`/payment/success?order_id=${result.order.id}`);
-            }
-          } catch (error) {
-            toast.error('Payment verification failed');
-            router.push('/payment/failure');
-          }
-        },
-        prefill: {
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          contact: formData.phone
-        },
-        theme: {
-          color: '#8B5CF6'
-        },
-        modal: {
-          ondismiss: function() {
-            setProcessing(false);
-            toast.error('Payment cancelled');
-          }
-        }
-      };
-
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
-    } catch (error) {
-      console.error('Payment error:', error);
-      toast.error('Failed to initialize payment');
-      setProcessing(false);
-    }
+    
+    // Simulate payment processing
+    setTimeout(() => {
+      const orderId = `ORD-${Date.now()}`;
+      clearCart();
+      router.push(`/payment/success?order_id=${orderId}`);
+    }, 2000);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (errors[e.target.name]) {
       setErrors({ ...errors, [e.target.name]: '' });
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-      </div>
-    );
-  }
+  const shippingCost = totalPrice > 2999 ? 0 : 99;
+  const tax = Math.round(totalPrice * 0.18);
+  const finalTotal = totalPrice + shippingCost + tax;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 py-12">
@@ -395,7 +303,7 @@ export default function CheckoutPage() {
                         <div className="flex items-center">
                           <CreditCard className="w-6 h-6 text-purple-600 mr-3" />
                           <div>
-                            <p className="font-medium">Razorpay</p>
+                            <p className="font-medium">Secure Payment</p>
                             <p className="text-sm text-gray-600">Credit/Debit Card, UPI, Net Banking</p>
                           </div>
                         </div>
@@ -429,7 +337,7 @@ export default function CheckoutPage() {
                 disabled={processing}
                 className="ml-auto px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {processing ? 'Processing...' : step === 3 ? 'Pay Now' : 'Continue'}
+                {processing ? 'Processing...' : step === 3 ? 'Place Order' : 'Continue'}
               </button>
             </div>
           </div>
@@ -440,12 +348,12 @@ export default function CheckoutPage() {
               <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
 
               <div className="space-y-4 mb-6">
-                {cart?.items?.map((item: any) => (
-                  <div key={item.id} className="flex items-center space-x-4">
+                {items.map((item) => (
+                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex items-center space-x-4">
                     <div className="relative">
                       <img
-                        src={item.thumbnail || '/placeholder.png'}
-                        alt={item.title}
+                        src={item.image}
+                        alt={item.name}
                         className="w-20 h-20 object-cover rounded-lg"
                       />
                       <span className="absolute -top-2 -right-2 bg-purple-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
@@ -453,10 +361,10 @@ export default function CheckoutPage() {
                       </span>
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium">{item.title}</p>
-                      <p className="text-sm text-gray-600">{item.variant?.title}</p>
+                      <p className="font-medium">{item.name}</p>
+                      <p className="text-sm text-gray-600">{item.size} • {item.color}</p>
                     </div>
-                    <p className="font-medium">₹{(item.total / 100).toFixed(2)}</p>
+                    <p className="font-medium">₹{item.price * item.quantity}</p>
                   </div>
                 ))}
               </div>
@@ -464,19 +372,19 @@ export default function CheckoutPage() {
               <div className="border-t pt-4 space-y-2">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
-                  <span>₹{((cart?.subtotal || 0) / 100).toFixed(2)}</span>
+                  <span>₹{totalPrice}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
-                  <span>{cart?.shipping_total ? `₹${(cart.shipping_total / 100).toFixed(2)}` : 'Calculated at next step'}</span>
+                  <span>{shippingCost === 0 ? 'FREE' : `₹${shippingCost}`}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
-                  <span>Tax</span>
-                  <span>₹{((cart?.tax_total || 0) / 100).toFixed(2)}</span>
+                  <span>Tax (18%)</span>
+                  <span>₹{tax}</span>
                 </div>
                 <div className="border-t pt-2 flex justify-between text-xl font-bold">
                   <span>Total</span>
-                  <span className="text-purple-600">₹{((cart?.total || 0) / 100).toFixed(2)}</span>
+                  <span className="text-purple-600">₹{finalTotal}</span>
                 </div>
               </div>
 
@@ -487,7 +395,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Truck className="w-4 h-4 mr-2" />
-                  Free shipping on orders over ₹999
+                  Free shipping on orders over ₹2,999
                 </div>
               </div>
             </div>
