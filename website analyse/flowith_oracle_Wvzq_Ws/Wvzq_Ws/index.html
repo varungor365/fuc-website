@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytical Report: fashun.co.in</title>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-gray-300 font-sans antialiased">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <header class="mb-12 border-b border-gray-700 pb-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight">Analytical Report</h1>
+            <p class="mt-2 text-xl text-cyan-400">fashun.co.in</p>
+            <p class="text-sm text-gray-500 mt-1" id="report-date"></p>
+        </header>
+
+        <main class="space-y-16">
+            
+            <!-- 1. Executive Summary -->
+            <section id="executive-summary">
+                <h2 class="section-title"><i data-lucide="layout-dashboard" class="icon-style"></i>Executive Summary</h2>
+                <div class="card">
+                    <p class="text-lg leading-relaxed"></p>
+                </div>
+            </section>
+
+            <!-- Key Metrics -->
+            <section id="key-metrics">
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="metric-card border-red-500/50">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold text-gray-400">Technical SEO</h3>
+                            <i data-lucide="shield-alert" class="h-6 w-6 text-red-400"></i>
+                        </div>
+                        <p class="text-3xl font-bold text-white mt-2">Critical</p>
+                        <p class="text-sm text-gray-500 mt-1">Sitemap & On-Page Errors</p>
+                    </div>
+                    <div class="metric-card border-amber-500/50">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold text-gray-400">Off-Page Authority</h3>
+                             <i data-lucide="link-2-off" class="h-6 w-6 text-amber-400"></i>
+                        </div>
+                        <p class="text-3xl font-bold text-white mt-2">Non-Existent</p>
+                        <p class="text-sm text-gray-500 mt-1">0 Significant Backlinks</p>
+                    </div>
+                    <div class="metric-card border-sky-500/50">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold text-gray-400">Brand Identity</h3>
+                            <i data-lucide="gem" class="h-6 w-6 text-sky-400"></i>
+                        </div>
+                        <p class="text-3xl font-bold text-white mt-2">Potent</p>
+                        <p class="text-sm text-gray-500 mt-1">Strong Voice & Vision</p>
+                    </div>
+                    <div class="metric-card border-red-500/50">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold text-gray-400">Market Position</h3>
+                            <i data-lucide="bar-chart-3" class="h-6 w-6 text-red-400"></i>
+                        </div>
+                        <p class="text-3xl font-bold text-white mt-2">Challenged</p>
+                        <p class="text-sm text-gray-500 mt-1">Highly Competitive Market</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Strategic SWOT Analysis -->
+            <section id="swot-analysis">
+                <h2 class="section-title"><i data-lucide="swords" class="icon-style"></i>Strategic SWOT Analysis</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="card lg:col-span-2">
+                        <canvas id="swotChart" class="max-h-[400px]"></canvas>
+                    </div>
+                    <div id="swot-strengths" class="swot-card border-t-4 border-green-500"></div>
+                    <div id="swot-weaknesses" class="swot-card border-t-4 border-red-500"></div>
+                    <div id="swot-opportunities" class="swot-card border-t-4 border-sky-500"></div>
+                    <div id="swot-threats" class="swot-card border-t-4 border-amber-500"></div>
+                </div>
+            </section>
+
+            <!-- 3. Market & Competitor Landscape -->
+            <section id="competitor-landscape">
+                <h2 class="section-title"><i data-lucide="target" class="icon-style"></i>Market & Competitor Landscape</h2>
+                <div class="card">
+                    <p id="competitor-summary" class="mb-6"></p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-4">Competitor Breakdown</h3>
+                            <div class="h-80 w-full">
+                                <canvas id="competitorChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="prose prose-invert max-w-none prose-p:text-gray-400 prose-p:m-0 prose-strong:text-white" id="competitor-text">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full" id="competitor-table">
+                            <!-- Table will be populated by JS -->
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. On-Page Content & SEO Analysis -->
+            <section id="on-page-analysis">
+                <h2 class="section-title"><i data-lucide="file-text" class="icon-style"></i>On-Page Content & SEO Analysis</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="on-page-cards">
+                    <!-- Cards will be populated by JS -->
+                </div>
+            </section>
+
+            <!-- 5. Technical SEO Audit -->
+            <section id="technical-audit">
+                <h2 class="section-title"><i data-lucide="server-cog" class="icon-style"></i>Technical SEO Audit</h2>
+                <div class="card">
+                    <div class="p-4 rounded-lg bg-red-900/30 border border-red-500/50 mb-6">
+                        <div class="flex items-start">
+                            <i data-lucide="alert-triangle" class="h-6 w-6 text-red-400 mr-4 flex-shrink-0 mt-1"></i>
+                            <div>
+                                <h3 class="text-xl font-bold text-red-300">CRITICAL FINDING: Invalid Sitemap</h3>
+                                <p class="text-red-300/80 mt-1">The website's sitemap is fundamentally broken, containing future dates and improper URLs. This severely undermines communication with search engines and requires immediate correction.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="technical-audit-content" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Content will be populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Off-Page Authority & Digital Footprint -->
+            <section id="off-page-analysis">
+                <h2 class="section-title"><i data-lucide="anchor" class="icon-style"></i>Off-Page Authority & Digital Footprint</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="off-page-cards">
+                    <!-- Cards will be populated by JS -->
+                </div>
+            </section>
+
+            <!-- 7. Actionable Recommendations -->
+            <section id="recommendations">
+                <h2 class="section-title"><i data-lucide="list-checks" class="icon-style"></i>Actionable Recommendations</h2>
+                <div class="space-y-8" id="recommendations-list">
+                    <!-- Recommendations will be populated by JS -->
+                </div>
+            </section>
+
+            <!-- 8. Conclusion -->
+            <section id="conclusion">
+                <h2 class="section-title"><i data-lucide="flag" class="icon-style"></i>Conclusion</h2>
+                 <div class="card">
+                    <p class="text-lg leading-relaxed"></p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

@@ -6,14 +6,6 @@
     {
       "path": "/api/cron/cleanup",
       "schedule": "0 2 * * *"
-    },
-    {
-      "path": "/api/cron/sync-inventory",
-      "schedule": "*/30 * * * *"
-    },
-    {
-      "path": "/api/cron/send-abandoned-cart",
-      "schedule": "0 */6 * * *"
     }
   ],
   "headers": [
