@@ -18,6 +18,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon, ShoppingBagIcon as ShoppingBagSolidIcon } from '@heroicons/react/24/solid';
 import { useCart } from '@/hooks/useCart';
+import CartDrawer from '@/components/cart/CartDrawer';
 
 const navigationItems = [
   {
@@ -55,6 +56,7 @@ export function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const { itemCount } = useCart();
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -106,20 +108,20 @@ export function Header() {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         {/* Top Bar - Enhanced */}
-        <div className="border-b border-yellow-400/30 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+        <div className="border-b border-orange-500/30 bg-gradient-to-r from-gray-900 via-gray-800 to-black">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between py-3 text-sm text-white">
               <div className="flex items-center space-x-6">
-                <span className="font-nav font-semibold tracking-wide">✨ FREE SHIPPING ON ORDERS OVER ₹2,999</span>
-                <span className="hidden md:inline text-white/60">|</span>
-                <span className="hidden md:inline font-body-medium">🔄 30-DAY HASSLE-FREE RETURNS</span>
+                <span className="font-semibold tracking-wide">✨ FREE SHIPPING ON ORDERS OVER ₹999</span>
+                <span className="hidden md:inline text-white/40">|</span>
+                <span className="hidden md:inline">🔄 30-DAY HASSLE-FREE RETURNS</span>
               </div>
               <div className="flex items-center space-x-4">
-                <Link href="/track" className="font-nav hover:text-yellow-200 transition-colors font-medium">
+                <Link href="/track-order" className="hover:text-orange-400 transition-colors font-medium">
                   📦 TRACK ORDER
                 </Link>
-                <span className="text-white/60">|</span>
-                <Link href="/contact" className="font-nav hover:text-yellow-200 transition-colors font-medium">
+                <span className="text-white/40">|</span>
+                <Link href="/contact" className="hover:text-orange-400 transition-colors font-medium">
                   💬 HELP
                 </Link>
               </div>
@@ -136,19 +138,13 @@ export function Header() {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="w-12 h-12 rounded-xl overflow-hidden">
+              <Link href="/" className="flex items-center">
+                <div className="w-24 h-24">
                   <img 
-                    src="/images/logo-black.png" 
+                    src="/logo.png" 
                     alt="FASHUN.CO.IN" 
                     className="w-full h-full object-contain"
                   />
-                </div>
-                <div className="hidden sm:block">
-                  <h1 className="text-2xl font-brand bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
-                    FASHUN.CO.IN
-                  </h1>
-                  <p className="text-xs font-body text-neutral-600 -mt-1 tracking-wide">PREMIUM STREETWEAR</p>
                 </div>
               </Link>
             </motion.div>
@@ -272,7 +268,7 @@ export function Header() {
 
               {/* Cart */}
               <motion.button
-                onClick={() => router.push('/cart')}
+                onClick={() => setIsCartDrawerOpen(true)}
                 className="relative p-2 rounded-full hover:bg-neutral-100 transition-colors"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -345,6 +341,12 @@ export function Header() {
           )}
         </AnimatePresence>
       </motion.header>
+      
+      {/* Cart Drawer */}
+      <CartDrawer 
+        isOpen={isCartDrawerOpen} 
+        onClose={() => setIsCartDrawerOpen(false)} 
+      />
     </>
   );
 }

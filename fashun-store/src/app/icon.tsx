@@ -14,8 +14,8 @@ export default function Icon() {
     (
       <div
         style={{
-          fontSize: 16,
-          background: 'linear-gradient(45deg, #000000, #2563eb)',
+          fontSize: 10,
+          background: 'linear-gradient(45deg, #000000, #1f2937)',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -23,10 +23,11 @@ export default function Icon() {
           justifyContent: 'center',
           color: 'white',
           fontWeight: 'bold',
-          borderRadius: '4px'
+          borderRadius: '4px',
+          letterSpacing: '-0.5px'
         }}
       >
-        F
+        FUC
       </div>
     ),
     {

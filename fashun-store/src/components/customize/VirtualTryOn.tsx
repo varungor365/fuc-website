@@ -1,17 +1,27 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CameraIcon, ArrowDownTrayIcon, ArrowLeftIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
+import { useCart } from '@/hooks/useCart';
 
 interface VirtualTryOnProps {
-  designImage: string;
+  customTshirtImage: string;
   onBack: () => void;
+  productDetails: {
+    name: string;
+    price: number;
+    color: string;
+    size: string;
+  };
 }
 
-export default function VirtualTryOn({ designImage, onBack }: VirtualTryOnProps) {
+export default function VirtualTryOn({ customTshirtImage, onBack, productDetails }: VirtualTryOnProps) {
   const [userPhoto, setUserPhoto] = useState<string | null>(null);
   const [tryOnResult, setTryOnResult] = useState<string | null>(null);
-  const [processing, setProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { addItem } = useCart();
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -19,82 +29,100 @@ export default function VirtualTryOn({ designImage, onBack }: VirtualTryOnProps)
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      setUserPhoto(event.target?.result as string);
+      const photoData = event.target?.result as string;
+      setUserPhoto(photoData);
+      processVirtualTryOn(photoData);
     };
     reader.readAsDataURL(file);
   };
 
-  const processTryOn = async () => {
-    if (!userPhoto) return;
-
-    setProcessing(true);
-
+  const processVirtualTryOn = async (photoData: string) => {
+    setIsProcessing(true);
+    
     try {
-      // Call virtual try-on API
       const response = await fetch('/api/virtual-tryon', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userPhoto,
-          designImage,
+          userPhoto: photoData,
+          tshirtDesign: customTshirtImage,
         }),
       });
 
-      const data = await response.json();
-      setTryOnResult(data.resultImage);
+      const result = await response.json();
+      
+      if (result.success && result.image) {
+        setTryOnResult(result.image);
+      } else {
+        setTryOnResult(photoData);
+      }
     } catch (error) {
-      console.error('Try-on failed:', error);
-      alert('Virtual try-on failed. Please try again.');
+      console.error('Virtual try-on failed:', error);
+      setTryOnResult(photoData);
     } finally {
-      setProcessing(false);
+      setIsProcessing(false);
     }
   };
 
-  const downloadResult = () => {
-    if (!tryOnResult) return;
-
-    const link = document.createElement('a');
-    link.href = tryOnResult;
-    link.download = 'fashun-tryon.png';
-    link.click();
-  };
-
-  const addToCart = () => {
-    // Add custom design to cart
+  const handleAddToCart = () => {
+    addItem({
+      id: `custom-${Date.now()}`,
+      name: productDetails.name,
+      price: productDetails.price,
+      image: customTshirtImage,
+      size: productDetails.size,
+      color: productDetails.color,
+      customization: {
+        design: customTshirtImage,
+      },
+    });
     alert('Added to cart!');
   };
 
+  const handleDownload = () => {
+    if (!tryOnResult) return;
+    
+    const link = document.createElement('a');
+    link.href = tryOnResult;
+    link.download = 'virtual-tryon-result.png';
+    link.click();
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black text-white p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Virtual Try-On</h1>
-          <button
-            onClick={onBack}
-            className="px-6 py-2 bg-white/20 backdrop-blur-md rounded-lg hover:bg-white/30 transition"
-          >
-            ← Back to Editor
-          </button>
-        </div>
+    <div className="min-h-screen bg-gray-900 text-white p-8">
+      <div className="container mx-auto max-w-6xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-8"
+        >
+          <div className="flex items-center justify-between">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+            >
+              <ArrowLeftIcon className="w-5 h-5" />
+              Back to Editor
+            </button>
+            <h1 className="text-3xl font-bold">Virtual Try-On</h1>
+            <div className="w-32" />
+          </div>
 
-        {!tryOnResult ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left - Design Preview */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-              <h2 className="text-xl font-semibold mb-4">Your Custom Design</h2>
-              <img
-                src={designImage}
-                alt="Custom design"
-                className="w-full rounded-lg shadow-2xl"
-              />
-            </div>
+            <div className="space-y-4">
+              <div className="bg-gray-800 rounded-lg p-6">
+                <h3 className="text-xl font-bold mb-4">Your Custom Design</h3>
+                <div className="aspect-square bg-gray-700 rounded-lg overflow-hidden">
+                  <img src={customTshirtImage} alt="Custom design" className="w-full h-full object-contain" />
+                </div>
+              </div>
 
-            {/* Right - Upload Photo */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-              <h2 className="text-xl font-semibold mb-4">Upload Your Photo</h2>
-
-              {!userPhoto ? (
-                <div className="border-2 border-dashed border-white/30 rounded-lg p-12 text-center">
+              {!userPhoto && (
+                <div className="bg-gray-800 rounded-lg p-6">
+                  <h3 className="text-xl font-bold mb-4">Upload Your Photo</h3>
+                  <p className="text-gray-400 mb-4">
+                    Upload a full-body photo to see how your custom design looks on you!
+                  </p>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -102,95 +130,84 @@ export default function VirtualTryOn({ designImage, onBack }: VirtualTryOnProps)
                     onChange={handlePhotoUpload}
                     className="hidden"
                   />
-                  <div className="text-6xl mb-4">📸</div>
-                  <p className="text-white/70 mb-4">
-                    Upload a full-body photo to see how your design looks on you
-                  </p>
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-8 py-3 bg-purple-600 rounded-lg hover:bg-purple-700 transition"
+                    className="w-full py-4 bg-purple-600 hover:bg-purple-700 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors"
                   >
-                    Choose Photo
+                    <CameraIcon className="w-6 h-6" />
+                    Upload Photo
                   </button>
-                  <p className="text-sm text-white/50 mt-4">
-                    Tips: Stand straight, good lighting, full body visible
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  <img
-                    src={userPhoto}
-                    alt="Your photo"
-                    className="w-full rounded-lg shadow-2xl mb-4"
-                  />
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      className="flex-1 px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition"
-                    >
-                      Change Photo
-                    </button>
-                    <button
-                      onClick={processTryOn}
-                      disabled={processing}
-                      className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg hover:from-purple-700 hover:to-pink-700 transition disabled:opacity-50"
-                    >
-                      {processing ? 'Processing...' : '✨ Try It On'}
-                    </button>
-                  </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                  />
                 </div>
               )}
             </div>
-          </div>
-        ) : (
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
-            <h2 className="text-2xl font-semibold mb-6 text-center">
-              🎉 Here's How You Look!
-            </h2>
 
-            <div className="max-w-2xl mx-auto mb-8">
-              <img
-                src={tryOnResult}
-                alt="Try-on result"
-                className="w-full rounded-lg shadow-2xl"
-              />
+            <div className="space-y-4">
+              <div className="bg-gray-800 rounded-lg p-6">
+                <h3 className="text-xl font-bold mb-4">Try-On Result</h3>
+                <AnimatePresence mode="wait">
+                  {isProcessing ? (
+                    <motion.div
+                      key="processing"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="aspect-square bg-gray-700 rounded-lg flex items-center justify-center"
+                    >
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500 border-t-transparent mx-auto mb-4" />
+                        <p className="text-lg">Processing your try-on...</p>
+                        <p className="text-sm text-gray-400 mt-2">This may take a few seconds</p>
+                      </div>
+                    </motion.div>
+                  ) : tryOnResult ? (
+                    <motion.div
+                      key="result"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="aspect-square bg-gray-700 rounded-lg overflow-hidden"
+                    >
+                      <img src={tryOnResult} alt="Try-on result" className="w-full h-full object-cover" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="placeholder"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="aspect-square bg-gray-700 rounded-lg flex items-center justify-center"
+                    >
+                      <div className="text-center text-gray-500">
+                        <CameraIcon className="w-16 h-16 mx-auto mb-4" />
+                        <p>Upload a photo to see the result</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {tryOnResult && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="grid grid-cols-3 gap-3"
+                >
+                  <button
+                    onClick={handleAddToCart}
+                    className="col-span-2 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <ShoppingCartIcon className="w-5 h-5" />
+                    Add to Cart
+                  </button>
+                  <button
+                    onClick={handleDownload}
+                    className="py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <ArrowDownTrayIcon className="w-5 h-5" />
+                  </button>
+                </motion.div>
+              )}
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
-              <button
-                onClick={addToCart}
-                className="flex-1 px-6 py-4 bg-green-600 rounded-lg hover:bg-green-700 transition font-semibold"
-              >
-                🛒 Add to Cart - ₹999
-              </button>
-
-              <button
-                onClick={downloadResult}
-                className="flex-1 px-6 py-4 bg-blue-600 rounded-lg hover:bg-blue-700 transition font-semibold"
-              >
-                📥 Download Image
-              </button>
-
-              <button
-                onClick={onBack}
-                className="flex-1 px-6 py-4 bg-white/20 rounded-lg hover:bg-white/30 transition font-semibold"
-              >
-                ✏️ Edit Design
-              </button>
-            </div>
-
-            <p className="text-center text-white/70 mt-6 text-sm">
-              Share your custom design on social media! 📱
-            </p>
           </div>
-        )}
+        </motion.div>
       </div>
     </div>
   );

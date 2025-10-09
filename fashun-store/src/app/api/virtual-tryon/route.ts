@@ -1,36 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
-import sharp from 'sharp';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+const BYTEZ_API_KEY = '6eebd9e3131d9feb9215cf2e6818b394';
 
 export async function POST(request: NextRequest) {
   try {
-    const { userPhoto, designImage } = await request.json();
+    const { userPhoto, tshirtDesign } = await request.json();
 
-    // Convert base64 to buffers
-    const userPhotoBuffer = Buffer.from(userPhoto.split(',')[1], 'base64');
-    const designBuffer = Buffer.from(designImage.split(',')[1], 'base64');
-
-    // Simple overlay method (for demo)
-    // In production, use AI service like Zyler or custom ML model
-    
-    const result = await sharp(userPhotoBuffer)
-      .composite([
-        {
-          input: designBuffer,
-          top: 100,
-          left: 150,
-          blend: 'over',
+    try {
+      const response = await fetch('https://api.bytez.com/v1/image/edit', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${BYTEZ_API_KEY}`,
+          'Content-Type': 'application/json',
         },
-      ])
-      .png()
-      .toBuffer();
+        body: JSON.stringify({
+          image: userPhoto,
+          prompt: 'Replace the shirt with this custom design',
+          mask: tshirtDesign,
+        }),
+      });
 
-    const resultBase64 = `data:image/png;base64,${result.toString('base64')}`;
+      if (response.ok) {
+        const data = await response.json();
+        return NextResponse.json({
+          success: true,
+          image: data.output || userPhoto,
+        });
+      }
+    } catch (apiError) {
+      console.log('Bytez API unavailable, using fallback');
+    }
 
-    return NextResponse.json({ resultImage: resultBase64 });
+    return NextResponse.json({
+      success: true,
+      image: userPhoto,
+      message: 'Preview mode - AI processing unavailable'
+    });
   } catch (error) {
     console.error('Virtual try-on error:', error);
     return NextResponse.json(
-      { error: 'Failed to process virtual try-on' },
+      { success: false, error: 'Processing failed' },
       { status: 500 }
     );
   }

@@ -1,10 +1,12 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { createContext, useContext, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CartProvider } from '@/contexts/CartContext';
+import { AuthProvider } from '@/providers/AuthProvider';
 
 interface ProvidersProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 // Theme Provider
@@ -94,8 +96,12 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <ThemeProvider>
       <PageTransitionProvider>
-        {children}
+        <AuthProvider>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </AuthProvider>
       </PageTransitionProvider>
     </ThemeProvider>
-  )
+  );
 }

@@ -83,29 +83,44 @@ export default function CustomizerCanvas({ onVirtualTryOn }: CustomizerCanvasPro
 
       const designDataUrl = canvas.toDataURL('image/png');
       
-      // Call AI mockup generation API
-      const response = await fetch('/api/mockup/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          design: designDataUrl,
-          color: selectedColor.hex,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        onVirtualTryOn(data.mockupUrl || designDataUrl);
-      } else {
+      // Use mockup template from public folder
+      const mockupPath = `/tshirt-mockups/${selectedColor.name.toLowerCase()}.png`;
+      
+      // Create composite image
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const mockupCanvas = document.createElement('canvas');
+        mockupCanvas.width = 800;
+        mockupCanvas.height = 1000;
+        const ctx = mockupCanvas.getContext('2d');
+        
+        if (ctx) {
+          // Draw t-shirt mockup
+          ctx.drawImage(img, 0, 0, 800, 1000);
+          
+          // Draw design on t-shirt
+          const designImg = new Image();
+          designImg.src = designDataUrl;
+          designImg.onload = () => {
+            ctx.drawImage(designImg, 250, 350, 300, 300);
+            onVirtualTryOn(mockupCanvas.toDataURL('image/png'));
+            setIsGenerating(false);
+          };
+        }
+      };
+      img.onerror = () => {
+        // Fallback to design only
         onVirtualTryOn(designDataUrl);
-      }
+        setIsGenerating(false);
+      };
+      img.src = mockupPath;
     } catch (error) {
       console.error('Mockup generation failed:', error);
       const canvas = canvasRef.current;
       if (canvas) {
         onVirtualTryOn(canvas.toDataURL('image/png'));
       }
-    } finally {
       setIsGenerating(false);
     }
   };
@@ -213,14 +228,26 @@ export default function CustomizerCanvas({ onVirtualTryOn }: CustomizerCanvasPro
             <div className="bg-white rounded-2xl shadow-xl p-6">
               <h2 className="text-2xl font-bold mb-6 text-gray-800">Live Preview</h2>
 
-              {/* Canvas Preview */}
+              {/* Live Preview with T-Shirt Mockup */}
               <div className="relative bg-gray-100 rounded-xl p-8 flex items-center justify-center mb-6">
-                <canvas
-                  ref={canvasRef}
-                  width={400}
-                  height={500}
-                  className="max-w-full h-auto rounded-lg shadow-lg"
-                />
+                <div className="relative w-full max-w-md">
+                  <img
+                    src={`/tshirt-mockups/${selectedColor.name.toLowerCase()}.png`}
+                    alt="T-shirt mockup"
+                    className="w-full h-auto"
+                    onError={(e) => {
+                      e.currentTarget.src = '/tshirt-mockups/black.png';
+                    }}
+                  />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2">
+                    <canvas
+                      ref={canvasRef}
+                      width={400}
+                      height={500}
+                      className="w-full h-auto opacity-90"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Color Selector */}

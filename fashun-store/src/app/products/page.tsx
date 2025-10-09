@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getProducts } from '@/lib/medusa-client';
+import { getProducts } from '@/services/medusa/product.service';
 import Link from 'next/link';
 
 export default function ProductsPage() {
@@ -15,13 +15,12 @@ export default function ProductsPage() {
 
   async function loadProducts() {
     setLoading(true);
-    const result = await getProducts();
-    
-    if (result.success) {
-      setProducts(result.data);
+    try {
+      const products = await getProducts();
+      setProducts(products);
       setError(null);
-    } else {
-      setError(result.error);
+    } catch (err) {
+      setError('Failed to load products');
       setProducts([]);
     }
     setLoading(false);
