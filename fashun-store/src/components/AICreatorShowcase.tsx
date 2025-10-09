@@ -14,7 +14,8 @@ import {
   CloudArrowUpIcon,
   FaceSmileIcon,
   CameraIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  CurrencyDollarIcon
 } from '@heroicons/react/24/outline';
 
 interface UseCase {
@@ -156,9 +157,10 @@ export default function AICreatorShowcase() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6"
+            className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 flex items-center justify-center gap-3"
           >
-            🎨 AI Creator Studio
+            <SparklesIcon className="w-12 h-12 text-purple-600" />
+            AI Creator Studio
           </motion.h1>
           
           <motion.p 
@@ -244,7 +246,7 @@ export default function AICreatorShowcase() {
             >
               <div className="flex items-center gap-4 mb-6">
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${useCases[selectedUseCase].color} flex items-center justify-center`}>
-                  <useCases[selectedUseCase].icon className="w-6 h-6 text-white" />
+                  {React.createElement(useCases[selectedUseCase].icon, { className: "w-6 h-6 text-white" })}
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                   {useCases[selectedUseCase].title}
@@ -325,8 +327,9 @@ export default function AICreatorShowcase() {
         {/* API Cost Information */}
         <div className="mt-12 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-8 border border-yellow-200 dark:border-yellow-800">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              💰 Cost-Effective AI Solutions
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-2">
+              <CurrencyDollarIcon className="w-6 h-6 text-yellow-600" />
+              Cost-Effective AI Solutions
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-3xl mx-auto">
               Freepik API operates on a pay-as-you-go model. You only pay for what you use, 

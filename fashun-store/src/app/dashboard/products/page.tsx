@@ -13,7 +13,7 @@ import {
   FunnelIcon,
   ArrowUpIcon,
   ArrowDownIcon,
-  DuplicateIcon,
+  ArrowUpTrayIcon,
   SparklesIcon
 } from '@heroicons/react/24/outline';
 
@@ -444,7 +444,7 @@ export default function ProductsPage() {
                       className="p-1 text-gray-500 hover:text-purple-600"
                       title="Duplicate Product"
                     >
-                      <DuplicateIcon className="h-4 w-4" />
+                      <ArrowUpTrayIcon className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => deleteProduct(product.id)}
