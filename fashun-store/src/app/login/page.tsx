@@ -22,8 +22,14 @@ export default function LoginPage() {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
 
   useEffect(() => {
-    if (searchParams.get('registered') === 'true') {
+    if (searchParams && searchParams.get('registered') === 'true') {
       toast.success('Account created! Please sign in.');
+    }
+    
+    // Check for authentication errors
+    if (searchParams && searchParams.get('error')) {
+      const error = searchParams.get('error');
+      toast.error(`Authentication failed: ${error}`);
     }
   }, [searchParams]);
 
@@ -168,7 +174,8 @@ export default function LoginPage() {
   };
 
   const handleSocialLogin = async (provider: 'google' | 'apple') => {
-    window.location.href = `/api/auth/social/${provider}`;
+    // Redirect to our API route which will handle the OAuth flow
+    window.location.href = `/api/auth/social/${provider}?redirect=/account`;
   };
 
   return (

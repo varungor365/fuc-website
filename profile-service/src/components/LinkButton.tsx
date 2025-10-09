@@ -1,7 +1,6 @@
 'use client';
 
 import { Link } from '@/lib/supabase';
-import { supabase } from '@/lib/supabase';
 
 interface LinkButtonProps {
   link: Link;
@@ -10,13 +9,16 @@ interface LinkButtonProps {
 
 export default function LinkButton({ link, profileId }: LinkButtonProps) {
   const handleClick = async () => {
-    // Track click analytics
-    await supabase.from('analytics').insert({
-      profile_id: profileId,
-      event_type: 'click',
-      link_id: link.id,
-      timestamp: new Date().toISOString(),
-    });
+    // Track click analytics via API route
+    try {
+      await fetch('/api/track-click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ linkId: link.id, profileId }),
+      });
+    } catch (error) {
+      console.error('Failed to track click:', error);
+    }
   };
 
   return (

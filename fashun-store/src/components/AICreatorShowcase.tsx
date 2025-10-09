@@ -15,8 +15,10 @@ import {
   FaceSmileIcon,
   CameraIcon,
   ChartBarIcon,
-  CurrencyDollarIcon
+  CurrencyDollarIcon,
+  ArrowRightIcon
 } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 interface UseCase {
   title: string;
@@ -275,6 +277,23 @@ export default function AICreatorShowcase() {
                   ))}
                 </ul>
               </div>
+
+              {/* Special CTA for LoRA Training */}
+              {selectedUseCase === 2 && (
+                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <Link 
+                    href="/avatar"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-700 hover:to-red-700 transition-all shadow-lg"
+                  >
+                    <UserCircleIcon className="w-5 h-5" />
+                    Start Custom Avatar Training
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">
+                    Train your personalized AI model in just a few minutes
+                  </p>
+                </div>
+              )}
             </motion.div>
           </div>
         </div>

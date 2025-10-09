@@ -44,7 +44,7 @@ export default async function UserProfilePage({ params }: { params: { username: 
       )}
       
       {displayMode === 'standard' && (
-        <ProfilePage profile={profile} />
+        <ProfilePage profile={profile} links={profile.links || []} />
       )}
     </div>
   );

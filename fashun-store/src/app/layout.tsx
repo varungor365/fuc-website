@@ -6,6 +6,9 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import SocialProof from '@/components/notifications/SocialProof';
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from '@vercel/analytics/react';
+import { AuthProvider } from '@/contexts/auth-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,12 +26,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider>
-          <Providers>
-            <Header />
-            {children}
-            <Footer />
-            <SocialProof />
-          </Providers>
+          <AuthProvider>
+            <Providers>
+              <Header />
+              {children}
+              <Footer />
+              <SocialProof />
+              <SpeedInsights />
+              <Analytics />
+            </Providers>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

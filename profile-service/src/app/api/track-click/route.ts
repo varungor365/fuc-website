@@ -37,15 +37,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update link click count
-    const { error: linkError } = await supabase
+    // Update link click count using increment
+    const { data: linkData, error: linkFetchError } = await supabase
       .from('links')
-      .update({ clicks: supabase.sql`clicks + 1` })
-      .eq('id', linkId);
+      .select('clicks')
+      .eq('id', linkId)
+      .single();
 
-    if (linkError) {
-      console.error('Link update error:', linkError);
-      // Don't fail the request if click count update fails
+    if (!linkFetchError && linkData) {
+      const newClicks = (linkData.clicks || 0) + 1;
+      
+      const { error: linkUpdateError } = await supabase
+        .from('links')
+        .update({ clicks: newClicks })
+        .eq('id', linkId);
+
+      if (linkUpdateError) {
+        console.error('Link update error:', linkUpdateError);
+        // Don't fail the request if click count update fails
+      }
     }
 
     return NextResponse.json({ success: true });

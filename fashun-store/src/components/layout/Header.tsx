@@ -19,6 +19,7 @@ import {
 import { HeartIcon as HeartSolidIcon, ShoppingBagIcon as ShoppingBagSolidIcon } from '@heroicons/react/24/solid';
 import { useCart } from '@/hooks/useCart';
 import CartDrawer from '@/components/cart/CartDrawer';
+import { useAuth } from '@/contexts/auth-context';
 
 const navigationItems = [
   {
@@ -52,7 +53,8 @@ const navigationItems = [
   { name: 'Women', href: '/collections/womens-tshirts' }
 ];
 
-export function Header() {
+export default function Header() {
+  const { user, loading, isAnonymous } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const { itemCount } = useCart();
@@ -287,14 +289,37 @@ export function Header() {
               </motion.button>
 
               {/* User Account */}
-              <motion.button
-                onClick={() => router.push('/account')}
-                className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <UserIcon className="w-5 h-5 text-neutral-700" />
-              </motion.button>
+              <div className="flex items-center space-x-4">
+                {loading ? (
+                  <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                ) : user ? (
+                  <Link 
+                    href="/account" 
+                    className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
+                  >
+                    <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">
+                        {isAnonymous ? 'A' : user.email?.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="hidden md:inline text-sm font-medium">
+                      {isAnonymous ? 'Anonymous User' : (user.user_metadata?.name || user.email?.split('@')[0])}
+                    </span>
+                    {isAnonymous && (
+                      <span className="hidden md:inline text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                        Anonymous
+                      </span>
+                    )}
+                  </Link>
+                ) : (
+                  <Link 
+                    href="/login" 
+                    className="text-gray-700 hover:text-gray-900 text-sm font-medium"
+                  >
+                    Sign In
+                  </Link>
+                )}
+              </div>
 
               {/* Mobile Menu Toggle */}
               <motion.button
@@ -350,5 +375,3 @@ export function Header() {
     </>
   );
 }
-
-export default Header;
