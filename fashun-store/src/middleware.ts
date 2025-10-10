@@ -9,8 +9,8 @@ export async function middleware(req: NextRequest) {
   // Refresh session if expired
   const { data: { session } } = await supabase.auth.getSession();
   
-  // Protect admin routes
-  if (req.nextUrl.pathname.startsWith('/admin')) {
+  // Protect admin routes, but exclude the login page itself
+  if (req.nextUrl.pathname.startsWith('/admin') && !req.nextUrl.pathname.startsWith('/admin/login')) {
     if (!session) {
       // Redirect to login if not authenticated
       const redirectUrl = req.nextUrl.clone();
