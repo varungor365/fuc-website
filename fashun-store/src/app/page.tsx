@@ -353,10 +353,21 @@ export default function HomePage() {
 
       {/* Hero Section - STREETWEAR REVOLUTION */}
       <section className="relative min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 overflow-hidden">
-        {/* Background Effects */}
+        {/* Animated Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(255,165,0,0.1)_0%,_transparent_50%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(45deg,_transparent_25%,_rgba(255,165,0,0.02)_50%,_transparent_75%)]" />
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(255,165,0,0.1)_0%,_transparent_50%)]"
+          />
+          <motion.div
+            animate={{ backgroundPosition: ['0% 0%', '100% 100%'] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 bg-[linear-gradient(45deg,_transparent_25%,_rgba(255,165,0,0.02)_50%,_transparent_75%)] bg-[length:200%_200%]"
+          />
         </div>
         
         <div className="relative z-10 container mx-auto px-4 h-screen flex items-center">
@@ -371,22 +382,40 @@ export default function HomePage() {
               <div className="space-y-6">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: [1, 1.05, 1],
+                    y: [0, -5, 0]
+                  }}
+                  transition={{ 
+                    delay: 0.2,
+                    scale: { duration: 2, repeat: Infinity },
+                    y: { duration: 2, repeat: Infinity }
+                  }}
                   className="inline-block"
                 >
-                  <span className="inline-block px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-lg font-bold animate-pulse">
+                  <span className="inline-block px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full text-lg font-bold shadow-lg shadow-orange-500/50">
                     🔥 TRENDY & FRESH 🔥
                   </span>
                 </motion.div>
                 
                 <h1 className="text-6xl lg:text-8xl font-black text-white leading-tight">
-                  <span className="block bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
+                  <motion.span 
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.8 }}
+                    className="block bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent"
+                  >
                     STREETWEAR
-                  </span>
-                  <span className="block text-white">
+                  </motion.span>
+                  <motion.span 
+                    initial={{ x: 100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.6, duration: 0.8 }}
+                    className="block text-white"
+                  >
                     REVOLUTION
-                  </span>
+                  </motion.span>
                 </h1>
                 
                 <div className="max-w-4xl mx-auto space-y-4">
@@ -404,22 +433,31 @@ export default function HomePage() {
               </div>
               
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+              >
                 <motion.div
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.05, rotate: [0, -1, 1, 0] }}
                   whileTap={{ scale: 0.95 }}
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ y: { duration: 2, repeat: Infinity, ease: "easeInOut" } }}
                 >
                   <Link
                     href="/collections/printed-tshirts"
-                    className="group inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold text-xl hover:from-orange-600 hover:to-red-600 transition-all duration-300 shadow-2xl hover:shadow-orange-500/25"
+                    className="group inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold text-xl hover:from-orange-600 hover:to-red-600 transition-all duration-300 shadow-2xl hover:shadow-orange-500/50"
                   >
                     🛍️ SHOP NOW
                   </Link>
                 </motion.div>
                 
                 <motion.div
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.05, rotate: [0, 1, -1, 0] }}
                   whileTap={{ scale: 0.95 }}
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ y: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 } }}
                 >
                   <Link
                     href="/collections/all"
@@ -428,7 +466,7 @@ export default function HomePage() {
                     🎨 EXPLORE ALL
                   </Link>
                 </motion.div>
-              </div>
+              </motion.div>
 
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 max-w-4xl mx-auto">
@@ -442,10 +480,17 @@ export default function HomePage() {
                     key={i}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + i * 0.1 }}
-                    className="text-center"
+                    whileHover={{ scale: 1.1, y: -5 }}
+                    transition={{ delay: 1 + i * 0.1 }}
+                    className="text-center cursor-pointer"
                   >
-                    <div className="text-lg font-bold text-orange-400">{stat.label}</div>
+                    <motion.div 
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+                      className="text-lg font-bold text-orange-400"
+                    >
+                      {stat.label}
+                    </motion.div>
                     <div className="text-gray-400 text-sm">{stat.desc}</div>
                   </motion.div>
                 ))}
