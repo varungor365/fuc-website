@@ -36,7 +36,7 @@ let orders = [
     shipping: 15.99,
     tax: 14.00,
     discount: 10.00,
-    currency: 'USD',
+    currency: 'INR',
     createdAt: '2024-01-20T10:30:00Z',
     updatedAt: '2024-01-20T14:15:00Z',
     shippingAddress: {
@@ -96,7 +96,7 @@ let orders = [
     shipping: 9.99,
     tax: 4.00,
     discount: 4.00,
-    currency: 'USD',
+    currency: 'INR',
     createdAt: '2024-01-19T15:45:00Z',
     updatedAt: '2024-01-20T09:20:00Z',
     shippingAddress: {
@@ -156,7 +156,7 @@ let orders = [
     shipping: 9.99,
     tax: 12.80,
     discount: 12.80,
-    currency: 'USD',
+    currency: 'INR',
     createdAt: '2024-01-20T16:00:00Z',
     updatedAt: '2024-01-20T16:00:00Z',
     shippingAddress: {
@@ -381,7 +381,7 @@ export async function POST(request: NextRequest) {
       shipping: body.shipping || 0,
       tax: body.tax || 0,
       discount: body.discount || 0,
-      currency: body.currency || 'USD',
+      currency: body.currency || 'INR',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       shippingAddress: body.shippingAddress,

@@ -12,7 +12,7 @@ import {
   UserGroupIcon,
   GlobeAltIcon,
   ChartBarIcon
-} from '@heroicons/24/outline'
+} from '@heroicons/react/24/outline'
 
 interface MobileOptimizationMetrics {
   mobileTraffic: number

@@ -97,9 +97,9 @@ const TrendingOutfits: React.FC<TrendingOutfitsProps> = ({
         saves: 1923,
         trending: true,
         items: [
-          { id: '4', name: 'Button Shirt', price: 1999, image: '/api/placeholder/150/200', category: 'shirts' },
-          { id: '5', name: 'Chino Pants', price: 2799, image: '/api/placeholder/150/200', category: 'pants' },
-          { id: '6', name: 'Minimalist Sneakers', price: 4499, image: '/api/placeholder/150/200', category: 'shoes' }
+          { id: '4', name: 'Button Shirt', price: 1999, image: '/images/products/t-shirts/tshirt-1-main.jpg', category: 'shirts' },
+          { id: '5', name: 'Chino Pants', price: 2799, image: '/images/products/hoodies/hoodie-1-main.jpg', category: 'pants' },
+          { id: '6', name: 'Minimalist Sneakers', price: 4499, image: '/images/products/accessories/cap-1-main.jpg', category: 'shoes' }
         ],
         totalPrice: 9297
       },
@@ -114,9 +114,9 @@ const TrendingOutfits: React.FC<TrendingOutfitsProps> = ({
         saves: 3156,
         trending: true,
         items: [
-          { id: '7', name: 'Leather Jacket', price: 7999, image: '/api/placeholder/150/200', category: 'jackets' },
-          { id: '8', name: 'Slim Jeans', price: 3499, image: '/api/placeholder/150/200', category: 'jeans' },
-          { id: '9', name: 'Combat Boots', price: 6499, image: '/api/placeholder/150/200', category: 'shoes' }
+          { id: '7', name: 'Leather Jacket', price: 7999, image: '/images/products/jackets/jacket-1-main.jpg', category: 'jackets' },
+          { id: '8', name: 'Slim Jeans', price: 3499, image: '/images/products/hoodies/hoodie-2-main.jpg', category: 'jeans' },
+          { id: '9', name: 'Combat Boots', price: 6499, image: '/images/products/t-shirts/tshirt-2-main.jpg', category: 'shoes' }
         ],
         totalPrice: 17997,
         discount: 20
@@ -132,9 +132,9 @@ const TrendingOutfits: React.FC<TrendingOutfitsProps> = ({
         saves: 1654,
         trending: false,
         items: [
-          { id: '10', name: 'Basic Tee', price: 899, image: '/api/placeholder/150/200', category: 'tshirts' },
-          { id: '11', name: 'Straight Jeans', price: 2999, image: '/api/placeholder/150/200', category: 'jeans' },
-          { id: '12', name: 'White Sneakers', price: 3999, image: '/api/placeholder/150/200', category: 'shoes' }
+          { id: '10', name: 'Basic Tee', price: 899, image: '/images/products/t-shirts/tshirt-1-front.jpg', category: 'tshirts' },
+          { id: '11', name: 'Straight Jeans', price: 2999, image: '/images/products/hoodies/hoodie-1-front.jpg', category: 'jeans' },
+          { id: '12', name: 'White Sneakers', price: 3999, image: '/images/products/jackets/jacket-1-front.jpg', category: 'shoes' }
         ],
         totalPrice: 7897
       },
@@ -149,9 +149,9 @@ const TrendingOutfits: React.FC<TrendingOutfitsProps> = ({
         saves: 2234,
         trending: false,
         items: [
-          { id: '13', name: 'Knit Sweater', price: 3299, image: '/api/placeholder/150/200', category: 'sweaters' },
-          { id: '14', name: 'Jogger Pants', price: 2199, image: '/api/placeholder/150/200', category: 'pants' },
-          { id: '15', name: 'Slip-on Shoes', price: 2999, image: '/api/placeholder/150/200', category: 'shoes' }
+          { id: '13', name: 'Knit Sweater', price: 3299, image: '/images/products/hoodies/hoodie-2-front.jpg', category: 'sweaters' },
+          { id: '14', name: 'Jogger Pants', price: 2199, image: '/images/products/t-shirts/tshirt-2-front.jpg', category: 'pants' },
+          { id: '15', name: 'Slip-on Shoes', price: 2999, image: '/images/products/accessories/cap-1-main.jpg', category: 'shoes' }
         ],
         totalPrice: 8497
       },
@@ -166,9 +166,9 @@ const TrendingOutfits: React.FC<TrendingOutfitsProps> = ({
         saves: 2789,
         trending: true,
         items: [
-          { id: '16', name: 'Linen Shirt', price: 2299, image: '/api/placeholder/150/200', category: 'shirts' },
-          { id: '17', name: 'Cotton Shorts', price: 1599, image: '/api/placeholder/150/200', category: 'shorts' },
-          { id: '18', name: 'Canvas Shoes', price: 2499, image: '/api/placeholder/150/200', category: 'shoes' }
+          { id: '16', name: 'Linen Shirt', price: 2299, image: '/images/products/t-shirts/tshirt-1-main.jpg', category: 'shirts' },
+          { id: '17', name: 'Cotton Shorts', price: 1599, image: '/images/products/hoodies/hoodie-1-back.jpg', category: 'shorts' },
+          { id: '18', name: 'Canvas Shoes', price: 2499, image: '/images/products/accessories/cap-1-main.jpg', category: 'shoes' }
         ],
         totalPrice: 6397
       }

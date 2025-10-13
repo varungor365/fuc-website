@@ -1,0 +1,77 @@
+{
+  "timestamp": "2025-10-04T14:14:49.896Z",
+  "totalPages": 56,
+  "categories": {
+    "critical": [
+      "/",
+      "/collections",
+      "/collections/all",
+      "/products/1",
+      "/cart",
+      "/checkout",
+      "/auth",
+      "/login",
+      "/register",
+      "/account",
+      "/search",
+      "/outfit-builder",
+      "/ai-features"
+    ],
+    "ecommerce": [
+      "/wishlist",
+      "/track-order",
+      "/payment/success",
+      "/payment/failure",
+      "/demo-payment",
+      "/dashboard",
+      "/profile/user123",
+      "/size-guide",
+      "/shipping",
+      "/returns",
+      "/returns-policy",
+      "/shipping-policy"
+    ],
+    "content": [
+      "/about",
+      "/contact",
+      "/faq",
+      "/blog",
+      "/careers",
+      "/press",
+      "/lookbook",
+      "/era-collections",
+      "/store-locator",
+      "/gift-cards",
+      "/privacy",
+      "/privacy-policy",
+      "/terms",
+      "/terms-of-service"
+    ],
+    "interactive": [
+      "/customizer",
+      "/designer",
+      "/avatar",
+      "/studio"
+    ],
+    "admin": [
+      "/admin",
+      "/admin/dashboard",
+      "/admin/products",
+      "/admin/orders",
+      "/admin/analytics",
+      "/admin/api-keys",
+      "/admin/error-monitoring",
+      "/admin/website-checker",
+      "/admin/products/new"
+    ],
+    "test": [
+      "/ui-demo",
+      "/test-simple",
+      "/test-supabase",
+      "/status"
+    ]
+  },
+  "baseUrl": "http://localhost:3000",
+  "status": "Ready for manual testing",
+  "notes": "All images created, directory structure complete, ready for page-by-page verification"
+}

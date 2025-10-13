@@ -7,15 +7,25 @@ import { ArrowRightIcon, FireIcon, SparklesIcon, ChartBarIcon as TrendingUpIcon 
 import { categories } from '@/data/products'
 
 export default function CollectionsPage() {
+  // Collection images mapping
+  const collectionImages = {
+    hoodies: '/images/products/hoodies/hoodie-1-main.jpg',
+    't-shirts': '/images/products/t-shirts/tshirt-1-main.jpg',
+    jackets: '/images/products/jackets/jacket-1-main.jpg',
+    accessories: '/images/products/accessories/cap-1-main.jpg',
+    streetwear: '/images/products/hoodies/hoodie-2-main.jpg',
+    premium: '/images/products/t-shirts/tshirt-2-main.jpg'
+  };
+
   // Transform categories data for display
-  const collections = Object.entries(categories).map(([key, category]) => ({
+  const collections = Object.entries(categories).map(([key, category], index) => ({
     slug: key,
     name: category.name,
     description: category.description,
-    image: `/api/placeholder/400/500`,
+    image: collectionImages[key as keyof typeof collectionImages] || '/images/products/hoodies/hoodie-1-main.jpg',
     productCount: Math.floor(Math.random() * 50) + 20, // Mock product count
-    trending: Math.random() > 0.6, // Random trending indicator
-    new: Math.random() > 0.8, // Random new indicator
+    trending: index < 3, // First 3 are trending
+    new: index < 2, // First 2 are new
     colors: ['bg-gradient-to-br from-purple-500 to-pink-500', 'bg-gradient-to-br from-blue-500 to-cyan-500', 'bg-gradient-to-br from-green-500 to-emerald-500', 'bg-gradient-to-br from-orange-500 to-red-500', 'bg-gradient-to-br from-indigo-500 to-purple-500', 'bg-gradient-to-br from-pink-500 to-rose-500']
   }))
 

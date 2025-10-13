@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { getImagePath } from '@/lib/imageUtils';
 
 // New Arrivals - Inspired by Empire, Dawn themes
 export default function NewArrivals() {
@@ -12,8 +13,8 @@ export default function NewArrivals() {
       name: 'Premium Cotton Oversized Tee',
       price: 1299,
       originalPrice: 1699,
-      image: '/images/mock/products/tshirts/oversized-tee.jpg',
-      hoverImage: '/images/mock/products/tshirts/oversized-tee-2.jpg',
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=1000&fit=crop&q=85',
       badge: 'New',
       colors: ['#000000', '#FFFFFF', '#FF6B6B', '#4ECDC4'],
       rating: 4.8,
@@ -25,8 +26,8 @@ export default function NewArrivals() {
       name: 'Streetwear Cargo Pants',
       price: 2499,
       originalPrice: 3199,
-      image: '/images/mock/products/pants/cargo-pants.jpg',
-      hoverImage: '/images/mock/products/pants/cargo-pants-2.jpg',
+      image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&h=1000&fit=crop&q=85',
       badge: 'Trending',
       colors: ['#2D3748', '#68D391', '#F6AD55'],
       rating: 4.9,
@@ -38,8 +39,8 @@ export default function NewArrivals() {
       name: 'Classic Bomber Jacket',
       price: 3999,
       originalPrice: 4999,
-      image: '/images/mock/products/jackets/bomber-jacket.jpg',
-      hoverImage: '/images/mock/products/jackets/bomber-jacket-2.jpg',
+      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&h=1000&fit=crop&q=85',
       badge: 'Sale',
       colors: ['#1A202C', '#2D3748', '#4A5568'],
       rating: 4.7,
@@ -51,8 +52,8 @@ export default function NewArrivals() {
       name: 'Urban Hoodie Collection',
       price: 2199,
       originalPrice: 2799,
-      image: '/images/mock/products/hoodies/urban-hoodie.jpg',
-      hoverImage: '/images/mock/products/hoodies/urban-hoodie-2.jpg',
+      image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&h=1000&fit=crop&q=85',
+      hoverImage: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=1000&fit=crop&q=85',
       badge: 'Limited',
       colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'],
       rating: 4.6,
@@ -72,7 +73,7 @@ export default function NewArrivals() {
   };
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
+    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/40">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -130,12 +131,29 @@ export default function NewArrivals() {
                       {/* Quick Actions */}
                       <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div className="flex flex-col space-y-2">
-                          <button className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110">
+                          <button 
+                            onClick={() => {
+                              // Add to wishlist functionality
+                              const existingWishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+                              const productExists = existingWishlist.find((item: any) => item.id === product.id);
+                              if (!productExists) {
+                                existingWishlist.push(product);
+                                localStorage.setItem('wishlist', JSON.stringify(existingWishlist));
+                                alert('Added to wishlist!');
+                              } else {
+                                alert('Already in wishlist!');
+                              }
+                            }}
+                            className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 cursor-pointer"
+                          >
                             <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                           </button>
-                          <button className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110">
+                          <button 
+                            onClick={() => window.location.href = `/products/${product.id}`}
+                            className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 cursor-pointer"
+                          >
                             <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -146,7 +164,25 @@ export default function NewArrivals() {
 
                       {/* Quick Add to Cart */}
                       <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button className="w-full bg-white text-gray-900 font-semibold py-3 rounded-full hover:bg-gray-100 transition-colors duration-200">
+                        <button 
+                          onClick={() => {
+                            // Add to cart functionality
+                            const existingCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                            const cartItem = {
+                              id: product.id,
+                              name: product.name,
+                              price: product.price,
+                              image: product.image,
+                              quantity: 1,
+                              size: 'M', // Default size
+                              color: product.colors?.[0] || 'Default'
+                            };
+                            existingCart.push(cartItem);
+                            localStorage.setItem('cart', JSON.stringify(existingCart));
+                            alert('Added to cart!');
+                          }}
+                          className="w-full bg-white text-gray-900 font-semibold py-3 rounded-full hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
+                        >
                           Quick Add to Cart
                         </button>
                       </div>

@@ -34,10 +34,10 @@ module.exports = {
         ],
       },
     ],
-    additionalSitemaps: [
-      'https://fashun.co.in/sitemap.xml',
-      'https://fashun.co.in/server-sitemap-index.xml',
-    ],
+    // Remove non-existent additional sitemaps to avoid 404s
+    // additionalSitemaps: [
+    //   'https://fashun.co.in/server-sitemap-index.xml',
+    // ],
   },
   exclude: [
     '/cart',
@@ -47,6 +47,11 @@ module.exports = {
     '/track-order',
     '/api/*',
     '/admin/*',
+    '/admin',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/wishlist',
     '/_next/*',
     '/private',
   ],

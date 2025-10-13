@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - FUC! Fashion | Your Data Protection',
-  description: 'Learn how FUC! Fashion protects your privacy and handles your personal information. Our comprehensive privacy policy.',
+  title: 'Privacy Policy - FASHUN.CO | Your Data Protection',
+  description: 'Learn how FASHUN.CO protects your privacy and handles your personal information. Our comprehensive privacy policy.',
 }
 
 export default function PrivacyPolicyPage() {

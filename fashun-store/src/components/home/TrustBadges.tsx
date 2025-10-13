@@ -24,7 +24,7 @@ const trustBadges: TrustBadge[] = [
   {
     id: '2',
     title: 'Fast Shipping',
-    description: 'Free express delivery on all orders over $150. Track your package in real-time',
+    description: 'Free express delivery on all orders over ₹4,500. Track your package in real-time',
     icon: TruckIcon,
     stats: '2-3 Day Delivery',
     color: 'from-blue-400 to-cyan-500'
@@ -154,7 +154,7 @@ export default function TrustBadges() {
 
           <motion.h2 variants={itemVariants} className="text-4xl md:text-6xl font-bold font-montserrat mb-6">
             <span className="bg-gradient-to-r from-white via-green-200 to-blue-200 bg-clip-text text-transparent">
-              Shop with Confidence
+              Premium Quality Guaranteed
             </span>
           </motion.h2>
 

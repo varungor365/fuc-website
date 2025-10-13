@@ -17,7 +17,7 @@ import {
   BellIcon,
   MagnifyingGlassIcon
 } from '@heroicons/react/24/outline'
-import GlassCard from './GlassCard'
+import GlassCard from '@/components/admin/GlassCard'
 
 interface NavItem {
   name: string

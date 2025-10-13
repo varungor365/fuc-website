@@ -1,6 +1,88 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
-import { AuthService } from '@/lib/authService'
-import { ApiKeyService } from '@/lib/apiKeyService'
+import { NextRequest, NextResponse } from 'next/server'
+import crypto from 'crypto'
+
+// Security: Require encryption key in production (runtime only)
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
+const encryptionKey = ENCRYPTION_KEY || 'development-key-not-for-production-use-only'
+
+// Encryption utilities
+function encrypt(text: string): string {
+  try {
+    const iv = crypto.randomBytes(16)
+    const key = crypto.scryptSync(encryptionKey, 'salt', 32)
+    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
+    let encrypted = cipher.update(text, 'utf8', 'hex')
+    encrypted += cipher.final('hex')
+    return iv.toString('hex') + ':' + encrypted
+  } catch (error) {
+    console.error('Encryption error:', error)
+    return text // Return original text if encryption fails (for development)
+  }
+}
+
+function decrypt(text: string): string {
+  try {
+    const textParts = text.split(':')
+    if (textParts.length !== 2) return text // Return original if not encrypted format
+    const iv = Buffer.from(textParts[0], 'hex')
+    const encryptedText = textParts[1]
+    const key = crypto.scryptSync(encryptionKey, 'salt', 32)
+    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv)
+    let decrypted = decipher.update(encryptedText, 'hex', 'utf8')
+    decrypted += decipher.final('utf8')
+    return decrypted
+  } catch (error) {
+    console.error('Decryption error:', error)
+    return text // Return original text if decryption fails (for development)
+  }
+}
+
+function maskKey(key: string): string {
+  if (!key || key.length <= 8) return key
+  return key.slice(0, 4) + '••••••••' + key.slice(-4)
+}
+
+// Mock data store - replace with database
+let apiKeysStore: Record<string, any> = {
+  openai: {
+    id: 'openai',
+    service: 'openai',
+    keyName: 'API Key',
+    keyValue: encrypt('sk-test-key-example'),
+    status: 'active',
+    lastTested: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  strapi: {
+    id: 'strapi',
+    service: 'strapi',
+    keyName: 'API Token',
+    keyValue: encrypt('strapi-token-example'),
+    status: 'active',
+    lastTested: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+}
+
+function isAdminAuthenticated(request: NextRequest): boolean {
+  // In production, implement proper admin authentication with JWT/session
+  if (process.env.NODE_ENV === 'production') {
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return false
+    }
+    
+    const token = authHeader.substring(7)
+    // TODO: Verify JWT token or session
+    // For now, check for a basic admin token
+    return token === process.env.ADMIN_API_TOKEN
+  }
+  
+  return true // Allow in development
+}
+>>>>>>> fa67490ae7cdb0419809cce851f9dcac45b31879
 
 // GET - Fetch all API keys (masked)
 export async function GET(request: NextRequest) {

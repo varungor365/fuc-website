@@ -151,7 +151,7 @@ export function FooterTrustSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Shop with Confidence
+            Quality You Can Trust
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Your trust is our priority. We're committed to providing a secure, 

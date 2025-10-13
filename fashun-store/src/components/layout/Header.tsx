@@ -18,6 +18,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon, ShoppingBagIcon as ShoppingBagSolidIcon } from '@heroicons/react/24/solid';
 import { useCart } from '@/hooks/useCart';
+import CartDrawer from '@/components/cart/CartDrawer';
+import { useAuth } from '@/contexts/auth-context';
 
 const navigationItems = [
   {
@@ -25,28 +27,38 @@ const navigationItems = [
     href: '/collections/all',
     megaMenu: {
       categories: [
-        { name: 'T-Shirts', href: '/collections/tshirts', image: '/images/products/t-shirts/tshirt-1-main.jpg' },
+        { name: 'Printed T-Shirts', href: '/collections/printed-tshirts', image: '/images/products/t-shirts/tshirt-1-main.jpg', badge: 'Popular' },
+        { name: 'Full Sleeve T-Shirts', href: '/collections/full-sleeve-tshirts', image: '/images/products/t-shirts/tshirt-2-main.jpg', badge: 'Trending' },
+        { name: 'Polo T-Shirts', href: '/collections/polo-tshirts', image: '/images/products/t-shirts/tshirt-1-front.jpg' },
+        { name: "Women's T-Shirts", href: '/collections/womens-tshirts', image: '/images/products/t-shirts/tshirt-2-front.jpg', badge: 'New' },
+        { name: 'Crop Tops', href: '/collections/crop-tops', image: '/images/products/accessories/cap-1-main.jpg', badge: 'Trending' },
+        { name: 'Plus Size T-Shirts', href: '/collections/plus-size-tshirts', image: '/images/products/jackets/jacket-1-main.jpg' },
+        { name: 'Plain T-Shirts & Packs', href: '/collections/plain-tshirts', image: '/images/products/t-shirts/tshirt-1-main.jpg', badge: 'Value' },
         { name: 'Hoodies', href: '/collections/hoodies', image: '/images/products/hoodies/hoodie-1-main.jpg' },
-        { name: 'Polos', href: '/collections/polos', image: '/images/products/t-shirts/tshirt-2-main.jpg' },
-        { name: 'Accessories', href: '/collections/accessories', image: '/images/products/accessories/cap-1-main.jpg' }
+        { name: 'Oversized Hoodies', href: '/collections/oversized-hoodies', image: '/images/products/hoodies/hoodie-2-main.jpg', badge: 'Street Style' },
+        { name: 'Sweatshirts', href: '/collections/sweatshirts', image: '/images/products/jackets/jacket-1-main.jpg' }
       ],
       featured: [
-        { name: 'New Arrivals', href: '/collections/new-arrivals' },
-        { name: 'Best Sellers', href: '/collections/best-sellers' },
-        { name: 'Sale Items', href: '/collections/sale' }
+        { name: 'New Arrivals', href: '/collections/new-arrivals', description: 'Latest drops & fresh designs' },
+        { name: 'Best Sellers', href: '/collections/best-sellers', description: 'Customer favorites' },
+        { name: 'Combo Packs', href: '/collections/combo-packs', description: 'Value deals & bundles' },
+        { name: 'Sale Items', href: '/collections/sale', description: 'Up to 50% off' }
       ]
     }
   },
-  { name: 'New Arrivals', href: '/collections/new-arrivals' },
-  { name: 'Designer', href: '/designer' },
-  { name: 'Lookbook', href: '/lookbook' },
-  { name: 'About', href: '/about' }
+  { name: 'Customize Your Look', href: '/customize', badge: '🎨 NEW' },
+  { name: 'Printed Tees', href: '/collections/printed-tshirts' },
+  { name: 'Plain & Combos', href: '/collections/plain-tshirts' },
+  { name: 'Hoodies', href: '/collections/hoodies' },
+  { name: 'Women', href: '/collections/womens-tshirts' }
 ];
 
-export function Header() {
+export default function Header() {
+  const { user, loading, isAnonymous } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const { itemCount } = useCart();
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -88,31 +100,31 @@ export function Header() {
     <>
       <motion.header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled 
-            ? 'glass backdrop-blur-xl bg-white/80 shadow-lg border-b border-white/20' 
-            : 'bg-transparent'
+            ? 'glass backdrop-blur-xl bg-white/90 shadow-2xl border-b border-white/30 transform scale-[0.98]' 
+            : 'bg-white/95 backdrop-blur-sm shadow-sm'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        {/* Top Bar */}
-        <div className="border-b border-neutral-200/50 bg-gradient-primary">
+        {/* Top Bar - Enhanced */}
+        <div className="border-b border-orange-500/30 bg-gradient-to-r from-gray-900 via-gray-800 to-black">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between py-2 text-sm text-white">
+            <div className="flex items-center justify-between py-3 text-sm text-white">
               <div className="flex items-center space-x-6">
-                <span>Free shipping on orders over ₹2,999</span>
-                <span className="hidden md:inline">|</span>
-                <span className="hidden md:inline">30-day returns</span>
+                <span className="font-semibold tracking-wide">✨ FREE SHIPPING ON ORDERS OVER ₹999</span>
+                <span className="hidden md:inline text-white/40">|</span>
+                <span className="hidden md:inline">🔄 30-DAY HASSLE-FREE RETURNS</span>
               </div>
               <div className="flex items-center space-x-4">
-                <Link href="/track" className="hover:text-primary-200 transition-colors">
-                  Track Order
+                <Link href="/track-order" className="hover:text-orange-400 transition-colors font-medium">
+                  📦 TRACK ORDER
                 </Link>
-                <span>|</span>
-                <Link href="/contact" className="hover:text-primary-200 transition-colors">
-                  Help
+                <span className="text-white/40">|</span>
+                <Link href="/contact" className="hover:text-orange-400 transition-colors font-medium">
+                  💬 HELP
                 </Link>
               </div>
             </div>
@@ -128,15 +140,13 @@ export function Header() {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">F</span>
-                </div>
-                <div className="hidden sm:block">
-                  <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                    FASHUN.CO.IN
-                  </h1>
-                  <p className="text-xs text-neutral-600 -mt-1">Premium Streetwear</p>
+              <Link href="/" className="flex items-center">
+                <div className="w-24 h-24">
+                  <img 
+                    src="/logo.png" 
+                    alt="FASHUN.CO.IN" 
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               </Link>
             </motion.div>
@@ -152,11 +162,16 @@ export function Header() {
                 >
                   <Link
                     href={item.href}
-                    className={`text-neutral-700 hover:text-primary-600 transition-colors font-medium relative py-2 ${
-                      pathname === item.href ? 'text-primary-600' : ''
+                    className={`font-nav text-neutral-700 hover:text-orange-600 transition-colors relative py-2 flex items-center space-x-2 ${
+                      pathname === item.href ? 'text-orange-600' : ''
                     }`}
                   >
-                    {item.name}
+                    <span>{item.name}</span>
+                    {(item as any).badge && (
+                      <span className="text-xs bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-1 rounded-full font-bold animate-pulse">
+                        {(item as any).badge}
+                      </span>
+                    )}
                     {pathname === item.href && (
                       <motion.div
                         className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-primary"
@@ -255,7 +270,7 @@ export function Header() {
 
               {/* Cart */}
               <motion.button
-                onClick={() => router.push('/cart')}
+                onClick={() => setIsCartDrawerOpen(true)}
                 className="relative p-2 rounded-full hover:bg-neutral-100 transition-colors"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -274,14 +289,37 @@ export function Header() {
               </motion.button>
 
               {/* User Account */}
-              <motion.button
-                onClick={() => router.push('/account')}
-                className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <UserIcon className="w-5 h-5 text-neutral-700" />
-              </motion.button>
+              <div className="flex items-center space-x-4">
+                {loading ? (
+                  <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                ) : user ? (
+                  <Link 
+                    href="/account" 
+                    className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
+                  >
+                    <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">
+                        {isAnonymous ? 'A' : user.email?.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <span className="hidden md:inline text-sm font-medium">
+                      {isAnonymous ? 'Anonymous User' : (user.user_metadata?.name || user.email?.split('@')[0])}
+                    </span>
+                    {isAnonymous && (
+                      <span className="hidden md:inline text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                        Anonymous
+                      </span>
+                    )}
+                  </Link>
+                ) : (
+                  <Link 
+                    href="/login" 
+                    className="text-gray-700 hover:text-gray-900 text-sm font-medium"
+                  >
+                    Sign In
+                  </Link>
+                )}
+              </div>
 
               {/* Mobile Menu Toggle */}
               <motion.button
@@ -328,8 +366,12 @@ export function Header() {
           )}
         </AnimatePresence>
       </motion.header>
+      
+      {/* Cart Drawer */}
+      <CartDrawer 
+        isOpen={isCartDrawerOpen} 
+        onClose={() => setIsCartDrawerOpen(false)} 
+      />
     </>
   );
 }
-
-export default Header;

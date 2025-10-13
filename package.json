@@ -1,39 +1,31 @@
 {
-  "name": "fuc-website",
-  "version": "1.0.0",
-  "description": "FASHUN.CO - Premium Streetwear Platform with Advanced SEO Optimization",
-  "main": "fashun-store/src/app/page.tsx",
+  "name": "fashun-ecosystem",
+  "version": "2.0.0",
+  "private": true,
   "scripts": {
-    "dev": "cd fashun-store && npm run dev",
-    "build": "cd fashun-store && npm install && npm run build",
-    "start": "cd fashun-store && npm run start",
-    "lint": "cd fashun-store && npm run lint",
-    "install-all": "cd fashun-store && npm install && cd ../fashun-backend && npm install && cd ../ai-mockup-service && npm install",
-    "start-platform": "powershell -ExecutionPolicy Bypass -File start-platform.ps1"
+    "dev": "concurrently \"npm run dev:store\" \"npm run dev:profile\"",
+    "dev:store": "cd fashun-store && npm run dev",
+    "dev:profile": "cd profile-service && npm run dev",
+    "build": "npm run build:store && npm run build:profile",
+    "build:store": "cd fashun-store && npm run build",
+    "build:profile": "cd profile-service && npm run build",
+    "seo:products": "ts-node scripts/seo/ai-product-descriptions.ts",
+    "seo:alt-text": "ts-node scripts/seo/generate-alt-text.ts",
+    "seo:meta": "ts-node scripts/seo/optimize-meta-tags.ts",
+    "seo:links": "ts-node scripts/seo/auto-internal-links.ts",
+    "seo:check-links": "ts-node scripts/seo/link-checker.ts",
+    "seo:all": "npm run seo:products && npm run seo:alt-text && npm run seo:meta && npm run seo:links"
   },
-  "keywords": [
-    "streetwear",
-    "ecommerce",
-    "nextjs",
-    "seo",
-    "performance",
-    "fashion"
-  ],
-  "author": "FASHUN.CO",
-  "license": "ISC",
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/varungor365/fuc-website.git"
-  },
-  "homepage": "https://fashun.co.in",
   "dependencies": {
-    "clsx": "^2.1.1",
-    "framer-motion": "^12.23.21",
-    "sharp": "^0.34.4",
-    "tailwind-merge": "^3.3.1"
+    "@types/fabric": "^5.3.10",
+    "concurrently": "^8.2.2",
+    "fabric": "^6.7.1"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.12.0",
+    "@octokit/rest": "^20.0.2",
+    "linkinator": "^6.0.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }

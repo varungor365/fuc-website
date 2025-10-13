@@ -266,7 +266,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 text-sm text-gray-300">
                       <Truck className="w-4 h-4 text-primary-400" />
-                      <span>Free shipping on orders over $100</span>
+                      <span>Free shipping on orders over ₹3,000</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm text-gray-300">
                       <RotateCcw className="w-4 h-4 text-primary-400" />

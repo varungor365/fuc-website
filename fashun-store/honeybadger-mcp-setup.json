@@ -1,0 +1,60 @@
+{
+  "name": "Honeybadger MCP Server Setup",
+  "description": "Configuration for Honeybadger Model Context Protocol server integration",
+  "version": "1.0.0",
+  "setup": {
+    "requirements": [
+      "Docker installed and running",
+      "Honeybadger account with API access",
+      "Personal auth token from Honeybadger user settings"
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "title": "Pull Honeybadger MCP Server Docker Image",
+        "command": "docker pull ghcr.io/honeybadger-io/honeybadger-mcp-server:latest",
+        "description": "Downloads the latest Honeybadger MCP server Docker image"
+      },
+      {
+        "step": 2,
+        "title": "Get Personal Auth Token",
+        "url": "https://app.honeybadger.io/users/edit",
+        "description": "Navigate to your Honeybadger user settings and copy your personal auth token from the Authentication tab"
+      },
+      {
+        "step": 3,
+        "title": "Configure VS Code for MCP",
+        "file": ".vscode/settings.json",
+        "content": {
+          "mcp.servers": {
+            "honeybadger": {
+              "command": "docker",
+              "args": [
+                "run",
+                "--rm",
+                "-e", "HONEYBADGER_PERSONAL_AUTH_TOKEN=${HONEYBADGER_PERSONAL_AUTH_TOKEN}",
+                "ghcr.io/honeybadger-io/honeybadger-mcp-server:latest"
+              ],
+              "env": {
+                "HONEYBADGER_PERSONAL_AUTH_TOKEN": "your-personal-auth-token-here"
+              }
+            }
+          }
+        }
+      },
+      {
+        "step": 4,
+        "title": "Add Environment Variable",
+        "file": ".env.local",
+        "content": "HONEYBADGER_PERSONAL_AUTH_TOKEN=your-personal-auth-token-here"
+      }
+    ]
+  },
+  "features": [
+    "Direct error data access from AI assistants",
+    "Project and fault management through AI",
+    "Real-time error analysis and debugging suggestions",
+    "Integration with Claude, Cursor, Windsurf, VS Code, and Zed"
+  ],
+  "documentation": "https://github.com/honeybadger-io/honeybadger-mcp-server"
+}

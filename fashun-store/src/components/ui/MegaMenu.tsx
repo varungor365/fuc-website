@@ -349,7 +349,7 @@ const MegaMenu: React.FC<MegaMenuProps> = ({
               <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2 text-gray-400">
                   <Gift className="w-4 h-4" />
-                  <span>Free shipping over $100</span>
+                  <span>Free shipping over ₹3,000</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-400">
                   <Zap className="w-4 h-4" />

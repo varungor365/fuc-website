@@ -5,6 +5,7 @@ import { Product as CanonicalProduct, ColorVariant, SizeVariant, ProductTransfor
 export interface Product {
   id: string;
   name: string;
+  brand?: string;
   price: number;
   originalPrice?: number;
   rating: number;
@@ -24,6 +25,7 @@ export interface Product {
   inStock: boolean;
   stockCount?: number;
   category: string;
+  subcategory?: string;
   tags: string[];
   sku: string;
   weight?: number;
@@ -32,25 +34,34 @@ export interface Product {
     width: number;
     height: number;
   };
+  // Additional properties used by filters
+  isNew?: boolean;
+  isBestseller?: boolean;
+  isOnSale?: boolean;
+  isFeatured?: boolean;
+  isLimited?: boolean;
+  material?: string;
+  fit?: string;
+  reviews?: number;
 }
 
 export const mockProducts: Product[] = [
+  // 🎨 PRINTED T-SHIRTS - Core Category
   {
-    id: 'hoodie-001',
-    name: 'Urban Legends Hoodie',
-    price: 129.99,
-    originalPrice: 159.99,
+    id: 'printed-tee-001',
+    name: 'Urban Street Art Printed Tee',
+    price: 899,
+    originalPrice: 1199,
     rating: 4.8,
     reviewCount: 247,
     images: [
-      '/images/products/hoodies/urban-legends-black.jpg',
-      '/images/products/hoodies/urban-legends-black-back.jpg',
-      '/images/products/hoodies/urban-legends-black-detail.jpg'
+      '/images/products/t-shirts/tshirt-1-main.jpg',
+      '/images/products/t-shirts/tshirt-1-front.jpg'
     ],
     colors: [
-      { name: 'Black', value: '#000000', image: '/images/products/hoodies/urban-legends-black.jpg' },
-      { name: 'Gray', value: '#6B7280', image: '/images/products/hoodies/urban-legends-gray.jpg' },
-      { name: 'Navy', value: '#1E3A8A', image: '/images/products/hoodies/urban-legends-navy.jpg' }
+      { name: 'Black', value: '#000000' },
+      { name: 'White', value: '#FFFFFF' },
+      { name: 'Grey', value: '#808080' }
     ],
     sizes: [
       { name: 'XS', available: true },
@@ -58,77 +69,78 @@ export const mockProducts: Product[] = [
       { name: 'M', available: true },
       { name: 'L', available: true },
       { name: 'XL', available: true },
-      { name: 'XXL', available: false }
+      { name: 'XXL', available: true }
     ],
-    description: 'Premium heavyweight hoodie with embroidered urban legends design. Made from 100% organic cotton with a soft fleece lining.',
+    description: 'Express your individuality with this unique urban street art printed t-shirt. Premium cotton with vibrant, long-lasting prints.',
     features: [
-      '100% Organic Cotton',
-      'Heavyweight 400gsm fabric',
-      'Embroidered design',
-      'Kangaroo pocket',
-      'Adjustable drawstring hood',
-      'Pre-shrunk'
+      '100% Premium Cotton',
+      'High-Quality Screen Print',
+      'Pre-Shrunk Fabric',
+      'Regular Fit',
+      'Machine Washable'
     ],
     inStock: true,
     stockCount: 45,
-    category: 'Hoodies',
-    tags: ['streetwear', 'urban', 'premium', 'organic'],
-    sku: 'UL-HOOD-001',
-    weight: 0.8,
-    dimensions: { length: 70, width: 55, height: 3 }
+    category: 'Printed T-Shirts',
+    tags: ['printed', 'streetwear', 'urban', 'graphic'],
+    sku: 'FSN-PT-001',
+    weight: 0.2
   },
   {
-    id: 'tshirt-001',
-    name: 'Street Vibes Graphic Tee',
-    price: 49.99,
+    id: 'printed-tee-002',
+    name: 'FASHUN Typography Print',
+    price: 799,
+    originalPrice: 999,
     rating: 4.6,
     reviewCount: 189,
     images: [
-      '/images/products/tshirts/street-vibes-white.jpg',
-      '/images/products/tshirts/street-vibes-white-back.jpg'
+      '/images/products/t-shirts/tshirt-2-main.jpg',
+      '/images/products/t-shirts/tshirt-2-front.jpg'
+    ],
+    colors: [
+      { name: 'Black', value: '#000000' },
+      { name: 'Navy Blue', value: '#000080' },
+      { name: 'Burgundy', value: '#800020' }
+    ],
+    sizes: [
+      { name: 'S', available: true },
+      { name: 'M', available: true },
+      { name: 'L', available: true },
+      { name: 'XL', available: true },
+      { name: 'XXL', available: false }
+    ],
+    description: 'Bold typography design featuring the FASHUN brand aesthetic. Perfect for making a statement.',
+    features: [
+      '180 GSM Cotton',
+      'Vinyl Print Technology',
+      'Fade Resistant',
+      'Comfortable Fit',
+      'Brand Exclusive'
+    ],
+    inStock: true,
+    stockCount: 78,
+    category: 'Printed T-Shirts',
+    tags: ['typography', 'brand', 'statement', 'exclusive'],
+    sku: 'FSN-PT-002',
+    weight: 0.2
+  },
+  
+  // 👕 FULL SLEEVE T-SHIRTS
+  {
+    id: 'fullsleeve-001',
+    name: 'Essential Full Sleeve Basic',
+    price: 1199,
+    rating: 4.7,
+    reviewCount: 156,
+    images: [
+      '/images/products/hoodies/hoodie-1-main.jpg',
+      '/images/products/hoodies/hoodie-1-front.jpg'
     ],
     colors: [
       { name: 'White', value: '#FFFFFF' },
       { name: 'Black', value: '#000000' },
-      { name: 'Vintage Blue', value: '#4F46E5' }
-    ],
-    sizes: [
-      { name: 'XS', available: true },
-      { name: 'S', available: true },
-      { name: 'M', available: true },
-      { name: 'L', available: true },
-      { name: 'XL', available: false },
-      { name: 'XXL', available: false }
-    ],
-    description: 'Comfortable cotton tee with unique street art inspired graphic print. Perfect for everyday wear.',
-    features: [
-      '100% Cotton',
-      'Screen printed design',
-      'Regular fit',
-      'Crew neck',
-      'Machine washable'
-    ],
-    inStock: true,
-    stockCount: 78,
-    category: 'T-Shirts',
-    tags: ['casual', 'graphic', 'cotton', 'everyday'],
-    sku: 'SV-TEE-001',
-    weight: 0.2
-  },
-  {
-    id: 'jacket-001',
-    name: 'Neo Tech Bomber',
-    price: 199.99,
-    originalPrice: 249.99,
-    rating: 4.9,
-    reviewCount: 156,
-    images: [
-      '/images/products/jackets/neo-tech-black.jpg',
-      '/images/products/jackets/neo-tech-black-side.jpg'
-    ],
-    colors: [
-      { name: 'Black', value: '#000000' },
-      { name: 'Olive', value: '#6B7280' }
+      { name: 'Grey Melange', value: '#A9A9A9' },
+      { name: 'Navy Blue', value: '#000080' }
     ],
     sizes: [
       { name: 'S', available: true },
@@ -137,129 +149,338 @@ export const mockProducts: Product[] = [
       { name: 'XL', available: true },
       { name: 'XXL', available: true }
     ],
-    description: 'Futuristic bomber jacket with tech-inspired details. Water-resistant fabric with reflective accents.',
+    description: 'Your go-to full sleeve tee for all seasons. Comfortable, versatile, and perfect for layering.',
     features: [
-      'Water-resistant coating',
-      'Reflective details',
-      'Multiple pockets',
-      'Ribbed cuffs and hem',
-      'Lightweight construction'
+      '100% Cotton',
+      'Full Sleeve Coverage',
+      'Ribbed Cuffs',
+      'Regular Fit',
+      'All Season Wear'
     ],
     inStock: true,
     stockCount: 23,
-    category: 'Jackets',
-    tags: ['bomber', 'tech', 'water-resistant', 'reflective'],
-    sku: 'NT-BOMB-001',
-    weight: 0.6
+    category: 'Full Sleeve T-Shirts',
+    tags: ['full-sleeve', 'basic', 'layering', 'comfortable'],
+    sku: 'FSN-FS-001',
+    weight: 0.25
   },
+  
+  // 🏆 POLO T-SHIRTS
   {
-    id: 'pants-001',
-    name: 'Cargo Utility Pants',
-    price: 89.99,
-    rating: 4.4,
+    id: 'polo-001',
+    name: 'Classic Streetwear Polo',
+    price: 1499,
+    originalPrice: 1899,
+    rating: 4.5,
     reviewCount: 203,
     images: [
-      '/images/products/pants/cargo-utility-khaki.jpg',
-      '/images/products/pants/cargo-utility-khaki-back.jpg'
-    ],
-    colors: [
-      { name: 'Khaki', value: '#D2B48C' },
-      { name: 'Black', value: '#000000' },
-      { name: 'Olive', value: '#556B2F' }
-    ],
-    sizes: [
-      { name: '28', available: true },
-      { name: '30', available: true },
-      { name: '32', available: true },
-      { name: '34', available: true },
-      { name: '36', available: true },
-      { name: '38', available: false }
-    ],
-    description: 'Functional cargo pants with multiple pockets and modern streetwear aesthetic.',
-    features: [
-      'Multiple cargo pockets',
-      'Adjustable waist',
-      'Reinforced knees',
-      'Tapered fit',
-      'Cotton-poly blend'
-    ],
-    inStock: true,
-    stockCount: 67,
-    category: 'Pants',
-    tags: ['cargo', 'utility', 'functional', 'streetwear'],
-    sku: 'CU-PANT-001',
-    weight: 0.5
-  },
-  {
-    id: 'shoes-001',
-    name: 'Future Runner Sneakers',
-    price: 159.99,
-    rating: 4.7,
-    reviewCount: 324,
-    images: [
-      '/images/products/shoes/future-runner-white.jpg',
-      '/images/products/shoes/future-runner-white-side.jpg'
-    ],
-    colors: [
-      { name: 'White/Gray', value: '#FFFFFF' },
-      { name: 'Black/Red', value: '#000000' },
-      { name: 'Blue/White', value: '#3B82F6' }
-    ],
-    sizes: [
-      { name: '7', available: true },
-      { name: '8', available: true },
-      { name: '9', available: true },
-      { name: '10', available: true },
-      { name: '11', available: true },
-      { name: '12', available: false }
-    ],
-    description: 'High-performance sneakers with futuristic design and superior comfort technology.',
-    features: [
-      'Air cushioning system',
-      'Breathable mesh upper',
-      'Rubber outsole',
-      'Lightweight EVA midsole',
-      'Reflective accents'
-    ],
-    inStock: true,
-    stockCount: 89,
-    category: 'Sneakers',
-    tags: ['performance', 'comfortable', 'futuristic', 'breathable'],
-    sku: 'FR-SNKR-001',
-    weight: 0.7
-  },
-  {
-    id: 'accessory-001',
-    name: 'Urban Legend Cap',
-    price: 34.99,
-    rating: 4.5,
-    reviewCount: 178,
-    images: [
-      '/images/products/accessories/urban-legend-cap-black.jpg',
-      '/images/products/accessories/urban-legend-cap-black-back.jpg'
+      '/images/products/hoodies/hoodie-2-main.jpg',
+      '/images/products/hoodies/hoodie-2-front.jpg'
     ],
     colors: [
       { name: 'Black', value: '#000000' },
       { name: 'White', value: '#FFFFFF' },
-      { name: 'Gray', value: '#6B7280' }
+      { name: 'Olive Green', value: '#808000' }
     ],
     sizes: [
-      { name: 'One Size', available: true }
+      { name: 'S', available: true },
+      { name: 'M', available: true },
+      { name: 'L', available: true },
+      { name: 'XL', available: true },
+      { name: 'XXL', available: false }
     ],
-    description: 'Classic snapback cap with embroidered logo. Adjustable fit for maximum comfort.',
+    description: 'Elevate your casual style with this premium polo tee. Perfect blend of comfort and sophistication.',
     features: [
-      'Embroidered logo',
-      'Snapback adjustment',
-      '6-panel construction',
-      'Curved visor',
-      'Cotton twill fabric'
+      'Collar Design',
+      '3-Button Closure',
+      'Pique Cotton Fabric',
+      'Smart Casual',
+      'Breathable Material'
+    ],
+    inStock: true,
+    stockCount: 67,
+    category: 'Polo T-Shirts',
+    tags: ['polo', 'collar', 'smart-casual', 'premium'],
+    sku: 'FSN-PL-001',
+    weight: 0.22
+  },
+  
+  // 👩 WOMEN'S T-SHIRTS
+  {
+    id: 'womens-001',
+    name: 'Feminine Fit Graphic Tee',
+    price: 999,
+    originalPrice: 1299,
+    rating: 4.9,
+    reviewCount: 324,
+    images: [
+      '/images/products/t-shirts/tshirt-1-front.jpg',
+      '/images/products/t-shirts/tshirt-2-front.jpg'
+    ],
+    colors: [
+      { name: 'Pastel Pink', value: '#FFD6E8' },
+      { name: 'Lavender', value: '#E6E6FA' },
+      { name: 'White', value: '#FFFFFF' },
+      { name: 'Black', value: '#000000' }
+    ],
+    sizes: [
+      { name: 'XS', available: true },
+      { name: 'S', available: true },
+      { name: 'M', available: true },
+      { name: 'L', available: true },
+      { name: 'XL', available: true }
+    ],
+    description: 'Designed specifically for women with a flattering fit and feminine aesthetic. Comfortable and stylish.',
+    features: [
+      'Feminine Cut',
+      'Soft Cotton Blend',
+      'Flattering Fit',
+      'Crew Neckline',
+      'Women Specific Sizing'
+    ],
+    inStock: true,
+    stockCount: 89,
+    category: "Women's T-Shirts",
+    tags: ['womens', 'feminine', 'flattering', 'comfortable'],
+    sku: 'FSN-WT-001',
+    weight: 0.18
+  },
+  
+  // ✂️ CROP TOPS
+  {
+    id: 'crop-001',
+    name: 'Trendy Cropped Basic',
+    price: 699,
+    rating: 4.4,
+    reviewCount: 178,
+    images: [
+      '/images/products/accessories/cap-1-main.jpg'
+    ],
+    colors: [
+      { name: 'Black', value: '#000000' },
+      { name: 'White', value: '#FFFFFF' },
+      { name: 'Baby Pink', value: '#FFB6C1' }
+    ],
+    sizes: [
+      { name: 'XS', available: true },
+      { name: 'S', available: true },
+      { name: 'M', available: true },
+      { name: 'L', available: true },
+      { name: 'XL', available: false }
+    ],
+    description: 'Stay on-trend with this stylish cropped tee. Perfect for layering or wearing solo.',
+    features: [
+      'Cropped Length',
+      'Trendy Style',
+      'Comfortable Fit',
+      'Mix & Match Ready',
+      'Soft Fabric'
     ],
     inStock: true,
     stockCount: 156,
-    category: 'Accessories',
-    tags: ['cap', 'snapback', 'embroidered', 'adjustable'],
-    sku: 'UL-CAP-001',
-    weight: 0.1
+    category: 'Crop Tops',
+    tags: ['crop', 'trendy', 'layering', 'fashion'],
+    sku: 'FSN-CT-001',
+    weight: 0.15
+  },
+  
+  // 📏 PLUS SIZE T-SHIRTS
+  {
+    id: 'plus-001',
+    name: 'Inclusive Comfort Tee',
+    price: 1099,
+    rating: 4.8,
+    reviewCount: 145,
+    images: [
+      '/images/products/jackets/jacket-1-main.jpg'
+    ],
+    colors: [
+      { name: 'Black', value: '#000000' },
+      { name: 'Navy Blue', value: '#000080' },
+      { name: 'Grey', value: '#808080' }
+    ],
+    sizes: [
+      { name: 'XL', available: true },
+      { name: 'XXL', available: true },
+      { name: 'XXXL', available: true }
+    ],
+    description: 'Designed with extended sizes for ultimate comfort and style. Inclusive fashion for everyone.',
+    features: [
+      'Extended Sizing',
+      'Comfortable Cut',
+      'Premium Cotton',
+      'Inclusive Design',
+      'Plus Size Fit'
+    ],
+    inStock: true,
+    stockCount: 67,
+    category: 'Plus Size T-Shirts',
+    tags: ['plus-size', 'inclusive', 'comfort', 'extended'],
+    sku: 'FSN-PS-001',
+    weight: 0.23
+  },
+  
+  // ⚪ PLAIN T-SHIRTS & COMBO PACKS
+  {
+    id: 'plain-combo-001',
+    name: 'Pick Any 3 - Plain T-Shirts Combo',
+    price: 1299, // for 3 pieces
+    originalPrice: 1797, // Original ₹599 each
+    rating: 4.6,
+    reviewCount: 892,
+    images: [
+      '/images/products/t-shirts/tshirt-1-main.jpg',
+      '/images/products/t-shirts/tshirt-2-main.jpg'
+    ],
+    colors: [
+      { name: 'Black', value: '#000000' },
+      { name: 'White', value: '#FFFFFF' },
+      { name: 'Grey', value: '#808080' },
+      { name: 'Navy Blue', value: '#000080' },
+      { name: 'Olive Green', value: '#808000' }
+    ],
+    sizes: [
+      { name: 'S', available: true },
+      { name: 'M', available: true },
+      { name: 'L', available: true },
+      { name: 'XL', available: true },
+      { name: 'XXL', available: true }
+    ],
+    description: 'Build your wardrobe essentials with this value combo pack. Choose any 3 colors from our plain collection.',
+    features: [
+      'Combo Pack of 3',
+      'Mix & Match Colors',
+      'Value Pricing',
+      'Basic Essentials',
+      '100% Cotton'
+    ],
+    inStock: true,
+    stockCount: 234,
+    category: 'Plain T-Shirts',
+    tags: ['combo', 'plain', 'value', 'essentials', 'pack'],
+    sku: 'FSN-PC-001',
+    weight: 0.6
+  },
+  
+  // 👘 HOODIES
+  {
+    id: 'hoodie-001',
+    name: 'Classic FASHUN Hoodie',
+    price: 2499,
+    originalPrice: 2999,
+    rating: 4.9,
+    reviewCount: 156,
+    images: [
+      '/images/products/hoodies/hoodie-1-main.jpg',
+      '/images/products/hoodies/hoodie-1-front.jpg',
+      '/images/products/hoodies/hoodie-1-back.jpg'
+    ],
+    colors: [
+      { name: 'Black', value: '#000000' },
+      { name: 'Grey', value: '#808080' },
+      { name: 'Navy Blue', value: '#000080' }
+    ],
+    sizes: [
+      { name: 'S', available: true },
+      { name: 'M', available: true },
+      { name: 'L', available: true },
+      { name: 'XL', available: true },
+      { name: 'XXL', available: true }
+    ],
+    description: 'Premium quality hoodie with the signature FASHUN design. Perfect for casual streetwear styling.',
+    features: [
+      'Premium Cotton Blend',
+      'Kangaroo Pocket',
+      'Adjustable Hood',
+      'Ribbed Cuffs',
+      'Soft Inner Lining'
+    ],
+    inStock: true,
+    stockCount: 23,
+    category: 'Hoodies',
+    tags: ['hoodie', 'streetwear', 'comfortable', 'premium'],
+    sku: 'FSN-HD-001',
+    weight: 0.6
+  },
+  
+  // 📏 OVERSIZED HOODIES
+  {
+    id: 'oversized-hoodie-001',
+    name: 'Oversized Street Hoodie',
+    price: 2799,
+    originalPrice: 3299,
+    rating: 4.7,
+    reviewCount: 203,
+    images: [
+      '/images/products/hoodies/hoodie-2-main.jpg',
+      '/images/products/hoodies/hoodie-2-front.jpg'
+    ],
+    colors: [
+      { name: 'Black', value: '#000000' },
+      { name: 'Olive Green', value: '#808000' },
+      { name: 'Cream', value: '#F5F5DC' }
+    ],
+    sizes: [
+      { name: 'S', available: true },
+      { name: 'M', available: true },
+      { name: 'L', available: true },
+      { name: 'XL', available: true },
+      { name: 'XXL', available: false }
+    ],
+    description: 'Trendy oversized hoodie with drop shoulders. The perfect streetwear statement piece.',
+    features: [
+      'Oversized Fit',
+      'Drop Shoulder Design',
+      'Heavy Cotton',
+      'Street Style',
+      'Premium Quality'
+    ],
+    inStock: true,
+    stockCount: 67,
+    category: 'Oversized Hoodies',
+    tags: ['oversized', 'street-style', 'trendy', 'drop-shoulder'],
+    sku: 'FSN-OH-001',
+    weight: 0.7
+  },
+  
+  // 👔 SWEATSHIRTS
+  {
+    id: 'sweatshirt-001',
+    name: 'Crew Neck Sweatshirt',
+    price: 1999,
+    originalPrice: 2499,
+    rating: 4.5,
+    reviewCount: 324,
+    images: [
+      '/images/products/jackets/jacket-1-main.jpg',
+      '/images/products/jackets/jacket-1-front.jpg'
+    ],
+    colors: [
+      { name: 'Grey Melange', value: '#A9A9A9' },
+      { name: 'Black', value: '#000000' },
+      { name: 'Navy Blue', value: '#000080' }
+    ],
+    sizes: [
+      { name: 'S', available: true },
+      { name: 'M', available: true },
+      { name: 'L', available: true },
+      { name: 'XL', available: true },
+      { name: 'XXL', available: true }
+    ],
+    description: 'Classic crew neck sweatshirt without hood. Versatile piece for layering and standalone wear.',
+    features: [
+      'Crew Neckline',
+      'No Hood Design',
+      'Comfortable Fit',
+      'Soft Cotton Blend',
+      'Versatile Styling'
+    ],
+    inStock: true,
+    stockCount: 89,
+    category: 'Sweatshirts',
+    tags: ['sweatshirt', 'crew-neck', 'versatile', 'comfortable'],
+    sku: 'FSN-SW-001',
+    weight: 0.5
   }
 ];
 

@@ -144,7 +144,7 @@ interface CurrencyProviderProps {
 
 export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({
   children,
-  defaultCurrency = 'USD',
+  defaultCurrency = 'INR',
   apiKey
 }) => {
   const [currencies, setCurrencies] = useState<Currency[]>(DEFAULT_CURRENCIES);

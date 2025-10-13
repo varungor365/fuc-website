@@ -1,9 +1,6 @@
 {
-  "version": 2,
-  "buildCommand": "cd fashun-store && npm install && npm run build",
-  "outputDirectory": "fashun-store/.next",
-  "installCommand": "cd fashun-store && npm install",
-  "framework": "nextjs",
+  "buildCommand": "vercel-build.bat",
+  "installCommand": "echo \"Install handled by build script\"",
   "redirects": [
     {
       "source": "/shop",

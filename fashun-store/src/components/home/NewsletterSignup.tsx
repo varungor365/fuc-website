@@ -280,7 +280,7 @@ export default function NewsletterSignup() {
                     role: "Style Influencer"
                   },
                   {
-                    quote: "VIP discounts saved me over $500 this year. Best fashion newsletter I've ever subscribed to.",
+                    quote: "VIP discounts saved me over ₹15,000 this year. Best fashion newsletter I've ever subscribed to.",
                     name: "Taylor Smith",
                     role: "Creative Director"
                   }

@@ -478,7 +478,7 @@ export const DEFAULT_POPUPS: PopupConfig[] = [
     type: 'time-based',
     variant: 'free-shipping',
     title: 'Free Shipping Available!',
-    subtitle: 'On Orders Over $100',
+    subtitle: 'On Orders Over ₹3,000',
     description: 'Add a few more items to your cart and enjoy free shipping.',
     ctaText: 'Continue Shopping',
     ctaUrl: '/products',

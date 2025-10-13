@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, CreditCard, Truck, Apple, Chrome, Loader2, Check, AlertCircle } from 'lucide-react';
-import OneClickCheckoutService, { CartItem, CheckoutProfile, PaymentMethod, ShippingAddress } from '@/lib/one-click-checkout';
+import oneClickCheckoutService, { CartItem, CheckoutProfile, PaymentMethod, ShippingAddress } from '@/lib/one-click-checkout';
 
 interface OneClickCheckoutProps {
   items: CartItem[];
@@ -26,7 +26,7 @@ const OneClickCheckout: React.FC<OneClickCheckoutProps> = ({
   const [showExpressOptions, setShowExpressOptions] = useState(true);
   const [expressLoading, setExpressLoading] = useState<'apple' | 'google' | null>(null);
 
-  const checkoutService = new OneClickCheckoutService();
+  const checkoutService = oneClickCheckoutService;
 
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
@@ -45,8 +45,8 @@ const OneClickCheckout: React.FC<OneClickCheckoutProps> = ({
       setProfile(userProfile);
       
       if (userProfile) {
-        setSelectedPayment(userProfile.defaultPaymentId || userProfile.paymentMethods[0]?.id || '');
-        setSelectedShipping(userProfile.defaultShippingId || userProfile.shippingAddresses[0]?.id || '');
+        setSelectedPayment(userProfile.defaultPayment?.id || '');
+        setSelectedShipping(userProfile.defaultShipping?.id || '');
       }
     } catch (error) {
       console.error('Error loading checkout profile:', error);
@@ -129,14 +129,14 @@ const OneClickCheckout: React.FC<OneClickCheckoutProps> = ({
   };
 
   const isApplePayAvailable = () => {
-    return window.ApplePaySession && window.ApplePaySession.canMakePayments();
+    return !!(window as any).ApplePaySession && (window as any).ApplePaySession.canMakePayments();
   };
 
   const isGooglePayAvailable = () => {
-    return window.google?.payments?.api;
+    return !!(window as any).google?.payments?.api;
   };
 
-  const canUseOneClick = profile && profile.paymentMethods.length > 0 && profile.shippingAddresses.length > 0;
+  const canUseOneClick = profile && profile.defaultPayment && profile.defaultShipping;
 
   return (
     <div className={`bg-white rounded-lg border p-6 ${className}`}>
@@ -159,7 +159,7 @@ const OneClickCheckout: React.FC<OneClickCheckoutProps> = ({
           {items.slice(0, 2).map((item, index) => (
             <div key={index} className="flex justify-between text-sm">
               <span className="text-gray-600 truncate">
-                {item.title} {item.size && `(${item.size})`}
+                {item.name}
               </span>
               <span className="text-gray-900">
                 ${(item.price * item.quantity).toFixed(2)}
@@ -236,12 +236,12 @@ const OneClickCheckout: React.FC<OneClickCheckoutProps> = ({
               onChange={(e) => setSelectedPayment(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              {profile?.paymentMethods.map((method) => (
-                <option key={method.id} value={method.id}>
-                  {method.brand ? `${method.brand.toUpperCase()} ****${method.last4}` : method.type}
-                  {method.isDefault && ' (Default)'}
+              {profile?.defaultPayment && (
+                <option value={profile.defaultPayment.id}>
+                  {profile.defaultPayment.provider} ****{profile.defaultPayment.last4}
+                  {profile.defaultPayment.isDefault && ' (Default)'}
                 </option>
-              ))}
+              )}
             </select>
           </div>
 
@@ -256,12 +256,12 @@ const OneClickCheckout: React.FC<OneClickCheckoutProps> = ({
               onChange={(e) => setSelectedShipping(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              {profile?.shippingAddresses.map((address) => (
-                <option key={address.id} value={address.id}>
-                  {address.name} - {address.address1}, {address.city}
-                  {address.isDefault && ' (Default)'}
+              {profile?.defaultShipping && (
+                <option value={profile.defaultShipping.id}>
+                  {profile.defaultShipping.name} - {profile.defaultShipping.street}, {profile.defaultShipping.city}
+                  {profile.defaultShipping.isDefault && ' (Default)'}
                 </option>
-              ))}
+              )}
             </select>
           </div>
 

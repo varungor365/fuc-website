@@ -6,8 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   XMarkIcon,
   InformationCircleIcon,
-  RulerIcon
-} from '@heroicons/24/outline'
+  ScaleIcon
+} from '@heroicons/react/24/outline'
 
 interface SizeData {
   size: string
@@ -154,7 +154,7 @@ export default function SizeGuide({ isOpen, onClose, category, productType = '' 
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-purple-500/10 to-pink-500/10">
                 <div className="flex items-center space-x-3">
-                  <RulerIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                  <ScaleIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                   <div>
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                       Size Guide

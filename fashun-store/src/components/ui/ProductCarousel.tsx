@@ -13,8 +13,8 @@ import {
   ShoppingBagIcon,
   HeartIcon,
   StarIcon as StarOutline
-} from '@heroicons/24/outline'
-import { HeartIcon as HeartSolid, StarIcon as StarSolid } from '@heroicons/24/solid'
+} from '@heroicons/react/24/outline'
+import { HeartIcon as HeartSolid, StarIcon as StarSolid } from '@heroicons/react/24/solid'
 
 interface Product {
   id: string

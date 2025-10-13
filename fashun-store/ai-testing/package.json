@@ -1,0 +1,26 @@
+{
+  "name": "fashun-ai-testing",
+  "version": "1.0.0",
+  "description": "AI-powered testing framework for Fashun.co.in",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:frontend": "node agents/frontend-tester.js",
+    "test:api": "node agents/api-tester.js",
+    "analyze": "node agents/code-analyzer.js",
+    "fix": "node agents/auto-fixer.js"
+  },
+  "keywords": ["ai", "testing", "automation", "fashun"],
+  "author": "Fashun Development Team",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^21.0.0",
+    "axe-core": "^4.8.0",
+    "lighthouse": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/puppeteer": "^7.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,141 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: fashun-postgres
+    environment:
+      POSTGRES_DB: fashun_medusa
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fashun-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: fashun-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - fashun-network
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: fashun-meilisearch
+    environment:
+      MEILI_MASTER_KEY: ${MEILISEARCH_KEY:-masterKey}
+      MEILI_ENV: production
+    ports:
+      - "7700:7700"
+    volumes:
+      - meilisearch_data:/meili_data
+    networks:
+      - fashun-network
+
+  medusa:
+    build:
+      context: ./fashun-medusa-backend
+      dockerfile: Dockerfile
+    container_name: fashun-medusa
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "9000:9000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/fashun_medusa
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      STORE_CORS: ${STORE_CORS:-http://localhost:3000}
+      ADMIN_CORS: ${ADMIN_CORS:-http://localhost:7001}
+    networks:
+      - fashun-network
+
+  frontend:
+    build:
+      context: ./fashun-store
+      dockerfile: Dockerfile
+    container_name: fashun-frontend
+    depends_on:
+      - medusa
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_MEDUSA_URL: http://medusa:9000
+      NEXT_PUBLIC_MEILISEARCH_URL: http://meilisearch:7700
+    networks:
+      - fashun-network
+
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: fashun-umami
+    depends_on:
+      - postgres
+    ports:
+      - "3001:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/umami
+      DATABASE_TYPE: postgresql
+      APP_SECRET: ${UMAMI_SECRET:-umami-secret}
+    networks:
+      - fashun-network
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: fashun-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      N8N_BASIC_AUTH_ACTIVE: true
+      N8N_BASIC_AUTH_USER: ${N8N_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD:-admin}
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678}
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - fashun-network
+
+  listmonk:
+    image: listmonk/listmonk:latest
+    container_name: fashun-listmonk
+    depends_on:
+      - postgres
+    ports:
+      - "9001:9000"
+    environment:
+      LISTMONK_app__address: 0.0.0.0:9000
+      LISTMONK_db__host: postgres
+      LISTMONK_db__port: 5432
+      LISTMONK_db__user: postgres
+      LISTMONK_db__password: postgres
+      LISTMONK_db__database: listmonk
+    networks:
+      - fashun-network
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: fashun-uptime
+    ports:
+      - "3002:3001"
+    volumes:
+      - uptime_data:/app/data
+    networks:
+      - fashun-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  meilisearch_data:
+  n8n_data:
+  uptime_data:
+
+networks:
+  fashun-network:
+    driver: bridge

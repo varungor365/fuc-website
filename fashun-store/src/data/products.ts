@@ -4,10 +4,13 @@
 import { mockProducts } from './mockProducts';
 
 export * from './mockProducts';
-export { mockProducts as products };
+export { mockProducts as products, mockProducts as default };
+
+// Export categories from config with backward compatibility
+export { productCategories as categories } from '../config/products';
 
 // Legacy categories structure for backward compatibility
-export const categories = {
+export const legacyCategories = {
   'hoodies': {
     name: 'Hoodies',
     description: 'Premium streetwear hoodies',
@@ -38,10 +41,4 @@ export const categories = {
     description: 'Complete your look',
     subcategories: ['hats', 'bags', 'jewelry', 'belts']
   }
-};
-
-// Export default for legacy imports
-export default {
-  products: mockProducts,
-  categories
 };

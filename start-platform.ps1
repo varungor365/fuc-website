@@ -1,5 +1,5 @@
 # FASHUN.CO Platform Startup Script
-# This script starts all components of the FASHUN platform
+# This script starts all components of the FASHUN platform (ASCII-safe)
 
 param(
     [switch]$SkipFrontend,
@@ -45,29 +45,29 @@ Examples:
 }
 
 function Test-Prerequisites {
-    Write-ColorOutput $Blue "🔍 Checking prerequisites..."
+    Write-ColorOutput $Blue "[INFO] Checking prerequisites..."
     
     # Check Node.js
     try {
         $nodeVersion = node --version
-        Write-ColorOutput $Green "✅ Node.js version: $nodeVersion"
+        Write-ColorOutput $Green "[OK] Node.js version: $nodeVersion"
     } catch {
-        Write-ColorOutput $Red "❌ Node.js not found. Please install Node.js 18+"
+        Write-ColorOutput $Red "[ERROR] Node.js not found. Please install Node.js 18+"
         exit 1
     }
     
     # Check npm
     try {
         $npmVersion = npm --version
-        Write-ColorOutput $Green "✅ npm version: $npmVersion"
+        Write-ColorOutput $Green "[OK] npm version: $npmVersion"
     } catch {
-        Write-ColorOutput $Red "❌ npm not found"
+        Write-ColorOutput $Red "[ERROR] npm not found"
         exit 1
     }
 }
 
 function Initialize-Environment {
-    Write-ColorOutput $Blue "🔧 Setting up environment..."
+    Write-ColorOutput $Blue "[INFO] Setting up environment..."
     
     # Check if .env files exist and create from examples if not
     $envFiles = @(
@@ -79,17 +79,17 @@ function Initialize-Environment {
     foreach ($env in $envFiles) {
         if (!(Test-Path $env.Path) -and (Test-Path $env.Example)) {
             Copy-Item $env.Example $env.Path
-            Write-ColorOutput $Yellow "⚠️  Created $($env.Path) from example. Please configure it."
+            Write-ColorOutput $Yellow "[WARN] Created $($env.Path) from example. Please configure it."
         }
     }
 }
 
 function Install-Dependencies {
-    Write-ColorOutput $Blue "📦 Installing dependencies..."
+    Write-ColorOutput $Blue "[INFO] Installing dependencies..."
     
     # Backend dependencies
     if (!(Test-Path "fashun-backend\node_modules") -or $Force) {
-        Write-ColorOutput $Yellow "Installing backend dependencies..."
+        Write-ColorOutput $Yellow "[INFO] Installing backend dependencies..."
         Set-Location "fashun-backend"
         npm install
         Set-Location ".."
@@ -97,7 +97,7 @@ function Install-Dependencies {
     
     # Frontend dependencies
     if (!(Test-Path "fashun-store\node_modules") -or $Force) {
-        Write-ColorOutput $Yellow "Installing frontend dependencies..."
+        Write-ColorOutput $Yellow "[INFO] Installing frontend dependencies..."
         Set-Location "fashun-store"
         npm install
         Set-Location ".."
@@ -105,70 +105,76 @@ function Install-Dependencies {
     
     # AI service dependencies
     if (!(Test-Path "ai-mockup-service\node_modules") -or $Force) {
-        Write-ColorOutput $Yellow "Installing AI service dependencies..."
+        Write-ColorOutput $Yellow "[INFO] Installing AI service dependencies..."
         Set-Location "ai-mockup-service"
         npm install
         Set-Location ".."
     }
     
-    Write-ColorOutput $Green "✅ All dependencies installed"
+    Write-ColorOutput $Green "[OK] All dependencies installed"
 }
 
 function Start-Backend {
     if ($SkipBackend) {
-        Write-ColorOutput $Yellow "⏭️  Skipping backend (Strapi)"
+        Write-ColorOutput $Yellow "[SKIP] Skipping backend (Strapi)"
         return
     }
     
-    Write-ColorOutput $Blue "🚀 Starting Strapi backend..."
+    Write-ColorOutput $Blue "[INFO] Starting Strapi backend..."
     
     Start-Process powershell -ArgumentList @(
         "-NoExit", 
         "-Command", 
-        "cd '$PWD\fashun-backend'; Write-Host '🎯 Strapi Backend Starting...' -ForegroundColor Green; npm run dev"
+        "cd '$PWD\fashun-backend'; Write-Host 'Strapi Backend Starting...' -ForegroundColor Green; npm run dev"
     ) -WindowStyle Normal
     
-    Write-ColorOutput $Green "✅ Backend started at http://localhost:1337"
+    Write-ColorOutput $Green "[OK] Backend started at http://localhost:1337"
 }
 
 function Start-AI-Service {
     if ($SkipAI) {
-        Write-ColorOutput $Yellow "⏭️  Skipping AI service"
+        Write-ColorOutput $Yellow "[SKIP] Skipping AI service"
         return
     }
     
-    Write-ColorOutput $Blue "🤖 Starting AI Mockup Service..."
+    Write-ColorOutput $Blue "[INFO] Starting AI Mockup Service..."
     
     Start-Process powershell -ArgumentList @(
         "-NoExit", 
         "-Command", 
-        "cd '$PWD\ai-mockup-service'; Write-Host '🎨 AI Service Starting...' -ForegroundColor Green; npm run dev"
+        "cd '$PWD\ai-mockup-service'; Write-Host 'AI Service Starting...' -ForegroundColor Green; npm run dev"
     ) -WindowStyle Normal
     
-    Write-ColorOutput $Green "✅ AI service started at http://localhost:3001"
+    Write-ColorOutput $Green "[OK] AI service started at http://localhost:3001"
 }
 
 function Start-Frontend {
     if ($SkipFrontend) {
-        Write-ColorOutput $Yellow "⏭️  Skipping frontend (Next.js)"
+        Write-ColorOutput $Yellow "[SKIP] Skipping frontend (Next.js)"
         return
     }
     
-    Write-ColorOutput $Blue "🌐 Starting Next.js frontend..."
+    Write-ColorOutput $Blue "[INFO] Starting Next.js frontend..."
     
-    $command = if ($Production) { "npm run build && npm start" } else { "npm run dev" }
+    if ($Production) {
+        Start-Process powershell -ArgumentList @(
+            "-NoExit",
+            "-Command",
+            "cd '$PWD\fashun-store'; Write-Host 'Next.js Frontend Starting...' -ForegroundColor Green; npm run build; npm start"
+        ) -WindowStyle Normal
+    } else {
+        Start-Process powershell -ArgumentList @(
+            "-NoExit",
+            "-Command",
+            "cd '$PWD\fashun-store'; Write-Host 'Next.js Frontend Starting...' -ForegroundColor Green; npm run dev"
+        ) -WindowStyle Normal
+    }
     
-    Start-Process powershell -ArgumentList @(
-        "-NoExit", 
-        "-Command", 
-        "cd '$PWD\fashun-store'; Write-Host '🎯 Next.js Frontend Starting...' -ForegroundColor Green; $command"
-    ) -WindowStyle Normal
-    
-    Write-ColorOutput $Green "✅ Frontend started at http://localhost:3000"
+    Write-ColorOutput $Green "[OK] Frontend started at http://localhost:3000"
 }
 
 function Test-Services {
-    Write-ColorOutput $Blue "🧪 Testing services..."
+    Write-ColorOutput $Blue "[INFO] Testing services..."
     Start-Sleep 10  # Wait for services to start
     
     $services = @(
@@ -183,12 +189,12 @@ function Test-Services {
         try {
             $response = Invoke-WebRequest -Uri $service.URL -TimeoutSec 10
             if ($response.StatusCode -eq 200) {
-                Write-ColorOutput $Green "✅ $($service.Name) is healthy"
+                Write-ColorOutput $Green "[OK] $($service.Name) is healthy"
             } else {
-                Write-ColorOutput $Yellow "⚠️  $($service.Name) returned status $($response.StatusCode)"
+                Write-ColorOutput $Yellow "[WARN] $($service.Name) returned status $($response.StatusCode)"
             }
         } catch {
-            Write-ColorOutput $Red "❌ $($service.Name) health check failed"
+            Write-ColorOutput $Red "[ERROR] $($service.Name) health check failed"
         }
     }
 }
@@ -196,40 +202,40 @@ function Test-Services {
 function Show-Dashboard {
     Write-ColorOutput $Blue @"
 
-🎉 FASHUN.CO Platform Status
-============================
+FASHUN.CO Platform Status
+=========================
 
 Services Running:
 "@
     
     if (!$SkipBackend) {
-        Write-ColorOutput $Green "🎯 Strapi Backend    : http://localhost:1337"
-        Write-ColorOutput $Green "   Admin Panel       : http://localhost:1337/admin"
+        Write-ColorOutput $Green "Strapi Backend    : http://localhost:1337"
+        Write-ColorOutput $Green "  Admin Panel     : http://localhost:1337/admin"
     }
     
     if (!$SkipAI) {
-        Write-ColorOutput $Green "🤖 AI Mockup Service : http://localhost:3001"
-        Write-ColorOutput $Green "   Health Check      : http://localhost:3001/health"
+        Write-ColorOutput $Green "AI Mockup Service : http://localhost:3001"
+        Write-ColorOutput $Green "  Health Check    : http://localhost:3001/health"
     }
     
     if (!$SkipFrontend) {
-        Write-ColorOutput $Green "🌐 Next.js Frontend  : http://localhost:3000"
+        Write-ColorOutput $Green "Next.js Frontend  : http://localhost:3000"
     }
     
     Write-ColorOutput $Blue @"
 
-📋 Next Steps:
-==============
+Next Steps:
+===========
 1. Configure your environment variables in .env files
 2. Set up your Stripe keys for payments
 3. Configure your AI service API keys
 4. Access the admin panel to add products
 5. Test the frontend functionality
 
-⚡ Quick Commands:
-=================
+Quick Commands:
+===============
 - Backend logs    : Check the Strapi window
-- Frontend logs   : Check the Next.js window  
+- Frontend logs   : Check the Next.js window
 - AI service logs : Check the AI service window
 - Stop all        : Close all PowerShell windows
 
@@ -237,11 +243,11 @@ Services Running:
 }
 
 function Run-Platform-Tests {
-    Write-ColorOutput $Blue "🧪 Running platform tests..."
+    Write-ColorOutput $Blue "[INFO] Running platform tests..."
     
     # Test backend
     if (!$SkipBackend) {
-        Write-ColorOutput $Yellow "Testing backend..."
+        Write-ColorOutput $Yellow "[TEST] Testing backend..."
         Set-Location "fashun-backend"
         # Add backend tests here when available
         Set-Location ".."
@@ -249,7 +255,7 @@ function Run-Platform-Tests {
     
     # Test frontend
     if (!$SkipFrontend) {
-        Write-ColorOutput $Yellow "Testing frontend..."
+        Write-ColorOutput $Yellow "[TEST] Testing frontend..."
         Set-Location "fashun-store"
         # Add frontend tests here when available
         Set-Location ".."
@@ -257,7 +263,7 @@ function Run-Platform-Tests {
     
     # Test AI service
     if (!$SkipAI) {
-        Write-ColorOutput $Yellow "Testing AI service..."
+        Write-ColorOutput $Yellow "[TEST] Testing AI service..."
         Set-Location "ai-mockup-service"
         # Add AI service tests here when available
         Set-Location ".."
@@ -271,8 +277,8 @@ if ($Help) {
 }
 
 Write-ColorOutput $Green @"
-🚀 FASHUN.CO Platform Startup
-=============================
+FASHUN.CO Platform Startup
+==========================
 "@
 
 Test-Prerequisites
@@ -298,8 +304,8 @@ if ($Test) {
 
 Show-Dashboard
 
-Write-ColorOutput $Green "🎉 FASHUN.CO platform is ready!"
-Write-ColorOutput $Yellow "⚠️  Keep this window open to see the platform status."
+Write-ColorOutput $Green "[READY] FASHUN.CO platform is ready!"
+Write-ColorOutput $Yellow "[NOTE] Keep this window open to see the platform status."
 Write-ColorOutput $Blue "Press Ctrl+C to stop monitoring (services will continue running)"
 
 # Keep the script running to show status
@@ -309,5 +315,5 @@ try {
         # Could add periodic health checks here
     }
 } catch {
-    Write-ColorOutput $Yellow "👋 Platform monitoring stopped. Services are still running."
+    Write-ColorOutput $Yellow "[INFO] Platform monitoring stopped. Services are still running."
 }

@@ -19,6 +19,7 @@ interface APIKey {
   service: string
   keyName: string
   keyValue: string
+  secretValue?: string
   status: 'active' | 'inactive' | 'expired'
   lastTested?: string
   createdAt: string
@@ -150,7 +151,7 @@ export default function APIKeysPage() {
       if (!existingKey) {
         setTestResults(prev => ({ 
           ...prev, 
-          [service]: { success: false, error: 'No API key configured' } 
+          [service]: { success: false, message: 'No API key configured' } 
         }))
         return
       }
@@ -192,7 +193,7 @@ export default function APIKeysPage() {
     } catch (error) {
       setTestResults(prev => ({ 
         ...prev, 
-        [service]: { success: false, error: 'Connection failed' } 
+        [service]: { success: false, message: 'Connection failed' } 
       }))
     } finally {
       setLoading(false)

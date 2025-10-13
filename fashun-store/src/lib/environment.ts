@@ -70,6 +70,8 @@ const envSchema = z.object({
   
   // Feature Flags
   VERCEL_ENV: z.enum(['development', 'preview', 'production']).optional(),
+  NEXT_PUBLIC_CONFIGCAT_SDK_KEY: z.string().optional(),
+  CONFIGCAT_SDK_KEY: z.string().optional(),
   
   // Security
   JWT_SECRET: z.string().min(32),
@@ -138,8 +140,36 @@ class EnvironmentManager {
 
   private validateAndLoad(): void {
     try {
-      // Validate environment variables
-      const envVars = envSchema.parse(process.env);
+      // In development, make validation more lenient
+      let envVars;
+      if (this.environment === 'development') {
+        // Use safeParse for development to avoid throwing
+        const result = envSchema.safeParse(process.env);
+        if (result.success) {
+          envVars = result.data;
+        } else {
+          console.warn('⚠️ Some environment variables are missing in development mode:', result.error.format());
+          // Use partial parsing with defaults
+          envVars = {
+            NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+            NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME || 'FASHUN.CO.IN',
+            NEXT_PUBLIC_APP_VERSION: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
+            DATABASE_URL: process.env.DATABASE_URL || 'postgresql://localhost:5432/fashun_dev',
+            NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || 'dev-secret-key-min-32-chars-long!',
+            NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'http://localhost:3000',
+            STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_dev_key',
+            NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_dev_key',
+            STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || 'whsec_dev_secret',
+            JWT_SECRET: process.env.JWT_SECRET || 'dev-jwt-secret-key-min-32-chars!',
+            ENCRYPTION_KEY: process.env.ENCRYPTION_KEY || 'dev-encryption-key-32-chars-min!',
+            ...process.env,
+            NODE_ENV: 'development'
+          };
+        }
+      } else {
+        // Strict validation for staging/production
+        envVars = envSchema.parse(process.env);
+      }
       
       // Merge with environment-specific config
       const envConfig = environmentConfigs[this.environment as keyof typeof environmentConfigs] || environmentConfigs.development;
@@ -159,8 +189,25 @@ class EnvironmentManager {
       console.log(`📦 App: ${this.config.NEXT_PUBLIC_APP_NAME} v${this.config.NEXT_PUBLIC_APP_VERSION}`);
       
     } catch (error) {
-      console.error('❌ Environment configuration validation failed:', error);
-      throw new Error('Invalid environment configuration');
+      if (this.environment === 'development') {
+        console.warn('⚠️ Environment configuration validation failed in development mode:', error);
+        // Continue with minimal config in development
+        this.config = {
+          NODE_ENV: 'development',
+          NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
+          NEXT_PUBLIC_APP_NAME: 'FASHUN.CO.IN',
+          NEXT_PUBLIC_APP_VERSION: '1.0.0',
+          ...environmentConfigs.development,
+          ENVIRONMENT: 'development',
+          IS_DEVELOPMENT: true,
+          IS_STAGING: false,
+          IS_PRODUCTION: false,
+          BUILD_TIME: new Date().toISOString(),
+        };
+      } else {
+        console.error('❌ Environment configuration validation failed:', error);
+        throw new Error('Invalid environment configuration');
+      }
     }
   }
 

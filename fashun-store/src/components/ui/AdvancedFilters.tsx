@@ -5,10 +5,15 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   FunnelIcon,
+  MagnifyingGlassIcon,
   XMarkIcon,
+  CheckIcon,
+  StarIcon,
+  CurrencyDollarIcon,
+  TagIcon,
   AdjustmentsHorizontalIcon,
   ChevronDownIcon
-} from '@heroicons/24/outline'
+} from '@heroicons/react/24/outline'
 
 export interface FilterOptions {
   categories: string[]

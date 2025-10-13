@@ -1,5 +1,3 @@
-import { NextSEO } from 'next-seo'
-
 const SEO = {
   title: 'FashUn.Co.in - Premium Streetwear & Custom Apparel',
   description: 'Discover premium streetwear and custom apparel at FashUn.Co.in. Oversized hoodies, tees, and unique prints designed for Gen-Z fashion lovers.',

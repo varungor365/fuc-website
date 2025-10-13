@@ -1,0 +1,40 @@
+name: Visual Regression Testing
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  visual-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: |
+          cd fashun-store
+          npm install
+          npx playwright install --with-deps
+      
+      - name: Build
+        run: |
+          cd fashun-store
+          npm run build
+      
+      - name: Run visual tests
+        run: |
+          cd fashun-store
+          npx playwright test --project=chromium
+      
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: visual-regression-screenshots
+          path: fashun-store/test-results/
+          retention-days: 30

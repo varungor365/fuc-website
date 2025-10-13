@@ -2,7 +2,7 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home, Mail } from 'lucide-react';
-import MonitoringService from '@/lib/monitoring';
+import Honeybadger from '@/lib/honeybadger';
 
 interface Props {
   children: ReactNode;
@@ -18,12 +18,9 @@ interface State {
 }
 
 class ErrorBoundary extends Component<Props, State> {
-  private monitoring: MonitoringService;
-
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false };
-    this.monitoring = MonitoringService.getInstance();
   }
 
   static getDerivedStateFromError(error: Error): State {
@@ -36,22 +33,19 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Capture error in monitoring system
-    this.monitoring.captureError({
-      message: error.message,
-      stack: error.stack,
-      url: window.location.href,
-      timestamp: Date.now(),
-      userAgent: navigator.userAgent,
-      sessionId: 'current_session'
+    // Report to Honeybadger
+    Honeybadger.notify(error, {
+      context: {
+        errorInfo: errorInfo.componentStack,
+        errorId: this.state.errorId,
+        level: this.props.level || 'component'
+      }
     });
 
     this.setState({
       error,
       errorInfo
     });
-
-    // Report to external error tracking services
     this.reportError(error, errorInfo);
   }
 

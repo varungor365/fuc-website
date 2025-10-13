@@ -443,22 +443,22 @@ export default function ProductDetailPage() {
 
             {/* Color Selection */}
             <div>
-              <h3 className="text-lg font-medium mb-3">Color: {selectedColor.name}</h3>
+              <h3 className="text-lg font-medium mb-3">Color: {selectedColor || 'Select a color'}</h3>
               <div className="flex gap-3">
                 {product.colors.map((color) => (
                   <motion.button
                     key={color.name}
-                    onClick={() => color.available && setSelectedColor(color)}
-                    disabled={!color.available}
+                    onClick={() => color.stock > 0 && setSelectedColor(color.name)}
+                    disabled={color.stock === 0}
                     className={`w-12 h-12 rounded-full border-4 transition-all ${
-                      selectedColor.name === color.name
+                      selectedColor === color.name
                         ? 'border-white scale-110'
                         : 'border-white/20 hover:border-white/50'
-                    } ${!color.available ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    style={{ backgroundColor: color.value }}
+                    } ${color.stock === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    style={{ backgroundColor: color.colorCode }}
                     title={color.name}
-                    whileHover={color.available ? { scale: 1.1 } : {}}
-                    whileTap={color.available ? { scale: 0.95 } : {}}
+                    whileHover={color.stock > 0 ? { scale: 1.1 } : {}}
+                    whileTap={color.stock > 0 ? { scale: 0.95 } : {}}
                   />
                 ))}
               </div>
