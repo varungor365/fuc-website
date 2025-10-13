@@ -1,3 +1,7 @@
+// Import canonical types
+import { Product as CanonicalProduct, ColorVariant, SizeVariant, ProductTransformer } from '../types/product';
+
+// Legacy interface for backward compatibility
 export interface Product {
   id: string;
   name: string;

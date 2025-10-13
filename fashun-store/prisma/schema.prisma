@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  service     String   @unique
+  keyValue    String   // Encrypted
+  secretValue String?  // Encrypted
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastUsed    DateTime?
+  
+  // Audit fields
+  createdBy   String?
+  updatedBy   String?
+  
+  // Relations
+  auditLogs   ApiKeyAuditLog[]
+  
+  @@map("api_keys")
+}
+
+model ApiKeyAuditLog {
+  id        String   @id @default(cuid())
+  apiKeyId  String?
+  service   String
+  action    String   // CREATE, UPDATE, DELETE, TEST, USE
+  userId    String?
+  userAgent String?
+  ipAddress String?
+  metadata  Json?
+  timestamp DateTime @default(now())
+  
+  apiKey    ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  
+  @@map("api_key_audit_logs")
+}
