@@ -31,6 +31,35 @@ In a new SQL query, copy and paste: `011_security_policies.sql`
 ### Step 3: Insert Sample Data (Optional)
 For development/testing, execute: `012_sample_data.sql`
 
+## Troubleshooting
+
+### Common PostgreSQL Syntax Errors
+
+#### Error: "syntax error at or near 'NOT'"
+**Issue:** PostgreSQL doesn't support `CREATE TYPE IF NOT EXISTS` syntax
+**Solution:** The schema has been updated to use proper PostgreSQL syntax. If you see this error:
+1. Use the updated `010_complete_fashun_schema.sql` file 
+2. Or run `deploy-schema.sql` first to create the enum type correctly
+3. Ensure you're using the latest version of the schema files
+
+#### Error: "type already exists"
+**Solution:** Run this command first to clean up:
+```sql
+DROP TYPE IF EXISTS public.event_type CASCADE;
+```
+
+#### Error: "relation already exists"
+**Solution:** The schema uses `CREATE TABLE IF NOT EXISTS` which is safe to re-run
+**For fresh deployment:** Add `DROP TABLE IF EXISTS tablename CASCADE;` before creation
+
+### Deployment Checklist
+- [ ] Execute `010_complete_fashun_schema.sql` (core tables and functions)
+- [ ] Execute `011_security_policies.sql` (RLS policies)  
+- [ ] Execute `012_sample_data.sql` (optional sample data)
+- [ ] Verify all 19 tables created successfully
+- [ ] Test RLS policies with authenticated users
+- [ ] Confirm enum types created without errors
+
 ## Key Features
 
 ### 🔐 Security Implementation
