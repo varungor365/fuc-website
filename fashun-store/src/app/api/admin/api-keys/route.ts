@@ -82,34 +82,24 @@ function isAdminAuthenticated(request: NextRequest): boolean {
   
   return true // Allow in development
 }
->>>>>>> fa67490ae7cdb0419809cce851f9dcac45b31879
 
 // GET - Fetch all API keys (masked)
 export async function GET(request: NextRequest) {
   try {
-    const auth = await AuthService.authenticateAdmin(request)
-    if (!auth.isAuthenticated) {
+    if (!isAdminAuthenticated(request)) {
       return NextResponse.json(
-        { error: auth.error },
-        { status: auth.statusCode || 401 }
+        { error: 'Unauthorized' },
+        { status: 401 }
       )
     }
 
-    const keys = await ApiKeyService.getAllKeys(auth.userId)
-    
-    // Transform to the expected format
+    // Return masked keys from the store
     const maskedKeys: Record<string, any> = {}
-    keys.forEach((key: any) => {
-      maskedKeys[key.service] = {
-        id: key.service,
-        service: key.service,
-        keyName: 'API Key',
-        keyValue: key.keyValue,
-        secretValue: key.secretValue,
-        status: key.isActive ? 'active' : 'inactive',
-        lastTested: key.lastUsed,
-        createdAt: key.createdAt.toISOString(),
-        updatedAt: key.updatedAt.toISOString()
+    
+    Object.entries(apiKeysStore).forEach(([key, value]) => {
+      maskedKeys[key] = {
+        ...value,
+        keyValue: maskKey(decrypt(value.keyValue))
       }
     })
 
@@ -127,11 +117,10 @@ export async function GET(request: NextRequest) {
 // POST - Create or update API key
 export async function POST(request: NextRequest) {
   try {
-    const auth = await AuthService.authenticateAdmin(request)
-    if (!auth.isAuthenticated) {
+    if (!isAdminAuthenticated(request)) {
       return NextResponse.json(
-        { error: auth.error },
-        { status: auth.statusCode || 401 }
+        { error: 'Unauthorized' },
+        { status: 401 }
       )
     }
 
@@ -145,24 +134,25 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const savedKey = await ApiKeyService.upsertKey(
+    // Store the encrypted key
+    const now = new Date().toISOString()
+    apiKeysStore[service] = {
+      id: service,
       service,
-      keyValue,
-      secretValue,
-      auth.userId,
-      request
-    )
-
-    const response = {
-      id: savedKey.service,
-      service: savedKey.service,
       keyName: 'API Key',
-      keyValue: savedKey.keyValue,
-      secretValue: savedKey.secretValue,
-      status: savedKey.isActive ? 'active' : 'inactive',
-      lastTested: savedKey.lastUsed,
-      createdAt: savedKey.createdAt.toISOString(),
-      updatedAt: savedKey.updatedAt.toISOString()
+      keyValue: encrypt(keyValue),
+      secretValue: secretValue ? encrypt(secretValue) : undefined,
+      status: 'active',
+      lastTested: now,
+      createdAt: apiKeysStore[service]?.createdAt || now,
+      updatedAt: now
+    }
+
+    // Return the saved key with masked value
+    const response = {
+      ...apiKeysStore[service],
+      keyValue: maskKey(keyValue),
+      secretValue: secretValue ? maskKey(secretValue) : undefined
     }
 
     return NextResponse.json(response)
