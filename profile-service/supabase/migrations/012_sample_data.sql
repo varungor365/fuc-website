@@ -3,11 +3,70 @@
 -- Insert demo data for testing and development
 -- =============================================
 
--- Insert sample profiles
-INSERT INTO public.profiles (id, username, display_name, bio, profile_image_url, theme_settings, qr_settings, custom_qr_url, affiliate_code) VALUES
-('550e8400-e29b-41d4-a716-446655440000', 'johndoe', 'John Doe', 'Fashion enthusiast and entrepreneur. Sharing my style journey and business insights.', '/demo/john-profile.jpg', '{"primaryColor": "#3B82F6", "backgroundColor": "#F8FAFC", "theme": "modern"}', '{"style": "squares", "color": "#3B82F6", "logo": true}', '/demo/john-qr.png', 'JOHN2024'),
-('550e8400-e29b-41d4-a716-446655440001', 'sarahstyle', 'Sarah Johnson', 'Fashion designer and lifestyle blogger. Creating content that inspires confidence and creativity.', '/demo/sarah-profile.jpg', '{"primaryColor": "#EC4899", "backgroundColor": "#FDF2F8", "theme": "elegant"}', '{"style": "dots", "color": "#EC4899", "logo": true}', '/demo/sarah-qr.png', 'SARAH2024'),
-('550e8400-e29b-41d4-a716-446655440002', 'mikefashion', 'Mike Chen', 'Streetwear enthusiast and trend forecaster. Connecting fashion with culture and community.', '/demo/mike-profile.jpg', '{"primaryColor": "#10B981", "backgroundColor": "#F0FDF4", "theme": "urban"}', '{"style": "rounded", "color": "#10B981", "logo": true}', '/demo/mike-qr.png', 'MIKE2024');
+-- ⚠️ IMPORTANT: PREREQUISITES BEFORE RUNNING THIS FILE
+-- =============================================
+-- This sample data requires actual authenticated users in auth.users table.
+-- You have TWO OPTIONS:
+--
+-- OPTION 1: Use with existing authenticated users
+-- 1. Sign up 3 test users through Supabase Auth UI or API
+-- 2. Run the query below to get their UUIDs:
+--    SELECT id, email FROM auth.users ORDER BY created_at DESC LIMIT 3;
+-- 3. Replace the UUIDs in this file with actual user IDs
+--
+-- OPTION 2: Skip sample data and use application-generated data
+-- - When users sign up through your application, profiles will be auto-created
+-- - This is the recommended approach for production
+-- =============================================
+
+-- NOTE: The UUIDs below are EXAMPLES ONLY and will NOT work
+-- You MUST replace them with real auth.users IDs from your database
+
+-- Get your actual user IDs first by running:
+-- SELECT id, email FROM auth.users ORDER BY created_at DESC LIMIT 3;
+
+-- Then replace these placeholder UUIDs:
+DO $$
+DECLARE
+    user1_id uuid;
+    user2_id uuid;
+    user3_id uuid;
+BEGIN
+    -- ⚠️ REPLACE THESE WITH YOUR ACTUAL USER IDs FROM auth.users
+    -- Example: user1_id := 'your-actual-uuid-from-auth-users-here';
+    
+    -- For now, this will check if you have at least 3 users
+    SELECT id INTO user1_id FROM auth.users ORDER BY created_at ASC LIMIT 1 OFFSET 0;
+    SELECT id INTO user2_id FROM auth.users ORDER BY created_at ASC LIMIT 1 OFFSET 1;
+    SELECT id INTO user3_id FROM auth.users ORDER BY created_at ASC LIMIT 1 OFFSET 2;
+    
+    -- If you have users, insert sample profiles
+    IF user1_id IS NOT NULL THEN
+        INSERT INTO public.profiles (id, username, display_name, bio, profile_image_url, theme_settings, qr_settings, custom_qr_url, affiliate_code) 
+        VALUES (user1_id, 'johndoe', 'John Doe', 'Fashion enthusiast and entrepreneur. Sharing my style journey and business insights.', '/demo/john-profile.jpg', '{"primaryColor": "#3B82F6", "backgroundColor": "#F8FAFC", "theme": "modern"}', '{"style": "squares", "color": "#3B82F6", "logo": true}', '/demo/john-qr.png', 'JOHN2024')
+        ON CONFLICT (id) DO NOTHING;
+        
+        RAISE NOTICE 'Created profile for user 1: %', user1_id;
+    ELSE
+        RAISE NOTICE '❌ No users found in auth.users. Please create users first.';
+    END IF;
+    
+    IF user2_id IS NOT NULL THEN
+        INSERT INTO public.profiles (id, username, display_name, bio, profile_image_url, theme_settings, qr_settings, custom_qr_url, affiliate_code)
+        VALUES (user2_id, 'sarahstyle', 'Sarah Johnson', 'Fashion designer and lifestyle blogger. Creating content that inspires confidence and creativity.', '/demo/sarah-profile.jpg', '{"primaryColor": "#EC4899", "backgroundColor": "#FDF2F8", "theme": "elegant"}', '{"style": "dots", "color": "#EC4899", "logo": true}', '/demo/sarah-qr.png', 'SARAH2024')
+        ON CONFLICT (id) DO NOTHING;
+        
+        RAISE NOTICE 'Created profile for user 2: %', user2_id;
+    END IF;
+    
+    IF user3_id IS NOT NULL THEN
+        INSERT INTO public.profiles (id, username, display_name, bio, profile_image_url, theme_settings, qr_settings, custom_qr_url, affiliate_code)
+        VALUES (user3_id, 'mikefashion', 'Mike Chen', 'Streetwear enthusiast and trend forecaster. Connecting fashion with culture and community.', '/demo/mike-profile.jpg', '{"primaryColor": "#10B981", "backgroundColor": "#F0FDF4", "theme": "urban"}', '{"style": "rounded", "color": "#10B981", "logo": true}', '/demo/mike-qr.png', 'MIKE2024')
+        ON CONFLICT (id) DO NOTHING;
+        
+        RAISE NOTICE 'Created profile for user 3: %', user3_id;
+    END IF;
+END $$;
 
 -- Insert sample links
 INSERT INTO public.links (profile_id, title, url, icon, position, is_spotlight) VALUES
