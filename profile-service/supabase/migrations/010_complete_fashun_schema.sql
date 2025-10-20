@@ -32,7 +32,7 @@ COMMENT ON TABLE public.profiles IS 'Public profile data for each user, extendin
 -- This table will store all the social media and other links for a user's profile.
 -- =============================================
 CREATE TABLE IF NOT EXISTS public.links (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     profile_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     url TEXT NOT NULL,
@@ -56,10 +56,10 @@ EXCEPTION
 END $$;
 
 CREATE TABLE IF NOT EXISTS public.analytics (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     profile_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
     event_type public.event_type NOT NULL,
-    link_id BIGINT REFERENCES public.links(id) ON DELETE SET NULL, -- Null if it's a general profile view.
+    link_id uuid REFERENCES public.links(id) ON DELETE SET NULL, -- Null if it's a general profile view.
     visitor_ip_hash TEXT, -- Store a hash of the IP for privacy and uniqueness tracking.
     visitor_id TEXT, -- Session-based visitor tracking
     user_agent TEXT, -- Browser information
@@ -76,7 +76,7 @@ COMMENT ON TABLE public.analytics IS 'Tracks engagement metrics like views and c
 -- This table links a user's profile to the products they have purchased from Medusa.
 -- =============================================
 CREATE TABLE IF NOT EXISTS public.closet_items (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     profile_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
     medusa_order_id TEXT NOT NULL, -- The order ID from your Medusa backend.
     product_title TEXT NOT NULL,
