@@ -49,7 +49,11 @@ COMMENT ON TABLE public.links IS 'Stores the individual links for a user''s prof
 -- 3. CREATE THE ANALYTICS TABLE
 -- This table will track profile views and link clicks.
 -- =============================================
-CREATE TYPE IF NOT EXISTS public.event_type AS ENUM ('profile_view', 'link_click', 'qr_scan', 'social_click', 'download', 'share');
+DO $$ BEGIN
+    CREATE TYPE public.event_type AS ENUM ('profile_view', 'link_click', 'qr_scan', 'social_click', 'download', 'share');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 CREATE TABLE IF NOT EXISTS public.analytics (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
