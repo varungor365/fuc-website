@@ -25,14 +25,20 @@ export default function HomePage() {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <Link
+            href="/demo"
+            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            🎨 View Demo Profile
+          </Link>
+          <Link
             href="https://www.fashun.co.in/login"
-            className="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors duration-200"
+            className="px-8 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-semibold rounded-xl border border-white/30 transition-colors duration-200"
           >
             Create Your Profile
           </Link>
           <Link
             href="https://www.fashun.co.in"
-            className="px-8 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-semibold rounded-xl border border-white/30 transition-colors duration-200"
+            className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-semibold rounded-xl border border-white/20 transition-colors duration-200"
           >
             Visit Store
           </Link>
@@ -65,12 +71,13 @@ export default function HomePage() {
 
         {/* Example Profile Link */}
         <div className="text-center">
-          <p className="text-white/60 mb-4">Try viewing a sample profile:</p>
+          <p className="text-white/60 mb-4">✨ No API required - Try the demo:</p>
           <Link
-            href="/demo-user"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors duration-200"
+            href="/demo"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500/20 to-blue-500/20 backdrop-blur-md rounded-lg border border-green-500/30 text-green-300 hover:bg-green-500/30 transition-all duration-200 hover:scale-105"
           >
-            <span>p.fashun.co.in/demo-user</span>
+            <span className="text-lg">🚀</span>
+            <span>View Demo Profile (Works Offline!)</span>
             <span>→</span>
           </Link>
         </div>
