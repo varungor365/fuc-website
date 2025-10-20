@@ -9,15 +9,31 @@ The database schema has been split into **12 separate SQL files** for easier dep
 
 ### Before Starting
 1. Open Supabase Dashboard → SQL Editor
-2. Have CLEAN_DEPLOY.sql ready if you have existing conflicting tables
+2. **CRITICAL:** You MUST run CLEAN_DEPLOY.sql first!
 
 ---
 
-### Step 1: Clean Deployment (If Needed)
-**⚠️ Only if you have existing tables with type conflicts**
+### Step 1: ⚠️ MANDATORY Clean Deployment
+**YOU MUST DO THIS FIRST - Your database has existing tables with wrong structure!**
+
+**Error you're seeing:**
+- `column "username" does not exist` 
+- `incompatible types: uuid and bigint`
+
+**This means:** Your existing `profiles` table uses BIGINT, not UUID!
+
+**Solution: Execute CLEAN_DEPLOY.sql**
 ```sql
--- Execute: CLEAN_DEPLOY.sql
--- This removes all existing tables
+-- Copy CLEAN_DEPLOY.sql contents into Supabase SQL Editor
+-- Click RUN
+-- This will DROP all existing tables safely
+```
+
+**⚠️ WARNING:** This deletes all data in these tables. Backup first if needed!
+
+After running CLEAN_DEPLOY.sql, you should see:
+```
+All tables, types, and functions dropped successfully. Ready for fresh deployment.
 ```
 
 ---
