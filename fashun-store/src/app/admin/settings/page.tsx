@@ -48,8 +48,6 @@ export default function AdminSettingsPage() {
     sanityProjectId: '',
     sanityDataset: '',
     sanityToken: '',
-    // AI
-    geminiApiKey: '',
     // Search
     algoliaAppId: '',
     algoliaApiKey: '',
@@ -506,8 +504,6 @@ export default function AdminSettingsPage() {
                   <label className="block text-sm font-medium mb-2">API Key</label>
                   <input
                     type="password"
-                    value={settings.geminiApiKey}
-                    onChange={(e) => setSettings({ ...settings, geminiApiKey: e.target.value })}
                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
                   />
                 </div>

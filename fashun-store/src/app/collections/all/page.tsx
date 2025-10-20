@@ -13,7 +13,9 @@ import {
   ShoppingBagIcon,
   CheckIcon,
   ChevronDownIcon,
-  AdjustmentsHorizontalIcon
+  AdjustmentsHorizontalIcon,
+  SparklesIcon,
+  QrCodeIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid';
 
@@ -28,6 +30,7 @@ interface Product {
   category: string;
   tags: string[];
   inStock: boolean;
+  phygitalEnabled?: boolean; // New property for phygital support
 }
 
 const mockProducts: Product[] = [
@@ -41,7 +44,8 @@ const mockProducts: Product[] = [
     reviewCount: 247,
     category: 'Hoodies',
     tags: ['streetwear', 'neon', 'premium'],
-    inStock: true
+    inStock: true,
+    phygitalEnabled: true
   },
   {
     id: 'neon-glow-hoodie',
@@ -53,7 +57,8 @@ const mockProducts: Product[] = [
     reviewCount: 156,
     category: 'Hoodies',
     tags: ['tech', 'glow', 'futuristic'],
-    inStock: true
+    inStock: true,
+    phygitalEnabled: true
   },
   {
     id: 'quantum-bomber',
@@ -65,7 +70,8 @@ const mockProducts: Product[] = [
     reviewCount: 89,
     category: 'Jackets',
     tags: ['bomber', 'mesh', 'premium'],
-    inStock: true
+    inStock: true,
+    phygitalEnabled: true
   },
   {
     id: 'holographic-tee',
@@ -77,7 +83,8 @@ const mockProducts: Product[] = [
     reviewCount: 203,
     category: 'T-Shirts',
     tags: ['holographic', 'tech', 'casual'],
-    inStock: true
+    inStock: true,
+    phygitalEnabled: false
   }
 ];
 
@@ -335,6 +342,16 @@ export default function CollectionsPage() {
                     <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
                       {Math.round((1 - product.price / product.comparePrice) * 100)}% OFF
                     </span>
+                  </div>
+                )}
+
+                {/* Phygital Badge */}
+                {product.phygitalEnabled && (
+                  <div className="absolute bottom-2 left-2">
+                    <div className="flex items-center gap-1 bg-gradient-to-r from-purple-500/90 to-pink-500/90 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-full">
+                      <SparklesIcon className="w-3 h-3" />
+                      Phygital
+                    </div>
                   </div>
                 )}
               </div>

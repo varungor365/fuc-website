@@ -28,6 +28,8 @@ import {
 } from '@heroicons/react/24/outline';
 import VariantSwatches from '../../../components/product/VariantSwatches';
 import ShippingCalculator from '../../../components/product/ShippingCalculator';
+import TryOnButton from '../../../components/product/TryOnButton';
+import PhygitalUpgradeButton from '../../../components/product/PhygitalUpgradeButton';
 import { StarIcon as StarIconSolid, HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 
 const mockProduct = {
@@ -229,7 +231,7 @@ export default function ProductDetailPage() {
     return () => clearTimeout(timeout);
   }, []);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (isPhygital: boolean = false) => {
     if (!selectedSize) {
       alert('Please select a size');
       return;
@@ -238,6 +240,15 @@ export default function ProductDetailPage() {
       alert('Please select a color');
       return;
     }
+    
+    // Here you would add the logic to add to cart with phygital flag
+    console.log('Adding to cart:', { 
+      product: product.id, 
+      size: selectedSize, 
+      color: selectedColor, 
+      quantity,
+      isPhygital 
+    });
     
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 3000);
@@ -542,27 +553,24 @@ export default function ProductDetailPage() {
 
             {/* Action Buttons */}
             <div className="space-y-4">
+              {/* Virtual Try-On Button */}
+              <TryOnButton
+                productId={product.id}
+                productName={product.name}
+                productColor={selectedColor}
+                productImageUrl={product.images[0]}
+                garmentType="hoodie"
+              />
+              
+              {/* Phygital Upgrade Button - Main CTA */}
+              <PhygitalUpgradeButton
+                productName={product.name}
+                productPrice={product.price}
+                onAddToCart={handleAddToCart}
+                className="w-full"
+              />
+              
               <div className="flex gap-4">
-                <motion.button
-                  onClick={handleAddToCart}
-                  disabled={!selectedSize || !selectedColor || !product.inStock}
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  {addedToCart ? (
-                    <>
-                      <CheckCircleIcon className="w-5 h-5" />
-                      Added to Cart!
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingCartIcon className="w-5 h-5" />
-                      Add to Cart
-                    </>
-                  )}
-                </motion.button>
-                
                 <motion.button
                   onClick={handleWishlist}
                   className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all border border-white/10 ${

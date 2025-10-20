@@ -40,8 +40,12 @@ function decrypt(text: string): string {
     decrypted += decipher.final('utf8');
     return decrypted;
   } catch (error) {
-    console.error('Decryption error:', error);
-    throw new Error('Failed to decrypt data');
+    console.error('Decryption failed for a key. Returning it as-is. This may cause API errors.', error);
+    // In a production environment, failing to decrypt a key is a critical issue,
+    // but throwing an error here might crash the entire application.
+    // Returning the text as-is allows the app to continue running, although the specific
+    // service using this key will likely fail. This should be monitored.
+    return text;
   }
 }
 
@@ -122,7 +126,8 @@ export class ApiKeyService {
       return {
         ...key,
         keyValue: key.keyValue ? decrypt(key.keyValue) : '',
-        secretValue: key.secretValue ? decrypt(key.secretValue) : '',
+        // Ensure we handle null secretValue gracefully
+        secretValue: key.secretValue ? decrypt(key.secretValue) : null,
       };
     } catch (error) {
       console.error(`Failed to fetch API key for service ${service}:`, error);

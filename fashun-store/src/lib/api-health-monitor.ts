@@ -76,7 +76,6 @@ export async function checkAllAPIs() {
   const apis = [
     { name: 'Supabase', endpoint: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`, key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY },
     { name: 'Replicate', endpoint: 'https://api.replicate.com/v1/models', key: process.env.REPLICATE_API_TOKEN },
-    { name: 'Gemini', endpoint: `https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GEMINI_API_KEY}` },
     { name: 'Medusa', endpoint: `${process.env.NEXT_PUBLIC_MEDUSA_URL}/store/products` },
     { name: 'Turnstile', endpoint: 'https://challenges.cloudflare.com/turnstile/v0/siteverify' }
   ];

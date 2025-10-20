@@ -75,26 +75,6 @@ export class APIIntegrations {
     };
   }
 
-  // Google Gemini API (AI Content Generation)
-  static async generateContent(prompt: string): Promise<string> {
-    const settings = await getSettings();
-    if (!settings.geminiApiKey) throw new Error('Gemini API key not configured');
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${settings.geminiApiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
-      }
-    );
-
-    const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
-  }
-
   // Algolia (Search)
   static getAlgoliaConfig() {
     const settings = getSettings();
