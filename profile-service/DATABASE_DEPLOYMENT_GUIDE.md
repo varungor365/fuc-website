@@ -21,6 +21,84 @@ The schema includes 19 core tables supporting:
 
 ## Deployment Instructions
 
+### ⚠️ IMPORTANT: Check for Existing Tables First
+
+**Before deploying, run the diagnostic script to check for conflicts:**
+
+1. Open Supabase SQL Editor
+2. Run `DIAGNOSTIC.sql` to check existing table structures
+3. If tables exist with BIGINT IDs → Use **Clean Deployment** method below
+4. If no tables exist → Use **Fresh Deployment** method below
+
+---
+
+### 🆕 Method 1: Fresh Deployment (No Existing Tables)
+
+**Step 1: Execute Core Schema**
+```sql
+-- In Supabase SQL Editor, run:
+-- File: 010_complete_fashun_schema.sql
+```
+
+**Step 2: Apply Security Policies**
+```sql
+-- In a new query, run:
+-- File: 011_security_policies.sql
+```
+
+**Step 3: Insert Sample Data (Optional)**
+```sql
+-- In a new query, run:
+-- File: 012_sample_data.sql
+```
+
+---
+
+### 🔄 Method 2: Clean Deployment (Existing Tables with Conflicts)
+
+**⚠️ WARNING: This will DELETE all existing data!**
+
+**Step 1: Run Clean Deployment Script**
+```sql
+-- In Supabase SQL Editor, run:
+-- File: CLEAN_DEPLOY.sql
+-- This drops all existing tables and types
+```
+
+**Step 2: Execute Core Schema**
+```sql
+-- File: 010_complete_fashun_schema.sql
+```
+
+**Step 3: Apply Security Policies**
+```sql
+-- File: 011_security_policies.sql
+```
+
+**Step 4: Insert Sample Data (Optional)**
+```sql
+-- File: 012_sample_data.sql
+```
+
+---
+
+### 🔧 Method 3: Quick Fix for Type Conflicts
+
+If you get "incompatible types: uuid and bigint" error:
+
+```sql
+-- Drop only the conflicting tables
+DROP TABLE IF EXISTS public.analytics CASCADE;
+DROP TABLE IF EXISTS public.closet_items CASCADE;
+DROP TABLE IF EXISTS public.links CASCADE;
+DROP TABLE IF EXISTS public.profiles CASCADE;
+DROP TYPE IF EXISTS public.event_type CASCADE;
+
+-- Then run 010_complete_fashun_schema.sql
+```
+
+---
+
 ### Step 1: Execute Core Schema
 Navigate to your Supabase dashboard → SQL Editor → New Query
 Copy and paste the contents of: `010_complete_fashun_schema.sql`
