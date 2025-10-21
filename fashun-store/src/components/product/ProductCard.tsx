@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { HeartIcon, EyeIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { HolographicCard } from '@/components/ui/holographic-card';
+import { DirectionAwareHover } from '@/components/ui/direction-aware-hover';
 
 interface Product {
   id: string;
@@ -63,60 +64,75 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className = '' }) =>
         onMouseLeave={() => setIsHovered(false)}
       >
         <Link href={`/products/${product.id}`}>
-        {/* Image Container */}
-        <div className="relative aspect-square overflow-hidden bg-neutral-100">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
-          
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
-            {product.isNew && (
-              <span className="bg-primary-500 text-white text-xs font-medium px-2 py-1 rounded-full">
-                New
+        {/* Image Container with Direction Aware Hover */}
+        <DirectionAwareHover
+          imageUrl={product.image}
+          className="aspect-square"
+          imageClassName="object-cover"
+          childrenClassName="bg-gradient-to-t from-black/90 via-black/60 to-transparent"
+        >
+          <div className="space-y-2">
+            <h3 className="text-lg font-bold text-white">{product.name}</h3>
+            <p className="text-sm text-white/80">{product.category}</p>
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold text-white">
+                ₹{product.price.toLocaleString()}
               </span>
-            )}
-            {product.isSale && discountPercentage > 0 && (
-              <span className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full">
-                -{discountPercentage}%
-              </span>
-            )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="absolute top-3 right-3 flex flex-col gap-2">
-            <motion.button
-              onClick={handleWishlistToggle}
-              className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {isWishlisted ? (
-                <HeartSolidIcon className="w-5 h-5 text-red-500" />
-              ) : (
-                <HeartIcon className="w-5 h-5 text-neutral-600" />
+              {product.originalPrice && product.originalPrice > product.price && (
+                <span className="text-sm text-white/60 line-through">
+                  ₹{product.originalPrice.toLocaleString()}
+                </span>
               )}
-            </motion.button>
-
-            <motion.button
-              onClick={handleQuickView}
-              className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <EyeIcon className="w-5 h-5 text-neutral-600" />
-            </motion.button>
+            </div>
           </div>
+        </DirectionAwareHover>
 
-          {/* Quick Add to Cart - Shown on Hover */}
-          <motion.div
-            className="absolute bottom-3 left-3 right-3"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-            transition={{ duration: 0.2 }}
+        {/* Floating Badges */}
+        <div className="absolute top-3 left-3 flex flex-col gap-2 z-20">
+          {product.isNew && (
+            <span className="bg-primary-500 text-white text-xs font-medium px-2 py-1 rounded-full shadow-lg">
+              New
+            </span>
+          )}
+          {product.isSale && discountPercentage > 0 && (
+            <span className="bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full shadow-lg">
+              -{discountPercentage}%
+            </span>
+          )}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="absolute top-3 right-3 flex flex-col gap-2 z-20">
+          <motion.button
+            onClick={handleWishlistToggle}
+            className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
           >
+            {isWishlisted ? (
+              <HeartSolidIcon className="w-5 h-5 text-red-500" />
+            ) : (
+              <HeartIcon className="w-5 h-5 text-neutral-600" />
+            )}
+          </motion.button>
+
+          <motion.button
+            onClick={handleQuickView}
+            className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <EyeIcon className="w-5 h-5 text-neutral-600" />
+          </motion.button>
+        </div>
+
+        {/* Quick Add to Cart - Shown on Hover */}
+        <motion.div
+          className="absolute bottom-3 left-3 right-3 z-20"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
+          transition={{ duration: 0.2 }}
+        >
             <motion.button
               onClick={handleAddToCart}
               className="w-full bg-primary-500 text-white font-medium py-3 rounded-xl hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
@@ -126,8 +142,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className = '' }) =>
               <ShoppingBagIcon className="w-4 h-4" />
               Quick Add
             </motion.button>
-          </motion.div>
-        </div>
+        </motion.div>
 
         {/* Product Info */}
         <div className="p-4">

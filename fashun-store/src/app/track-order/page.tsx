@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { trackOrder } from '@/lib/medusa-client';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { OrderTracking } from '@/components/ui/order-tracking';
+import { OrderState } from '@/components/ui/order-state';
+import { motion } from 'framer-motion';
 
 export default function TrackOrderPage() {
   const [orderId, setOrderId] = useState('');
@@ -49,105 +51,156 @@ export default function TrackOrderPage() {
   }
 
   const getStatusSteps = (status: string) => {
-    const steps = ['pending', 'processing', 'shipped', 'delivered'];
-    const currentIndex = steps.indexOf(status);
-    return steps.map((step, index) => ({
-      name: step,
-      completed: index <= currentIndex,
-      active: index === currentIndex
-    }));
+    const statusMap: Record<string, Array<{ title: string; description: string; date?: string; status: 'completed' | 'current' | 'pending' }>> = {
+      pending: [
+        { title: 'Order Placed', description: 'Your order has been confirmed', status: 'completed' },
+        { title: 'Processing', description: 'Preparing your items', status: 'current' },
+        { title: 'Shipped', description: 'Out for delivery', status: 'pending' },
+        { title: 'Delivered', description: 'Package delivered', status: 'pending' },
+      ],
+      processing: [
+        { title: 'Order Placed', description: 'Your order has been confirmed', status: 'completed' },
+        { title: 'Processing', description: 'Preparing your items', status: 'completed' },
+        { title: 'Shipped', description: 'Out for delivery', status: 'current' },
+        { title: 'Delivered', description: 'Package delivered', status: 'pending' },
+      ],
+      shipped: [
+        { title: 'Order Placed', description: 'Your order has been confirmed', status: 'completed' },
+        { title: 'Processing', description: 'Preparing your items', status: 'completed' },
+        { title: 'Shipped', description: 'Out for delivery', status: 'completed' },
+        { title: 'Delivered', description: 'Package delivered', status: 'current' },
+      ],
+      delivered: [
+        { title: 'Order Placed', description: 'Your order has been confirmed', status: 'completed' },
+        { title: 'Processing', description: 'Preparing your items', status: 'completed' },
+        { title: 'Shipped', description: 'Out for delivery', status: 'completed' },
+        { title: 'Delivered', description: 'Package delivered', status: 'completed' },
+      ],
+    };
+
+    return statusMap[status] || statusMap.pending;
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-center">Track Your Order</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-8">
+      <div className="max-w-4xl mx-auto">
+        <motion.h1 
+          className="text-5xl font-bold mb-8 text-center bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Track Your Order
+        </motion.h1>
 
-        <div className="bg-white/5 backdrop-blur-md rounded-xl p-8 border border-white/10 mb-8">
+        <motion.div 
+          className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 mb-8 shadow-2xl"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
           <div className="flex gap-4">
             <input
               type="text"
               value={orderId}
               onChange={(e) => setOrderId(e.target.value)}
               placeholder="Enter your order ID"
-              className="flex-1 px-6 py-4 bg-white/10 rounded-lg border border-white/20 text-lg"
+              className="flex-1 px-6 py-4 bg-white/10 rounded-xl border border-white/20 text-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all"
               onKeyPress={(e) => e.key === 'Enter' && handleTrack()}
             />
-            <button
+            <motion.button
               onClick={handleTrack}
               disabled={loading}
-              className="px-8 py-4 bg-purple-600 hover:bg-purple-700 rounded-lg font-bold text-lg disabled:opacity-50"
+              className="px-8 py-4 bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 rounded-xl font-bold text-lg disabled:opacity-50 shadow-lg transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               {loading ? 'Tracking...' : 'Track'}
-            </button>
+            </motion.button>
           </div>
 
           {error && (
-            <div className="mt-4 p-4 bg-red-900/20 border border-red-500 rounded-lg text-red-400">
+            <motion.div 
+              className="mt-4 p-4 bg-red-900/20 border border-red-500 rounded-xl text-red-400"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
               {error}
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
 
         {tracking && (
-          <div className="bg-white/5 backdrop-blur-md rounded-xl p-8 border border-white/10">
-            <h2 className="text-2xl font-bold mb-6">Order Status</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-8"
+          >
+            {/* Order State Card */}
+            <OrderState
+              status={tracking.status as any}
+              orderNumber={orderId}
+              estimatedDelivery={tracking.estimatedDelivery}
+            />
 
-            <div className="mb-8">
-              <div className="flex justify-between mb-4">
-                {getStatusSteps(tracking.status).map((step, index) => (
-                  <div key={step.name} className="flex-1 relative">
-                    <div className="flex flex-col items-center">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold ${
-                        step.completed ? 'bg-green-500' : 'bg-gray-700'
-                      }`}>
-                        {step.completed ? '✓' : index + 1}
-                      </div>
-                      <p className="mt-2 text-sm capitalize">{step.name}</p>
-                    </div>
-                    {index < 3 && (
-                      <div className={`absolute top-6 left-1/2 w-full h-1 ${
-                        step.completed ? 'bg-green-500' : 'bg-gray-700'
-                      }`} />
-                    )}
-                  </div>
-                ))}
-              </div>
+            {/* Order Tracking Steps */}
+            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 shadow-2xl">
+              <h2 className="text-3xl font-bold mb-8 text-center">Order Journey</h2>
+              <OrderTracking steps={getStatusSteps(tracking.status).map((step, index) => ({
+                id: `step-${index}`,
+                ...step
+              }))} />
             </div>
 
             {tracking.trackingNumber && (
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-white/5 rounded-lg">
-                  <span className="text-gray-400">Tracking Number:</span>
-                  <span className="font-bold">{tracking.trackingNumber}</span>
-                </div>
+              <div className="space-y-4 mt-8">
+                <motion.div 
+                  className="flex justify-between items-center p-6 bg-gradient-to-r from-white/10 to-white/5 rounded-xl border border-white/10"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <span className="text-gray-300 text-lg">Tracking Number:</span>
+                  <span className="font-bold text-xl">{tracking.trackingNumber}</span>
+                </motion.div>
 
-                <div className="flex justify-between items-center p-4 bg-white/5 rounded-lg">
-                  <span className="text-gray-400">Carrier:</span>
-                  <span className="font-bold capitalize">{tracking.carrier}</span>
-                </div>
+                <motion.div 
+                  className="flex justify-between items-center p-6 bg-gradient-to-r from-white/10 to-white/5 rounded-xl border border-white/10"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <span className="text-gray-300 text-lg">Carrier:</span>
+                  <span className="font-bold text-xl capitalize">{tracking.carrier}</span>
+                </motion.div>
 
                 {tracking.trackingUrl && (
-                  <a
+                  <motion.a
                     href={tracking.trackingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg font-bold text-center"
+                    className="block w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-bold text-center text-lg shadow-lg"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
                   >
                     Track on {tracking.carrier} Website →
-                  </a>
+                  </motion.a>
                 )}
               </div>
             )}
 
             {!tracking.trackingNumber && tracking.status === 'pending' && (
-              <div className="text-center py-8">
-                <p className="text-gray-400">
+              <motion.div 
+                className="text-center py-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <p className="text-gray-400 text-lg">
                   Your order is being processed. Tracking information will be available soon.
                 </p>
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>
