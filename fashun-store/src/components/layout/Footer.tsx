@@ -57,9 +57,9 @@ export function Footer() {
               <Link href="/" className="flex items-center space-x-3 mb-6">
                 <div className="w-12 h-12 rounded-xl overflow-hidden">
                   <img 
-                    src="/images/logo-black.png" 
+                    src="/logo.png" 
                     alt="FASHUN.CO" 
-                    className="w-full h-full object-contain filter invert"
+                    className="w-full h-full object-contain"
                   />
                 </div>
                 <div>
