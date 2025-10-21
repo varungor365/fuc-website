@@ -17,9 +17,20 @@ import {
   ChatBubbleLeftIcon
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon, ShoppingBagIcon as ShoppingBagSolidIcon } from '@heroicons/react/24/solid';
+import { 
+  ShoppingCart, 
+  Palette, 
+  Shirt, 
+  Package, 
+  Layers,
+  TruckIcon,
+  LogIn,
+  User
+} from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import CartDrawer from '@/components/cart/CartDrawer';
 import { useAuth } from '@/contexts/auth-context';
+import { ExpandableTabs } from '@/components/ui/expandable-tabs';
 
 const navigationItems = [
   {
@@ -151,8 +162,28 @@ export default function Header() {
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
+            {/* Desktop Navigation - Expandable Tabs */}
+            <nav className="hidden lg:flex items-center">
+              <ExpandableTabs
+                tabs={[
+                  { title: 'Shop', icon: ShoppingCart },
+                  { title: 'Customize', icon: Palette },
+                  { title: 'Printed Tees', icon: Shirt },
+                  { title: 'Plain & Combos', icon: Layers },
+                  { title: 'Hoodies', icon: Package },
+                ]}
+                activeColor="text-orange-600"
+                onChange={(index) => {
+                  if (index !== null) {
+                    const routes = ['/collections/all', '/customize', '/collections/printed-tshirts', '/collections/plain-tshirts', '/collections/hoodies'];
+                    router.push(routes[index]);
+                  }
+                }}
+              />
+            </nav>
+
+            {/* Old Navigation - Backup */}
+            <nav className="hidden xl:hidden lg:flex items-center space-x-8">
               {navigationItems.map((item) => (
                 <div
                   key={item.name}
@@ -246,71 +277,118 @@ export default function Header() {
               </form>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-2">
-              {/* Search (Mobile) */}
-              <motion.button
-                onClick={() => setIsSearchOpen(true)}
-                className="md:hidden p-2 rounded-full hover:bg-neutral-100 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <MagnifyingGlassIcon className="w-5 h-5 text-neutral-700" />
-              </motion.button>
+            {/* Action Buttons - Right Side with Expandable Tabs */}
+            <div className="flex items-center space-x-4">
+              {/* Right Side Actions - Expandable Tabs */}
+              <div className="hidden lg:flex">
+                <ExpandableTabs
+                  tabs={[
+                    { title: 'Track Order', icon: TruckIcon },
+                    { type: 'separator' },
+                    { title: user ? 'Account' : 'Login', icon: user ? User : LogIn },
+                  ]}
+                  activeColor="text-orange-600"
+                  onChange={(index) => {
+                    if (index === 0) {
+                      router.push('/track-order');
+                    } else if (index === 2) {
+                      router.push(user ? '/account' : '/login');
+                    }
+                  }}
+                />
+              </div>
 
-              {/* Wishlist */}
-              <motion.button
-                onClick={() => router.push('/account/wishlist')}
-                className="relative p-2 rounded-full hover:bg-neutral-100 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <HeartIcon className="w-5 h-5 text-neutral-700" />
-              </motion.button>
+              {/* Mobile Actions */}
+              <div className="flex lg:hidden items-center space-x-2">
+                {/* Search (Mobile) */}
+                <motion.button
+                  onClick={() => setIsSearchOpen(true)}
+                  className="md:hidden p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <MagnifyingGlassIcon className="w-5 h-5 text-neutral-700" />
+                </motion.button>
 
-              {/* Cart */}
-              <motion.button
-                onClick={() => setIsCartDrawerOpen(true)}
-                className="relative p-2 rounded-full hover:bg-neutral-100 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <ShoppingBagIcon className="w-5 h-5 text-neutral-700" />
-                {itemCount > 0 && (
-                  <motion.span
-                    className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  >
-                    {itemCount}
-                  </motion.span>
-                )}
-              </motion.button>
+                {/* Wishlist */}
+                <motion.button
+                  onClick={() => router.push('/account/wishlist')}
+                  className="relative p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <HeartIcon className="w-5 h-5 text-neutral-700" />
+                </motion.button>
 
-              {/* User Account */}
-              <div className="flex items-center space-x-4">
+                {/* Cart */}
+                <motion.button
+                  onClick={() => setIsCartDrawerOpen(true)}
+                  className="relative p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <ShoppingBagIcon className="w-5 h-5 text-neutral-700" />
+                  {itemCount > 0 && (
+                    <motion.span
+                      className="absolute -top-1 -right-1 w-5 h-5 bg-primary-500 text-white text-xs rounded-full flex items-center justify-center font-bold"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    >
+                      {itemCount}
+                    </motion.span>
+                  )}
+                </motion.button>
+
+                {/* User Account - Mobile */}
+                <div className="flex items-center">
+                  {loading ? (
+                    <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+                  ) : user ? (
+                    <Link 
+                      href="/account" 
+                      className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
+                    >
+                      <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                        <span className="text-white text-sm font-medium">
+                          {isAnonymous ? 'A' : user.email?.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    </Link>
+                  ) : (
+                    <Link href="/login">
+                      <motion.button
+                        className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <UserIcon className="w-5 h-5 text-neutral-700" />
+                      </motion.button>
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              {/* Desktop User Status */}
+              <div className="hidden lg:flex items-center space-x-4">
                 {loading ? (
                   <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
                 ) : user ? (
-                  <Link 
-                    href="/account" 
-                    className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
-                  >
+                  <div className="flex items-center space-x-2 text-gray-700">
                     <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
                         {isAnonymous ? 'A' : user.email?.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <span className="hidden md:inline text-sm font-medium">
+                    <span className="hidden xl:inline text-sm font-medium">
                       {isAnonymous ? 'Anonymous User' : (user.user_metadata?.name || user.email?.split('@')[0])}
                     </span>
                     {isAnonymous && (
-                      <span className="hidden md:inline text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                      <span className="hidden xl:inline text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
                         Anonymous
                       </span>
                     )}
-                  </Link>
+                  </div>
                 ) : (
                   <Link 
                     href="/login" 
