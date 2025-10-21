@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -152,11 +153,13 @@ export default function Header() {
               transition={{ duration: 0.2 }}
             >
               <Link href="/" className="flex items-center">
-                <div className="w-24 h-24">
-                  <img 
+                <div className="relative w-32 h-16">
+                  <Image 
                     src="/logo.png" 
                     alt="FASHUN.CO.IN" 
-                    className="w-full h-full object-contain"
+                    fill
+                    className="object-contain"
+                    priority
                   />
                 </div>
               </Link>
