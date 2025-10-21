@@ -9,6 +9,7 @@
     "lint": "next lint",
     "analyze": "ANALYZE=true next build",
     "type-check": "tsc --noEmit",
+    "check:supabase": "node scripts/check-supabase.js",
     "ai:test": "node ai-testing/run-all-tests.js",
     "ai:test:frontend": "node ai-testing/run-all-tests.js",
     "ai:test:api": "node ai-testing/run-all-tests.js",

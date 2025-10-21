@@ -8,26 +8,44 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
   
-  // Get tokens from cookies
-  const accessToken = req.cookies.get('sb-access-token')?.value;
-  const refreshToken = req.cookies.get('sb-refresh-token')?.value;
-  
-  // Create Supabase client
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  // Create Supabase client with custom storage adapter to read cookies properly
+  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      flowType: 'pkce',
+      detectSessionInUrl: false,
+      persistSession: true,
+      storage: {
+        getItem: (key) => {
+          return req.cookies.get(key)?.value || null;
+        },
+        setItem: (key, value) => {
+          res.cookies.set({
+            name: key,
+            value: value,
+            path: '/',
+            maxAge: 60 * 60 * 24 * 7,
+            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            httpOnly: false,
+          });
+        },
+        removeItem: (key) => {
+          res.cookies.delete(key);
+        },
+      },
+    },
+  });
   
   let session: any = null;
   
-  // Try to get session from tokens
-  if (accessToken && refreshToken) {
-    try {
-      const { data } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
-      session = data.session;
-    } catch (error) {
-      console.error('Session error in middleware:', error);
+  // Try to get session - Supabase will automatically read cookies via storage adapter
+  try {
+    const { data: { session: userSession }, error } = await supabase.auth.getSession();
+    if (!error && userSession) {
+      session = userSession;
     }
+  } catch (error) {
+    console.error('Session error in middleware:', error);
   }
   
   // Protect admin routes, but exclude the login page itself

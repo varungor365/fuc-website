@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -28,14 +27,34 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Create Supabase client with cookies
+    const response = NextResponse.redirect(`${origin}${redirect}`);
+
+    // Create Supabase client with cookie support
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         flowType: 'pkce',
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
+        detectSessionInUrl: false,
         persistSession: true,
-      }
+        storage: {
+          getItem: (key) => {
+            return request.cookies.get(key)?.value || null;
+          },
+          setItem: (key, value) => {
+            response.cookies.set({
+              name: key,
+              value: value,
+              path: '/',
+              maxAge: 60 * 60 * 24 * 7, // 7 days
+              sameSite: 'lax',
+              secure: process.env.NODE_ENV === 'production',
+              httpOnly: false, // Needs to be accessible by client-side JavaScript
+            });
+          },
+          removeItem: (key) => {
+            response.cookies.delete(key);
+          },
+        },
+      },
     });
 
     // Exchange code for session
@@ -48,30 +67,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (data.session) {
-      // Create response with redirect
-      const response = NextResponse.redirect(`${origin}${redirect}`);
-      
-      // Set cookies for session persistence
-      response.cookies.set('sb-access-token', data.session.access_token, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 7 days
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-      });
-      
-      response.cookies.set('sb-refresh-token', data.session.refresh_token, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-      });
-
-      return response;
+    if (!data.session) {
+      return NextResponse.redirect(
+        `${origin}/login?error=no_session`
+      );
     }
 
-    // Redirect to account page on success (fallback)
-    return NextResponse.redirect(`${origin}${redirect}`);
+    // Cookies are already set by the storage adapter above
+    return response;
   } catch (err) {
     console.error('Callback error:', err);
     return NextResponse.redirect(
