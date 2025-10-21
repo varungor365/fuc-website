@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { HeartIcon, EyeIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
+import { HolographicCard } from '@/components/ui/holographic-card';
 
 interface Product {
   id: string;
@@ -54,13 +55,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className = '' }) =>
   };
 
   return (
-    <motion.div
-      className={`group relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 ${className}`}
-      whileHover={{ y: -4 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <Link href={`/products/${product.id}`}>
+    <HolographicCard containerClassName={className}>
+      <motion.div
+        className="group relative bg-gradient-to-br from-white/80 via-white/60 to-white/80 backdrop-blur-xl rounded-2xl overflow-hidden"
+        whileHover={{ y: -4 }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <Link href={`/products/${product.id}`}>
         {/* Image Container */}
         <div className="relative aspect-square overflow-hidden bg-neutral-100">
           <img
@@ -191,6 +193,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className = '' }) =>
         </div>
       </Link>
     </motion.div>
+    </HolographicCard>
   );
 };
 

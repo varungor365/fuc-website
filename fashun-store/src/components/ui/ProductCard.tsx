@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { HeartIcon, ShoppingBagIcon, StarIcon } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
+import { HolographicCard } from '@/components/ui/holographic-card'
 
 interface Product {
   id: number
@@ -47,12 +48,13 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
   }
 
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.3 }}
-      className={`group relative bg-gray-900/30 rounded-lg overflow-hidden border border-gray-800 hover:border-[#E4C590]/50 transition-all duration-300 ${className}`}
-    >
-      <Link href={`/products/${product.id}`}>
+    <HolographicCard>
+      <motion.div
+        whileHover={{ y: -5 }}
+        transition={{ duration: 0.3 }}
+        className={`group relative bg-gradient-to-br from-gray-900/40 via-gray-800/30 to-gray-900/40 backdrop-blur-xl rounded-lg overflow-hidden border border-gray-800/50 hover:border-[#E4C590]/50 transition-all duration-300 ${className}`}
+      >
+        <Link href={`/products/${product.id}`}>
         {/* Image Container */}
         <div className="relative aspect-[3/4] overflow-hidden">
           <Image
@@ -171,6 +173,7 @@ export function ProductCard({ product, className = '' }: ProductCardProps) {
         </div>
       </Link>
     </motion.div>
+    </HolographicCard>
   )
 }
 
