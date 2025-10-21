@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import { useCartStore } from '@/store/cartStore';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -172,6 +173,9 @@ export default function ProductDetailPage() {
   const [addedToCart, setAddedToCart] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
   
+  // Get cart store actions
+  const { addItem: addToCart, openCart } = useCartStore();
+  
   // New Feature States
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [showImageLightbox, setShowImageLightbox] = useState(false);
@@ -241,17 +245,25 @@ export default function ProductDetailPage() {
       return;
     }
     
-    // Here you would add the logic to add to cart with phygital flag
-    console.log('Adding to cart:', { 
-      product: product.id, 
-      size: selectedSize, 
-      color: selectedColor, 
-      quantity,
-      isPhygital 
+    // Add item to cart using Zustand store
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      size: selectedSize,
+      color: selectedColor,
+      image: product.images[0],
+      slug: product.id,
+      quantity: quantity,
+      maxQuantity: product.stock,
     });
     
+    // Show success feedback
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 3000);
+    
+    // Open cart sidebar
+    openCart();
   };
 
   const nextImage = () => {

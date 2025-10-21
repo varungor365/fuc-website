@@ -1,13 +1,34 @@
-import { createMiddlewareSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
-  const supabase = createMiddlewareSupabaseClient({ req, res });
   
-  // Refresh session if expired
-  const { data: { session } } = await supabase.auth.getSession();
+  // Get tokens from cookies
+  const accessToken = req.cookies.get('sb-access-token')?.value;
+  const refreshToken = req.cookies.get('sb-refresh-token')?.value;
+  
+  // Create Supabase client
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  
+  let session: any = null;
+  
+  // Try to get session from tokens
+  if (accessToken && refreshToken) {
+    try {
+      const { data } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+      session = data.session;
+    } catch (error) {
+      console.error('Session error in middleware:', error);
+    }
+  }
   
   // Protect admin routes, but exclude the login page itself
   if (req.nextUrl.pathname.startsWith('/admin') && !req.nextUrl.pathname.startsWith('/admin/login')) {
@@ -18,9 +39,6 @@ export async function middleware(req: NextRequest) {
       redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname);
       return NextResponse.redirect(redirectUrl);
     }
-    
-    // Check if user is admin (you might want to implement this check differently)
-    // For now, we'll assume the admin login page handles this
   }
   
   // Protect account routes
