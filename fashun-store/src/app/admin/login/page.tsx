@@ -8,7 +8,9 @@ export default function AdminLogin() {
   const router = useRouter();
   const [isFirstTimeSetup, setIsFirstTimeSetup] = useState(false);
   const [isCheckingSetup, setIsCheckingSetup] = useState(true);
-  const [credentials, setCredentials] = useState({ email: 'fashun.co.in@gmail.com', password: '' });
+  const ADMIN_EMAIL = 'fashun.co.in@gmail.com'; // Hidden from UI for security
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -34,12 +36,12 @@ export default function AdminLogin() {
     e.preventDefault();
     setError('');
     
-    if (credentials.password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
     
-    if (credentials.password.length < 8) {
+    if (password.length < 8) {
       setError('Password must be at least 8 characters long');
       return;
     }
@@ -49,7 +51,7 @@ export default function AdminLogin() {
       const response = await fetch('/api/admin/setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: credentials.password })
+        body: JSON.stringify({ password })
       });
       
       const data = await response.json();
@@ -76,8 +78,8 @@ export default function AdminLogin() {
     
     try {
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email: credentials.email,
-        password: credentials.password,
+        email: ADMIN_EMAIL,
+        password,
       });
       
       if (signInError) {
@@ -139,23 +141,13 @@ export default function AdminLogin() {
         
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-white mb-2 text-sm font-medium">Email</label>
-            <input
-              type="email"
-              value={credentials.email}
-              readOnly
-              className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white/50 cursor-not-allowed"
-            />
-          </div>
-          
-          <div className="mb-4">
             <label className="block text-white mb-2 text-sm font-medium">
-              {isFirstTimeSetup ? 'Create Password' : 'Password'}
+              {isFirstTimeSetup ? 'Create Admin Password' : 'Admin Password'}
             </label>
             <input
               type="password"
-              value={credentials.password}
-              onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-purple-500"
               placeholder={isFirstTimeSetup ? 'Minimum 8 characters' : 'Enter your password'}
               required
