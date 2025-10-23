@@ -9,6 +9,15 @@ import SocialProof from '@/components/notifications/SocialProof';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from '@/contexts/auth-context';
+import { LoadingProvider } from '@/contexts/loading-context';
+import { FloatingDock } from '@/components/ui/dock-navigation';
+import { 
+  HomeIcon, 
+  ShoppingBagIcon, 
+  HeartIcon, 
+  UserIcon,
+  MagnifyingGlassIcon 
+} from '@heroicons/react/24/outline';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,10 +37,40 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <Providers>
-              <Header />
+              {/* Header, Footer, and Navigation hidden for launch countdown */}
+              {/* <Header /> */}
               {children}
-              <Footer />
-              <SocialProof />
+              {/* <Footer /> */}
+              {/* <SocialProof /> */}
+              {/* <FloatingDock
+                items={[
+                  { 
+                    title: 'Home', 
+                    icon: <HomeIcon className="w-6 h-6" />, 
+                    href: '/' 
+                  },
+                  { 
+                    title: 'Shop', 
+                    icon: <ShoppingBagIcon className="w-6 h-6" />, 
+                    href: '/products' 
+                  },
+                  { 
+                    title: 'Search', 
+                    icon: <MagnifyingGlassIcon className="w-6 h-6" />, 
+                    href: '/search' 
+                  },
+                  { 
+                    title: 'Wishlist', 
+                    icon: <HeartIcon className="w-6 h-6" />, 
+                    href: '/wishlist' 
+                  },
+                  { 
+                    title: 'Account', 
+                    icon: <UserIcon className="w-6 h-6" />, 
+                    href: '/account' 
+                  },
+                ]}
+              /> */}
               <SpeedInsights />
               <Analytics />
             </Providers>

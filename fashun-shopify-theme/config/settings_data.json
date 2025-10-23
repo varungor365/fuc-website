@@ -1,0 +1,84 @@
+{
+  "current": {
+    "primary_color": "#E4C590",
+    "secondary_color": "#0F0F10",
+    "accent_color": "#FF6B35",
+    "success_color": "#10B981",
+    "warning_color": "#F59E0B",
+    "error_color": "#EF4444",
+    "brand_tagline": "Express Yourself. Stay Fresh. Be Iconic.",
+    "logo_width": 150,
+    "page_width": 1200,
+    "spacing_sections": 56,
+    "spacing_grid_horizontal": 28,
+    "spacing_grid_vertical": 28,
+    "card_style": "premium",
+    "show_vendor": false,
+    "show_rating": true,
+    "show_quick_add": true,
+    "show_wishlist": true,
+    "card_corner_radius": 16,
+    "card_image_padding": 0,
+    "card_text_alignment": "left",
+    "enable_ai_recommendations": true,
+    "enable_trending_products": true,
+    "enable_smart_search": true,
+    "enable_virtual_tryon": true,
+    "enable_personalization": true,
+    "track_user_behavior": true,
+    "enable_social_proof": true,
+    "social_proof_frequency": 15,
+    "enable_instagram_feed": true,
+    "instagram_handle": "@fashun.co.in",
+    "enable_user_profiles": true,
+    "enable_reviews": true,
+    "enable_customization": true,
+    "enable_text_customization": true,
+    "enable_image_upload": true,
+    "max_custom_text_length": 20,
+    "customization_fee": "₹199",
+    "enable_lazy_loading": true,
+    "enable_preloading": true,
+    "enable_animations": true,
+    "animation_speed": "normal",
+    "cart_type": "drawer",
+    "enable_cart_notes": true,
+    "enable_shipping_calculator": true,
+    "enable_express_checkout": true,
+    "free_shipping_threshold": "2999",
+    "enable_announcement_bar": true,
+    "announcement_text": "Free Shipping on Orders Above ₹999 - Limited Time Offer!",
+    "enable_newsletter_popup": true,
+    "newsletter_popup_delay": 10,
+    "newsletter_discount": "10%",
+    "enable_auto_seo": true,
+    "meta_description": "FASHUN.CO - India's hottest streetwear brand. Premium quality t-shirts, hoodies, and accessories. Express yourself with our trendy designs.",
+    "enable_debug_mode": false,
+    "enable_console_logs": false,
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "main_menu": "main-menu"
+        }
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {
+          "footer_menu": "footer",
+          "social_instagram_link": "https://instagram.com/fashun.co.in",
+          "social_facebook_link": "",
+          "social_twitter_link": ""
+        }
+      }
+    }
+  },
+  "presets": {
+    "Default": {
+      "primary_color": "#E4C590",
+      "secondary_color": "#0F0F10",
+      "accent_color": "#FF6B35",
+      "brand_tagline": "Express Yourself. Stay Fresh. Be Iconic."
+    }
+  }
+}

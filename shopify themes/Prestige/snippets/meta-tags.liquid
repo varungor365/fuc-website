@@ -1,0 +1,186 @@
+{% comment %}
+  FASHUN.CO Meta Tags
+  SEO and social media optimization
+{% endcomment %}
+
+{%- assign og_title = page_title -%}
+{%- assign og_url = canonical_url -%}
+{%- assign og_type = 'website' -%}
+{%- assign og_description = page_description | default: shop.description | default: shop.name -%}
+
+{%- if request.page_type == 'product' -%}
+  {%- assign og_type = 'product' -%}
+  {%- if product.featured_media -%}
+    {%- assign og_image = product.featured_media | img_url: '1200x630' -%}
+  {%- endif -%}
+{%- elsif request.page_type == 'article' -%}
+  {%- assign og_type = 'article' -%}
+  {%- if article.image -%}
+    {%- assign og_image = article.image | img_url: '1200x630' -%}
+  {%- endif -%}
+{%- elsif request.page_type == 'collection' -%}
+  {%- if collection.image -%}
+    {%- assign og_image = collection.image | img_url: '1200x630' -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- unless og_image -%}
+  {%- if settings.social_image -%}
+    {%- assign og_image = settings.social_image | img_url: '1200x630' -%}
+  {%- elsif shop.brand.logo -%}
+    {%- assign og_image = shop.brand.logo | img_url: '1200x630' -%}
+  {%- endif -%}
+{%- endunless -%}
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:description" content="{{ og_description | escape }}">
+<meta property="og:url" content="{{ og_url }}">
+<meta property="og:site_name" content="{{ shop.name | escape }}">
+{%- if og_image -%}
+  <meta property="og:image" content="https:{{ og_image }}">
+  <meta property="og:image:secure_url" content="https:{{ og_image }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+{%- endif -%}
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ og_description | escape }}">
+{%- if og_image -%}
+  <meta name="twitter:image" content="https:{{ og_image }}">
+{%- endif -%}
+{%- if settings.social_twitter_link -%}
+  <meta name="twitter:site" content="{{ settings.social_twitter_link | split: 'twitter.com/' | last | prepend: '@' }}">
+{%- endif -%}
+
+<!-- Additional SEO Meta Tags -->
+<meta name="author" content="{{ shop.name }}">
+<meta name="robots" content="index, follow">
+
+{%- if request.page_type == 'product' -%}
+  <!-- Product specific meta tags -->
+  <meta property="product:brand" content="{{ product.vendor | escape }}">
+  <meta property="product:availability" content="{% if product.available %}in stock{% else %}out of stock{% endif %}">
+  <meta property="product:condition" content="new">
+  <meta property="product:price:amount" content="{{ product.price | money_without_currency | remove: ',' }}">
+  <meta property="product:price:currency" content="{{ cart.currency.iso_code }}">
+  
+  <!-- Schema.org structured data for products -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "description": {{ product.description | strip_html | json }},
+    "image": [
+      {%- for media in product.media limit: 5 -%}
+        "https:{{ media | img_url: '1200x1200' }}"
+        {%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ],
+    "brand": {
+      "@type": "Brand",
+      "name": {{ product.vendor | json }}
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": {{ shop.url | append: product.url | json }},
+      "priceCurrency": {{ cart.currency.iso_code | json }},
+      "price": {{ product.price | divided_by: 100.0 | json }},
+      "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+      "seller": {
+        "@type": "Organization",
+        "name": {{ shop.name | json }}
+      }
+    }
+    {%- if product.variants.size > 1 -%}
+    ,"hasVariant": [
+      {%- for variant in product.variants -%}
+      {
+        "@type": "ProductModel",
+        "name": {{ variant.title | json }},
+        "sku": {{ variant.sku | json }},
+        "offers": {
+          "@type": "Offer",
+          "price": {{ variant.price | divided_by: 100.0 | json }},
+          "priceCurrency": {{ cart.currency.iso_code | json }},
+          "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}"
+        }
+      }
+      {%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]
+    {%- endif -%}
+  }
+  </script>
+{%- endif -%}
+
+{%- if request.page_type == 'collection' -%}
+  <!-- Collection structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "CollectionPage",
+    "name": {{ collection.title | json }},
+    "description": {{ collection.description | strip_html | json }},
+    "url": {{ shop.url | append: collection.url | json }}
+  }
+  </script>
+{%- endif -%}
+
+{%- if request.page_type == 'index' -%}
+  <!-- Organization structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": {{ shop.name | json }},
+    "url": {{ shop.url | json }},
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https:{{ settings.logo | default: shop.brand.logo | img_url: '500x500' }}"
+    },
+    "sameAs": [
+      {%- if settings.social_facebook_link != blank -%}{{ settings.social_facebook_link | json }}{%- endif -%}
+      {%- if settings.social_instagram_link != blank -%}{%- if settings.social_facebook_link != blank -%},{%- endif -%}{{ settings.social_instagram_link | json }}{%- endif -%}
+      {%- if settings.social_twitter_link != blank -%}{%- if settings.social_facebook_link != blank or settings.social_instagram_link != blank -%},{%- endif -%}{{ settings.social_twitter_link | json }}{%- endif -%}
+    ]
+  }
+  </script>
+  
+  <!-- Website structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": {{ shop.name | json }},
+    "url": {{ shop.url | json }},
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "{{ shop.url }}/search?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+{%- endif -%}
+
+<!-- FASHUN.CO Brand Colors for Browser UI -->
+<meta name="theme-color" content="{{ settings.primary_color | default: '#E4C590' }}">
+<meta name="msapplication-TileColor" content="{{ settings.primary_color | default: '#E4C590' }}">
+
+<!-- Preconnect to external domains for performance -->
+<link rel="preconnect" href="https://cdn.shopify.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- DNS prefetch for better performance -->
+<link rel="dns-prefetch" href="//productreviews.shopifycdn.com">
+<link rel="dns-prefetch" href="//ajax.googleapis.com">
+<link rel="dns-prefetch" href="//maps.googleapis.com">
+<link rel="dns-prefetch" href="//maps.gstatic.com">

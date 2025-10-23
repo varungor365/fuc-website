@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Gradient Design System */
+@import '../styles/gradient-system.css';
+
 @layer base {
   body {
     @apply bg-white text-gray-900;

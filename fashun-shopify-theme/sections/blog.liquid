@@ -1,0 +1,247 @@
+{% comment %}
+  Blog Section - Display Recent Blog Posts
+  Shows latest articles with images and excerpts
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Blog",
+  "settings": [
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Latest Articles"
+    },
+    {
+      "type": "range",
+      "id": "posts_count",
+      "label": "Number of Posts",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {"value": "carousel", "label": "Carousel"},
+        {"value": "grid", "label": "Grid"}
+      ],
+      "default": "grid"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog"
+    }
+  ]
+}
+{% endschema %}
+
+{% if section.settings.blog %}
+  {% assign blog = section.settings.blog %}
+  
+  <section class="blog-section">
+    <div class="container blog-container">
+      <div class="blog-header">
+        <h2 class="blog-heading">{{ section.settings.heading }}</h2>
+        <a href="{{ blog.url }}" class="blog-view-all">View All Articles →</a>
+      </div>
+
+      <div class="blog-wrapper blog-{{ section.settings.layout }}">
+        {% for article in blog.articles limit: section.settings.posts_count %}
+          <article class="blog-card">
+            {% if article.image %}
+              <div class="blog-image">
+                <img
+                  src="{{ article.image | image_url: width: 500 }}"
+                  alt="{{ article.image.alt | default: article.title }}"
+                  loading="lazy"
+                >
+              </div>
+            {% endif %}
+
+            <div class="blog-content">
+              <div class="blog-meta">
+                <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                  {{ article.published_at | date: '%b %d, %Y' }}
+                </time>
+                <span class="blog-author">By {{ article.author }}</span>
+              </div>
+
+              <h3 class="blog-title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h3>
+
+              <p class="blog-excerpt">
+                {{ article.excerpt_or_content | strip_html | truncatewords: 20 }}
+              </p>
+
+              <a href="{{ article.url }}" class="blog-read-more">
+                Read More →
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+<style>
+  .blog-section {
+    padding: 4rem 2rem;
+    background: #f9f9f9;
+  }
+
+  .blog-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .blog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+  }
+
+  .blog-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .blog-view-all {
+    color: #007aff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+  }
+
+  .blog-view-all:hover {
+    color: #0051d5;
+  }
+
+  .blog-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .blog-carousel {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-behavior: smooth;
+  }
+
+  .blog-carousel .blog-card {
+    flex: 0 0 calc(33.333% - 1.34rem);
+    min-width: 300px;
+  }
+
+  .blog-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .blog-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+  }
+
+  .blog-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #f0f0f0;
+  }
+
+  .blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .blog-card:hover .blog-image img {
+    transform: scale(1.05);
+  }
+
+  .blog-content {
+    padding: 1.5rem;
+  }
+
+  .blog-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0.75rem 0;
+  }
+
+  .blog-title a {
+    color: #000;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .blog-title a:hover {
+    color: #007aff;
+  }
+
+  .blog-excerpt {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 1rem 0;
+  }
+
+  .blog-read-more {
+    display: inline-block;
+    color: #007aff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .blog-read-more:hover {
+    color: #0051d5;
+    margin-left: 0.25rem;
+  }
+
+  @media (max-width: 768px) {
+    .blog-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .blog-wrapper {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-section {
+      padding: 2rem 1rem;
+    }
+  }
+</style>

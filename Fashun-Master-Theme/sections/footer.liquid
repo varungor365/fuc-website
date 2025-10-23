@@ -1,0 +1,140 @@
+{% stylesheet %}
+  footer {
+    background: linear-gradient(135deg, #0a0a0a 0%, #000000 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 60px 20px 20px;
+    margin-top: 100px;
+  }
+
+  .footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .footer-section h4 {
+    color: white;
+    margin-bottom: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+  }
+
+  .footer-section ul {
+    list-style: none;
+  }
+
+  .footer-section li {
+    margin-bottom: 10px;
+  }
+
+  .footer-section a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .footer-section a:hover {
+    color: #007AFF;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 30px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 122, 255, 0.1);
+    border: 1px solid rgba(0, 122, 255, 0.3);
+    border-radius: 50%;
+    color: #007AFF;
+    transition: all 0.3s ease;
+  }
+
+  .social-links a:hover {
+    background: #007AFF;
+    color: white;
+  }
+{% endstylesheet %}
+
+<footer>
+  <div class="footer-content">
+    <!-- Company Info -->
+    <div class="footer-section">
+      <h4>About FASHUN</h4>
+      <p style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 20px;">
+        Premium streetwear crafted for the modern urban lifestyle.
+      </p>
+      <div class="social-links">
+        <a href="#" title="Instagram">📸</a>
+        <a href="#" title="Twitter">𝕏</a>
+        <a href="#" title="YouTube">▶</a>
+        <a href="#" title="TikTok">♪</a>
+      </div>
+    </div>
+
+    <!-- Shop -->
+    <div class="footer-section">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="/collections/hoodies">Hoodies</a></li>
+        <li><a href="/collections/t-shirts">T-Shirts</a></li>
+        <li><a href="/collections/jackets">Jackets</a></li>
+        <li><a href="/collections/sneakers">Sneakers</a></li>
+        <li><a href="/collections/accessories">Accessories</a></li>
+        <li><a href="/collections/all">View All</a></li>
+      </ul>
+    </div>
+
+    <!-- Customer Service -->
+    <div class="footer-section">
+      <h4>Customer Service</h4>
+      <ul>
+        <li><a href="/pages/contact">Contact Us</a></li>
+        <li><a href="/pages/shipping">Shipping Info</a></li>
+        <li><a href="/pages/returns">Returns & Exchanges</a></li>
+        <li><a href="/pages/faq">FAQ</a></li>
+        <li><a href="/pages/size-guide">Size Guide</a></li>
+      </ul>
+    </div>
+
+    <!-- Legal -->
+    <div class="footer-section">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="/policies/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/policies/terms-of-service">Terms of Service</a></li>
+        <li><a href="/policies/refund-policy">Return Policy</a></li>
+        <li><a href="/pages/careers">Careers</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; {{ "now" | date: "%Y" }} FASHUN. All rights reserved. | Powered by Shopify</p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": []
+}
+{% endschema %}

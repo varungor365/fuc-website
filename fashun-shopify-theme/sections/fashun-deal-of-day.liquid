@@ -1,0 +1,632 @@
+{% comment %}
+  FASHUN.CO Deal of the Day Section
+  Flash sale with countdown timer
+{% endcomment %}
+
+<section class="fashun-deal-of-day" id="fashun-deal-{{ section.id }}">
+  <div class="container">
+    <div class="deal-container">
+      <div class="deal-grid">
+        <!-- Product Image -->
+        <div class="deal-image">
+          {%- assign featured_product = all_products[section.settings.featured_product] -%}
+          {%- if featured_product != blank and featured_product.featured_media -%}
+            <img 
+              src="{{ featured_product.featured_media | img_url: '800x800' }}"
+              alt="{{ featured_product.title | escape }}"
+              loading="lazy"
+              width="800"
+              height="800"
+            >
+          {%- else -%}
+            <div class="deal-placeholder">
+              <svg width="600" height="600" viewBox="0 0 600 600" fill="none">
+                <rect width="600" height="600" fill="#F3F4F6"/>
+                <path d="M200 250H400V350H200V250Z" stroke="#9CA3AF" stroke-width="4" stroke-linecap="round"/>
+                <text x="300" y="450" font-family="Arial" font-size="24" fill="#9CA3AF" text-anchor="middle">Deal of the Day</text>
+              </svg>
+            </div>
+          {%- endif -%}
+          
+          <div class="deal-badges">
+            <div class="discount-badge">
+              {%- if featured_product != blank and featured_product.compare_at_price > featured_product.price -%}
+                -{{ featured_product.compare_at_price | minus: featured_product.price | times: 100 | divided_by: featured_product.compare_at_price | round }}%
+              {%- else -%}
+                -50%
+              {%- endif -%}
+            </div>
+            <div class="stock-badge">
+              {{ section.settings.stock_text | default: 'Only 23 left!' }}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product Details -->
+        <div class="deal-content">
+          <div class="deal-header">
+            <div class="deal-label">
+              <span class="fire-icon">🔥</span>
+              <span class="label-text">{{ section.settings.deal_label | default: 'Deal of the Day' }}</span>
+            </div>
+            
+            <h2 class="deal-title">
+              {%- if featured_product != blank -%}
+                {{ featured_product.title }}
+              {%- else -%}
+                {{ section.settings.fallback_title | default: 'Premium Streetwear Hoodie Collection' }}
+              {%- endif -%}
+            </h2>
+            
+            <!-- Rating -->
+            <div class="deal-rating">
+              <div class="stars">
+                {%- for i in (1..5) -%}
+                  <span class="star">★</span>
+                {%- endfor -%}
+              </div>
+              <span class="rating-text">
+                {{ section.settings.rating | default: '4.8' }} ({{ section.settings.reviews | default: '127' }} reviews)
+              </span>
+            </div>
+            
+            <!-- Pricing -->
+            <div class="deal-pricing">
+              {%- if featured_product != blank -%}
+                <span class="current-price">{{ featured_product.price | money }}</span>
+                {%- if featured_product.compare_at_price > featured_product.price -%}
+                  <span class="original-price">{{ featured_product.compare_at_price | money }}</span>
+                  <span class="savings">Save {{ featured_product.compare_at_price | minus: featured_product.price | money }}</span>
+                {%- endif -%}
+              {%- else -%}
+                <span class="current-price">₹4,499</span>
+                <span class="original-price">₹8,999</span>
+                <span class="savings">Save ₹4,500</span>
+              {%- endif -%}
+            </div>
+          </div>
+          
+          <!-- Countdown Timer -->
+          <div class="countdown-section">
+            <h3 class="countdown-title">{{ section.settings.countdown_title | default: 'Deal Expires In' }}</h3>
+            <p class="countdown-subtitle">{{ section.settings.countdown_subtitle | default: 'Hurry! This exclusive offer won\'t last long.' }}</p>
+            
+            <div class="countdown-timer" id="countdown-{{ section.id }}">
+              <div class="time-unit">
+                <div class="time-value" data-days>00</div>
+                <div class="time-label">Days</div>
+              </div>
+              <div class="time-unit">
+                <div class="time-value" data-hours>00</div>
+                <div class="time-label">Hours</div>
+              </div>
+              <div class="time-unit">
+                <div class="time-value" data-minutes>00</div>
+                <div class="time-label">Minutes</div>
+              </div>
+              <div class="time-unit">
+                <div class="time-value" data-seconds>00</div>
+                <div class="time-label">Seconds</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="deal-actions">
+            {%- if featured_product != blank -%}
+              <form action="/cart/add" method="post" enctype="multipart/form-data" class="deal-form">
+                <input type="hidden" name="id" value="{{ featured_product.selected_or_first_available_variant.id }}">
+                <button type="submit" class="btn btn-primary deal-add-to-cart">
+                  {{ section.settings.add_to_cart_text | default: 'Add to Cart' }}
+                </button>
+              </form>
+              <a href="{{ featured_product.url }}" class="btn btn-secondary deal-view-details">
+                {{ section.settings.view_details_text | default: 'View Details' }}
+              </a>
+            {%- else -%}
+              <button class="btn btn-primary deal-add-to-cart" disabled>
+                {{ section.settings.add_to_cart_text | default: 'Add to Cart' }}
+              </button>
+              <button class="btn btn-secondary deal-view-details" disabled>
+                {{ section.settings.view_details_text | default: 'View Details' }}
+              </button>
+            {%- endif -%}
+          </div>
+          
+          <!-- Guarantees -->
+          <div class="deal-guarantees">
+            <div class="guarantee-item">
+              <div class="guarantee-icon">🚚</div>
+              <div class="guarantee-content">
+                <div class="guarantee-title">{{ section.settings.guarantee_1_title | default: 'Free Shipping' }}</div>
+                <div class="guarantee-desc">{{ section.settings.guarantee_1_desc | default: 'On orders over ₹2,999' }}</div>
+              </div>
+            </div>
+            <div class="guarantee-item">
+              <div class="guarantee-icon">↩️</div>
+              <div class="guarantee-content">
+                <div class="guarantee-title">{{ section.settings.guarantee_2_title | default: 'Easy Returns' }}</div>
+                <div class="guarantee-desc">{{ section.settings.guarantee_2_desc | default: '30-day return policy' }}</div>
+              </div>
+            </div>
+            <div class="guarantee-item">
+              <div class="guarantee-icon">🛡️</div>
+              <div class="guarantee-content">
+                <div class="guarantee-title">{{ section.settings.guarantee_3_title | default: 'Authentic' }}</div>
+                <div class="guarantee-desc">{{ section.settings.guarantee_3_desc | default: '100% genuine products' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .fashun-deal-of-day {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #fef2f2, #fff7ed);
+  }
+  
+  .deal-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .deal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  }
+  
+  .deal-image {
+    position: relative;
+    aspect-ratio: 1;
+  }
+  
+  .deal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .deal-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+  }
+  
+  .deal-badges {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .discount-badge {
+    background: #dc2626;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  
+  .stock-badge {
+    background: #ea580c;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .deal-content {
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .deal-header {
+    margin-bottom: 32px;
+  }
+  
+  .deal-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .fire-icon {
+    font-size: 32px;
+  }
+  
+  .label-text {
+    font-size: 32px;
+    font-weight: 700;
+    color: #dc2626;
+  }
+  
+  .deal-title {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  
+  .deal-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  
+  .stars {
+    display: flex;
+    gap: 2px;
+  }
+  
+  .star {
+    color: #fbbf24;
+    font-size: 20px;
+  }
+  
+  .rating-text {
+    color: #6b7280;
+    font-weight: 600;
+  }
+  
+  .deal-pricing {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  
+  .current-price {
+    font-size: 48px;
+    font-weight: 700;
+    color: #dc2626;
+  }
+  
+  .original-price {
+    font-size: 32px;
+    color: #9ca3af;
+    text-decoration: line-through;
+  }
+  
+  .savings {
+    font-size: 18px;
+    font-weight: 700;
+    color: #16a34a;
+  }
+  
+  .countdown-section {
+    margin-bottom: 32px;
+  }
+  
+  .countdown-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 16px;
+  }
+  
+  .countdown-subtitle {
+    color: #6b7280;
+    margin-bottom: 16px;
+  }
+  
+  .countdown-timer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  
+  .time-unit {
+    text-align: center;
+  }
+  
+  .time-value {
+    background: #111827;
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  
+  .time-label {
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  .deal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  
+  .deal-form {
+    width: 100%;
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 18px;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: block;
+  }
+  
+  .btn-primary {
+    background: #dc2626;
+    color: white;
+  }
+  
+  .btn-primary:hover:not(:disabled) {
+    background: #b91c1c;
+    transform: translateY(-2px);
+  }
+  
+  .btn-secondary {
+    background: #f3f4f6;
+    color: #111827;
+  }
+  
+  .btn-secondary:hover:not(:disabled) {
+    background: #e5e7eb;
+  }
+  
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .deal-guarantees {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding-top: 32px;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .guarantee-item {
+    text-align: center;
+  }
+  
+  .guarantee-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  
+  .guarantee-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+  }
+  
+  .guarantee-desc {
+    font-size: 12px;
+    color: #6b7280;
+  }
+  
+  @media (max-width: 768px) {
+    .fashun-deal-of-day {
+      padding: 60px 0;
+    }
+    
+    .deal-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .deal-content {
+      padding: 32px 24px;
+    }
+    
+    .current-price {
+      font-size: 36px;
+    }
+    
+    .original-price {
+      font-size: 24px;
+    }
+    
+    .countdown-timer {
+      gap: 8px;
+    }
+    
+    .time-value {
+      padding: 12px;
+      font-size: 24px;
+    }
+    
+    .deal-guarantees {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const countdownElement = document.getElementById('countdown-{{ section.id }}');
+    if (!countdownElement) return;
+    
+    // Set target date (24 hours from now)
+    const targetDate = new Date();
+    targetDate.setHours(targetDate.getHours() + 24);
+    
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate.getTime() - now;
+      
+      if (distance < 0) {
+        // Deal expired
+        countdownElement.innerHTML = '<div class="expired-message">Deal Expired!</div>';
+        return;
+      }
+      
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      
+      const daysEl = countdownElement.querySelector('[data-days]');
+      const hoursEl = countdownElement.querySelector('[data-hours]');
+      const minutesEl = countdownElement.querySelector('[data-minutes]');
+      const secondsEl = countdownElement.querySelector('[data-seconds]');
+      
+      if (daysEl) daysEl.textContent = days.toString().padStart(2, '0');
+      if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, '0');
+      if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
+      if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
+    }
+    
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "FASHUN Deal of the Day",
+  "settings": [
+    {
+      "type": "product",
+      "id": "featured_product",
+      "label": "Featured product"
+    },
+    {
+      "type": "text",
+      "id": "fallback_title",
+      "label": "Fallback title",
+      "default": "Premium Streetwear Hoodie Collection",
+      "info": "Used when no product is selected"
+    },
+    {
+      "type": "text",
+      "id": "deal_label",
+      "label": "Deal label",
+      "default": "Deal of the Day"
+    },
+    {
+      "type": "text",
+      "id": "stock_text",
+      "label": "Stock urgency text",
+      "default": "Only 23 left!"
+    },
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Product rating",
+      "default": "4.8"
+    },
+    {
+      "type": "text",
+      "id": "reviews",
+      "label": "Number of reviews",
+      "default": "127"
+    },
+    {
+      "type": "header",
+      "content": "Countdown Timer"
+    },
+    {
+      "type": "text",
+      "id": "countdown_title",
+      "label": "Countdown title",
+      "default": "Deal Expires In"
+    },
+    {
+      "type": "text",
+      "id": "countdown_subtitle",
+      "label": "Countdown subtitle",
+      "default": "Hurry! This exclusive offer won't last long."
+    },
+    {
+      "type": "header",
+      "content": "Action Buttons"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to cart button text",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "text",
+      "id": "view_details_text",
+      "label": "View details button text",
+      "default": "View Details"
+    },
+    {
+      "type": "header",
+      "content": "Guarantees"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_1_title",
+      "label": "Guarantee 1 title",
+      "default": "Free Shipping"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_1_desc",
+      "label": "Guarantee 1 description",
+      "default": "On orders over ₹2,999"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_2_title",
+      "label": "Guarantee 2 title",
+      "default": "Easy Returns"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_2_desc",
+      "label": "Guarantee 2 description",
+      "default": "30-day return policy"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_3_title",
+      "label": "Guarantee 3 title",
+      "default": "Authentic"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_3_desc",
+      "label": "Guarantee 3 description",
+      "default": "100% genuine products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FASHUN Deal of the Day"
+    }
+  ]
+}
+{% endschema %}

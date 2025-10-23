@@ -32,6 +32,11 @@ import { useCart } from '@/hooks/useCart';
 import CartDrawer from '@/components/cart/CartDrawer';
 import { useAuth } from '@/contexts/auth-context';
 import { ExpandableTabs } from '@/components/ui/expandable-tabs';
+import {
+  TruckIcon as TruckAnimated,
+  GiftIcon,
+  AnimatedIcon
+} from '@/components/icons/AnimatedIcons';
 
 const navigationItems = [
   {
@@ -121,22 +126,31 @@ export default function Header() {
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        {/* Top Bar - Enhanced */}
-        <div className="border-b border-orange-500/30 bg-gradient-to-r from-gray-900 via-gray-800 to-black">
-          <div className="container mx-auto px-4">
+        {/* Top Bar - Enhanced with Animated Icons */}
+        <div className="border-b border-orange-500/30 gradient-brand-primary relative overflow-hidden">
+          <div className="absolute inset-0 pattern-gradient-dots opacity-10"></div>
+          <div className="container mx-auto px-4 relative z-10">
             <div className="flex items-center justify-between py-3 text-sm text-white">
               <div className="flex items-center space-x-6">
-                <span className="font-semibold tracking-wide">✨ FREE SHIPPING ON ORDERS OVER ₹999</span>
+                <span className="font-semibold tracking-wide flex items-center gap-2">
+                  <TruckAnimated size={18} />
+                  FREE SHIPPING ON ORDERS OVER ₹999
+                </span>
                 <span className="hidden md:inline text-white/40">|</span>
-                <span className="hidden md:inline">🔄 30-DAY HASSLE-FREE RETURNS</span>
+                <span className="hidden md:inline flex items-center gap-2">
+                  <AnimatedIcon icon="shield" animation="pulse" size={18} />
+                  30-DAY HASSLE-FREE RETURNS
+                </span>
               </div>
               <div className="flex items-center space-x-4">
-                <Link href="/track-order" className="hover:text-orange-400 transition-colors font-medium">
-                  📦 TRACK ORDER
+                <Link href="/track-order" className="hover:text-orange-400 transition-colors font-medium flex items-center gap-2">
+                  <AnimatedIcon icon="package" animation="bounce" size={18} />
+                  TRACK ORDER
                 </Link>
                 <span className="text-white/40">|</span>
-                <Link href="/contact" className="hover:text-orange-400 transition-colors font-medium">
-                  💬 HELP
+                <Link href="/contact" className="hover:text-orange-400 transition-colors font-medium flex items-center gap-2">
+                  <AnimatedIcon icon="message" animation="wiggle" size={18} />
+                  HELP
                 </Link>
               </div>
             </div>

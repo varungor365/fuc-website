@@ -1,0 +1,215 @@
+{% stylesheet %}
+  .profile-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #0a0a0a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .profile-content {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 0 auto 30px;
+    border: 4px solid #007AFF;
+    object-fit: cover;
+    background: rgba(0, 122, 255, 0.1);
+  }
+
+  .profile-name {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 10px;
+  }
+
+  .profile-username {
+    font-size: 1rem;
+    color: #007AFF;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 20px;
+  }
+
+  .profile-bio {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .profile-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .profile-link {
+    display: block;
+    padding: 16px 24px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+  }
+
+  .profile-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .profile-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #007AFF;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 5px;
+  }
+
+  .not-logged-in {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    color: #FFC107;
+    font-family: 'Inter', sans-serif;
+  }
+
+  @media (max-width: 768px) {
+    .profile-name {
+      font-size: 1.5rem;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+    }
+
+    .profile-stats {
+      gap: 20px;
+    }
+  }
+{% endstylesheet %}
+
+<div class="profile-container">
+  <div class="profile-content">
+    {% if customer %}
+      <!-- Logged In User Profile -->
+      {% assign bio = customer.metafields.custom.bio | default: customer.first_name | append: ' ' | append: customer.last_name %}
+      {% assign avatar = customer.metafields.custom.profile_image %}
+      {% assign links = customer.metafields.custom.social_links | parse_json %}
+
+      {% if avatar %}
+        <img src="{{ avatar }}" alt="{{ customer.first_name }}" class="profile-avatar">
+      {% else %}
+        <div class="profile-avatar" style="background: linear-gradient(135deg, #007AFF 0%, #00D9FF 100%); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+          👤
+        </div>
+      {% endif %}
+
+      <h1 class="profile-name">{{ customer.first_name }} {{ customer.last_name }}</h1>
+      <p class="profile-username">@{{ customer.email | split: '@' | first }}</p>
+      <p class="profile-bio">{{ bio }}</p>
+
+      <!-- Social Links -->
+      <div class="profile-links">
+        {% if customer.metafields.custom.instagram_url %}
+          <a href="{{ customer.metafields.custom.instagram_url }}" class="profile-link" target="_blank">
+            📸 Instagram
+          </a>
+        {% endif %}
+
+        {% if customer.metafields.custom.twitter_url %}
+          <a href="{{ customer.metafields.custom.twitter_url }}" class="profile-link" target="_blank">
+            𝕏 Twitter
+          </a>
+        {% endif %}
+
+        {% if customer.metafields.custom.youtube_url %}
+          <a href="{{ customer.metafields.custom.youtube_url }}" class="profile-link" target="_blank">
+            ▶ YouTube
+          </a>
+        {% endif %}
+
+        {% if customer.metafields.custom.portfolio_url %}
+          <a href="{{ customer.metafields.custom.portfolio_url }}" class="profile-link" target="_blank">
+            🌐 Portfolio
+          </a>
+        {% endif %}
+
+        {% if customer.metafields.custom.shop_link %}
+          <a href="{{ customer.metafields.custom.shop_link }}" class="profile-link">
+            🛍️ Shop My Style
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Profile Stats -->
+      <div class="profile-stats">
+        <div class="stat">
+          <div class="stat-value">{{ customer.orders_count }}</div>
+          <div class="stat-label">Orders</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">{{ customer.metafields.custom.profile_views | default: 0 }}</div>
+          <div class="stat-label">Profile Views</div>
+        </div>
+      </div>
+
+    {% else %}
+      <!-- Not Logged In -->
+      <div class="not-logged-in">
+        <p>🔒 Please log in to view this profile</p>
+      </div>
+
+      <a href="/account/login" class="profile-link" style="display: inline-block; margin-bottom: 20px;">
+        Log In to Your Account
+      </a>
+
+      <!-- Demo Profile -->
+      <h2 class="profile-name">FASHUN Profile Demo</h2>
+      <p class="profile-username">@fashun_demo</p>
+      <p class="profile-bio">
+        This is a sample profile page. Log in or create an account to set up your own profile!
+      </p>
+
+      <div class="profile-links">
+        <a href="/" class="profile-link">← Back to Store</a>
+        <a href="/account/register" class="profile-link">Create Account</a>
+      </div>
+
+    {% endif %}
+  </div>
+</div>

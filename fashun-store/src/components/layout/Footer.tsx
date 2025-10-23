@@ -9,6 +9,12 @@ import {
   MapPinIcon,
   HeartIcon
 } from '@heroicons/react/24/outline';
+import {
+  AnimatedIcon,
+  FlameIcon,
+  SparklesIcon,
+  RocketIcon
+} from '@/components/icons/AnimatedIcons';
 
 const footerLinks = {
   shop: [
@@ -43,9 +49,10 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-neutral-900 to-black text-white">
+    <footer className="gradient-hero-cosmic pattern-gradient-grid text-white relative overflow-hidden">
+      <div className="absolute inset-0 mesh-gradient-2 opacity-40"></div>
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">

@@ -25,6 +25,10 @@
 
     {{ content_for_header }}
 
+    {% comment %} FASHUN.CO Theme Assets {% endcomment %}
+    <link rel="stylesheet" href="{{ 'responsive.css' | asset_url }}">
+    <link rel="stylesheet" href="{{ 'fashun-theme.css' | asset_url }}">
+    <link rel="stylesheet" href="{{ 'fashun-animations.css' | asset_url }}">
     <link rel="stylesheet" href="{{ 'theme.scss.css' | asset_url }}">
 
     <script>
@@ -150,6 +154,11 @@
       </div>
     </div>
   {% include 'banana-stand-footer' %}
+
+  {% comment %} FASHUN.CO AI & Animation Scripts {% endcomment %}
+  <script src="{{ 'fashun-animations.js' | asset_url }}" defer></script>
+  <script src="{{ 'fashun-theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'predictive-search.js' | asset_url }}" defer></script>
 
 {% include 'adolab-get-clicked-seo' %}
 

@@ -1,0 +1,128 @@
+{% stylesheet %}
+  header {
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .nav a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .nav a:hover {
+    color: #007AFF;
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .cart-icon {
+    position: relative;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+
+  .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #007AFF;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  @media (max-width: 768px) {
+    .header-content {
+      justify-content: space-between;
+    }
+
+    .nav {
+      display: none;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+<header>
+  <div class="header-content">
+    <a href="/" class="logo">
+      <span style="font-size: 1.5rem;">✨</span> FASHUN
+    </a>
+
+    <nav class="nav">
+      <a href="/collections/all">Shop</a>
+      <a href="/collections">Collections</a>
+      <a href="/pages/about">About</a>
+      <a href="/pages/contact">Contact</a>
+    </nav>
+
+    <div class="nav-buttons">
+      {% if customer %}
+        <a href="/account" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">👤 Account</a>
+      {% else %}
+        <a href="/account/login" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Log In</a>
+      {% endif %}
+
+      <div class="cart-icon">
+        <a href="/cart" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; font-size: 1.2rem;">🛒</a>
+        {% if cart.item_count > 0 %}
+          <span class="cart-count">{{ cart.item_count }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": []
+}
+{% endschema %}

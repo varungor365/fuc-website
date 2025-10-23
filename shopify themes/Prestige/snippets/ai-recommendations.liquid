@@ -1,0 +1,397 @@
+{% comment %}
+  FASHUN.CO AI Recommendations
+  Personalized product recommendations
+{% endcomment %}
+
+{%- if settings.enable_ai_recommendations -%}
+  <div id="ai-recommendations-container"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!{{ settings.enable_ai_recommendations | json }}) return;
+      
+      class AIRecommendations {
+        constructor() {
+          this.viewedProducts = JSON.parse(localStorage.getItem('fashun_viewed_products') || '[]');
+          this.userPreferences = JSON.parse(localStorage.getItem('fashun_user_preferences') || '{}');
+          this.init();
+        }
+        
+        init() {
+          this.trackCurrentProduct();
+          this.updateUserPreferences();
+          this.loadRecommendations();
+        }
+        
+        trackCurrentProduct() {
+          const productId = document.querySelector('[data-product-id]')?.dataset.productId;
+          if (!productId) return;
+          
+          // Add to viewed products
+          if (!this.viewedProducts.includes(productId)) {
+            this.viewedProducts.push(productId);
+            if (this.viewedProducts.length > 20) {
+              this.viewedProducts.shift(); // Keep only last 20 viewed products
+            }
+            localStorage.setItem('fashun_viewed_products', JSON.stringify(this.viewedProducts));
+          }
+          
+          // Track product category and tags for preferences
+          const productType = document.querySelector('[data-product-type]')?.dataset.productType;
+          const productTags = document.querySelector('[data-product-tags]')?.dataset.productTags?.split(',') || [];
+          
+          if (productType) {
+            this.userPreferences.categories = this.userPreferences.categories || {};
+            this.userPreferences.categories[productType] = (this.userPreferences.categories[productType] || 0) + 1;
+          }
+          
+          productTags.forEach(tag => {
+            if (tag.trim()) {
+              this.userPreferences.tags = this.userPreferences.tags || {};
+              this.userPreferences.tags[tag.trim()] = (this.userPreferences.tags[tag.trim()] || 0) + 1;
+            }
+          });
+          
+          localStorage.setItem('fashun_user_preferences', JSON.stringify(this.userPreferences));
+        }
+        
+        updateUserPreferences() {
+          // Track time spent on page
+          const startTime = Date.now();
+          
+          window.addEventListener('beforeunload', () => {
+            const timeSpent = Date.now() - startTime;
+            const productId = document.querySelector('[data-product-id]')?.dataset.productId;
+            
+            if (productId && timeSpent > 5000) { // More than 5 seconds indicates interest
+              this.userPreferences.engagement = this.userPreferences.engagement || {};
+              this.userPreferences.engagement[productId] = timeSpent;
+              localStorage.setItem('fashun_user_preferences', JSON.stringify(this.userPreferences));
+            }
+          });
+        }
+        
+        async loadRecommendations() {
+          try {
+            // Simulate AI recommendation API call
+            const recommendations = await this.getAIRecommendations();
+            this.displayRecommendations(recommendations);
+          } catch (error) {
+            console.log('AI recommendations not available:', error);
+            this.loadFallbackRecommendations();
+          }
+        }
+        
+        async getAIRecommendations() {
+          const apiEndpoint = {{ settings.ai_api_endpoint | json }};
+          
+          if (!apiEndpoint) {
+            throw new Error('AI API endpoint not configured');
+          }
+          
+          const response = await fetch(apiEndpoint + '/recommendations', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              viewed_products: this.viewedProducts,
+              user_preferences: this.userPreferences,
+              current_product: document.querySelector('[data-product-id]')?.dataset.productId,
+              limit: 6
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error('AI API request failed');
+          }
+          
+          return await response.json();
+        }
+        
+        loadFallbackRecommendations() {
+          // Fallback to related products or popular items
+          const currentProductType = document.querySelector('[data-product-type]')?.dataset.productType;
+          
+          if (currentProductType) {
+            // Show products from the same category
+            this.displayCategoryRecommendations(currentProductType);
+          } else {
+            // Show recently viewed products
+            this.displayRecentlyViewed();
+          }
+        }
+        
+        displayRecommendations(recommendations) {
+          if (!recommendations || recommendations.length === 0) return;
+          
+          const container = document.getElementById('ai-recommendations-container');
+          if (!container) return;
+          
+          const recommendationsHTML = `
+            <div class="ai-recommendations-section">
+              <div class="container">
+                <div class="section-header">
+                  <h3 class="section-title">Recommended for You</h3>
+                  <p class="section-subtitle">AI-curated picks based on your style</p>
+                </div>
+                <div class="recommendations-grid">
+                  ${recommendations.map(product => this.createProductCard(product)).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+          
+          container.innerHTML = recommendationsHTML;
+          
+          // Add event listeners
+          this.addRecommendationTracking();
+        }
+        
+        displayCategoryRecommendations(category) {
+          // This would typically fetch products from the same category
+          // For now, we'll create a placeholder
+          const container = document.getElementById('ai-recommendations-container');
+          if (!container) return;
+          
+          container.innerHTML = `
+            <div class="ai-recommendations-section">
+              <div class="container">
+                <div class="section-header">
+                  <h3 class="section-title">More ${category}</h3>
+                  <p class="section-subtitle">Similar products you might like</p>
+                </div>
+                <div class="recommendations-grid">
+                  <div class="recommendation-placeholder">
+                    <p>Loading similar products...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        
+        displayRecentlyViewed() {
+          if (this.viewedProducts.length === 0) return;
+          
+          const container = document.getElementById('ai-recommendations-container');
+          if (!container) return;
+          
+          container.innerHTML = `
+            <div class="ai-recommendations-section">
+              <div class="container">
+                <div class="section-header">
+                  <h3 class="section-title">Recently Viewed</h3>
+                  <p class="section-subtitle">Continue where you left off</p>
+                </div>
+                <div class="recommendations-grid">
+                  ${this.viewedProducts.slice(-6).map(productId => 
+                    `<div class="recently-viewed-item" data-product-id="${productId}">
+                       <p>Product ${productId}</p>
+                     </div>`
+                  ).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        
+        createProductCard(product) {
+          return `
+            <div class="recommendation-card" data-product-id="${product.id}">
+              <a href="${product.url}" class="recommendation-link">
+                <div class="recommendation-image">
+                  <img src="${product.image}" alt="${product.title}" loading="lazy">
+                  <div class="ai-badge">AI Pick</div>
+                </div>
+                <div class="recommendation-content">
+                  <h4 class="recommendation-title">${product.title}</h4>
+                  <div class="recommendation-price">
+                    <span class="current-price">${product.price}</span>
+                    ${product.compare_at_price ? `<span class="original-price">${product.compare_at_price}</span>` : ''}
+                  </div>
+                  <div class="recommendation-score">
+                    <span class="score-label">Match Score:</span>
+                    <span class="score-value">${product.match_score || 95}%</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          `;
+        }
+        
+        addRecommendationTracking() {
+          document.querySelectorAll('.recommendation-card').forEach(card => {
+            card.addEventListener('click', () => {
+              const productId = card.dataset.productId;
+              this.trackRecommendationClick(productId);
+            });
+          });
+        }
+        
+        trackRecommendationClick(productId) {
+          // Track that user clicked on a recommendation
+          const clicks = JSON.parse(localStorage.getItem('fashun_recommendation_clicks') || '[]');
+          clicks.push({
+            product_id: productId,
+            timestamp: Date.now(),
+            source: 'ai_recommendations'
+          });
+          
+          // Keep only last 50 clicks
+          if (clicks.length > 50) {
+            clicks.splice(0, clicks.length - 50);
+          }
+          
+          localStorage.setItem('fashun_recommendation_clicks', JSON.stringify(clicks));
+        }
+      }
+      
+      // Initialize AI recommendations
+      new AIRecommendations();
+    });
+  </script>
+
+  <style>
+    .ai-recommendations-section {
+      padding: 60px 0;
+      background: #f9fafb;
+      margin-top: 40px;
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--fashun-secondary);
+      margin-bottom: 8px;
+    }
+    
+    .section-subtitle {
+      color: #6b7280;
+      font-size: 1.1rem;
+    }
+    
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    
+    .recommendation-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .recommendation-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .recommendation-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+    
+    .recommendation-image {
+      position: relative;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+    }
+    
+    .recommendation-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .recommendation-card:hover .recommendation-image img {
+      transform: scale(1.05);
+    }
+    
+    .ai-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .recommendation-content {
+      padding: 16px;
+    }
+    
+    .recommendation-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--fashun-secondary);
+    }
+    
+    .recommendation-price {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .current-price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--fashun-secondary);
+    }
+    
+    .original-price {
+      font-size: 1rem;
+      color: #9ca3af;
+      text-decoration: line-through;
+    }
+    
+    .recommendation-score {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+    }
+    
+    .score-label {
+      color: #6b7280;
+    }
+    
+    .score-value {
+      color: var(--fashun-primary);
+      font-weight: 600;
+    }
+    
+    .recommendation-placeholder {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px;
+      color: #6b7280;
+    }
+    
+    @media (max-width: 768px) {
+      .ai-recommendations-section {
+        padding: 40px 0;
+      }
+      
+      .recommendations-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+      }
+    }
+  </style>
+{%- endif -%}

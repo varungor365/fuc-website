@@ -1,0 +1,354 @@
+{% stylesheet %}
+  .product-customizer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .customizer-preview {
+    position: relative;
+    height: 600px;
+    background: #f5f5f5;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+  }
+
+  .preview-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .custom-text {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #007AFF;
+    text-align: center;
+    max-width: 300px;
+    word-wrap: break-word;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .customizer-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .control-section {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 20px;
+  }
+
+  .control-section:last-child {
+    border-bottom: none;
+  }
+
+  .control-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .control-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.3s ease;
+  }
+
+  .control-input:focus {
+    outline: none;
+    border-color: #007AFF;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  }
+
+  .file-upload {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  .file-label {
+    display: block;
+    padding: 20px;
+    background: #f0f0f0;
+    border: 2px dashed #007AFF;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .file-label:hover {
+    background: #e8f0ff;
+    border-color: #0051D5;
+  }
+
+  .color-picker {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .color-swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .color-swatch.active {
+    border-color: #007AFF;
+    transform: scale(1.1);
+  }
+
+  .add-to-cart-btn {
+    background: #007AFF;
+    color: white;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+  }
+
+  .add-to-cart-btn:hover {
+    background: #0051D5;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 122, 255, 0.3);
+  }
+
+  .virtual-tryon-section {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 1024px) {
+    .product-customizer {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .customizer-preview {
+      height: 400px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .product-customizer {
+      padding: 20px 10px;
+    }
+
+    .customizer-controls {
+      gap: 20px;
+    }
+  }
+{% endstylesheet %}
+
+<div class="product-customizer">
+  <!-- Preview Section -->
+  <div class="customizer-preview">
+    <img 
+      id="previewImage" 
+      src="{{ product.featured_image | image_url: width: 600 }}"
+      alt="{{ product.title }}"
+      class="preview-image"
+    >
+    <div class="preview-overlay" id="previewOverlay">
+      <div class="custom-text" id="previewText" style="font-size: 24px;">
+        Your Text Here
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls Section -->
+  <div class="customizer-controls">
+    <h2 style="font-size: 2rem; color: #333; font-family: 'Montserrat', sans-serif;">Customize Your Product</h2>
+
+    <!-- Text Input -->
+    <div class="control-section">
+      <label class="control-label">Custom Text</label>
+      <input 
+        type="text" 
+        id="customText" 
+        class="control-input"
+        placeholder="Enter your custom text"
+        maxlength="50"
+      >
+      <p style="font-size: 0.85rem; color: #999; margin-top: 5px;">Up to 50 characters</p>
+    </div>
+
+    <!-- Text Size -->
+    <div class="control-section">
+      <label class="control-label">Text Size</label>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <input 
+          type="range" 
+          id="textSize" 
+          min="12" 
+          max="48" 
+          value="24"
+          style="flex: 1;"
+        >
+        <span id="sizeDisplay">24px</span>
+      </div>
+    </div>
+
+    <!-- Color Picker -->
+    <div class="control-section">
+      <label class="control-label">Text Color</label>
+      <div class="color-picker">
+        <div class="color-swatch active" style="background: #007AFF;" data-color="#007AFF"></div>
+        <div class="color-swatch" style="background: #FF006E;" data-color="#FF006E"></div>
+        <div class="color-swatch" style="background: #00D9FF;" data-color="#00D9FF"></div>
+        <div class="color-swatch" style="background: #FFB81C;" data-color="#FFB81C"></div>
+        <div class="color-swatch" style="background: #FFFFFF;" data-color="#FFFFFF" style="border: 1px solid #ddd;"></div>
+        <div class="color-swatch" style="background: #000000;" data-color="#000000"></div>
+      </div>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="control-section">
+      <label class="control-label">Add Custom Image</label>
+      <div class="file-upload">
+        <input 
+          type="file" 
+          id="imageUpload" 
+          class="file-input"
+          accept="image/*"
+        >
+        <label for="imageUpload" class="file-label">
+          <div style="font-weight: 600; color: #007AFF;">📁 Click to upload or drag image</div>
+          <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">PNG, JPG up to 5MB</div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Virtual Try-On Section (App Integration Point) -->
+    {% if settings.enable_virtual_tryon %}
+      <div class="virtual-tryon-section">
+        <h4 style="margin: 0 0 10px 0; font-size: 1rem; color: #333;">
+          🪞 Virtual Try-On
+        </h4>
+        <p style="font-size: 0.9rem; color: #666; margin: 0;">
+          Try this product on using your camera - powered by AR technology
+        </p>
+        <button style="
+          margin-top: 10px;
+          width: 100%;
+          padding: 12px;
+          background: rgba(0, 122, 255, 0.1);
+          border: 1px solid #007AFF;
+          color: #007AFF;
+          border-radius: 6px;
+          cursor: pointer;
+          font-weight: 600;
+        " onclick="launchVirtualTryOn()">
+          Launch AR Try-On
+        </button>
+        <!-- Placeholder for Shopify app embed -->
+        {% comment %} Shopify App Block for Virtual Try-On will be inserted here {% endcomment %}
+      </div>
+    {% endif %}
+
+    <!-- Add to Cart -->
+    <form method="post" action="/cart/add" class="customizer-form">
+      <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
+      <input type="hidden" name="properties[Custom Text]" id="cartCustomText" value="Your Text Here">
+      <input type="hidden" name="properties[Custom Image URL]" id="cartCustomImage" value="">
+      
+      <button type="submit" class="add-to-cart-btn">
+        ✓ Add to Cart — {{ product.price | money }}
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Customizer JavaScript
+  const customTextInput = document.getElementById('customText');
+  const textSizeSlider = document.getElementById('textSize');
+  const previewText = document.getElementById('previewText');
+  const sizeDisplay = document.getElementById('sizeDisplay');
+  const colorSwatches = document.querySelectorAll('.color-swatch');
+  const imageUpload = document.getElementById('imageUpload');
+  const cartCustomText = document.getElementById('cartCustomText');
+  const cartCustomImage = document.getElementById('cartCustomImage');
+
+  // Update preview text
+  customTextInput.addEventListener('input', (e) => {
+    previewText.textContent = e.target.value || 'Your Text Here';
+    cartCustomText.value = e.target.value;
+  });
+
+  // Update text size
+  textSizeSlider.addEventListener('input', (e) => {
+    previewText.style.fontSize = e.target.value + 'px';
+    sizeDisplay.textContent = e.target.value + 'px';
+  });
+
+  // Update text color
+  colorSwatches.forEach(swatch => {
+    swatch.addEventListener('click', (e) => {
+      colorSwatches.forEach(s => s.classList.remove('active'));
+      e.target.classList.add('active');
+      previewText.style.color = e.target.dataset.color;
+    });
+  });
+
+  // Handle image upload
+  imageUpload.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        cartCustomImage.value = event.target.result;
+        // Could add preview of uploaded image here
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Virtual Try-On launch (placeholder)
+  function launchVirtualTryOn() {
+    console.log('Virtual Try-On launched - Waiting for app integration');
+    // This will be replaced by actual Shopify app block
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product - Customizer",
+  "settings": []
+}
+{% endschema %}

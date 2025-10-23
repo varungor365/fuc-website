@@ -1,0 +1,101 @@
+{% comment %}
+  Payment Icons Snippet - Trust Indicators
+  Display accepted payment methods
+{% endcomment %}
+
+<div class="payment-icons">
+  <p class="payment-icons-label">We accept</p>
+  <div class="payment-icons-grid">
+    {% if shop.enabled_payment_types contains 'visa' %}
+      <svg class="payment-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-label="Visa">
+        <rect fill="#1434CB" width="32" height="32" rx="3"/>
+        <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-weight="bold" font-size="10">VISA</text>
+      </svg>
+    {% endif %}
+
+    {% if shop.enabled_payment_types contains 'mastercard' %}
+      <svg class="payment-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-label="Mastercard">
+        <rect fill="#EB001B" width="16" height="32"/>
+        <rect fill="#F79E1B" x="16" width="16" height="32"/>
+        <circle cx="11" cy="16" r="5" fill="#FF5F00" opacity="0.8"/>
+      </svg>
+    {% endif %}
+
+    {% if shop.enabled_payment_types contains 'american_express' %}
+      <svg class="payment-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-label="American Express">
+        <rect fill="#006FCF" width="32" height="32" rx="3"/>
+        <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-weight="bold" font-size="9">AMEX</text>
+      </svg>
+    {% endif %}
+
+    {% if shop.enabled_payment_types contains 'apple_pay' %}
+      <svg class="payment-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-label="Apple Pay">
+        <rect fill="black" width="32" height="32" rx="3"/>
+        <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-weight="bold" font-size="10">Apple</text>
+      </svg>
+    {% endif %}
+
+    {% if shop.enabled_payment_types contains 'google_pay' %}
+      <svg class="payment-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-label="Google Pay">
+        <rect fill="white" width="32" height="32" rx="3" stroke="#ddd" stroke-width="0.5"/>
+        <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#666" font-weight="bold" font-size="8">Google</text>
+      </svg>
+    {% endif %}
+
+    {% if shop.enabled_payment_types contains 'paypal' %}
+      <svg class="payment-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-label="PayPal">
+        <rect fill="#003087" width="32" height="32" rx="3"/>
+        <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#FFC439" font-weight="bold" font-size="10">PP</text>
+      </svg>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .payment-icons {
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .payment-icons-label {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .payment-icons-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .payment-icon {
+    width: 45px;
+    height: 30px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s;
+  }
+
+  .payment-icon:hover {
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    .payment-icons {
+      padding: 1.5rem 0;
+    }
+
+    .payment-icon {
+      width: 40px;
+      height: 26px;
+    }
+
+    .payment-icons-grid {
+      gap: 0.75rem;
+    }
+  }
+</style>

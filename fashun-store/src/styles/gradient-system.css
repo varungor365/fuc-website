@@ -1,0 +1,439 @@
+/**
+ * FASHUN Gradient Design System
+ * Inspired by gradienty.codes
+ * Premium gradient utilities for modern web design
+ */
+
+/* ========================================
+   1. BRAND GRADIENT PRESETS
+   ======================================== */
+
+.gradient-brand-primary {
+  background: linear-gradient(135deg, #ff6b35 0%, #f72585 50%, #7209b7 100%);
+}
+
+.gradient-brand-secondary {
+  background: linear-gradient(135deg, #ff9770 0%, #ff6b9d 50%, #a855f7 100%);
+}
+
+.gradient-brand-tertiary {
+  background: linear-gradient(135deg, #ffd60a 0%, #ff9f1c 50%, #ff006e 100%);
+}
+
+/* ========================================
+   2. HERO GRADIENTS (Large Sections)
+   ======================================== */
+
+.gradient-hero-sunset {
+  background: linear-gradient(135deg, #ff6b35 0%, #f72585 25%, #b5179e 50%, #7209b7 75%, #3a0ca3 100%);
+}
+
+.gradient-hero-ocean {
+  background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 25%, #7209b7 50%, #b5179e 75%, #f72585 100%);
+}
+
+.gradient-hero-cosmic {
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1d3f 25%, #2d1b69 50%, #7209b7 75%, #f72585 100%);
+}
+
+.gradient-hero-neon {
+  background: linear-gradient(135deg, #00f5ff 0%, #7b2cbf 25%, #f72585 50%, #ff006e 75%, #ffbe0b 100%);
+}
+
+/* ========================================
+   3. CARD GRADIENTS (Components)
+   ======================================== */
+
+.gradient-card-glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gradient-card-dark {
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(18, 18, 36, 0.95) 100%);
+  border: 1px solid rgba(247, 37, 133, 0.2);
+}
+
+.gradient-card-vibrant {
+  background: linear-gradient(135deg, #ff6b35 0%, #f72585 100%);
+}
+
+.gradient-card-subtle {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(247, 37, 133, 0.1) 100%);
+}
+
+/* ========================================
+   4. TEXT GRADIENTS
+   ======================================== */
+
+.text-gradient-primary {
+  background: linear-gradient(135deg, #ff6b35 0%, #f72585 50%, #7209b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-fire {
+  background: linear-gradient(135deg, #ffbe0b 0%, #ff006e 50%, #8338ec 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-ice {
+  background: linear-gradient(135deg, #00f5ff 0%, #4361ee 50%, #3a0ca3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #ffd60a 0%, #ff9f1c 50%, #ff6b35 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-animate {
+  background: linear-gradient(90deg, #ff6b35 0%, #f72585 25%, #7209b7 50%, #4361ee 75%, #ff6b35 100%);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 6s ease infinite;
+}
+
+/* ========================================
+   5. BUTTON GRADIENTS
+   ======================================== */
+
+.btn-gradient-primary {
+  background: linear-gradient(135deg, #ff6b35 0%, #f72585 100%);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.btn-gradient-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f72585 0%, #7209b7 100%);
+  transition: left 0.4s ease;
+}
+
+.btn-gradient-primary:hover::before {
+  left: 0;
+}
+
+.btn-gradient-secondary {
+  background: linear-gradient(135deg, #7209b7 0%, #3a0ca3 100%);
+  box-shadow: 0 10px 30px rgba(114, 9, 183, 0.4);
+}
+
+.btn-gradient-outline {
+  background: transparent;
+  border: 2px solid transparent;
+  background-image: linear-gradient(white, white), linear-gradient(135deg, #ff6b35 0%, #f72585 50%, #7209b7 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* ========================================
+   6. BORDER GRADIENTS
+   ======================================== */
+
+.border-gradient-primary {
+  border: 2px solid transparent;
+  background-image: linear-gradient(white, white), linear-gradient(135deg, #ff6b35 0%, #f72585 100%);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.border-gradient-glow {
+  position: relative;
+  border: 1px solid rgba(247, 37, 133, 0.3);
+  box-shadow: 0 0 20px rgba(247, 37, 133, 0.5), inset 0 0 20px rgba(247, 37, 133, 0.1);
+}
+
+/* ========================================
+   7. MESH GRADIENTS (Complex Backgrounds)
+   ======================================== */
+
+.mesh-gradient-1 {
+  background: 
+    radial-gradient(at 0% 0%, rgba(255, 107, 53, 0.3) 0px, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(247, 37, 133, 0.3) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(114, 9, 183, 0.3) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(255, 107, 53, 0.2) 0px, transparent 50%),
+    radial-gradient(at 100% 50%, rgba(114, 9, 183, 0.2) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(58, 12, 163, 0.3) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(247, 37, 133, 0.3) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(255, 107, 53, 0.3) 0px, transparent 50%);
+  background-color: #0a0e27;
+}
+
+.mesh-gradient-2 {
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(114, 9, 183, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(247, 37, 133, 0.4) 0%, transparent 50%);
+  background-color: #000;
+}
+
+/* ========================================
+   8. PATTERN BACKGROUNDS
+   ======================================== */
+
+.pattern-gradient-dots {
+  background-color: #0a0e27;
+  background-image: 
+    radial-gradient(circle, rgba(247, 37, 133, 0.4) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.pattern-gradient-grid {
+  background-color: #0a0e27;
+  background-image: 
+    linear-gradient(rgba(247, 37, 133, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(247, 37, 133, 0.2) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.pattern-gradient-diagonal {
+  background-color: #0a0e27;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 35px,
+    rgba(247, 37, 133, 0.1) 35px,
+    rgba(247, 37, 133, 0.1) 70px
+  );
+}
+
+/* ========================================
+   9. GLASSMORPHISM EFFECTS
+   ======================================== */
+
+.glass-gradient-light {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(247, 37, 133, 0.2);
+}
+
+.glass-gradient-dark {
+  background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(18, 18, 36, 0.9) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(247, 37, 133, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(247, 37, 133, 0.3);
+}
+
+.glass-gradient-frosted {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ========================================
+   10. ANIMATED GRADIENTS
+   ======================================== */
+
+.gradient-animate-slow {
+  background: linear-gradient(270deg, #ff6b35, #f72585, #7209b7, #4361ee);
+  background-size: 800% 800%;
+  animation: gradientShift 15s ease infinite;
+}
+
+.gradient-animate-medium {
+  background: linear-gradient(270deg, #ff6b35, #f72585, #7209b7);
+  background-size: 600% 600%;
+  animation: gradientShift 8s ease infinite;
+}
+
+.gradient-animate-fast {
+  background: linear-gradient(270deg, #ff6b35, #f72585, #7209b7);
+  background-size: 400% 400%;
+  animation: gradientShift 4s ease infinite;
+}
+
+.gradient-pulse {
+  background: linear-gradient(135deg, #ff6b35 0%, #f72585 100%);
+  animation: gradientPulse 3s ease infinite;
+}
+
+/* ========================================
+   11. BOX SHADOW GRADIENTS
+   ======================================== */
+
+.shadow-gradient-primary {
+  box-shadow: 
+    0 10px 40px rgba(255, 107, 53, 0.3),
+    0 20px 60px rgba(247, 37, 133, 0.2);
+}
+
+.shadow-gradient-glow {
+  box-shadow: 
+    0 0 20px rgba(247, 37, 133, 0.6),
+    0 0 40px rgba(247, 37, 133, 0.4),
+    0 0 60px rgba(247, 37, 133, 0.2);
+}
+
+.shadow-gradient-neon {
+  box-shadow: 
+    0 0 10px rgba(247, 37, 133, 0.8),
+    0 0 20px rgba(247, 37, 133, 0.6),
+    0 0 30px rgba(247, 37, 133, 0.4),
+    0 0 40px rgba(114, 9, 183, 0.3);
+}
+
+/* ========================================
+   12. HOVER EFFECTS
+   ======================================== */
+
+.hover-gradient-lift {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-gradient-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 60px rgba(247, 37, 133, 0.4),
+    0 0 40px rgba(255, 107, 53, 0.3);
+}
+
+.hover-gradient-glow:hover {
+  box-shadow: 
+    0 0 30px rgba(247, 37, 133, 0.8),
+    0 0 60px rgba(247, 37, 133, 0.5),
+    inset 0 0 20px rgba(247, 37, 133, 0.2);
+}
+
+.hover-gradient-scale {
+  transition: all 0.3s ease;
+}
+
+.hover-gradient-scale:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #f72585 0%, #7209b7 100%);
+}
+
+/* ========================================
+   13. KEYFRAME ANIMATIONS
+   ======================================== */
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradientPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes gradientRotate {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* ========================================
+   14. UTILITY CLASSES
+   ======================================== */
+
+.gradient-text-shine {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+.gradient-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.9) 0%, rgba(247, 37, 133, 0.9) 100%);
+  z-index: 1;
+}
+
+.gradient-overlay > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ========================================
+   15. RESPONSIVE UTILITIES
+   ======================================== */
+
+@media (max-width: 768px) {
+  .gradient-hero-sunset,
+  .gradient-hero-ocean,
+  .gradient-hero-cosmic {
+    background-attachment: scroll;
+  }
+  
+  .mesh-gradient-1,
+  .mesh-gradient-2 {
+    background-size: cover;
+  }
+}
+
+/* ========================================
+   16. PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+.will-change-gradient {
+  will-change: background, transform, box-shadow;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}

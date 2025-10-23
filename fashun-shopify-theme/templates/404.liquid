@@ -1,0 +1,317 @@
+{% comment %}
+  FASHUN.CO 404 Page - Shopify Online Store 2.0 Compatible
+  Supports custom sections via section blocks
+{% endcomment %}
+
+<main class="error-page">
+  <div class="container">
+    <div class="error-content">
+      <div class="error-animation">
+        <div class="error-number">404</div>
+        <div class="error-icon">😵</div>
+      </div>
+      
+      <div class="error-text">
+        <h1 class="error-title">{{ section.settings.heading }}</h1>
+        <p class="error-message">{{ section.settings.description }}</p>
+      </div>
+      
+      <div class="error-actions">
+        <a href="{{ routes.root_url }}" class="btn btn-primary">
+          {{ section.settings.primary_button_text }}
+        </a>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn-secondary">
+          {{ section.settings.secondary_button_text }}
+        </a>
+      </div>
+      
+      {% if section.settings.show_suggestions %}
+        <div class="error-suggestions">
+          <h3>{{ section.settings.suggestions_heading }}</h3>
+          <div class="suggestions-grid">
+            {% for block in section.blocks %}
+              <a href="{{ block.settings.link }}" class="suggestion-item">
+                <span class="suggestion-icon">{{ block.settings.icon }}</span>
+                <span class="suggestion-text">{{ block.settings.title }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</main>
+
+<style>
+  .error-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    background: linear-gradient(135deg, #f9fafb, #e5e7eb);
+  }
+  
+  .error-content {
+    text-align: center;
+    max-width: 600px;
+  }
+  
+  .error-animation {
+    position: relative;
+    margin-bottom: 40px;
+  }
+  
+  .error-number {
+    font-size: clamp(80px, 15vw, 200px);
+    font-weight: 900;
+    color: var(--fashun-primary);
+    line-height: 1;
+    margin-bottom: 20px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  
+  .error-icon {
+    font-size: 60px;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .error-title {
+    font-size: clamp(24px, 5vw, 48px);
+    font-weight: 700;
+    color: var(--fashun-secondary);
+    margin-bottom: 16px;
+  }
+  
+  .error-message {
+    font-size: 18px;
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 40px;
+  }
+  
+  .error-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+  
+  .btn-primary {
+    background: var(--fashun-primary);
+    color: var(--fashun-secondary);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(228, 197, 144, 0.4);
+  }
+  
+  .btn-secondary {
+    background: transparent;
+    color: var(--fashun-secondary);
+    border: 2px solid var(--fashun-primary);
+  }
+  
+  .btn-secondary:hover {
+    background: var(--fashun-primary);
+    color: var(--fashun-secondary);
+  }
+  
+  .error-suggestions h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--fashun-secondary);
+    margin-bottom: 24px;
+  }
+  
+  .suggestions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+  }
+  
+  .suggestion-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--fashun-secondary);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .suggestion-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    color: var(--fashun-primary);
+  }
+  
+  .suggestion-icon {
+    font-size: 32px;
+  }
+  
+  .suggestion-text {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-20px);
+    }
+    60% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .error-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .btn {
+      width: 100%;
+      max-width: 280px;
+    }
+    
+    .suggestions-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "404 Not Found",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Oops! Page Not Found"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "The page you're looking for seems to have vanished into the streetwear void. Don't worry, even the best fits sometimes go missing!"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primary Button Text",
+      "default": "Back to Home"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary Button Text",
+      "default": "Shop All Products"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_suggestions",
+      "label": "Show Suggested Links",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "suggestions_heading",
+      "label": "Suggestions Heading",
+      "default": "Maybe you're looking for:"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "suggestion",
+      "name": "Suggestion Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (Emoji)",
+          "default": "🔗"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Link Title",
+          "default": "Link"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "404 Not Found",
+      "blocks": [
+        {
+          "type": "suggestion",
+          "settings": {
+            "icon": "👕",
+            "title": "T-Shirts",
+            "link": "/collections/t-shirts"
+          }
+        },
+        {
+          "type": "suggestion",
+          "settings": {
+            "icon": "🧥",
+            "title": "Hoodies",
+            "link": "/collections/hoodies"
+          }
+        },
+        {
+          "type": "suggestion",
+          "settings": {
+            "icon": "✨",
+            "title": "New Arrivals",
+            "link": "/collections/new-arrivals"
+          }
+        },
+        {
+          "type": "suggestion",
+          "settings": {
+            "icon": "📞",
+            "title": "Contact Us",
+            "link": "/pages/contact"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

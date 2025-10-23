@@ -1,0 +1,483 @@
+{% comment %}
+  FASHUN.CO Hero Section
+  Streetwear Revolution Banner
+{% endcomment %}
+
+<section class="fashun-hero" id="fashun-hero-{{ section.id }}">
+  <!-- Promotional Banner -->
+  {%- if section.settings.show_promo_banner -%}
+    <div class="fashun-promo-banner">
+      <div class="container">
+        <div class="promo-content">
+          <span class="promo-icon">🔥</span>
+          <span class="promo-text">{{ section.settings.promo_text | default: 'Free Shipping on Orders Above ₹999 - Limited Time Offer!' }}</span>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <!-- Main Hero Section -->
+  <div class="fashun-hero-main">
+    <div class="hero-background">
+      <div class="hero-gradient"></div>
+      <div class="hero-pattern"></div>
+    </div>
+    
+    <div class="container">
+      <div class="hero-content">
+        <!-- Badge -->
+        {%- if section.settings.show_badge -%}
+          <div class="hero-badge">
+            <span class="badge-text">{{ section.settings.badge_text | default: '🔥 TRENDY & FRESH 🔥' }}</span>
+          </div>
+        {%- endif -%}
+        
+        <!-- Main Heading -->
+        <h1 class="hero-title">
+          <span class="title-line-1">{{ section.settings.title_line_1 | default: 'STREETWEAR' }}</span>
+          <span class="title-line-2">{{ section.settings.title_line_2 | default: 'REVOLUTION' }}</span>
+        </h1>
+        
+        <!-- Subtitle -->
+        <div class="hero-subtitle">
+          <h2 class="subtitle-main">{{ section.settings.subtitle | default: "India's Hottest T-Shirt Brand! 🚀" }}</h2>
+          <p class="subtitle-desc">{{ section.settings.description | default: 'From Printed Tees to Oversized Hoodies - Premium Quality, Killer Designs, Unbeatable Vibes!' }}</p>
+          <p class="subtitle-tagline">{{ section.settings.tagline | default: '✨ Express Yourself. Stay Fresh. Be Iconic. ✨' }}</p>
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div class="hero-cta">
+          {%- if section.settings.primary_button_text != blank -%}
+            <a href="{{ section.settings.primary_button_link | default: '/collections/all' }}" class="btn btn-primary hero-btn-primary">
+              {{ section.settings.primary_button_text | default: '🛍️ SHOP NOW' }}
+            </a>
+          {%- endif -%}
+          
+          {%- if section.settings.secondary_button_text != blank -%}
+            <a href="{{ section.settings.secondary_button_link | default: '/collections' }}" class="btn btn-secondary hero-btn-secondary">
+              {{ section.settings.secondary_button_text | default: '🎨 EXPLORE ALL' }}
+            </a>
+          {%- endif -%}
+        </div>
+        
+        <!-- Stats -->
+        {%- if section.settings.show_stats -%}
+          <div class="hero-stats">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+                {%- when 'stat' -%}
+                  <div class="stat-item" {{ block.shopify_attributes }}>
+                    <div class="stat-label">{{ block.settings.label }}</div>
+                    <div class="stat-desc">{{ block.settings.description }}</div>
+                  </div>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .fashun-hero {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .fashun-promo-banner {
+    background: linear-gradient(135deg, #dc2626, #ea580c);
+    color: white;
+    padding: 12px 0;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .fashun-hero-main {
+    position: relative;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #000000, #1f2937, #374151);
+    display: flex;
+    align-items: center;
+    color: white;
+  }
+  
+  .hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  
+  .hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255,165,0,0.1) 0%, transparent 50%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+  
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent 25%, rgba(255,165,0,0.02) 50%, transparent 75%);
+    background-size: 200% 200%;
+    animation: move 20s linear infinite;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .hero-badge {
+    margin-bottom: 32px;
+    animation: float 2s ease-in-out infinite;
+  }
+  
+  .badge-text {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #f97316, #dc2626);
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 18px;
+    box-shadow: 0 10px 25px rgba(249, 115, 22, 0.5);
+  }
+  
+  .hero-title {
+    font-size: clamp(48px, 8vw, 128px);
+    font-weight: 900;
+    line-height: 0.9;
+    margin-bottom: 32px;
+  }
+  
+  .title-line-1 {
+    display: block;
+    background: linear-gradient(135deg, #fb923c, #dc2626);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: slideInLeft 0.8s ease-out 0.4s both;
+  }
+  
+  .title-line-2 {
+    display: block;
+    color: white;
+    animation: slideInRight 0.8s ease-out 0.6s both;
+  }
+  
+  .hero-subtitle {
+    max-width: 800px;
+    margin: 0 auto 48px;
+  }
+  
+  .subtitle-main {
+    font-size: clamp(24px, 4vw, 48px);
+    font-weight: 700;
+    color: #fb923c;
+    margin-bottom: 16px;
+  }
+  
+  .subtitle-desc {
+    font-size: clamp(18px, 2vw, 24px);
+    color: #d1d5db;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  
+  .subtitle-tagline {
+    font-size: clamp(16px, 1.5vw, 20px);
+    color: #fbbf24;
+    font-weight: 600;
+  }
+  
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin-bottom: 64px;
+  }
+  
+  .hero-btn-primary {
+    background: linear-gradient(135deg, #f97316, #dc2626);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(249, 115, 22, 0.5);
+    animation: float 2s ease-in-out infinite;
+  }
+  
+  .hero-btn-primary:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(249, 115, 22, 0.6);
+  }
+  
+  .hero-btn-secondary {
+    background: transparent;
+    color: white;
+    padding: 20px 40px;
+    border: 2px solid #f97316;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    animation: float 2s ease-in-out infinite 0.3s;
+  }
+  
+  .hero-btn-secondary:hover {
+    background: #f97316;
+    color: black;
+    transform: translateY(-2px) scale(1.05);
+  }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .stat-item {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    animation: fadeInUp 0.8s ease-out calc(1s + var(--delay, 0s)) both;
+  }
+  
+  .stat-item:hover {
+    transform: translateY(-5px) scale(1.1);
+  }
+  
+  .stat-label {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fb923c;
+    margin-bottom: 4px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .stat-desc {
+    font-size: 14px;
+    color: #9ca3af;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.05); }
+  }
+  
+  @keyframes move {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-100px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(100px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @media (max-width: 768px) {
+    .hero-cta {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .hero-btn-primary,
+    .hero-btn-secondary {
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .hero-stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FASHUN Hero Section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Promotional Banner"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promo_banner",
+      "label": "Show promotional banner",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Promotional text",
+      "default": "Free Shipping on Orders Above ₹999 - Limited Time Offer!"
+    },
+    {
+      "type": "header",
+      "content": "Hero Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "🔥 TRENDY & FRESH 🔥"
+    },
+    {
+      "type": "text",
+      "id": "title_line_1",
+      "label": "Title line 1",
+      "default": "STREETWEAR"
+    },
+    {
+      "type": "text",
+      "id": "title_line_2",
+      "label": "Title line 2",
+      "default": "REVOLUTION"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "India's Hottest T-Shirt Brand! 🚀"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "From Printed Tees to Oversized Hoodies - Premium Quality, Killer Designs, Unbeatable Vibes!"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "✨ Express Yourself. Stay Fresh. Be Iconic. ✨"
+    },
+    {
+      "type": "header",
+      "content": "Call to Action Buttons"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Primary button text",
+      "default": "🛍️ SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary button text",
+      "default": "🎨 EXPLORE ALL"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "header",
+      "content": "Statistics"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show statistics",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "FREE SHIPPING"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "On orders ₹999+"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FASHUN Hero",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "label": "FREE SHIPPING",
+            "description": "On orders ₹999+"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "label": "100% AUTHENTIC",
+            "description": "Original designs"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "label": "4.9★ REVIEWS",
+            "description": "10k+ happy customers"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "label": "TRENDING STYLES",
+            "description": "Latest drops weekly"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

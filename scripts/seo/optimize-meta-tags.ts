@@ -6,47 +6,16 @@ const supabase = createClient(
 );
 
 async function analyzeKeywords(content: string): Promise<string[]> {
-  const prompt = `Analyze this content and extract the top 5 SEO keywords:\n\n${content.substring(0, 1000)}`;
-
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
-      })
-    }
-  );
-
-  const data = await response.json();
-  const keywords = data.candidates[0].content.parts[0].text.split(',').map((k: string) => k.trim());
-  return keywords.slice(0, 5);
+  // Gemini API integration removed
+  return [];
 }
 
 async function generateMetaTags(content: string, keywords: string[]) {
-  const titlePrompt = `Create an SEO-optimized page title (max 60 chars) using these keywords: ${keywords.join(', ')}. Content: ${content.substring(0, 200)}`;
-  const descPrompt = `Create an SEO-optimized meta description (max 155 chars) using these keywords: ${keywords.join(', ')}. Content: ${content.substring(0, 300)}`;
-
-  const [titleRes, descRes] = await Promise.all([
-    fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: titlePrompt }] }] })
-    }),
-    fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: descPrompt }] }] })
-    })
-  ]);
-
-  const [titleData, descData] = await Promise.all([titleRes.json(), descRes.json()]);
-
+  // Gemini API integration removed
   return {
-    title: titleData.candidates[0].content.parts[0].text.substring(0, 60),
-    description: descData.candidates[0].content.parts[0].text.substring(0, 155),
-    keywords: keywords.join(', ')
+    title: '',
+    description: '',
+    keywords: ''
   };
 }
 

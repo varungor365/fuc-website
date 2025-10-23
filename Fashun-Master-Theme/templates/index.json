@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero"
+    },
+    "shop_by_category": {
+      "type": "shop-by-category"
+    },
+    "new_arrivals": {
+      "type": "new-arrivals"
+    },
+    "trending_now": {
+      "type": "trending-now"
+    },
+    "community_showcase": {
+      "type": "community-showcase"
+    },
+    "featured_collection": {
+      "type": "featured-collection"
+    },
+    "newsletter": {
+      "type": "newsletter"
+    }
+  },
+  "order": [
+    "hero",
+    "shop_by_category",
+    "new_arrivals",
+    "trending_now",
+    "community_showcase",
+    "featured_collection",
+    "newsletter"
+  ]
+}

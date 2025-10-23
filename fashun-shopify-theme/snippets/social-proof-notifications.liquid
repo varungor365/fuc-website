@@ -1,0 +1,174 @@
+{% comment %}
+  FASHUN.CO Social Proof Notifications
+  Real-time purchase notifications
+{% endcomment %}
+
+{%- if settings.enable_social_proof -%}
+  <div id="social-proof-container"></div>
+
+  <style>
+    .social-proof-notification {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9999;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      padding: 16px;
+      max-width: 320px;
+      transform: translateX(-100%);
+      opacity: 0;
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--fashun-primary);
+    }
+    
+    .social-proof-notification.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    
+    .notification-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .notification-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    
+    .notification-text {
+      flex: 1;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .notification-text strong {
+      font-weight: 600;
+      color: var(--fashun-secondary);
+    }
+    
+    .product-name {
+      color: var(--fashun-primary);
+      font-weight: 600;
+    }
+    
+    .notification-time {
+      font-size: 12px;
+      color: #6b7280;
+      flex-shrink: 0;
+    }
+    
+    @media (max-width: 768px) {
+      .social-proof-notification {
+        left: 10px;
+        right: 10px;
+        max-width: none;
+        bottom: 10px;
+      }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!{{ settings.enable_social_proof | json }}) return;
+      
+      const notifications = [
+        { name: 'Arjun from Mumbai', product: 'Oversized Hoodie', time: '2 minutes ago', location: 'Mumbai' },
+        { name: 'Priya from Delhi', product: 'Graphic Tee Collection', time: '5 minutes ago', location: 'Delhi' },
+        { name: 'Rahul from Bangalore', product: 'Streetwear Cargo Pants', time: '8 minutes ago', location: 'Bangalore' },
+        { name: 'Sneha from Pune', product: 'Premium Bomber Jacket', time: '12 minutes ago', location: 'Pune' },
+        { name: 'Vikram from Chennai', product: 'Urban Sweatshirt', time: '15 minutes ago', location: 'Chennai' },
+        { name: 'Ananya from Hyderabad', product: 'Trendy Crop Top', time: '18 minutes ago', location: 'Hyderabad' },
+        { name: 'Rohan from Kolkata', product: 'Classic Denim Jacket', time: '22 minutes ago', location: 'Kolkata' },
+        { name: 'Kavya from Ahmedabad', product: 'Stylish Joggers', time: '25 minutes ago', location: 'Ahmedabad' }
+      ];
+      
+      let currentIndex = 0;
+      let isVisible = false;
+      
+      function showNotification() {
+        if (isVisible) return;
+        
+        const notification = notifications[currentIndex];
+        const notificationEl = document.createElement('div');
+        notificationEl.className = 'social-proof-notification';
+        notificationEl.innerHTML = `
+          <div class="notification-content">
+            <div class="notification-icon">🛍️</div>
+            <div class="notification-text">
+              <strong>${notification.name}</strong> just purchased<br>
+              <span class="product-name">${notification.product}</span>
+            </div>
+            <div class="notification-time">${notification.time}</div>
+          </div>
+        `;
+        
+        // Add click handler to close notification
+        notificationEl.addEventListener('click', function() {
+          hideNotification(notificationEl);
+        });
+        
+        document.body.appendChild(notificationEl);
+        isVisible = true;
+        
+        // Show notification
+        setTimeout(() => {
+          notificationEl.classList.add('show');
+        }, 100);
+        
+        // Hide notification after 4 seconds
+        setTimeout(() => {
+          hideNotification(notificationEl);
+        }, 4000);
+        
+        currentIndex = (currentIndex + 1) % notifications.length;
+      }
+      
+      function hideNotification(notificationEl) {
+        if (!notificationEl || !document.body.contains(notificationEl)) return;
+        
+        notificationEl.classList.remove('show');
+        setTimeout(() => {
+          if (document.body.contains(notificationEl)) {
+            document.body.removeChild(notificationEl);
+          }
+          isVisible = false;
+        }, 300);
+      }
+      
+      // Show first notification after 3 seconds
+      setTimeout(showNotification, 3000);
+      
+      // Show subsequent notifications based on settings
+      const frequency = {{ settings.social_proof_frequency | default: 15 }} * 1000;
+      setInterval(() => {
+        if (!isVisible) {
+          showNotification();
+        }
+      }, frequency);
+      
+      // Hide notifications when user is inactive
+      let inactivityTimer;
+      
+      function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+          const activeNotification = document.querySelector('.social-proof-notification.show');
+          if (activeNotification) {
+            hideNotification(activeNotification);
+          }
+        }, 30000); // Hide after 30 seconds of inactivity
+      }
+      
+      // Track user activity
+      ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+        document.addEventListener(event, resetInactivityTimer, true);
+      });
+      
+      resetInactivityTimer();
+    });
+  </script>
+{%- endif -%}

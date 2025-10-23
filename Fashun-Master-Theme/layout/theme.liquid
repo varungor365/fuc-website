@@ -1,0 +1,101 @@
+<!doctype html>
+<html class="no-js" lang="{{ shop.locale }}" data-theme-store="{{ shop.url }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ section.settings.color_scheme }}">
+  
+  <!-- SEO & Meta Tags -->
+  <title>{{ page_title }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
+  
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% elsif product and product.metafields.custom.seo_description %}
+    <meta name="description" content="{{ product.metafields.custom.seo_description | escape }}">
+  {% else %}
+    <meta name="description" content="{{ shop.description | escape }}">
+  {% endif %}
+  
+  <link rel="canonical" href="{{ canonical_url }}">
+  
+  {% if customer %}
+    <script>window.ShopifyAnalytics = window.ShopifyAnalytics || {}; window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {}; window.ShopifyAnalytics.meta.currency = "{{ shop.currency }}";</script>
+    <script>
+      var Shopify = Shopify || {}; Shopify.shop = "{{ shop.myshopify_domain }}"; Shopify.cdnHost = "cdn.shopify.com"; Shopify.checkout_api_supported = true;
+    </script>
+  {% endif %}
+  
+  <!-- Core Assets -->
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {{ 'globals.css' | asset_url | stylesheet_tag }}
+  {{ 'theme.js' | asset_url | script_tag }}
+  
+  <!-- Font Loading -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="apple-touch-icon" href="{{ 'icon-apple.png' | asset_url }}">
+  <link rel="icon" type="image/png" href="{{ 'icon.png' | asset_url }}">
+  
+  <!-- Shopify App Embeds -->
+  {{ content_for_header }}
+  
+  <!-- Custom Meta Fields Support -->
+  {% if customer and customer.metafields %}
+    <script>
+      window.customerMetafields = {
+        bio: "{{ customer.metafields.custom.bio | escape_javascript }}",
+        profileImage: "{{ customer.metafields.custom.profile_image | escape_javascript }}",
+        socialLinks: {{ customer.metafields.custom.social_links | json }}
+      };
+    </script>
+  {% endif %}
+</head>
+<body class="template-{{ template.name }} gradient-background">
+  
+  <!-- Skip to Content -->
+  <a href="#main" class="skip-to-content">Skip to content</a>
+  
+  <!-- Header -->
+  {% section 'header' %}
+  
+  <!-- Main Content -->
+  <main id="main" role="main">
+    {{ content_for_layout }}
+  </main>
+  
+  <!-- Footer -->
+  {% section 'footer' %}
+  
+  <!-- Analytics & Tracking -->
+  <script>
+    window.performance && window.performance.mark && window.performance.mark('shopify.content_for_layout.end');
+  </script>
+  
+  <!-- Shopify Analytics Events -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "{{ shop.name }}",
+      "url": "{{ shop.url }}",
+      "logo": "{{ shop.brand.logo.src | image_url: width: 250 }}",
+      "description": "{{ shop.description | escape }}"
+    }
+  </script>
+  
+  <!-- Performance Optimization -->
+  <script defer>
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => {
+        document.querySelectorAll('[data-lazy-src]').forEach(el => {
+          el.src = el.dataset.lazySrc;
+        });
+      });
+    }
+  </script>
+</body>
+</html>

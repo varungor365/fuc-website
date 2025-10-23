@@ -1,0 +1,357 @@
+{% comment %}
+  FASHUN.CO Featured Collections Section
+  Curated streetwear collections
+{% endcomment %}
+
+<section class="fashun-collections" id="fashun-collections-{{ section.id }}">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 class="section-title">{{ section.settings.title | default: 'Curated Collections' }}</h2>
+      <p class="section-subtitle">{{ section.settings.subtitle | default: 'Discover our handpicked collections designed to elevate your style' }}</p>
+    </div>
+    
+    <!-- Collections Grid -->
+    <div class="collections-grid">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'collection' -%}
+            {%- assign collection = collections[block.settings.collection] -%}
+            {%- if collection != blank -%}
+              <div class="collection-card" {{ block.shopify_attributes }}>
+                <a href="{{ collection.url }}" class="collection-link">
+                  <div class="collection-image">
+                    {%- if collection.featured_image -%}
+                      <img 
+                        src="{{ collection.featured_image | img_url: '600x450' }}"
+                        alt="{{ collection.title | escape }}"
+                        loading="lazy"
+                        width="600"
+                        height="450"
+                      >
+                    {%- else -%}
+                      <div class="collection-placeholder">
+                        <svg width="400" height="300" viewBox="0 0 400 300" fill="none">
+                          <rect width="400" height="300" fill="#F3F4F6"/>
+                          <path d="M150 100H250V200H150V100Z" stroke="#9CA3AF" stroke-width="4" stroke-linecap="round"/>
+                          <text x="200" y="250" font-family="Arial" font-size="18" fill="#9CA3AF" text-anchor="middle">Collection</text>
+                        </svg>
+                      </div>
+                    {%- endif -%}
+                    
+                    <div class="collection-overlay">
+                      <div class="collection-info">
+                        <span class="product-count">{{ collection.products_count }} Products</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="collection-content">
+                    <h3 class="collection-title">{{ collection.title }}</h3>
+                    <p class="collection-description">
+                      {%- if block.settings.custom_description != blank -%}
+                        {{ block.settings.custom_description }}
+                      {%- else -%}
+                        {{ collection.description | truncate: 100 }}
+                      {%- endif -%}
+                    </p>
+                    <div class="collection-meta">
+                      <span class="product-count-text">{{ collection.products_count }} Products</span>
+                      <span class="collection-cta">Shop Collection →</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+    
+    <!-- View All Button -->
+    {%- if section.settings.show_view_all -%}
+      <div class="section-footer">
+        <a href="{{ section.settings.view_all_link | default: '/collections' }}" class="btn btn-primary">
+          {{ section.settings.view_all_text | default: 'View All Collections' }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .fashun-collections {
+    padding: 80px 0;
+    background: #f9fafb;
+  }
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  
+  .section-title {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 16px;
+  }
+  
+  .section-subtitle {
+    font-size: clamp(18px, 2vw, 20px);
+    color: #6b7280;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .collections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+  
+  .collection-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  .collection-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  .collection-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .collection-image {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+  }
+  
+  .collection-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .collection-card:hover .collection-image img {
+    transform: scale(1.1);
+  }
+  
+  .collection-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+  }
+  
+  .collection-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+  }
+  
+  .collection-card:hover .collection-overlay {
+    opacity: 1;
+  }
+  
+  .collection-info {
+    color: white;
+  }
+  
+  .product-count {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .collection-content {
+    padding: 24px;
+  }
+  
+  .collection-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+  }
+  
+  .collection-card:hover .collection-title {
+    color: #ea580c;
+  }
+  
+  .collection-description {
+    color: #6b7280;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  
+  .collection-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .product-count-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ea580c;
+  }
+  
+  .collection-cta {
+    color: #ea580c;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+  }
+  
+  .collection-card:hover .collection-cta {
+    transform: translateX(8px);
+  }
+  
+  .section-footer {
+    text-align: center;
+  }
+  
+  .btn {
+    display: inline-block;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 18px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary {
+    background: #111827;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-primary:hover {
+    background: #374151;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .fashun-collections {
+      padding: 60px 0;
+    }
+    
+    .collections-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    
+    .section-header {
+      margin-bottom: 48px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "FASHUN Featured Collections",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Curated Collections"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section subtitle",
+      "default": "Discover our handpicked collections designed to elevate your style"
+    },
+    {
+      "type": "header",
+      "content": "View All Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view all button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all button text",
+      "default": "View All Collections"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View all button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_description",
+          "label": "Custom description",
+          "info": "Leave blank to use collection description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FASHUN Featured Collections",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

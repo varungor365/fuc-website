@@ -1,0 +1,148 @@
+[
+  {
+    "name": "Theme Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Colors & Branding"
+      },
+      {
+        "type": "color",
+        "id": "primary_color",
+        "label": "Primary Color (Electric Blue)",
+        "default": "#007AFF"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text Color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "header",
+        "content": "Typography"
+      },
+      {
+        "type": "select",
+        "id": "heading_font",
+        "label": "Heading Font",
+        "options": [
+          {
+            "value": "montserrat",
+            "label": "Montserrat"
+          },
+          {
+            "value": "inter",
+            "label": "Inter"
+          }
+        ],
+        "default": "montserrat"
+      },
+      {
+        "type": "range",
+        "id": "heading_scale",
+        "label": "Heading Size Scale",
+        "min": 80,
+        "max": 150,
+        "step": 5,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "header",
+        "content": "Performance"
+      },
+      {
+        "type": "checkbox",
+        "id": "lazy_load_images",
+        "label": "Enable Image Lazy Loading",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_animations",
+        "label": "Enable Animations",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "animation_speed",
+        "label": "Animation Speed",
+        "options": [
+          {
+            "value": "slow",
+            "label": "Slow"
+          },
+          {
+            "value": "normal",
+            "label": "Normal"
+          },
+          {
+            "value": "fast",
+            "label": "Fast"
+          }
+        ],
+        "default": "normal"
+      },
+      {
+        "type": "header",
+        "content": "Profile Service Settings"
+      },
+      {
+        "type": "text",
+        "id": "profile_base_url",
+        "label": "Profile Base URL",
+        "placeholder": "p.fashun.co.in",
+        "default": "p.fashun.co.in"
+      },
+      {
+        "type": "select",
+        "id": "profile_theme",
+        "label": "Profile Theme",
+        "options": [
+          {
+            "value": "dark",
+            "label": "Dark Mode"
+          },
+          {
+            "value": "light",
+            "label": "Light Mode"
+          },
+          {
+            "value": "gradient",
+            "label": "Gradient"
+          }
+        ],
+        "default": "dark"
+      },
+      {
+        "type": "header",
+        "content": "Advanced Features"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_customizer",
+        "label": "Enable Customizer Studio",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_virtual_tryon",
+        "label": "Enable Virtual Try-On",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_ai_features",
+        "label": "Enable AI Features",
+        "default": true
+      }
+    ]
+  }
+]

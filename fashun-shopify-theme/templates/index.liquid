@@ -1,0 +1,56 @@
+{% comment %}
+  FASHUN.CO Homepage Template
+  Premium Streetwear E-commerce Platform
+{% endcomment %}
+
+{%- paginate blog.articles by 3 -%}
+  {% sections 'homepage' %}
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Homepage",
+  "settings": [
+    {
+      "type": "header",
+      "content": "FASHUN.CO Homepage Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hero_section",
+      "label": "Show Hero Section",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_collections",
+      "label": "Show Featured Collections",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trending_products",
+      "label": "Show AI Trending Products",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_deal_of_day",
+      "label": "Show Deal of the Day",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_testimonials",
+      "label": "Show Customer Testimonials",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_instagram_feed",
+      "label": "Show Instagram Community",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

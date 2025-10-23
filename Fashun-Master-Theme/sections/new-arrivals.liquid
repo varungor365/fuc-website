@@ -1,0 +1,148 @@
+{% stylesheet %}
+  .new-arrivals {
+    padding: 60px 20px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #000000 100%);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 15px;
+  }
+
+  .products-carousel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .product-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .product-card:hover {
+    border-color: #007AFF;
+    box-shadow: 0 10px 30px rgba(0, 122, 255, 0.2);
+    transform: translateY(-5px);
+  }
+
+  .product-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .product-info {
+    padding: 20px;
+  }
+
+  .product-name {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .product-price {
+    color: #007AFF;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .product-button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    background: #007AFF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .product-button:hover {
+    background: #0051D5;
+  }
+
+  @media (max-width: 768px) {
+    .section-title {
+      font-size: 1.8rem;
+    }
+
+    .products-carousel {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+  }
+{% endstylesheet %}
+
+<div class="new-arrivals">
+  <div class="section-header">
+    <h2 class="section-title">{{ section.settings.title }}</h2>
+  </div>
+
+  <div class="products-carousel">
+    {% assign collection = collections[section.settings.collection] %}
+    
+    {% if collection %}
+      {% for product in collection.products limit: 8 %}
+        <div class="product-card">
+          <img 
+            src="{{ product.featured_image | image_url: width: 300 }}"
+            alt="{{ product.title }}"
+            class="product-image"
+            loading="lazy"
+          >
+          <div class="product-info">
+            <h3 class="product-name">{{ product.title }}</h3>
+            <div class="product-price">
+              {{ product.price | money }}
+            </div>
+            <a href="{{ product.url }}" class="product-button">
+              View Product
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "New Arrivals",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "New Arrivals"
+    }
+  ]
+}
+{% endschema %}

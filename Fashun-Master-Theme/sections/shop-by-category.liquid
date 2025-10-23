@@ -1,0 +1,291 @@
+{% stylesheet %}
+  .shop-by-category {
+    padding: 60px 20px;
+    background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .section-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 15px;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Inter', sans-serif;
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    height: 300px;
+    cursor: pointer;
+    group: true;
+  }
+
+  .category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .category-card:hover .category-image {
+    transform: scale(1.1);
+  }
+
+  .category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 122, 255, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+  }
+
+  .category-card:hover .category-overlay {
+    opacity: 1;
+  }
+
+  .category-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .category-count {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 10px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  @media (max-width: 768px) {
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .categories-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .category-card {
+      height: 200px;
+    }
+  }
+{% endstylesheet %}
+
+<div class="shop-by-category">
+  <div class="section-header">
+    <h2 class="section-title">{{ section.settings.title }}</h2>
+    <p class="section-subtitle">{{ section.settings.subtitle }}</p>
+  </div>
+
+  <div class="categories-grid">
+    {% for i in (1..5) %}
+      {% assign category_key = 'category_' | append: i %}
+      {% assign image_key = 'category_image_' | append: i %}
+      {% assign link_key = 'category_link_' | append: i %}
+      {% assign count_key = 'product_count_' | append: i %}
+      
+      {% if section.settings[category_key] %}
+        <a href="{{ section.settings[link_key] }}" class="category-card">
+          {% if section.settings[image_key] %}
+            <img 
+              src="{{ section.settings[image_key] | image_url: width: 500 }}"
+              alt="{{ section.settings[category_key] }}"
+              class="category-image"
+              loading="lazy"
+            >
+          {% endif %}
+          <div class="category-overlay">
+            <div class="category-name">{{ section.settings[category_key] }}</div>
+            <div class="category-count">{{ section.settings[count_key] | default: '20+' }} items</div>
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Shop by Category",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Explore our curated collections"
+    },
+    {
+      "type": "header",
+      "content": "Category 1"
+    },
+    {
+      "type": "text",
+      "id": "category_1",
+      "label": "Category Name",
+      "default": "Hoodies"
+    },
+    {
+      "type": "image_picker",
+      "id": "category_image_1",
+      "label": "Category Image"
+    },
+    {
+      "type": "url",
+      "id": "category_link_1",
+      "label": "Category Link"
+    },
+    {
+      "type": "text",
+      "id": "product_count_1",
+      "label": "Product Count",
+      "default": "24"
+    },
+    {
+      "type": "header",
+      "content": "Category 2"
+    },
+    {
+      "type": "text",
+      "id": "category_2",
+      "label": "Category Name",
+      "default": "T-Shirts"
+    },
+    {
+      "type": "image_picker",
+      "id": "category_image_2",
+      "label": "Category Image"
+    },
+    {
+      "type": "url",
+      "id": "category_link_2",
+      "label": "Category Link"
+    },
+    {
+      "type": "text",
+      "id": "product_count_2",
+      "label": "Product Count",
+      "default": "36"
+    },
+    {
+      "type": "header",
+      "content": "Category 3"
+    },
+    {
+      "type": "text",
+      "id": "category_3",
+      "label": "Category Name",
+      "default": "Jackets"
+    },
+    {
+      "type": "image_picker",
+      "id": "category_image_3",
+      "label": "Category Image"
+    },
+    {
+      "type": "url",
+      "id": "category_link_3",
+      "label": "Category Link"
+    },
+    {
+      "type": "text",
+      "id": "product_count_3",
+      "label": "Product Count",
+      "default": "18"
+    },
+    {
+      "type": "header",
+      "content": "Category 4"
+    },
+    {
+      "type": "text",
+      "id": "category_4",
+      "label": "Category Name",
+      "default": "Sneakers"
+    },
+    {
+      "type": "image_picker",
+      "id": "category_image_4",
+      "label": "Category Image"
+    },
+    {
+      "type": "url",
+      "id": "category_link_4",
+      "label": "Category Link"
+    },
+    {
+      "type": "text",
+      "id": "product_count_4",
+      "label": "Product Count",
+      "default": "42"
+    },
+    {
+      "type": "header",
+      "content": "Category 5"
+    },
+    {
+      "type": "text",
+      "id": "category_5",
+      "label": "Category Name",
+      "default": "Accessories"
+    },
+    {
+      "type": "image_picker",
+      "id": "category_image_5",
+      "label": "Category Image"
+    },
+    {
+      "type": "url",
+      "id": "category_link_5",
+      "label": "Category Link"
+    },
+    {
+      "type": "text",
+      "id": "product_count_5",
+      "label": "Product Count",
+      "default": "28"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by Category"
+    }
+  ]
+}
+{% endschema %}

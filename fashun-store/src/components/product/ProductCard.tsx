@@ -7,6 +7,7 @@ import { HeartIcon, EyeIcon, ShoppingBagIcon } from '@heroicons/react/24/outline
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { HolographicCard } from '@/components/ui/holographic-card';
 import { DirectionAwareHover } from '@/components/ui/direction-aware-hover';
+import { RainbowButtonIcon } from '@/components/ui/rainbow-button';
 
 interface Product {
   id: string;
@@ -133,15 +134,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className = '' }) =>
           animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
           transition={{ duration: 0.2 }}
         >
-            <motion.button
+            <RainbowButtonIcon
               onClick={handleAddToCart}
-              className="w-full bg-primary-500 text-white font-medium py-3 rounded-xl hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              icon={<ShoppingBagIcon className="w-4 h-4" />}
+              className="w-full"
             >
-              <ShoppingBagIcon className="w-4 h-4" />
               Quick Add
-            </motion.button>
+            </RainbowButtonIcon>
         </motion.div>
 
         {/* Product Info */}

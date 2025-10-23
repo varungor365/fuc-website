@@ -1,0 +1,49 @@
+{% comment %}
+  FASHUN.CO Product Card - Shopify Compatible
+{% endcomment %}
+
+<div class="fashun-product-card" data-product-id="{{ product.id }}">
+  <a href="{{ product.url }}" class="product-link">
+    <div class="product-image-container">
+      {%- if product.featured_media -%}
+        <img 
+          src="{{ product.featured_media | img_url: '400x500' }}"
+          alt="{{ product.title | escape }}"
+          class="product-image"
+          loading="lazy"
+        >
+      {%- endif -%}
+      
+      <div class="product-badges">
+        {%- if product.compare_at_price > product.price -%}
+          <span class="badge badge-sale">-{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round }}%</span>
+        {%- endif -%}
+        {%- if product.tags contains 'new' -%}<span class="badge badge-new">New</span>{%- endif -%}
+        {%- if product.tags contains 'trending' -%}<span class="badge badge-trending">🔥</span>{%- endif -%}
+      </div>
+      
+      <div class="product-actions">
+        <button class="action-btn wishlist-btn" data-product-id="{{ product.id }}">♡</button>
+        <button class="action-btn quick-view-btn" data-product-id="{{ product.id }}">👁</button>
+      </div>
+      
+      {%- if product.available and product.variants.size == 1 -%}
+        <div class="quick-add-container">
+          <button class="quick-add-btn" data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+            Quick Add - {{ product.price | money }}
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+    
+    <div class="product-info">
+      <h3 class="product-title">{{ product.title }}</h3>
+      <div class="product-pricing">
+        <span class="current-price">{{ product.price | money }}</span>
+        {%- if product.compare_at_price > product.price -%}
+          <span class="original-price">{{ product.compare_at_price | money }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+  </a>
+</div>
