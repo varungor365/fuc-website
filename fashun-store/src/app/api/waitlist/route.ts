@@ -1,4 +1,11 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client with service role key for server-side operations
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(request: Request) {
   try {
@@ -13,73 +20,58 @@ export async function POST(request: Request) {
       );
     }
 
-    // Google Sheets Web App URL
-    const GOOGLE_SHEETS_URL = process.env.GOOGLE_SHEETS_WEBHOOK_URL || '';
+    console.log('📧 Waitlist signup attempt:', email);
     
-    console.log('📧 Waitlist signup:', email);
-    console.log('📊 Google Sheets URL configured:', !!GOOGLE_SHEETS_URL);
-    
-    // Try to send to Google Sheets
-    let sheetsSuccess = false;
-    
-    if (GOOGLE_SHEETS_URL) {
-      try {
-        const payload = {
-          email,
-          timestamp: new Date().toISOString(),
-          source: 'launch_countdown',
-          userAgent: request.headers.get('user-agent') || 'unknown',
-          referrer: request.headers.get('referer') || 'direct'
-        };
-        
-        console.log('📤 Sending to Google Sheets:', payload);
-        
-        // Use redirect: 'follow' and mode: 'cors' for Google Apps Script
-        const sheetsResponse = await fetch(GOOGLE_SHEETS_URL, {
-          method: 'POST',
-          redirect: 'follow',
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8',
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const responseText = await sheetsResponse.text();
-        console.log('📥 Google Sheets response:', responseText);
-        
-        // Try to parse as JSON
-        try {
-          const responseJson = JSON.parse(responseText);
-          sheetsSuccess = responseJson.success || responseJson.result === 'success';
-          console.log('✅ Parsed response:', responseJson);
-        } catch (parseError) {
-          // Response might not be JSON, check if it contains success indicators
-          sheetsSuccess = responseText.includes('success') || responseText.includes('Success');
-          console.log('⚠️ Non-JSON response, checking for success keyword');
-        }
-
-        if (sheetsSuccess) {
-          console.log('✅ Email saved to Google Sheets successfully!');
-        } else {
-          console.warn('⚠️ Google Sheets response unclear, assuming success');
-          sheetsSuccess = true; // Assume success if no error thrown
-        }
-        
-      } catch (error) {
-        console.error('❌ Google Sheets error:', error);
-        // Don't fail - email is still in localStorage
+    // Prepare waitlist data
+    const waitlistData = {
+      email: email.toLowerCase().trim(),
+      source: 'launch_countdown',
+      user_agent: request.headers.get('user-agent') || 'unknown',
+      referrer: request.headers.get('referer') || 'direct',
+      metadata: {
+        ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+        signup_date: new Date().toISOString()
       }
-    } else {
-      console.warn('⚠️ Google Sheets URL not configured');
+    };
+
+    // Insert into Supabase
+    const { data, error } = await supabase
+      .from('waitlist')
+      .insert([waitlistData])
+      .select()
+      .single();
+
+    if (error) {
+      // Check if it's a duplicate email error
+      if (error.code === '23505') {
+        console.log('⚠️ Duplicate email:', email);
+        return NextResponse.json({ 
+          success: true, 
+          message: 'You are already on the waitlist!',
+          duplicate: true
+        });
+      }
+      
+      console.error('❌ Supabase error:', error);
+      return NextResponse.json(
+        { error: 'Failed to join waitlist. Please try again.' },
+        { status: 500 }
+      );
     }
 
-    // Always return success - email is stored in localStorage on client side as backup
+    console.log('✅ Email saved to Supabase successfully!', data);
+
+    // Get total count
+    const { count } = await supabase
+      .from('waitlist')
+      .select('*', { count: 'exact', head: true });
+
     return NextResponse.json({ 
       success: true, 
       message: 'Successfully joined the waitlist!',
-      sheetsStored: sheetsSuccess,
-      localStorageBackup: true,
-      debugInfo: GOOGLE_SHEETS_URL ? 'Sent to Google Sheets' : 'localStorage only'
+      stored: true,
+      totalSignups: count || 0,
+      storage: 'Supabase Database'
     });
 
   } catch (error) {
@@ -91,16 +83,45 @@ export async function POST(request: Request) {
   }
 }
 
-// Optional: Get total count
-export async function GET() {
+// Get waitlist count and optionally all emails (for admin)
+export async function GET(request: Request) {
   try {
-    // This would require a separate Google Sheets endpoint to get count
-    // For now, return a placeholder
-    return NextResponse.json({ 
-      count: 247, // You can update this manually or create a count endpoint
-      message: 'Check your Google Sheet for full list'
-    });
+    const { searchParams } = new URL(request.url);
+    const includeEmails = searchParams.get('emails') === 'true';
+
+    // Get total count
+    const { count, error: countError } = await supabase
+      .from('waitlist')
+      .select('*', { count: 'exact', head: true });
+
+    if (countError) {
+      console.error('❌ Error getting count:', countError);
+      return NextResponse.json({ error: 'Failed to get waitlist count' }, { status: 500 });
+    }
+
+    const response: any = {
+      count: count || 0,
+      message: `${count || 0} people on the waitlist`
+    };
+
+    // If emails requested (admin only), include the list
+    if (includeEmails) {
+      const { data: emails, error: emailsError } = await supabase
+        .from('waitlist')
+        .select('email, created_at, source, referrer')
+        .order('created_at', { ascending: false });
+
+      if (emailsError) {
+        console.error('❌ Error getting emails:', emailsError);
+      } else {
+        response.emails = emails;
+      }
+    }
+
+    return NextResponse.json(response);
+
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to get count' }, { status: 500 });
+    console.error('❌ Waitlist GET error:', error);
+    return NextResponse.json({ error: 'Failed to get waitlist data' }, { status: 500 });
   }
 }
