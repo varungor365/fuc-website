@@ -35,8 +35,8 @@ export default function LaunchCountdown() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [totalSubscribers, setTotalSubscribers] = useState(247); // Initial count for social proof
 
-  // Launch date: October 28, 2025 at midnight
-  const launchDate = new Date('2025-10-28T00:00:00').getTime();
+  // Launch date: November 1, 2025 at midnight
+  const launchDate = new Date('2025-11-01T00:00:00').getTime();
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -185,20 +185,20 @@ export default function LaunchCountdown() {
           >
             <div className="flex items-center justify-center gap-4 mb-6">
               <SparklesIcon size={40} />
-              <h1 className="text-6xl md:text-8xl font-black text-gradient-primary gradient-text-shine">
+              <h1 className="text-6xl md:text-9xl font-black text-gradient-primary gradient-text-shine">
                 FASHUN.CO.IN
               </h1>
               <SparklesIcon size={40} />
             </div>
-            <p className="text-2xl md:text-3xl font-bold text-white mb-4">
+            <p className="text-2xl md:text-4xl font-bold text-white mb-4 tracking-wide">
               India's Premium Streetwear Revolution
             </p>
             <div className="flex items-center justify-center gap-3 text-orange-400">
-              <FlameIcon size={24} />
-              <p className="text-lg font-semibold">
+              <FlameIcon size={28} />
+              <p className="text-xl md:text-2xl font-bold animate-pulse">
                 Something Epic is Coming...
               </p>
-              <FlameIcon size={24} />
+              <FlameIcon size={28} />
             </div>
           </motion.div>
 
@@ -210,12 +210,13 @@ export default function LaunchCountdown() {
             className="mb-16"
           >
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-black text-white mb-2">
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-3 tracking-wider">
                 LAUNCHING IN
               </h2>
               <div className="flex items-center justify-center gap-2">
-                <AnimatedIcon icon="rocket" animation="float" size={24} gradient />
-                <p className="text-gray-400 text-lg">Get ready for the drop</p>
+                <AnimatedIcon icon="rocket" animation="float" size={28} gradient />
+                <p className="text-gray-300 text-xl font-semibold">Get ready for the drop</p>
+                <AnimatedIcon icon="zap" animation="pulse" size={28} gradient />
               </div>
             </div>
 
@@ -231,18 +232,18 @@ export default function LaunchCountdown() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                  className="glass-gradient-dark rounded-3xl p-6 md:p-8 shadow-gradient-neon border-gradient-primary hover-gradient-lift will-change-gradient"
+                  className="glass-gradient-dark rounded-3xl p-6 md:p-8 shadow-gradient-neon border-gradient-primary hover-gradient-lift will-change-gradient transform hover:scale-105 transition-all duration-300"
                 >
                   <motion.div
                     key={unit.value}
                     initial={{ scale: 1.2, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.3 }}
-                    className="text-5xl md:text-7xl font-black text-gradient-fire mb-2"
+                    className="text-6xl md:text-8xl font-black text-gradient-fire mb-3 drop-shadow-2xl"
                   >
                     {String(unit.value).padStart(2, '0')}
                   </motion.div>
-                  <div className="text-sm md:text-base font-bold text-gray-400 uppercase tracking-wider">
+                  <div className="text-base md:text-lg font-bold text-gray-300 uppercase tracking-widest">
                     {unit.label}
                   </div>
                 </motion.div>
@@ -258,16 +259,19 @@ export default function LaunchCountdown() {
             className="max-w-2xl mx-auto"
           >
             {!isSubmitted ? (
-              <div className="glass-gradient-frosted rounded-3xl p-8 md:p-12 shadow-gradient-glow border-gradient-primary">
+              <div className="glass-gradient-frosted rounded-3xl p-8 md:p-12 shadow-gradient-glow border-gradient-primary transform hover:scale-[1.02] transition-all duration-300">
                 <div className="text-center mb-6">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <BellIcon size={32} />
-                    <h3 className="text-2xl md:text-3xl font-black text-white">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <BellIcon size={36} />
+                    <h3 className="text-3xl md:text-4xl font-black text-white tracking-wide">
                       Join the Waitlist
                     </h3>
                   </div>
-                  <p className="text-gray-300 text-lg">
-                    Be the first to know when we launch & get exclusive early access deals!
+                  <p className="text-gray-200 text-lg md:text-xl font-medium">
+                    Be the first to access exclusive drops & limited editions
+                  </p>
+                  <p className="text-orange-400 text-sm md:text-base font-semibold mt-2 animate-pulse">
+                    🔥 {totalSubscribers}+ fashion rebels already joined
                   </p>
                 </div>
 
@@ -292,7 +296,7 @@ export default function LaunchCountdown() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full btn-gradient-primary shadow-gradient-neon py-5 text-xl font-black rounded-2xl text-white hover-gradient-lift transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                    className="w-full btn-gradient-primary shadow-gradient-neon py-6 text-xl md:text-2xl font-black rounded-2xl text-white hover-gradient-lift transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 transform hover:scale-105"
                   >
                     {isLoading ? (
                       <>
