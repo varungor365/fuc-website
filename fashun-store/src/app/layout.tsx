@@ -21,8 +21,62 @@ import {
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'FASHUN.CO.IN - Premium Streetwear',
-  description: 'India\'s Hottest T-Shirt Brand! From Printed Tees to Oversized Hoodies - Premium Quality, Killer Designs, Unbeatable Vibes!',
+  title: {
+    default: 'FASHUN.CO - Premium Streetwear & Custom T-Shirts | India\'s Hottest Fashion Brand',
+    template: '%s | FASHUN.CO'
+  },
+  description: 'India\'s #1 Streetwear Brand! Shop premium printed tees, oversized hoodies, custom designs & exclusive collections. Free shipping, 30-day returns, and unbeatable vibes.',
+  keywords: [
+    'streetwear India',
+    'custom t-shirts',
+    'oversized hoodies',
+    'printed tees',
+    'fashion India',
+    'trendy clothing',
+    'premium streetwear',
+    'custom designs',
+    'fashun.co',
+    'online shopping India'
+  ],
+  authors: [{ name: 'FASHUN.CO' }],
+  creator: 'FASHUN.CO',
+  publisher: 'FASHUN.CO',
+  metadataBase: new URL('https://fashun.co'),
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    url: 'https://fashun.co',
+    siteName: 'FASHUN.CO',
+    title: 'FASHUN.CO - Premium Streetwear & Custom T-Shirts',
+    description: 'India\'s Hottest T-Shirt Brand! From Printed Tees to Oversized Hoodies - Premium Quality, Killer Designs.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@fashun_co',
+    creator: '@fashun_co',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
+  },
 };
 
 export default function RootLayout({

@@ -1,0 +1,28 @@
+/**
+  * This JavaScript file removes any numbers from the author name field in comment
+  * forms. It listens for when users finish typing in the author field and
+  * automatically strips out any numerical digits, helping prevent user enumeration
+  * through comments.
+  *
+  * This code is from the 'Stop User Enumeration' plugin.
+  * https://wordpress.org/plugins/stop-user-enumeration/
+  */
+document.addEventListener('DOMContentLoaded', function () {
+    var commentForm = document.getElementById("commentform");
+    if (null === commentForm) {
+        return;
+    }
+
+    var author = commentForm.querySelector("#author");
+    if (null === author) {
+        return;
+    }
+
+    author.addEventListener(
+        'blur',
+        function () {
+            this.value = this.value.replace(/\d+/g, '');
+        },
+        false
+    );
+});

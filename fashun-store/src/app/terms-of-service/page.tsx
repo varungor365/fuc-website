@@ -293,7 +293,7 @@ export default function TermsOfServicePage() {
               <p>
                 These Terms shall be governed by and construed in accordance with the laws of India. 
                 Any disputes arising from these terms or your use of our service shall be subject 
-                to the exclusive jurisdiction of the courts in Mumbai, India.
+                to the exclusive jurisdiction of the courts in Dehradun, India.
               </p>
               <p>
                 We encourage resolving disputes through direct communication. If a dispute cannot 

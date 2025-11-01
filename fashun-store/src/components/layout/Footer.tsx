@@ -174,15 +174,15 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="flex items-center space-x-3">
               <EnvelopeIcon className="w-5 h-5 text-yellow-400" />
-              <span className="text-neutral-300">support@fashun.co</span>
+              <span className="text-neutral-300">fashun.co.in@gmail.com</span>
             </div>
             <div className="flex items-center space-x-3">
               <PhoneIcon className="w-5 h-5 text-yellow-400" />
-              <span className="text-neutral-300">+91 98765 43210</span>
+              <span className="text-neutral-300">+91 9310632271</span>
             </div>
             <div className="flex items-center space-x-3">
               <MapPinIcon className="w-5 h-5 text-yellow-400" />
-              <span className="text-neutral-300">Mumbai, India</span>
+              <span className="text-neutral-300">Jakhan, Dehradun, India</span>
             </div>
           </div>
         </div>

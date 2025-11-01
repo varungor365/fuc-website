@@ -1,0 +1,189 @@
+/**
+ * Cookie Tracking JavaScript
+ * 
+ */
+
+(function() {
+    'use strict';
+
+    class CookieTracking {
+        constructor() {
+            // Extract the root domain from current hostname
+            const hostname = window.location.hostname;
+            // Remove any subdomain (www. or others) to get the root domain
+            const rootDomain = hostname.replace(/^[^.]+\./, '');
+            this.domain = "." + rootDomain; // Parent domain with leading dot for subdomain sharing
+            this.track();
+        }
+
+        /**
+         * Setzt ein Tracking-Cookie mit den gleichen Parametern wie in PHP
+         */
+        setTrackingCookie(name, value) {
+            name = encodeURIComponent(name);
+            value = encodeURIComponent(value);
+            
+            // 30 Tage Ablaufzeit (wie in PHP: 3600 * 24 * 30)
+            const expiryTime = new Date();
+            expiryTime.setTime(expiryTime.getTime() + (30 * 24 * 60 * 60 * 1000));
+            
+            const cookieString = name + '=' + value +
+                '; expires=' + expiryTime.toUTCString() +
+                '; path=/' +
+                '; domain=' + this.domain +
+                '; secure' +
+                '; samesite=lax';
+            
+           
+            
+            document.cookie = cookieString;
+            
+        
+        }
+
+        /**
+         * Pr�ft ob ein Cookie existiert
+         */
+        getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        /**
+         * Pr�ft ob ein Cookie gesetzt ist
+         */
+        hasCookie(name) {
+            return this.getCookie(name) !== null;
+        }
+
+        /**
+         * Pr�ft ob der Referer erlaubt ist
+         */
+        isRefererAllowed() {
+            const notAllowedDomains = [
+                'pay1.de',
+                'payone.com',
+                'payone.de',
+                'paypal.com',
+                'paypal.de',
+            ];
+
+            const referer = document.referrer;
+            
+            if (!referer) {
+                return false;
+            }
+
+            // Pr�fe nicht erlaubte Domains
+            for (const domain of notAllowedDomains) {
+                if (referer.toLowerCase().indexOf(domain) !== -1) {
+                    return false;
+                }
+            }
+
+            // Pr�fe eigene Domain (au�er hello.seobility.net)
+            if (referer.toLowerCase().indexOf(this.domain) !== -1 &&
+                referer.toLowerCase().indexOf('hello.seobility.net') === -1) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * URL-Parameter aus der aktuellen URL extrahieren
+         */
+        getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name) || '';
+        }
+
+        /**
+         * Haupt-Tracking-Funktion
+         */
+        track() {
+            // Do not track visits from Google, Bing and Vertifire
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.indexOf('google') !== -1 ||
+                userAgent.indexOf('bing') !== -1 ||
+                userAgent.indexOf('vertifire') !== -1) {
+                    console.log("Not tracking from Google, Bing and Vertifire",userAgent);
+                return;
+            }
+
+            // Track the first URL visited by the user
+            // First wins, logged only once
+            
+            if (!this.hasCookie('track_firsturlvisited')) {
+                this.setTrackingCookie('track_firsturlvisited', window.location.href);
+            }
+
+            // Track the first time the user visits the website
+            // First wins, logged only once
+          
+            if (!this.hasCookie('track_sessiondatetime')) {
+                const now = new Date();
+                const dateString = now.getFullYear() + '-' + 
+                    String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(now.getDate()).padStart(2, '0') + ' ' +
+                    String(now.getHours()).padStart(2, '0') + ':' + 
+                    String(now.getMinutes()).padStart(2, '0') + ':' + 
+                    String(now.getSeconds()).padStart(2, '0');
+                this.setTrackingCookie('track_sessiondatetime', dateString);
+            }
+
+            // Certain referers (Payment providers) and empty referers stored as empty values
+            // This is to avoid tracking them
+            // In that case we also do not need to track anything else and return early
+            if (!this.isRefererAllowed()) {
+                if (!this.hasCookie('track_http_referer')) {
+                    this.setTrackingCookie('track_http_referer', '');
+                }
+                //return;
+            }
+
+            // Track the referer
+            // First wins, logged only once
+            if (!this.hasCookie('track_http_referer')) {
+                // Session-basierte Logik kann in JavaScript nicht direkt abgebildet werden
+                // Daher setzen wir den Referer direkt
+                this.setTrackingCookie('track_http_referer', document.referrer || '');
+            }
+
+            // Track the affiliate ID
+            // Last wins, but doesn't get overwritten when none is existing
+            const affiliateId = this.getUrlParameter('a_aid');
+            if (affiliateId) {
+                this.setTrackingCookie('track_affiliate_id', affiliateId);
+            }
+
+            // Track UTM parameters
+            // Last wins, gets overwritten, also with empty when not existing
+            this.setTrackingCookie('track_utm_source', this.getUrlParameter('utm_source'));
+            this.setTrackingCookie('track_data1', this.getUrlParameter('data1'));
+            this.setTrackingCookie('track_data2', this.getUrlParameter('data2'));
+            this.setTrackingCookie('track_utm_campaign', this.getUrlParameter('utm_campaign'));
+            this.setTrackingCookie('track_utm_medium', this.getUrlParameter('utm_medium'));
+            this.setTrackingCookie('track_utm_content', this.getUrlParameter('utm_content'));
+            this.setTrackingCookie('track_utm_term', this.getUrlParameter('utm_term'));
+            this.setTrackingCookie('track_id', this.getUrlParameter('utm_id'));
+            this.setTrackingCookie('track_mt', this.getUrlParameter('utm_mt'));
+        }
+    }
+
+    // Initialisiere das Tracking wenn das DOM geladen ist
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            new CookieTracking();
+        });
+    } else {
+        new CookieTracking();
+    }
+
+})(); 

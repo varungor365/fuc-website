@@ -1,0 +1,341 @@
+/**
+ * File navigation.js.
+ *
+ * Handles toggling the navigation menu for small screens and enables TAB key
+ * navigation support for dropdown menus.
+ */
+( function() {
+	const siteNavigation = document.getElementById( 'site-navigation' );
+	
+	// Return early if the navigation doesn't exist.
+	if ( ! siteNavigation ) {
+		return;
+	}
+	
+	// Track last button click to prevent immediate outside click removal
+	let lastButtonClick = 0;
+
+	const button = siteNavigation.getElementsByTagName( 'button' )[ 0 ];
+	// Return early if the button doesn't exist.
+	if ( 'undefined' === typeof button ) {
+		return;
+	}
+	
+	const menu = siteNavigation.getElementsByTagName( 'ul' )[ 0 ];
+	
+	// Hide menu toggle button if menu is empty and return early.
+	if ( 'undefined' === typeof menu ) {
+		button.style.display = 'none';
+		return;
+	}
+
+	if ( ! menu.classList.contains( 'nav-menu' ) ) {
+		menu.classList.add( 'nav-menu' );
+	}
+
+	// Check if button already has event listeners (to prevent double binding)
+	if (!button.hasAttribute('data-navigation-ready')) {
+		// Mark button as ready
+		button.setAttribute('data-navigation-ready', 'true');
+		
+		// Toggle the .toggled class and the aria-expanded value each time the button is clicked.
+		button.addEventListener( 'click', function(event) {
+			// Prevent event bubbling to avoid conflicts with other click handlers
+			event.stopPropagation();
+			// Track button click timestamp
+			lastButtonClick = Date.now();
+			siteNavigation.classList.toggle( 'toggled' );
+			document.body.classList.toggle('menu-open');
+			document.documentElement.classList.toggle('menu-open'); 
+			let openIcon = document.querySelector('.menu-open-icon');
+			let closeIcon = document.querySelector('.menu-close-icon');
+			const menuIcon = button.querySelector('i');
+			
+			// Apply animation class
+			if (menuIcon) {
+				menuIcon.classList.add('icon-transition');
+			}
+			
+			const expanded = button.getAttribute( 'aria-expanded' ) === 'true';
+			if ( expanded ) {
+				button.setAttribute( 'aria-expanded', 'false' );
+			} else {
+				button.setAttribute( 'aria-expanded', 'true' );
+			}
+			
+			// Switch the icon after the animation
+			setTimeout(() => {
+				if (!expanded && openIcon && closeIcon) {
+					openIcon.classList.add('hidden');
+					closeIcon.classList.remove('hidden');
+				} else if (expanded && openIcon && closeIcon) {
+					openIcon.classList.remove('hidden');
+					closeIcon.classList.add('hidden');
+				}
+				if (menuIcon) {
+					menuIcon.classList.remove('icon-transition');
+				}
+			}, 200); // The animation duration
+		} );
+	}
+
+	// Remove the .toggled class and set aria-expanded to false when the user clicks outside the navigation.
+	document.addEventListener( 'click', function( event ) {
+		const isClickInside = siteNavigation.contains( event.target );
+		const isButtonClick = button.contains( event.target );
+		const timeSinceButtonClick = Date.now() - lastButtonClick;
+
+		// Ignore outside clicks that happen within 100ms of button click to prevent conflicts
+		if ( ! isClickInside && ! isButtonClick && timeSinceButtonClick > 100 ) {
+			siteNavigation.classList.remove( 'toggled' );
+			document.body.classList.remove('menu-open');
+			document.documentElement.classList.remove('menu-open');
+			button.setAttribute( 'aria-expanded', 'false' );
+		}
+	} );
+
+	// Get all the link elements within the menu.
+	const links = menu.getElementsByTagName( 'a' );
+
+	// Get all the link elements with children within the menu.
+	const linksWithChildren = menu.querySelectorAll( '.menu-item-has-children > a, .page_item_has_children > a' );
+
+	// Toggle focus each time a menu link is focused or blurred.
+	for ( const link of linksWithChildren ) {
+		link.addEventListener( 'focus', toggleFocus, true );
+		link.addEventListener( 'blur', toggleFocus, true );
+	}
+
+	// Toggle focus each time a menu link with children receive a touch event.
+	for ( const link of linksWithChildren ) {
+		link.addEventListener( 'touchstart', toggleFocus, false );
+	}
+
+	/**
+	 * Sets or removes .focus class on an element.
+	 */
+	function toggleFocus() {
+		if ( event.type === 'focus' || event.type === 'blur' ) {
+			let self = this;
+			// Move up through the ancestors of the current link until we hit .nav-menu.
+			while ( ! self.classList.contains( 'nav-menu' ) ) {
+				// On li elements toggle the class .focus.
+				if ( 'li' === self.tagName.toLowerCase() ) {
+					self.classList.toggle( 'focus' );
+					self.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start' // or 'start', 'center', etc.
+					});
+				}
+				self = self.parentNode;
+			}
+		}
+
+		if ( event.type === 'touchstart' ) {
+			const menuItem = this.parentNode;
+			event.preventDefault();
+			for ( const link of menuItem.parentNode.children ) {
+				if ( menuItem !== link ) {
+					link.classList.remove( 'focus' );
+				}
+			}
+			menuItem.classList.toggle( 'focus' );
+			menuItem.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start' // or 'start', 'center', etc.
+			});
+		}
+	}
+}() );
+
+// Fallback mechanism for wpRocket deferred loading
+// This ensures the mobile menu works even if the main script hasn't loaded yet
+(function() {
+	function setupFallbackMenuToggle() {
+		const siteNavigation = document.getElementById('site-navigation');
+		const button = siteNavigation?.getElementsByTagName('button')[0];
+		
+		if (!siteNavigation || !button) {
+			return false;
+		}
+		
+		// Check if main script has already set up the button
+		if (button.hasAttribute('data-navigation-ready')) {
+			return true;
+		}
+		
+		// Add a temporary click handler
+		function tempClickHandler(event) {
+			event.stopPropagation();
+			
+			siteNavigation.classList.toggle('toggled');
+			document.body.classList.toggle('menu-open');
+			document.documentElement.classList.toggle('menu-open');
+			
+			const expanded = button.getAttribute('aria-expanded') === 'true';
+			button.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+		}
+		
+		// Add the temporary handler
+		button.addEventListener('click', tempClickHandler);
+		button.setAttribute('data-fallback-ready', 'true');
+		
+		// Check periodically if the main script has loaded and remove fallback
+		const checkInterval = setInterval(() => {
+			if (button.hasAttribute('data-navigation-ready')) {
+				button.removeEventListener('click', tempClickHandler);
+				button.removeAttribute('data-fallback-ready');
+				clearInterval(checkInterval);
+			}
+		}, 100);
+		
+		// Safety timeout to remove fallback after 10 seconds
+		setTimeout(() => {
+			if (button.hasAttribute('data-fallback-ready')) {
+				button.removeEventListener('click', tempClickHandler);
+				button.removeAttribute('data-fallback-ready');
+				clearInterval(checkInterval);
+			}
+		}, 10000);
+		
+		return true;
+	}
+	
+	// Try to setup immediately
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', setupFallbackMenuToggle);
+	} else {
+		setupFallbackMenuToggle();
+	}
+	
+	// Also try on next tick in case DOM elements are added dynamically
+	setTimeout(setupFallbackMenuToggle, 50);
+})();
+
+
+document.addEventListener("DOMContentLoaded", function() {
+	//Start Add language to header links
+	//
+		function appendLanguageCodeToLinks() {
+		  let htmlLang = document.documentElement.lang; // e.g. "de-DE"
+		  let wpmlLangCode = htmlLang.split('-')[0]; // "de"
+
+		  const links = document.querySelectorAll('a.add-languagecode');
+		  
+		  links.forEach(link => {
+			let url = new URL(link.href, window.location.origin);
+			url.searchParams.set('locale', wpmlLangCode);
+			link.href = url.toString();
+		  });
+		}
+	appendLanguageCodeToLinks();
+	
+	//END 
+	
+	/**
+	 * Behält Query-Parameter beim Sprachwechsel bei
+	 * Besonders wichtig für Free-Tools-Ergebnisseiten
+	 */
+	function preserveQueryParamsOnLanguageSwitch() {
+		// Prüfe ob wir auf einer Free-Tools-Ergebnisseite sind
+		const isResultsPage = document.querySelector('.free-tool-result') !== null;
+		
+		if (!isResultsPage) {
+			return;
+		}
+		
+		// Alle Query-Parameter sammeln
+		const currentUrl = new URL(window.location.href);
+		const currentParams = {};
+		
+		// Alle aktuellen Parameter sammeln
+		currentUrl.searchParams.forEach((value, key) => {
+			currentParams[key] = value;
+		});
+		
+		// Wenn Parameter vorhanden sind, Language-Switcher-Links anpassen
+		if (Object.keys(currentParams).length > 0) {
+			// WPML Language Switcher Links finden und anpassen
+			const languageLinks = document.querySelectorAll('.wpml-ls-item a, .wpml-ls-link, [data-lang] a');
+			
+			languageLinks.forEach(link => {
+				const linkUrl = new URL(link.href, window.location.origin);
+				
+				// Alle Parameter zur URL hinzufügen
+				Object.keys(currentParams).forEach(param => {
+					linkUrl.searchParams.set(param, currentParams[param]);
+				});
+				
+				link.href = linkUrl.toString();
+			});
+		}
+	}
+	
+	// Funktion beim Laden ausführen
+	preserveQueryParamsOnLanguageSwitch();
+	
+	// Auch nach AJAX-Laden ausführen (falls Language-Switcher dynamisch geladen wird)
+	const observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+				// Prüfe ob Language-Switcher hinzugefügt wurde
+				mutation.addedNodes.forEach(function(node) {
+					if (node.nodeType === 1 && (
+						node.classList.contains('wpml-ls') || 
+						node.querySelector('.wpml-ls') ||
+						node.querySelector('[data-lang]')
+					)) {
+						preserveQueryParamsOnLanguageSwitch();
+					}
+				});
+			}
+		});
+	});
+	
+	// Observer starten
+	observer.observe(document.body, {
+		childList: true,
+		subtree: true
+	});
+
+    const header = document.getElementById("masthead");
+
+});
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    });
+
+    document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+	  
+	 
+	  
+	  let primMenu = document.getElementById("primary-menu");
+	  if (primMenu) {
+		primMenu.addEventListener('click', function(event) {
+		  const dropdowns = document.querySelectorAll('.sub-menu-grid');
+
+		  dropdowns.forEach(subMenu => {
+			const parent = subMenu.parentElement;
+		
+			  
+			  
+			if (!subMenu.contains(event.target) && event.target.id != 'primary-menu') {
+			  parent.classList.remove('focus');
+			}
+		  });
+		});
+	  }
+	  
+  });
+
+
+
+
+

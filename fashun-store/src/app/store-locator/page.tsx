@@ -23,13 +23,13 @@ export default function StoreLocatorPage() {
   const stores = [
     {
       id: 1,
-      name: 'FASHUN Flagship - Bandra',
+      name: 'FASHUN Flagship - Jakhan',
       type: 'Flagship Store',
-      address: 'Shop 15, Linking Road, Bandra West, Mumbai, Maharashtra 400050',
-      city: 'Mumbai',
-      state: 'Maharashtra',
-      phone: '+91 98765 43210',
-      email: 'bandra@fashun.co.in',
+      address: 'Jakhan, Dehradun, Uttarakhand 248001',
+      city: 'Dehradun',
+      state: 'Uttarakhand',
+      phone: '+91 9310632271',
+      email: 'fashun.co.in@gmail.com',
       hours: {
         weekdays: '11:00 AM - 10:00 PM',
         weekend: '10:00 AM - 11:00 PM'

@@ -117,9 +117,9 @@ export default function PrivacyPolicyPage() {
                   If you have any questions about this Privacy Policy, please contact us:
                 </p>
                 <ul className="list-none space-y-2">
-                  <li>Email: privacy@fashun.co.in</li>
-                  <li>Phone: +91 98765 43210</li>
-                  <li>Address: 123 Fashion Street, Mumbai, Maharashtra 400001</li>
+                  <li>Email: fashun.co.in@gmail.com</li>
+                  <li>Phone: +91 9310632271</li>
+                  <li>Address: Jakhan, Dehradun, Uttarakhand 248001, India</li>
                 </ul>
               </div>
             </section>

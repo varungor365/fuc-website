@@ -13,7 +13,7 @@ export default function ReturnsPage() {
           <section>
             <h2 className="text-2xl font-bold text-white mb-4">How to Return</h2>
             <ol className="list-decimal list-inside space-y-2">
-              <li>Contact our support team at support@fashun.co.in</li>
+              <li>Contact our support team at fashun.co.in@gmail.com</li>
               <li>Provide your order number and reason for return</li>
               <li>Pack the item securely in original packaging</li>
               <li>Ship to our returns address (provided via email)</li>

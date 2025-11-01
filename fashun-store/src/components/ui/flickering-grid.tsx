@@ -122,11 +122,27 @@ export function FlickeringGridHero({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900/20 to-black"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Animated gradient overlay */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-pink-500/10 to-purple-600/10"
+        animate={{
+          backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        style={{
+          backgroundSize: "200% 200%",
+        }}
+      />
+
       {/* Flickering Grid Background */}
       <div className="absolute inset-0">
         <FlickeringGrid
@@ -160,7 +176,7 @@ export function FlickeringGridHero({
           ) : (
             <>
               <motion.h1
-                className="text-9xl font-black text-white relative"
+                className="text-5xl sm:text-7xl md:text-9xl font-black text-white relative"
                 animate={{
                   textShadow: [
                     "0 0 20px rgba(249, 115, 22, 0.5)",
@@ -176,7 +192,7 @@ export function FlickeringGridHero({
 
               {/* Glitch layers */}
               <motion.h1
-                className="absolute inset-0 text-9xl font-black text-orange-500 opacity-70"
+                className="absolute inset-0 text-5xl sm:text-7xl md:text-9xl font-black text-orange-500 opacity-70"
                 style={{ clipPath: "inset(0 0 0 0)" }}
                 animate={{
                   clipPath: [
@@ -192,7 +208,7 @@ export function FlickeringGridHero({
               </motion.h1>
 
               <motion.h1
-                className="absolute inset-0 text-9xl font-black text-pink-500 opacity-70"
+                className="absolute inset-0 text-5xl sm:text-7xl md:text-9xl font-black text-pink-500 opacity-70"
                 style={{ clipPath: "inset(0 0 0 0)" }}
                 animate={{
                   clipPath: [
@@ -212,7 +228,7 @@ export function FlickeringGridHero({
 
         {/* FASHUN.CO Text */}
         <motion.p
-          className="text-2xl font-bold tracking-[0.5em] text-white/80"
+          className="text-lg sm:text-xl md:text-2xl font-bold tracking-[0.3em] sm:tracking-[0.5em] text-white/80"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}

@@ -145,7 +145,7 @@ export default function OrderTracking({ orderId, trackingNumber }: OrderTracking
     courierInfo: {
       name: 'Raj Kumar',
       trackingUrl: 'https://delhivery.com/track',
-      phone: '+91 98765 43210',
+      phone: '+91 9310632271',
       estimatedTime: '3:00 PM - 6:00 PM',
       vehicleType: 'bike',
       courierRating: 4.8

@@ -318,7 +318,7 @@ export default function FAQPage() {
               <h3 className="text-white font-semibold mb-2">Live Chat</h3>
               <p className="text-primary-300 text-sm mb-4">Get instant help from our support team</p>
               <button 
-                onClick={() => window.open('https://wa.me/919876543210?text=Hi! I need help with FASHUN.CO', '_blank')}
+                onClick={() => window.open('https://wa.me/919310632271?text=Hi! I need help with FASHUN.CO', '_blank')}
                 className="w-full btn btn-glass btn-sm cursor-pointer hover:scale-105 transition-transform"
               >
                 Start Chat
@@ -342,7 +342,7 @@ export default function FAQPage() {
               <h3 className="text-white font-semibold mb-2">Phone Support</h3>
               <p className="text-primary-300 text-sm mb-4">Mon-Fri, 9 AM - 6 PM IST</p>
               <button 
-                onClick={() => window.location.href = 'tel:+919876543210'}
+                onClick={() => window.location.href = 'tel:+919310632271'}
                 className="w-full btn btn-ghost btn-sm text-white border-white/30 cursor-pointer hover:scale-105 transition-transform"
               >
                 Call Now

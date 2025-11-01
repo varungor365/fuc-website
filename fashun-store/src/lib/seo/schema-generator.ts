@@ -62,9 +62,9 @@ export function generateOrganizationSchema() {
     ],
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+91-XXXXXXXXXX",
+      "telephone": "+91-9310632271",
       "contactType": "Customer Service",
-      "email": "support@fashun.co.in"
+      "email": "fashun.co.in@gmail.com"
     }
   };
 }

@@ -16,7 +16,7 @@ export default function AdminSettingsPage() {
     sendgridApiKey: '',
     siteName: 'FASHUN.CO',
     siteUrl: 'https://fashun.co',
-    supportEmail: 'support@fashun.co',
+    supportEmail: 'fashun.co.in@gmail.com',
     currency: 'INR',
     googleAnalyticsId: '',
     facebookPixelId: '',

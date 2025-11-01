@@ -92,7 +92,7 @@ ${this.state.error?.message}
 Please describe what you were doing when this error occurred.
     `);
     
-    window.open(`mailto:support@fashun.co.in?subject=${subject}&body=${body}`);
+    window.open(`mailto:fashun.co.in@gmail.com?subject=${subject}&body=${body}`);
   };
 
   render() {

@@ -1,0 +1,15 @@
+{
+  "name": "linkinator-audit",
+  "version": "1.0.0",
+  "description": "Broken links audit for fashun.co",
+  "scripts": {
+    "audit:links": "linkinator https://fashun.co --recurse --format=json > reports/broken-links-report.json",
+    "audit:links:local": "linkinator http://localhost:3000 --recurse --format=csv > reports/local-broken-links.csv",
+    "audit:links:detailed": "linkinator https://fashun.co --recurse --verbosity=info > reports/detailed-links-report.txt",
+    "fix:links": "tsx scripts/fix-broken-links.ts"
+  },
+  "devDependencies": {
+    "linkinator": "^6.0.4",
+    "tsx": "^4.7.0"
+  }
+}

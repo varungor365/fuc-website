@@ -40,9 +40,10 @@ export const siteConfig = {
     email: "fashun.co.in@gmail.com",
     supportEmail: "fashun.co.in@gmail.com",
     businessEmail: "fashun.co.in@gmail.com",
-    phone: "+919310632771",
+    phone: "+919310632271",
+    whatsapp: "+919310632271",
     address: {
-      street: "Jakhan Rajpur Road",
+      street: "Jakhan",
       city: "Dehradun", 
       state: "Uttarakhand",
       postalCode: "248001",

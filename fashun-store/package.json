@@ -15,7 +15,13 @@
     "ai:test:api": "node ai-testing/run-all-tests.js",
     "ai:analyze": "node ai-testing/run-all-tests.js",
     "ai:fix": "node ai-testing/run-all-tests.js",
-    "ai:demo": "node ai-testing/demo-workflow.js"
+    "ai:demo": "node ai-testing/demo-workflow.js",
+    "audit:links": "linkinator https://fashun.co --recurse --format json > reports/broken-links-report.json",
+    "audit:links:local": "linkinator http://localhost:3000 --recurse --format csv > reports/local-broken-links.csv",
+    "audit:images": "node scripts/analyze-images.js",
+    "audit:all": "node run-all-audits.js",
+    "fix:links": "node scripts/fix-broken-links.js",
+    "pre-deploy": "node pre-deploy-check.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

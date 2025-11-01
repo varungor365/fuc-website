@@ -1,0 +1,838 @@
+{
+  "date": "2025-11-01T17:17:44.528Z",
+  "summary": {
+    "total": 85,
+    "needsOptimization": 85,
+    "totalSize": 3284016,
+    "oversized": 2
+  },
+  "images": [
+    {
+      "path": "public\\images\\banners\\collection-banner.jpg",
+      "size": 100,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\banners\\hero-banner-1.jpg",
+      "size": 156,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\banners\\sale-banner.jpg",
+      "size": 100,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\categories\\accessories.jpg",
+      "size": 43920,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\categories\\hoodies.jpg",
+      "size": 139523,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\categories\\jackets.jpg",
+      "size": 126500,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\categories\\polos.jpg",
+      "size": 134745,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\categories\\sweatshirts.jpg",
+      "size": 79050,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\categories\\tshirts.jpg",
+      "size": 63168,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\hoodies\\cyber-punk-hoodie.svg",
+      "size": 836,
+      "format": ".svg",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\hoodies\\neon-glow-hoodie.svg",
+      "size": 835,
+      "format": ".svg",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\hoodies\\trending-hoodie.jpg",
+      "size": 110,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\hoodies\\urban-hoodie-2.jpg",
+      "size": 108,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\hoodies\\urban-hoodie.jpg",
+      "size": 108,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\jackets\\bomber-jacket-2.jpg",
+      "size": 108,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\jackets\\bomber-jacket.jpg",
+      "size": 108,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\jackets\\quantum-bomber.svg",
+      "size": 833,
+      "format": ".svg",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\pants\\cargo-pants-2.jpg",
+      "size": 108,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\pants\\cargo-pants.jpg",
+      "size": 108,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\tshirts\\holographic-tee.svg",
+      "size": 834,
+      "format": ".svg",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\tshirts\\oversized-tee-2.jpg",
+      "size": 108,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\mock\\products\\tshirts\\oversized-tee.jpg",
+      "size": 0,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\accessories\\cap-1-front.jpg",
+      "size": 0,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\accessories\\cap-1-main.jpg",
+      "size": 43920,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\accessories\\cap-1-side.jpg",
+      "size": 54849,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\hoodies\\deal-hoodie.jpg",
+      "size": 108,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\hoodies\\hoodie-1-back.jpg",
+      "size": 63168,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\hoodies\\hoodie-1-front.jpg",
+      "size": 79050,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\hoodies\\hoodie-1-main.jpg",
+      "size": 139523,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\hoodies\\hoodie-1-side.jpg",
+      "size": 70682,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\hoodies\\hoodie-2-back.jpg",
+      "size": 209424,
+      "format": ".jpg",
+      "recommendations": [
+        "Compress image - current size 204.52 KB exceeds 200 KB",
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\hoodies\\hoodie-2-front.jpg",
+      "size": 31615,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\hoodies\\hoodie-2-main.jpg",
+      "size": 134745,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\jackets\\jacket-1-back.jpg",
+      "size": 114803,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\jackets\\jacket-1-detail.jpg",
+      "size": 108097,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\jackets\\jacket-1-front.jpg",
+      "size": 0,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\jackets\\jacket-1-main.jpg",
+      "size": 126500,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\pants\\cargo-pants.jpg",
+      "size": 110,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\pants\\jeans-1-back.jpg",
+      "size": 37172,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\pants\\jeans-1-detail.jpg",
+      "size": 156890,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\pants\\jeans-1-front.jpg",
+      "size": 164070,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\pants\\jeans-1-main.jpg",
+      "size": 393661,
+      "format": ".jpg",
+      "recommendations": [
+        "Compress image - current size 384.43 KB exceeds 200 KB",
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\shoes\\sneaker-1-main.jpg",
+      "size": 170673,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\shoes\\sneaker-1-side.jpg",
+      "size": 72265,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\shoes\\sneaker-1-sole.jpg",
+      "size": 70556,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\shoes\\sneaker-1-top.jpg",
+      "size": 69467,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\t-shirts\\tshirt-1-back.jpg",
+      "size": 43656,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\t-shirts\\tshirt-1-front.jpg",
+      "size": 96649,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\t-shirts\\tshirt-1-main.jpg",
+      "size": 63168,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\t-shirts\\tshirt-2-front.jpg",
+      "size": 0,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\t-shirts\\tshirt-2-main.jpg",
+      "size": 90260,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\products\\t-shirts\\tshirt-2-side.jpg",
+      "size": 31615,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\images\\social\\instagram-post-1.jpg",
+      "size": 143,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\logo.png",
+      "size": 4765,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\og.jpg",
+      "size": 238,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\patterns\\dots.svg",
+      "size": 0,
+      "format": ".svg",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\hero-background.jpg",
+      "size": 0,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\hero-background.svg",
+      "size": 0,
+      "format": ".svg",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\icons\\social-media.svg",
+      "size": 0,
+      "format": ".svg",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\lifestyle\\urban-scene-1.jpg",
+      "size": 0,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\models\\model-1.jpg",
+      "size": 0,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\models\\model-2.jpg",
+      "size": 100,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\models\\model-3.jpg",
+      "size": 100,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\models\\model-4.jpg",
+      "size": 100,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\models\\model-5.jpg",
+      "size": 100,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\models\\model-6.jpg",
+      "size": 100,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\models\\model-7.jpg",
+      "size": 100,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\models\\model-8.jpg",
+      "size": 100,
+      "format": ".jpg",
+      "recommendations": [
+        "Consider converting to WebP for 25-35% size reduction",
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-01.png",
+      "size": 0,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-01.svg",
+      "size": 0,
+      "format": ".svg",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-010.png",
+      "size": 110,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-011.png",
+      "size": 110,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-012.png",
+      "size": 110,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-02.png",
+      "size": 108,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-03.png",
+      "size": 108,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-04.png",
+      "size": 108,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-05.png",
+      "size": 108,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-06.png",
+      "size": 108,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-07.png",
+      "size": 108,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-08.png",
+      "size": 108,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\stock\\products\\tshirt-09.png",
+      "size": 108,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\templates\\hoodie-back.png",
+      "size": 12308,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\templates\\hoodie-front.png",
+      "size": 12244,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\templates\\tshirt-back.png",
+      "size": 12157,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    },
+    {
+      "path": "public\\templates\\tshirt-front.png",
+      "size": 12105,
+      "format": ".png",
+      "recommendations": [
+        "Modern format recommended (WebP or AVIF)",
+        "Ensure Next.js Image component is used with lazy loading"
+      ]
+    }
+  ]
+}

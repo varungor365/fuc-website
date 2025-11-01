@@ -1,0 +1,149 @@
+/* Luís can work here */
+
+pre {
+	margin-bottom: 1.2em !important;
+}
+
+aside#secondary {
+    max-width: 280px;
+}
+.blog-section aside#secondary, .search-results:not(.post-type-archive-wiki) aside#secondary {
+    max-width: 376px;
+}
+
+body.single .post-content li a, 
+body.single .post-content li a:visited,
+.feature-accordion-item p a,
+.feature-accordion-item p a:visited,
+.wiki-template-default article a,
+.wiki-template-default article a:visited,
+.entry-content p a,
+.entry-content p a:visited,
+.entry-content li a,
+.entry-content li a:visited,
+.top-contact-container a, 
+.top-contact-container a:visited,
+body.page-template-default p a,
+body.page-template-default td a,
+.author-bio a,
+.author-bio a:visited,
+.page-template-template-wiki-team .wiki-wrapper main a,
+.page-template-template-wiki-team .wiki-wrapper main a:visited,
+body.page-template-archive-wiki .wiki-wrapper main a,
+body.page-template-archive-wiki .wiki-wrapper main a:visited {
+    color: #1D85ED !important;
+    font-family: Graphik !important;
+    /*font-size: 16px;*/
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: 22px;
+	text-decoration: none !important;
+}
+
+body.single .post-content li a:hover,
+.feature-accordion-item p a:hover,
+.wiki-template-default article a:hover,
+.entry-content p a:hover,
+.entry-content li a:hover,
+.top-contact-container a:hover,
+.contact-link-wrapper a:hover,
+body.page-template-default td a:hover,
+.author-bio a:hover,
+.page-template-template-wiki-team .wiki-wrapper main a:hover,
+.toc-container ul.toc-list li a.toc-link:hover,
+body.page-template-archive-wiki .wiki-wrapper main a:hover{
+    text-decoration: underline !important;
+}
+
+.toc-container ul.toc-list li a.toc-link {
+    color: #1F2937 !important;
+    font-weight: 500 !important;
+    line-height: 22px !important;
+}
+
+/* Blog sidebar */
+
+body .sidebar:nth-of-type(2) {
+	position: sticky;
+	margin-top: 50px;
+	top: 50px;
+}
+.sidebar-inner {
+	/*height: 100%;*/
+}
+.toc-wrapper h3 {
+	padding-left: 20px;
+}
+
+#toc-list li a {
+	font-size: 18px !important;
+	line-height: 24px !important;
+}
+#toc-list li a:hover {
+	color: #1D85ED;
+    font-weight: 500;
+}
+
+/* SEO Check widget */
+
+.seo-check-widget button,
+.wiki-wrapper .seo-check-widget button {
+	border-radius: 6px !important;
+}
+
+.page-template-archive-wiki .seo-check-widget form input,
+.wiki-wrapper .seo-check-widget form input {
+    border-radius: 8px !important;
+    border: 1px solid #1D85ED !important;
+    background: #FFF !important;
+    height: 40px !important;
+    padding: 10px 17px 10px 17px !important;
+    margin-bottom: 8px ;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Newsletter sidebar forms */
+
+._form_21 form,
+._form_23 form {
+    font-family: Graphik !important;
+	padding: 0 !important;
+}
+
+._form_21 form input,
+._form_23 form input {
+    border-radius: 6px !important;
+    border: 1px solid #AFD6FE !important;
+    background: #FFF !important;
+    width: 100% !important;
+    height: 40px !important;
+    flex-shrink: 0 !important;
+    padding: 10px 12px !important;
+	font-family: Graphik !important;
+	font-size: 16px !important;
+}
+
+._form_21 form button,
+._form_21 form ._submit,
+._form_23 form button,
+._form_23 form ._submit {
+	padding: 8px 30px !important;
+    border-radius: 8px !important;
+    background: #1D85ED !important;
+    box-shadow: 3px 3px 20px 1px rgba(19, 92, 164, 0.15) !important;
+    width: 100% !important;
+    color: #FFF !important;
+    font-family: Graphik !important;
+    font-size: 16px !important;
+    font-style: normal !important;
+    font-weight: 500 !important;
+    line-height: 22px !important;
+	margin-top: 10px !important;
+}
+
+._form_21 form button:hover,
+._form_23 form button:hover {
+    background: #1678C2 !important;
+    box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.1) !important;
+}

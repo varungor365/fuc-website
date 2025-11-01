@@ -1,0 +1,104 @@
+// DISPLAY DASHBOARD BUTTON IF USER IS LOGGED IN - PERFORMANCE OPTIMIZED
+(function watchAuthStatus() {
+	let isAuthenticated = false;
+	let isInitialized = false;
+	
+	// Cache DOM elements to avoid repeated queries
+	let authHiddenElements, dashboardBtn, dashBoardMobile, signInMobile, signUpMobile;
+	
+	// Initialize DOM elements only when needed
+	const initializeElements = () => {
+		if (!isInitialized) {
+			authHiddenElements = document.querySelectorAll('.auth-hidden');
+			dashboardBtn = document.querySelector('.dashboard-btn');
+			dashBoardMobile = document.querySelector('.dashboard-mobile');
+			signInMobile = document.querySelector('.sign-in-mobile');
+			signUpMobile = document.querySelector('.sign-up-mobile');
+			isInitialized = true;
+		}
+	};
+	
+	const checkAuth = () => {
+		const newAuthState = window.authStatus && window.authStatus.authenticated === true;
+		
+		// Only update DOM if authentication state has changed
+		if (newAuthState !== isAuthenticated) {
+			isAuthenticated = newAuthState;
+			
+			// Initialize elements only when auth state changes
+			initializeElements();
+			
+			if (isAuthenticated) {
+				// Hide sign-in/sign-up buttons
+				authHiddenElements.forEach(el => el.style.display = 'none');
+				if(dashBoardMobile) dashBoardMobile.classList.remove('hidden');
+				if(signInMobile) signInMobile.classList.add('hidden');
+				if(signUpMobile) signUpMobile.classList.add('hidden');
+
+				// Show dashboard button
+				if (dashboardBtn) {
+					dashboardBtn.style.display = 'inline-block';
+					
+					// Set dashboard URL if available from authStatus
+					if (window.authStatus && window.authStatus.dashboardUrl) {
+						dashboardBtn.href = window.authStatus.dashboardUrl;
+					} else {
+						// Fallback dashboard URL
+						dashboardBtn.href = window.seobilityAppDomain || '/dashboard';
+					}
+				}
+			} else {
+				if(dashBoardMobile) dashBoardMobile.classList.add('hidden');
+				if(signInMobile) signInMobile.classList.remove('hidden');
+				if(signUpMobile) signUpMobile.classList.remove('hidden');
+				// Show sign-in/sign-up buttons
+				authHiddenElements.forEach(el => el.style.display = '');
+				
+				// Hide dashboard button
+				if (dashboardBtn) {
+					dashboardBtn.style.display = 'none';
+				}
+			}
+		}
+	};
+
+	// Use requestIdleCallback for better performance (fallback to setTimeout)
+	const scheduleCheck = (callback) => {
+		if ('requestIdleCallback' in window) {
+			requestIdleCallback(callback, { timeout: 1000 });
+		} else {
+			setTimeout(callback, 0);
+		}
+	};
+
+	// Check immediately
+	scheduleCheck(checkAuth);
+	
+	// Set up interval with better performance
+	let intervalId;
+	const startInterval = () => {
+		intervalId = setInterval(() => {
+			scheduleCheck(checkAuth);
+		}, 5000);
+	};
+	
+	// Start interval after initial load
+	setTimeout(startInterval, 1000);
+	
+	// Clean up interval when page is unloaded or hidden
+	window.addEventListener('beforeunload', () => {
+		if (intervalId) clearInterval(intervalId);
+	});
+	
+	// Pause interval when page is hidden (Page Visibility API)
+	document.addEventListener('visibilitychange', () => {
+		if (document.hidden) {
+			if (intervalId) clearInterval(intervalId);
+		} else {
+			startInterval();
+		}
+	});
+	
+	// Listen for auth status changes from other scripts
+	window.addEventListener('authStatusChanged', checkAuth);
+})();
