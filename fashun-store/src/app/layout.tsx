@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
-import { ThemeProvider } from '@/contexts/ThemeContext';
+import { ThemeProvider } from '@/contexts/theme-context';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import SocialProof from '@/components/notifications/SocialProof';
@@ -32,47 +32,48 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
           <AuthProvider>
             <Providers>
-              {/* Header, Footer, and Navigation hidden for launch countdown */}
-              {/* <Header /> */}
-              {children}
-              {/* <Footer /> */}
-              {/* <SocialProof /> */}
-              {/* <FloatingDock
-                items={[
-                  { 
-                    title: 'Home', 
-                    icon: <HomeIcon className="w-6 h-6" />, 
-                    href: '/' 
-                  },
-                  { 
-                    title: 'Shop', 
-                    icon: <ShoppingBagIcon className="w-6 h-6" />, 
-                    href: '/products' 
-                  },
-                  { 
-                    title: 'Search', 
-                    icon: <MagnifyingGlassIcon className="w-6 h-6" />, 
-                    href: '/search' 
-                  },
-                  { 
-                    title: 'Wishlist', 
-                    icon: <HeartIcon className="w-6 h-6" />, 
-                    href: '/wishlist' 
-                  },
-                  { 
-                    title: 'Account', 
-                    icon: <UserIcon className="w-6 h-6" />, 
-                    href: '/account' 
-                  },
-                ]}
-              /> */}
-              <SpeedInsights />
-              <Analytics />
+              <LoadingProvider>
+                <Header />
+                {children}
+                <Footer />
+                <SocialProof />
+                <FloatingDock
+                  items={[
+                    { 
+                      title: 'Home', 
+                      icon: <HomeIcon className="w-6 h-6" />, 
+                      href: '/' 
+                    },
+                    { 
+                      title: 'Shop', 
+                      icon: <ShoppingBagIcon className="w-6 h-6" />, 
+                      href: '/products' 
+                    },
+                    { 
+                      title: 'Search', 
+                      icon: <MagnifyingGlassIcon className="w-6 h-6" />, 
+                      href: '/search' 
+                    },
+                    { 
+                      title: 'Wishlist', 
+                      icon: <HeartIcon className="w-6 h-6" />, 
+                      href: '/wishlist' 
+                    },
+                    { 
+                      title: 'Account', 
+                      icon: <UserIcon className="w-6 h-6" />, 
+                      href: '/account' 
+                    },
+                  ]}
+                />
+                <SpeedInsights />
+                <Analytics />
+              </LoadingProvider>
             </Providers>
           </AuthProvider>
         </ThemeProvider>

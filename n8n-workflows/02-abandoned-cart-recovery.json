@@ -1,0 +1,264 @@
+{
+  "name": "FASHUN - Abandoned Cart Recovery",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every Hour Check",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SUPABASE_URL}}/rest/v1/rpc/get_abandoned_carts",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{$env.SUPABASE_KEY}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-abandoned-carts",
+      "name": "Get Abandoned Carts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.length}}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "id": "check-if-carts-exist",
+      "name": "Check If Carts Exist",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "output": "={{$json[\"hours_abandoned\"] <= 1 ? 'sendEmail' : $json[\"hours_abandoned\"] <= 3 ? 'sendWhatsApp' : 'sendDiscount'}}"
+      },
+      "id": "switch-recovery-stage",
+      "name": "Switch: Recovery Stage",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "message",
+        "operation": "send",
+        "to": "={{$json[\"customer_email\"]}}",
+        "subject": "Did you forget something? 👀",
+        "emailType": "html",
+        "message": "=<html>\n<head>\n  <style>\n    body { font-family: 'Montserrat', Arial, sans-serif; background: #000; color: #fff; }\n    .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }\n    .header { text-align: center; margin-bottom: 40px; }\n    .logo { font-size: 32px; font-weight: 900; background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\n    .cart-items { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 30px; margin: 20px 0; }\n    .item { display: flex; align-items: center; margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; }\n    .btn { background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); color: #fff; padding: 15px 40px; border-radius: 12px; text-decoration: none; display: inline-block; font-weight: bold; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <div class=\"logo\">FASHUN</div>\n      <h1>You left something behind! 👀</h1>\n    </div>\n    \n    <p>Hey {{$json[\"customer_name\"]}}! 👋</p>\n    <p>We noticed you left some amazing pieces in your cart. They're still waiting for you!</p>\n    \n    <div class=\"cart-items\">\n      <h2>Your Cart</h2>\n      <p><strong>Total:</strong> ₹{{$json[\"cart_total\"]}}</p>\n      <p><em>{{$json[\"item_count\"]}} items</em></p>\n    </div>\n    \n    <p>🔥 These items are selling fast! Complete your purchase now before they're gone.</p>\n    \n    <div style=\"text-align: center; margin: 40px 0;\">\n      <a href=\"https://fashun.co.in/cart?recover={{$json[\"cart_id\"]}}\" class=\"btn\">Complete My Purchase</a>\n    </div>\n    \n    <p style=\"text-align: center; color: #666; font-size: 12px;\">This cart will expire in 7 days</p>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-email-reminder",
+      "name": "Send Email Reminder (1 hour)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1050, 100]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "from": "whatsapp:{{$env.TWILIO_WHATSAPP_NUMBER}}",
+        "to": "whatsapp:{{$json[\"customer_phone\"]}}",
+        "message": "=Hey {{$json[\"customer_name\"]}}! 👋\n\n*You left {{$json[\"item_count\"]}} items in your cart!* 🛍️\n\n💰 *Total:* ₹{{$json[\"cart_total\"]}}\n\n🔥 These pieces are selling fast! Complete your purchase now:\nhttps://fashun.co.in/cart?recover={{$json[\"cart_id\"]}}\n\n*FASHUN* - Your style is waiting! ✨",
+        "options": {}
+      },
+      "id": "send-whatsapp-reminder",
+      "name": "Send WhatsApp (3 hours)",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate unique 10% discount code\nconst cartId = $input.item.json.cart_id;\nconst discountCode = `COMEBACK${cartId.substring(0, 6).toUpperCase()}`;\n\nreturn {\n  ...items[0].json,\n  discount_code: discountCode,\n  discount_percent: 10\n};"
+      },
+      "id": "generate-discount-code",
+      "name": "Generate Discount Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 500]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "message",
+        "operation": "send",
+        "to": "={{$json[\"customer_email\"]}}",
+        "subject": "🎁 10% OFF to complete your FASHUN order!",
+        "emailType": "html",
+        "message": "=<html>\n<head>\n  <style>\n    body { font-family: 'Montserrat', Arial, sans-serif; background: #000; color: #fff; }\n    .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }\n    .discount-box { background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%); border-radius: 16px; padding: 40px; text-align: center; margin: 30px 0; }\n    .code { font-size: 32px; font-weight: 900; letter-spacing: 4px; background: #fff; color: #000; padding: 20px; border-radius: 12px; margin: 20px 0; }\n    .btn { background: #fff; color: #000; padding: 15px 40px; border-radius: 12px; text-decoration: none; display: inline-block; font-weight: bold; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1 style=\"text-align: center;\">We miss you! 💔</h1>\n    \n    <p>Hey {{$json[\"customer_name\"]}}! 👋</p>\n    <p>We noticed you haven't completed your purchase. Here's a special gift just for you:</p>\n    \n    <div class=\"discount-box\">\n      <h2 style=\"margin: 0 0 20px 0;\">🎁 EXCLUSIVE 10% OFF</h2>\n      <div class=\"code\">{{$json[\"discount_code\"]}}</div>\n      <p style=\"margin: 20px 0 0 0;\">Use this code at checkout</p>\n    </div>\n    \n    <p style=\"text-align: center;\">⏰ <strong>Valid for 24 hours only!</strong></p>\n    \n    <div style=\"text-align: center; margin: 40px 0;\">\n      <a href=\"https://fashun.co.in/cart?recover={{$json[\"cart_id\"]}}&code={{$json[\"discount_code\"]}}\" class=\"btn\">Shop Now With Discount</a>\n    </div>\n    \n    <p style=\"text-align: center; color: #666; font-size: 12px;\">This offer expires in 24 hours</p>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-discount-email",
+      "name": "Send Discount Email (24 hours)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1250, 500]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.SUPABASE_URL}}/rest/v1/discount_codes",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "code",
+              "value": "={{$json[\"discount_code\"]}}"
+            },
+            {
+              "name": "discount_percent",
+              "value": 10
+            },
+            {
+              "name": "customer_email",
+              "value": "={{$json[\"customer_email\"]}}"
+            },
+            {
+              "name": "cart_id",
+              "value": "={{$json[\"cart_id\"]}}"
+            },
+            {
+              "name": "expires_at",
+              "value": "={{new Date(Date.now() + 24*60*60*1000).toISOString()}}"
+            },
+            {
+              "name": "created_at",
+              "value": "={{new Date().toISOString()}}"
+            }
+          ]
+        }
+      },
+      "id": "save-discount-code",
+      "name": "Save Discount to DB",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1450, 500]
+    }
+  ],
+  "connections": {
+    "Every Hour Check": {
+      "main": [
+        [
+          {
+            "node": "Get Abandoned Carts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Abandoned Carts": {
+      "main": [
+        [
+          {
+            "node": "Check If Carts Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Carts Exist": {
+      "main": [
+        [
+          {
+            "node": "Switch: Recovery Stage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch: Recovery Stage": {
+      "main": [
+        [
+          {
+            "node": "Send Email Reminder (1 hour)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send WhatsApp (3 hours)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Discount Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Discount Code": {
+      "main": [
+        [
+          {
+            "node": "Send Discount Email (24 hours)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Discount Email (24 hours)": {
+      "main": [
+        [
+          {
+            "node": "Save Discount to DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-11-01T00:00:00.000Z",
+  "versionId": "1"
+}

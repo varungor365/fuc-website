@@ -1,0 +1,455 @@
+{
+  "name": "Shopify Order Processing (Complete)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "shopify-order-created",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook - Shopify Order",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "shopify-order-webhook"
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "requestMethod": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/orders",
+        "options": {
+          "headers": {
+            "header": [
+              {
+                "name": "apikey",
+                "value": "={{ $env.SUPABASE_ANON_KEY }}"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{ $env.SUPABASE_ANON_KEY }}"
+              },
+              {
+                "name": "Prefer",
+                "value": "return=representation"
+              }
+            ]
+          }
+        },
+        "sendBody": true,
+        "bodyContentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "shopify_order_id",
+              "value": "={{ $json.payload.id }}"
+            },
+            {
+              "name": "order_number",
+              "value": "={{ $json.payload.order_number }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.payload.email }}"
+            },
+            {
+              "name": "total_price",
+              "value": "={{ $json.payload.total_price }}"
+            },
+            {
+              "name": "currency",
+              "value": "={{ $json.payload.currency }}"
+            },
+            {
+              "name": "financial_status",
+              "value": "={{ $json.payload.financial_status }}"
+            },
+            {
+              "name": "fulfillment_status",
+              "value": "={{ $json.payload.fulfillment_status }}"
+            },
+            {
+              "name": "customer_name",
+              "value": "={{ $json.payload.customer.first_name }} {{ $json.payload.customer.last_name }}"
+            },
+            {
+              "name": "customer_phone",
+              "value": "={{ $json.payload.customer.phone }}"
+            },
+            {
+              "name": "shipping_address",
+              "value": "={{ $json.payload.shipping_address }}"
+            },
+            {
+              "name": "order_items",
+              "value": "={{ $json.payload.line_items }}"
+            },
+            {
+              "name": "order_data",
+              "value": "={{ $json.payload }}"
+            }
+          ]
+        }
+      },
+      "name": "Save Order to Supabase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $json.payload.customer.phone }}",
+        "text": "🎉 Order Confirmed! #{{ $json.payload.order_number }}\\n\\n✅ Total: ₹{{ $json.payload.total_price }}\\n📦 Items: {{ $json.payload.line_items.length }}\\n🚚 Delivery in 3-5 days\\n\\n👉 Track: fashun.co.in/orders/{{ $json.payload.order_number }}\\n\\nThank you for shopping with FASHUN! 🖤",
+        "additionalFields": {}
+      },
+      "name": "WhatsApp Confirmation",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [650, 200],
+      "credentials": {
+        "twilioApi": {
+          "id": "1",
+          "name": "Twilio Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "fromEmail": "orders@fashun.co.in",
+        "toEmail": "={{ $json.payload.email }}",
+        "subject": "Order Confirmed #{{ $json.payload.order_number }} 🎉",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\\n<html>\\n<head>\\n<style>\\nbody { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #ffffff; margin: 0; padding: 20px; }\\n.container { max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 20px; padding: 40px; border: 1px solid rgba(255,255,255,0.1); }\\n.header { text-align: center; margin-bottom: 30px; }\\n.logo { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }\\n.order-number { font-size: 24px; color: #667eea; margin: 20px 0; }\\n.product { background: rgba(255,255,255,0.05); padding: 20px; margin: 15px 0; border-radius: 10px; display: flex; align-items: center; }\\n.product-image { width: 80px; height: 80px; border-radius: 10px; margin-right: 20px; }\\n.total { font-size: 28px; color: #667eea; text-align: center; margin: 30px 0; }\\n.button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; margin: 20px 0; }\\n.footer { text-align: center; margin-top: 40px; opacity: 0.7; font-size: 12px; }\\n</style>\\n</head>\\n<body>\\n<div class='container'>\\n<div class='header'>\\n<div class='logo'>FASHUN</div>\\n<h1>Order Confirmed!</h1>\\n<div class='order-number'>#{{ $json.payload.order_number }}</div>\\n</div>\\n\\n<p>Hey {{ $json.payload.customer.first_name }}! 🎉</p>\\n<p>Your order has been confirmed and is being prepared for shipment.</p>\\n\\n{{#each $json.payload.line_items}}\\n<div class='product'>\\n<img class='product-image' src='{{ this.image }}' alt='{{ this.title }}'>\\n<div>\\n<strong>{{ this.title }}</strong><br>\\nQuantity: {{ this.quantity }}<br>\\n₹{{ this.price }}\\n</div>\\n</div>\\n{{/each}}\\n\\n<div class='total'>Total: ₹{{ $json.payload.total_price }}</div>\\n\\n<center>\\n<a href='https://fashun.co.in/orders/{{ $json.payload.order_number }}' class='button'>Track Order</a>\\n</center>\\n\\n<p><strong>Delivery Address:</strong><br>\\n{{ $json.payload.shipping_address.address1 }}<br>\\n{{ $json.payload.shipping_address.city }}, {{ $json.payload.shipping_address.province }} {{ $json.payload.shipping_address.zip }}</p>\\n\\n<div class='footer'>\\n<p>Questions? Reply to this email or WhatsApp us at +91 98765 43210</p>\\n<p>© 2024 FASHUN. Premium Streetwear</p>\\n</div>\\n</div>\\n</body>\\n</html>",
+        "options": {}
+      },
+      "name": "Email Confirmation",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [650, 300],
+      "credentials": {
+        "smtp": {
+          "id": "2",
+          "name": "Gmail SMTP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/rpc/decrement_inventory",
+        "authentication": "genericCredentialType",
+        "requestMethod": "POST",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "order_items",
+              "value": "={{ $json.payload.line_items }}"
+            }
+          ]
+        },
+        "options": {
+          "headers": {
+            "header": [
+              {
+                "name": "apikey",
+                "value": "={{ $env.SUPABASE_ANON_KEY }}"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{ $env.SUPABASE_ANON_KEY }}"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Update Inventory",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 400]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $env.TELEGRAM_ADMIN_CHAT_ID }}",
+        "text": "🛍️ NEW ORDER!\\n\\nOrder #{{ $json.payload.order_number }}\\nCustomer: {{ $json.payload.customer.first_name }} {{ $json.payload.customer.last_name }}\\nTotal: ₹{{ $json.payload.total_price }}\\nItems: {{ $json.payload.line_items.length }}\\n\\n📊 View: fashun.co.in/admin/orders/{{ $json.payload.order_number }}",
+        "additionalFields": {
+          "parseMode": "Markdown"
+        }
+      },
+      "name": "Admin Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [850, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "3",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "jsonToPdf",
+        "options": {
+          "headerHtml": "<div style='text-align: center; font-family: Arial; padding: 20px;'><h1>FASHUN</h1><p>TAX INVOICE</p></div>",
+          "footerHtml": "<div style='text-align: center; font-size: 10px; padding: 10px;'>Thank you for shopping with FASHUN | fashun.co.in</div>",
+          "margin": {
+            "top": "20",
+            "right": "20",
+            "bottom": "20",
+            "left": "20"
+          }
+        },
+        "fileName": "invoice-{{ $json.payload.order_number }}.pdf"
+      },
+      "name": "Generate Invoice PDF",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.payload.total_price }}",
+              "operation": "largerEqual",
+              "value2": 2999
+            }
+          ]
+        }
+      },
+      "name": "Check if Free Shipping",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "resource": "fulfillment",
+        "orderId": "={{ $json.payload.id }}",
+        "locationId": "={{ $env.SHOPIFY_LOCATION_ID }}",
+        "additionalFields": {
+          "notifyCustomer": true,
+          "trackingCompany": "Delhivery",
+          "trackingNumber": "{{ $randomString(12) }}"
+        }
+      },
+      "name": "Create Shopify Fulfillment",
+      "type": "n8n-nodes-base.shopify",
+      "typeVersion": 1,
+      "position": [1050, 300],
+      "credentials": {
+        "shopifyApi": {
+          "id": "4",
+          "name": "Shopify API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/customers",
+        "authentication": "genericCredentialType",
+        "requestMethod": "POST",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $json.payload.email }}"
+            },
+            {
+              "name": "first_name",
+              "value": "={{ $json.payload.customer.first_name }}"
+            },
+            {
+              "name": "last_name",
+              "value": "={{ $json.payload.customer.last_name }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $json.payload.customer.phone }}"
+            },
+            {
+              "name": "total_orders",
+              "value": "={{ $json.payload.customer.orders_count }}"
+            },
+            {
+              "name": "total_spent",
+              "value": "={{ $json.payload.customer.total_spent }}"
+            }
+          ]
+        },
+        "options": {
+          "headers": {
+            "header": [
+              {
+                "name": "apikey",
+                "value": "={{ $env.SUPABASE_ANON_KEY }}"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer {{ $env.SUPABASE_ANON_KEY }}"
+              },
+              {
+                "name": "Prefer",
+                "value": "resolution=merge-duplicates"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Update Customer Profile",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "amount": 7,
+        "unit": "days"
+      },
+      "name": "Wait 7 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1050, 500]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $json.payload.customer.phone }}",
+        "text": "Hey {{ $json.payload.customer.first_name }}! 😊\\n\\nHope you're loving your FASHUN purchase! \\n\\nWould you mind sharing a quick review? Your feedback helps us improve and helps other customers too!\\n\\n⭐ Review here: fashun.co.in/reviews/{{ $json.payload.order_number }}\\n\\nAs a thank you, get 10% off your next order! 🎁",
+        "additionalFields": {}
+      },
+      "name": "Review Request WhatsApp",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1250, 500]
+    }
+  ],
+  "connections": {
+    "Webhook - Shopify Order": {
+      "main": [
+        [
+          {
+            "node": "Save Order to Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check if Free Shipping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Order to Supabase": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Confirmation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Confirmation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Generate Invoice PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Confirmation": {
+      "main": [
+        [
+          {
+            "node": "Admin Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Inventory": {
+      "main": [
+        [
+          {
+            "node": "Update Customer Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Admin Notification": {
+      "main": [
+        [
+          {
+            "node": "Create Shopify Fulfillment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Invoice PDF": {
+      "main": [
+        [
+          {
+            "node": "Create Shopify Fulfillment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Customer Profile": {
+      "main": [
+        [
+          {
+            "node": "Wait 7 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 7 Days": {
+      "main": [
+        [
+          {
+            "node": "Review Request WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": "shopify-order-processing"
+}

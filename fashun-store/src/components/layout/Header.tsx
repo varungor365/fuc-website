@@ -32,6 +32,8 @@ import { useCart } from '@/hooks/useCart';
 import CartDrawer from '@/components/cart/CartDrawer';
 import { useAuth } from '@/contexts/auth-context';
 import { ExpandableTabs } from '@/components/ui/expandable-tabs';
+import ThemeSwitcher from '@/components/theme/ThemeSwitcher';
+import SeasonalThemeSwitcher from '@/components/theme/SeasonalThemeSwitcher';
 import {
   TruckIcon as TruckAnimated,
   GiftIcon,
@@ -317,6 +319,12 @@ export default function Header() {
 
               {/* Mobile Actions */}
               <div className="flex lg:hidden items-center space-x-2">
+                {/* Seasonal Theme Switcher */}
+                <SeasonalThemeSwitcher />
+                
+                {/* Theme Switcher */}
+                <ThemeSwitcher />
+                
                 {/* Search (Mobile) */}
                 <motion.button
                   onClick={() => setIsSearchOpen(true)}
@@ -388,10 +396,16 @@ export default function Header() {
 
               {/* Desktop User Status */}
               <div className="hidden lg:flex items-center space-x-4">
+                {/* Seasonal Theme Switcher */}
+                <SeasonalThemeSwitcher />
+                
+                {/* Theme Switcher */}
+                <ThemeSwitcher />
+                
                 {loading ? (
                   <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
                 ) : user ? (
-                  <div className="flex items-center space-x-2 text-gray-700">
+                  <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
                     <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
                         {isAnonymous ? 'A' : user.email?.charAt(0).toUpperCase()}
@@ -409,7 +423,7 @@ export default function Header() {
                 ) : (
                   <Link 
                     href="/login" 
-                    className="text-gray-700 hover:text-gray-900 text-sm font-medium"
+                    className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm font-medium"
                   >
                     Sign In
                   </Link>

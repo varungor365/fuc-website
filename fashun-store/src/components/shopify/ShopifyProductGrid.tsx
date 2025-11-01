@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'link';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, Heart, Eye, Star } from 'lucide-react';
 import { getAllProducts, addToCart, createCart } from '@/lib/shopify/client';
@@ -46,7 +46,9 @@ export default function ShopifyProductGrid() {
         const newCart = await createCart([{ merchandiseId: variantId, quantity: 1 }]);
         currentCartId = newCart.id;
         setCartId(currentCartId);
-        localStorage.setItem('shopify_cart_id', currentCartId);
+        if (currentCartId) {
+          localStorage.setItem('shopify_cart_id', currentCartId);
+        }
       } else {
         // Add to existing cart
         await addToCart(currentCartId, [{ merchandiseId: variantId, quantity: 1 }]);
