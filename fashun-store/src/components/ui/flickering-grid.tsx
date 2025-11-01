@@ -165,12 +165,21 @@ export function FlickeringGridHero({
           transition={{ duration: 0.5 }}
         >
           {logo ? (
-            <div className="relative w-64 h-64">
+            <div className="relative w-80 h-80 flex items-center justify-center">
               <Image
                 src={logo}
                 alt="FASHUN.CO Logo"
-                fill
-                className="object-contain"
+                width={320}
+                height={320}
+                className="object-contain drop-shadow-2xl filter brightness-110 hover:scale-105 transition-transform duration-300"
+                priority
+                unoptimized={logo.endsWith('.svg')}
+                onError={() => {
+                  console.log('Logo failed to load, falling back to text');
+                }}
+                onLoad={() => {
+                  console.log('Logo loaded successfully');
+                }}
               />
             </div>
           ) : (

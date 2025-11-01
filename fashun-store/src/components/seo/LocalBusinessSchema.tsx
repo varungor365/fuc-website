@@ -45,7 +45,7 @@ export default function LocalBusinessSchema({
     "Mo-Su 00:00-23:59" // 24/7 online store
   ],
   priceRange = "₹₹-₹₹₹",
-  logo = "https://fashun.co.in/logo.png",
+  logo = "https://fashun.co.in/images/brand/logo.svg",
   image = [
     "https://fashun.co.in/images/store-front.jpg",
     "https://fashun.co.in/images/product-collection.jpg"

@@ -41,7 +41,7 @@ export function generateArticleSchema(article: any) {
       "name": "Fashun.co.in",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.fashun.co.in/logo.png"
+        "url": "https://www.fashun.co.in/images/brand/logo.svg"
       }
     },
     "datePublished": article.publishedAt,
@@ -55,7 +55,7 @@ export function generateOrganizationSchema() {
     "@type": "Organization",
     "name": "Fashun.co.in",
     "url": "https://www.fashun.co.in",
-    "logo": "https://www.fashun.co.in/logo.png",
+    "logo": "https://www.fashun.co.in/images/brand/logo.svg",
     "sameAs": [
       "https://instagram.com/fashun.co.in",
       "https://twitter.com/fashunco"

@@ -169,7 +169,7 @@ export default function Header() {
               <Link href="/" className="flex items-center">
                 <div className="relative w-32 h-16">
                   <Image 
-                    src="/logo.png" 
+                    src="/images/brand/logo-simple.svg" 
                     alt="FASHUN.CO.IN" 
                     fill
                     className="object-contain"

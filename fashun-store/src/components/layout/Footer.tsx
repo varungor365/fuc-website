@@ -64,7 +64,7 @@ export function Footer() {
               <Link href="/" className="flex items-center space-x-3 mb-6">
                 <div className="w-12 h-12 rounded-xl overflow-hidden">
                   <img 
-                    src="/logo.png" 
+                    src="/images/brand/logo-simple.svg" 
                     alt="FASHUN.CO" 
                     className="w-full h-full object-contain"
                   />

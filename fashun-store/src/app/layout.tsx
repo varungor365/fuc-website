@@ -77,6 +77,16 @@ export const metadata: Metadata = {
   verification: {
     google: 'your-google-verification-code',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/images/brand/logo-small.svg', type: 'image/svg+xml', sizes: '32x32' }
+    ],
+    apple: [
+      { url: '/images/brand/logo-small.svg', sizes: '180x180' }
+    ],
+    shortcut: '/favicon.svg'
+  },
 };
 
 export default function RootLayout({

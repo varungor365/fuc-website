@@ -27,7 +27,7 @@ interface LoadingProviderProps {
 
 export function LoadingProvider({
   children,
-  logo = "/logo.png",
+  logo = "/images/brand/logo.svg",
   title = "FUC!",
   subtitle = "Fashion Unleashed Culture",
   minLoadingTime = 1500, // 1.5 seconds
