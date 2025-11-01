@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, Search, Home, TrendingUp, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, Search, Home, TrendingUp, ShoppingBag, Sparkles, Flame } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Page Not Found | FashUn',
-  description: 'The page you are looking for could not be found. Discover our latest fashion collections instead.',
+  title: '404 - Page Not Found | FASHUN',
+  description: 'Lost in style? Discover India\'s premium streetwear collection at fashun.co.in',
 };
 
 // Smart 404 page with product suggestions based on URL
@@ -49,76 +49,70 @@ export default function NotFound() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 gradient-hero-cosmic opacity-30"></div>
+      <div className="absolute inset-0 pattern-gradient-dots opacity-10"></div>
+      
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="mb-6">
-            <div className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6">
-              <Search className="w-12 h-12 text-white" />
+          <div className="mb-8">
+            {/* 404 Number */}
+            <div className="mb-6">
+              <h1 className="text-9xl md:text-[200px] font-black text-gradient-fire mb-4 leading-none">
+                404
+              </h1>
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Flame className="w-8 h-8 text-orange-500 animate-pulse" />
+                <h2 className="text-3xl md:text-4xl font-bold text-white">
+                  Page Not Found
+                </h2>
+                <Flame className="w-8 h-8 text-orange-500 animate-pulse" />
+              </div>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Page Not Found
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              The page you're looking for doesn't exist, but don't worry! 
-              Let's help you find what you're searching for.
+            
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+              Looks like you've wandered off the streetwear runway. 
+              Let's get you back to the fire drops! 🔥
             </p>
           </div>
 
-          {/* Search Input - Simple non-interactive version for SSG */}
-          <div className="mb-8">
-            <div className="relative w-full max-w-2xl mx-auto">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="text"
-                  placeholder="Search for products, styles, or trends..."
-                  className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm text-gray-900 placeholder-gray-500"
-                  disabled
-                />
-              </div>
-              <p className="text-sm text-gray-500 mt-2">
-                Please go to the homepage to use the search functionality
-              </p>
-            </div>
-          </div>
-
           {/* Quick Actions */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <div className="flex flex-wrap justify-center gap-4 mb-16">
             <Link
               href="/"
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center px-8 py-4 btn-gradient-primary text-white font-bold rounded-xl hover-gradient-lift transition-all shadow-gradient-neon text-lg"
             >
-              <Home className="w-5 h-5 mr-2" />
-              Go to Homepage
+              <Home className="w-6 h-6 mr-2" />
+              Back to Homepage
             </Link>
             <Link
               href="/collections/all"
-              className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center px-8 py-4 glass-gradient-dark text-white font-bold rounded-xl hover-gradient-lift transition-all border border-white/20 text-lg"
             >
-              <ShoppingBag className="w-5 h-5 mr-2" />
-              Browse All Products
+              <ShoppingBag className="w-6 h-6 mr-2" />
+              Shop All Products
             </Link>
           </div>
         </div>
 
         {/* Popular Categories */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <TrendingUp className="w-6 h-6 mr-2" />
-            Popular Categories
+        <div className="mb-16">
+          <h2 className="text-3xl font-black text-white mb-8 flex items-center justify-center gap-3">
+            <TrendingUp className="w-8 h-8 text-orange-500" />
+            <span className="text-gradient-primary">Hot Collections</span>
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {popularCategories.map((category) => (
               <Link
                 key={category.name}
                 href={category.href}
-                className="group p-6 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-200"
+                className="group glass-gradient-frosted rounded-2xl border border-white/20 p-8 hover-gradient-lift transition-all duration-300 transform hover:scale-105"
               >
                 <div className="text-center">
-                  <div className="text-3xl mb-3">{category.icon}</div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                  <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform">{category.icon}</div>
+                  <h3 className="font-bold text-xl text-white group-hover:text-orange-400 transition-colors">
                     {category.name}
                   </h3>
                 </div>
@@ -128,30 +122,33 @@ export default function NotFound() {
         </div>
 
         {/* Popular Products */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Popular Products
+        <div className="mb-16">
+          <h2 className="text-3xl font-black text-white mb-8 text-center">
+            <span className="text-gradient-fire">Trending Drops</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {popularProducts.map((product) => (
               <Link
                 key={product.id}
                 href={`/products/${product.id}`}
-                className="group bg-white rounded-xl border border-gray-200 overflow-hidden hover:border-blue-300 hover:shadow-lg transition-all duration-200"
+                className="group glass-gradient-dark rounded-2xl border border-white/10 overflow-hidden hover-gradient-lift transition-all duration-300 transform hover:scale-105"
               >
-                <div className="aspect-[3/4] bg-gray-100 overflow-hidden">
+                <div className="aspect-[3/4] bg-gray-800 overflow-hidden relative">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
+                  <div className="absolute top-3 right-3">
+                    <Sparkles className="w-6 h-6 text-orange-400 animate-pulse" />
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-1">
+                <div className="p-5">
+                  <h3 className="font-bold text-lg text-white group-hover:text-orange-400 transition-colors mb-2">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-gray-500 mb-2">{product.category}</p>
-                  <p className="font-bold text-lg text-gray-900">
+                  <p className="text-sm text-gray-400 mb-3">{product.category}</p>
+                  <p className="font-black text-2xl text-gradient-primary">
                     ₹{product.price.toLocaleString()}
                   </p>
                 </div>
@@ -161,23 +158,25 @@ export default function NotFound() {
         </div>
 
         {/* Help Section */}
-        <div className="mt-16 bg-white rounded-xl border border-gray-200 p-8 text-center">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">
-            Still can't find what you're looking for?
+        <div className="glass-gradient-frosted rounded-3xl border border-white/20 p-10 text-center shadow-gradient-glow">
+          <Sparkles className="w-12 h-12 text-orange-400 mx-auto mb-6 animate-pulse" />
+          <h3 className="text-2xl font-black text-white mb-4">
+            Need Help Finding Something?
           </h3>
-          <p className="text-gray-600 mb-6">
-            Our customer support team is here to help you find the perfect fashion items.
+          <p className="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+            Our team is ready to help you discover the perfect streetwear pieces. 
+            Hit us up!
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               href="/contact"
-              className="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
+              className="inline-flex items-center px-8 py-4 btn-gradient-primary text-white font-bold rounded-xl hover-gradient-lift transition-all shadow-gradient-neon"
             >
               Contact Support
             </Link>
             <Link
               href="/size-guide"
-              className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center px-8 py-4 glass-gradient-dark text-white font-bold rounded-xl hover-gradient-lift transition-all border border-white/20"
             >
               Size Guide
             </Link>
