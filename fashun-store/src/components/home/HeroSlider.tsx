@@ -79,7 +79,7 @@ export default function HeroSlider() {
 
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 6000); // 6 seconds per slide
 
     return () => clearInterval(timer);
   }, [isAutoPlaying]);

@@ -30,7 +30,7 @@ export function LoadingProvider({
   logo = "/logo.png",
   title = "FUC!",
   subtitle = "Fashion Unleashed Culture",
-  minLoadingTime = 2500,
+  minLoadingTime = 1500, // 1.5 seconds
   showOnFirstVisit = true,
 }: LoadingProviderProps) {
   const [isLoading, setIsLoading] = useState(true);

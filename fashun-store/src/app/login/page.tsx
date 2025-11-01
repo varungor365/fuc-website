@@ -78,7 +78,15 @@ export default function LoginPage() {
       localStorage.setItem('customer_email', customer.email);
       
       toast.success('Welcome back!');
-      router.push('/account');
+      
+      // Get redirect URL from query params or default to account
+      const redirectTo = searchParams?.get('redirect') || '/account';
+      
+      // Small delay to ensure localStorage is saved
+      setTimeout(() => {
+        router.push(redirectTo);
+        router.refresh(); // Force refresh to update auth state
+      }, 300);
     } catch (error: any) {
       toast.error('Invalid email or password');
     } finally {

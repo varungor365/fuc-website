@@ -32,8 +32,6 @@ import { useCart } from '@/hooks/useCart';
 import CartDrawer from '@/components/cart/CartDrawer';
 import { useAuth } from '@/contexts/auth-context';
 import { ExpandableTabs } from '@/components/ui/expandable-tabs';
-import ThemeSwitcher from '@/components/theme/ThemeSwitcher';
-import SeasonalThemeSwitcher from '@/components/theme/SeasonalThemeSwitcher';
 import {
   TruckIcon as TruckAnimated,
   GiftIcon,
@@ -46,16 +44,16 @@ const navigationItems = [
     href: '/collections/all',
     megaMenu: {
       categories: [
-        { name: 'Printed T-Shirts', href: '/collections/printed-tshirts', image: '/images/products/t-shirts/tshirt-1-main.jpg', badge: 'Popular' },
-        { name: 'Full Sleeve T-Shirts', href: '/collections/full-sleeve-tshirts', image: '/images/products/t-shirts/tshirt-2-main.jpg', badge: 'Trending' },
-        { name: 'Polo T-Shirts', href: '/collections/polo-tshirts', image: '/images/products/t-shirts/tshirt-1-front.jpg' },
-        { name: "Women's T-Shirts", href: '/collections/womens-tshirts', image: '/images/products/t-shirts/tshirt-2-front.jpg', badge: 'New' },
-        { name: 'Crop Tops', href: '/collections/crop-tops', image: '/images/products/accessories/cap-1-main.jpg', badge: 'Trending' },
-        { name: 'Plus Size T-Shirts', href: '/collections/plus-size-tshirts', image: '/images/products/jackets/jacket-1-main.jpg' },
-        { name: 'Plain T-Shirts & Packs', href: '/collections/plain-tshirts', image: '/images/products/t-shirts/tshirt-1-main.jpg', badge: 'Value' },
-        { name: 'Hoodies', href: '/collections/hoodies', image: '/images/products/hoodies/hoodie-1-main.jpg' },
-        { name: 'Oversized Hoodies', href: '/collections/oversized-hoodies', image: '/images/products/hoodies/hoodie-2-main.jpg', badge: 'Street Style' },
-        { name: 'Sweatshirts', href: '/collections/sweatshirts', image: '/images/products/jackets/jacket-1-main.jpg' }
+        { name: 'Printed T-Shirts', href: '/collections/printed-tshirts', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop', badge: 'Popular' },
+        { name: 'Full Sleeve T-Shirts', href: '/collections/full-sleeve-tshirts', image: 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=200&h=200&fit=crop', badge: 'Trending' },
+        { name: 'Polo T-Shirts', href: '/collections/polo-tshirts', image: 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=200&h=200&fit=crop' },
+        { name: "Women's T-Shirts", href: '/collections/womens-tshirts', image: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=200&h=200&fit=crop', badge: 'New' },
+        { name: 'Crop Tops', href: '/collections/crop-tops', image: 'https://images.unsplash.com/photo-1564859228273-274232fdb516?w=200&h=200&fit=crop', badge: 'Trending' },
+        { name: 'Plus Size T-Shirts', href: '/collections/plus-size-tshirts', image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=200&h=200&fit=crop' },
+        { name: 'Plain T-Shirts & Packs', href: '/collections/plain-tshirts', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop', badge: 'Value' },
+        { name: 'Hoodies', href: '/collections/hoodies', image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=200&h=200&fit=crop' },
+        { name: 'Oversized Hoodies', href: '/collections/oversized-hoodies', image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=200&h=200&fit=crop', badge: 'Street Style' },
+        { name: 'Sweatshirts', href: '/collections/sweatshirts', image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?w=200&h=200&fit=crop' }
       ],
       featured: [
         { name: 'New Arrivals', href: '/collections/new-arrivals', description: 'Latest drops & fresh designs' },
@@ -181,28 +179,54 @@ export default function Header() {
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation - Expandable Tabs */}
-            <nav className="hidden lg:flex items-center">
-              <ExpandableTabs
-                tabs={[
-                  { title: 'Shop', icon: ShoppingCart },
-                  { title: 'Customize', icon: Palette },
-                  { title: 'Printed Tees', icon: Shirt },
-                  { title: 'Plain & Combos', icon: Layers },
-                  { title: 'Hoodies', icon: Package },
-                ]}
-                activeColor="text-orange-600"
-                onChange={(index) => {
-                  if (index !== null) {
-                    const routes = ['/collections/all', '/customize', '/collections/printed-tshirts', '/collections/plain-tshirts', '/collections/hoodies'];
-                    router.push(routes[index]);
-                  }
-                }}
-              />
+            {/* Desktop Navigation - Enhanced Buttons */}
+            <nav className="hidden lg:flex items-center gap-3">
+              {[
+                { title: 'Shop', icon: ShoppingCart, href: '/collections/all' },
+                { title: 'Customize', icon: Palette, href: '/customize', badge: '🎨' },
+                { title: 'Printed Tees', icon: Shirt, href: '/collections/printed-tshirts' },
+                { title: 'Plain & Combos', icon: Layers, href: '/collections/plain-tshirts' },
+                { title: 'Hoodies', icon: Package, href: '/collections/hoodies' },
+              ].map((item, index) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <motion.div
+                    key={item.title}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Link
+                      href={item.href}
+                      className={`
+                        group relative flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-base
+                        transition-all duration-300 shadow-md hover:shadow-xl
+                        ${isActive 
+                          ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white' 
+                          : 'bg-white/80 backdrop-blur-sm hover:bg-gradient-to-r hover:from-orange-50 hover:to-red-50 text-gray-700 hover:text-orange-600'
+                        }
+                      `}
+                    >
+                      <Icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive ? 'text-white' : 'text-orange-500'}`} />
+                      <span className="whitespace-nowrap">{item.title}</span>
+                      {item.badge && (
+                        <span className="text-sm">{item.badge}</span>
+                      )}
+                      {isActive && (
+                        <motion.div
+                          className="absolute -bottom-1 left-0 right-0 h-1 bg-white rounded-full"
+                          layoutId="activeNavBar"
+                          transition={{ duration: 0.3 }}
+                        />
+                      )}
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </nav>
 
             {/* Old Navigation - Backup */}
-            <nav className="hidden xl:hidden lg:flex items-center space-x-8">
+            <nav className="hidden xl:hidden lg:hidden items-center space-x-8">
               {navigationItems.map((item) => (
                 <div
                   key={item.name}
@@ -319,12 +343,6 @@ export default function Header() {
 
               {/* Mobile Actions */}
               <div className="flex lg:hidden items-center space-x-2">
-                {/* Seasonal Theme Switcher */}
-                <SeasonalThemeSwitcher />
-                
-                {/* Theme Switcher */}
-                <ThemeSwitcher />
-                
                 {/* Search (Mobile) */}
                 <motion.button
                   onClick={() => setIsSearchOpen(true)}
@@ -396,16 +414,10 @@ export default function Header() {
 
               {/* Desktop User Status */}
               <div className="hidden lg:flex items-center space-x-4">
-                {/* Seasonal Theme Switcher */}
-                <SeasonalThemeSwitcher />
-                
-                {/* Theme Switcher */}
-                <ThemeSwitcher />
-                
                 {loading ? (
                   <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
                 ) : user ? (
-                  <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300">
+                  <div className="flex items-center space-x-2 text-gray-700">
                     <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
                         {isAnonymous ? 'A' : user.email?.charAt(0).toUpperCase()}
@@ -423,7 +435,7 @@ export default function Header() {
                 ) : (
                   <Link 
                     href="/login" 
-                    className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm font-medium"
+                    className="text-gray-700 hover:text-gray-900 text-sm font-medium"
                   >
                     Sign In
                   </Link>

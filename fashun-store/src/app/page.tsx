@@ -11,7 +11,7 @@ import TrustBadges from '@/components/home/TrustBadges';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-950 transition-colors">
+    <main className="min-h-screen bg-white transition-colors">
       {/* Announcement Bar */}
       <AnnouncementBar />
       
@@ -24,7 +24,7 @@ export default function Home() {
       </section>
       
       {/* New Arrivals */}
-      <section className="py-12 md:py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-12 md:py-16 bg-gray-50">
         <NewArrivals />
       </section>
       
@@ -34,7 +34,7 @@ export default function Home() {
       </section>
       
       {/* Brand Story */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-purple-900/20">
+      <section className="py-16 md:py-24 bg-gradient-to-br from-purple-50 to-pink-50">
         <BrandStory />
       </section>
       
@@ -44,7 +44,7 @@ export default function Home() {
       </section>
       
       {/* Instagram Feed */}
-      <section className="py-12 md:py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-12 md:py-16 bg-gray-50">
         <InstagramFeed />
       </section>
       
