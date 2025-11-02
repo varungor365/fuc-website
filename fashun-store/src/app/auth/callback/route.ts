@@ -11,24 +11,27 @@ export async function GET(request: NextRequest) {
   const errorDescription = searchParams.get('error_description');
   const redirect = searchParams.get('redirect') || '/account';
 
+  // Use production URL if available, fallback to origin
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || origin;
+
   // Handle authentication errors
   if (error) {
     console.error('Auth error:', error, errorDescription);
     return NextResponse.redirect(
-      `${origin}/login?error=${encodeURIComponent(error)}`
+      `${baseUrl}/login?error=${encodeURIComponent(error)}`
     );
   }
 
   // Handle missing code
   if (!code) {
     return NextResponse.redirect(
-      `${origin}/login?error=missing_code`
+      `${baseUrl}/login?error=missing_code`
     );
   }
 
   try {
     // Create response object first
-    const response = NextResponse.redirect(`${origin}${redirect}`);
+    const response = NextResponse.redirect(`${baseUrl}${redirect}`);
 
     // Create Supabase client with proper cookie handling
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -64,13 +67,13 @@ export async function GET(request: NextRequest) {
     if (exchangeError) {
       console.error('Session exchange error:', exchangeError);
       return NextResponse.redirect(
-        `${origin}/login?error=session_exchange_failed`
+        `${baseUrl}/login?error=session_exchange_failed`
       );
     }
 
     if (!data.session) {
       return NextResponse.redirect(
-        `${origin}/login?error=no_session`
+        `${baseUrl}/login?error=no_session`
       );
     }
 
@@ -88,14 +91,14 @@ export async function GET(request: NextRequest) {
     });
 
     // Add success parameter to redirect URL to trigger client-side session refresh
-    const redirectUrl = new URL(`${origin}${redirect}`);
+    const redirectUrl = new URL(`${baseUrl}${redirect}`);
     redirectUrl.searchParams.set('auth_success', 'true');
     
     return NextResponse.redirect(redirectUrl.toString());
   } catch (err) {
     console.error('Callback error:', err);
     return NextResponse.redirect(
-      `${origin}/login?error=callback_exception`
+      `${baseUrl}/login?error=callback_exception`
     );
   }
 }

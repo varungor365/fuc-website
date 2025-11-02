@@ -8,6 +8,9 @@ export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const redirect = searchParams.get('redirect') || '/account';
   
+  // Use production URL if available, fallback to origin
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || origin;
+  
   // Create Supabase client
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
@@ -23,7 +26,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`,
+        redirectTo: `${baseUrl}/auth/callback?redirect=${encodeURIComponent(redirect)}`,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
@@ -33,7 +36,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('Google OAuth error:', error);
-      return NextResponse.redirect(`${origin}/login?error=${error.message}`);
+      return NextResponse.redirect(`${baseUrl}/login?error=${error.message}`);
     }
 
     if (data.url) {
@@ -41,10 +44,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Fallback if no redirect URL
-    return NextResponse.redirect(`${origin}/login?error=no_redirect_url`);
+    return NextResponse.redirect(`${baseUrl}/login?error=no_redirect_url`);
     
   } catch (error) {
     console.error('Google OAuth exception:', error);
-    return NextResponse.redirect(`${origin}/login?error=oauth_exception`);
+    return NextResponse.redirect(`${baseUrl}/login?error=oauth_exception`);
   }
 }
