@@ -26,10 +26,36 @@ export default function LoginPage() {
       toast.success('Account created! Please sign in.');
     }
     
-    // Check for authentication errors
+    // Check for authentication errors with detailed messages
     if (searchParams && searchParams.get('error')) {
       const error = searchParams.get('error');
-      toast.error(`Authentication failed: ${error}`);
+      const message = searchParams.get('message');
+      const description = searchParams.get('description');
+      
+      let errorMessage = 'Authentication failed';
+      
+      switch (error) {
+        case 'session_exchange_failed':
+          errorMessage = message ? `Session exchange failed: ${message}` : 'Failed to exchange authorization code. Please try again.';
+          break;
+        case 'invalid_grant':
+          errorMessage = 'Authorization code expired. Please try logging in again.';
+          break;
+        case 'missing_code':
+          errorMessage = 'Missing authorization code. Please try again.';
+          break;
+        case 'no_session':
+          errorMessage = 'No session created. Please try again.';
+          break;
+        case 'callback_exception':
+          errorMessage = message ? `Callback error: ${message}` : 'Authentication callback failed. Please try again.';
+          break;
+        default:
+          errorMessage = message || description || `Authentication failed: ${error}`;
+      }
+      
+      toast.error(errorMessage);
+      console.error('Login error details:', { error, message, description });
     }
   }, [searchParams]);
 
