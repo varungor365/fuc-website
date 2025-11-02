@@ -29,16 +29,16 @@ export default function BrandStory() {
               </div>
               
               {/* Main Heading */}
-              <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight">
+              <h2 className="text-5xl md:text-6xl font-bold text-white mb-8 leading-tight">
                 <span className="block">Redefining</span>
-                <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                   Streetwear
                 </span>
                 <span className="block">Culture</span>
               </h2>
               
               {/* Story Content */}
-              <div className="space-y-6 text-lg text-gray-600 mb-10">
+              <div className="space-y-6 text-lg text-gray-300 mb-10">
                 <p>
                   Born from the streets and inspired by the digital revolution, FASHUN.CO represents 
                   a new era of streetwear that seamlessly blends cutting-edge fashion with intelligent technology.
@@ -59,22 +59,22 @@ export default function BrandStory() {
               
               {/* Key Values */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-                <div className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200">
+                <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
                   <div className="text-3xl mb-3">🎨</div>
-                  <h3 className="font-bold text-gray-900 mb-2">Creative</h3>
-                  <p className="text-sm text-gray-600">Pushing boundaries in design and innovation</p>
+                  <h3 className="font-bold text-white mb-2">Creative</h3>
+                  <p className="text-sm text-gray-300">Pushing boundaries in design and innovation</p>
                 </div>
                 
-                <div className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200">
+                <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
                   <div className="text-3xl mb-3">⚡</div>
-                  <h3 className="font-bold text-gray-900 mb-2">Authentic</h3>
-                  <p className="text-sm text-gray-600">True to streetwear culture and values</p>
+                  <h3 className="font-bold text-white mb-2">Authentic</h3>
+                  <p className="text-sm text-gray-300">True to streetwear culture and values</p>
                 </div>
                 
-                <div className="text-center p-6 bg-white/50 backdrop-blur-sm rounded-2xl border border-gray-200">
+                <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
                   <div className="text-3xl mb-3">🚀</div>
-                  <h3 className="font-bold text-gray-900 mb-2">Future-Ready</h3>
-                  <p className="text-sm text-gray-600">Embracing tomorrow's fashion today</p>
+                  <h3 className="font-bold text-white mb-2">Future-Ready</h3>
+                  <p className="text-sm text-gray-300">Embracing tomorrow's fashion today</p>
                 </div>
               </div>
               

@@ -5,6 +5,7 @@ import FeaturedCollections from '@/components/home/FeaturedCollections';
 import NewArrivals from '@/components/home/NewArrivals';
 import TrendingProducts from '@/components/home/TrendingProducts';
 import BrandStory from '@/components/home/BrandStory';
+import PhygitalIdentity from '@/components/home/PhygitalIdentity';
 import InstagramFeed from '@/components/home/InstagramFeed';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import NewsletterSignup from '@/components/home/NewsletterSignup';
@@ -64,52 +65,66 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white transition-colors">
-      {/* Announcement Bar */}
-      <AnnouncementBar />
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black relative overflow-hidden transition-colors">
+      {/* Premium Background Texture */}
+      <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent"></div>
+      <div className="absolute inset-0 opacity-20" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }}></div>
       
-      {/* Hero Slider - Main Banner */}
-      <HeroSlider />
-      
-      {/* Featured Collections */}
-      <section className="py-12 md:py-16">
-        <FeaturedCollections />
-      </section>
-      
-      {/* New Arrivals */}
-      <section className="py-12 md:py-16 bg-gray-50">
-        <NewArrivals />
-      </section>
-      
-      {/* Trending Products */}
-      <section className="py-12 md:py-16">
-        <TrendingProducts />
-      </section>
-      
-      {/* Brand Story */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-purple-50 to-pink-50">
-        <BrandStory />
-      </section>
-      
-      {/* Testimonials */}
-      <section className="py-12 md:py-16">
-        <TestimonialsSection />
-      </section>
-      
-      {/* Instagram Feed */}
-      <section className="py-12 md:py-16 bg-gray-50">
-        <InstagramFeed />
-      </section>
-      
-      {/* Trust Badges */}
-      <section className="py-8 md:py-12">
-        <TrustBadges />
-      </section>
-      
-      {/* Newsletter Signup */}
-      <section className="py-16 md:py-20 bg-gradient-to-r from-purple-600 to-pink-600">
-        <NewsletterSignup />
-      </section>
+      {/* Content */}
+      <div className="relative z-10">
+        {/* Announcement Bar */}
+        <AnnouncementBar />
+        
+        {/* Hero Slider - Main Banner */}
+        <HeroSlider />
+        
+        {/* Featured Collections */}
+        <section className="py-12 md:py-16">
+          <FeaturedCollections />
+        </section>
+        
+        {/* New Arrivals */}
+        <section className="py-12 md:py-16 bg-black/20 backdrop-blur-sm">
+          <NewArrivals />
+        </section>
+        
+        {/* Trending Products */}
+        <section className="py-12 md:py-16">
+          <TrendingProducts />
+        </section>
+        
+        {/* Brand Story */}
+        <section className="py-16 md:py-24 bg-gradient-to-br from-white/5 to-gray-900/30 backdrop-blur-sm">
+          <BrandStory />
+        </section>
+        
+        {/* Phygital Identity */}
+        <section className="py-16 md:py-24">
+          <PhygitalIdentity />
+        </section>
+        
+        {/* Testimonials */}
+        <section className="py-12 md:py-16">
+          <TestimonialsSection />
+        </section>
+        
+        {/* Instagram Feed */}
+        <section className="py-12 md:py-16 bg-black/20 backdrop-blur-sm">
+          <InstagramFeed />
+        </section>
+        
+        {/* Trust Badges */}
+        <section className="py-8 md:py-12">
+          <TrustBadges />
+        </section>
+        
+        {/* Newsletter Signup */}
+        <section className="py-16 md:py-20 bg-gradient-to-r from-white/10 to-gray-800/20 backdrop-blur-sm">
+          <NewsletterSignup />
+        </section>
+      </div>
     </main>
   );
 }

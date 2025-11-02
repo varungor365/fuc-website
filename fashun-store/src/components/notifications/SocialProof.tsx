@@ -179,9 +179,9 @@ export default function SocialProof() {
     }
   ];
 
-  // Generate more realistic timing intervals (3-12 minutes)
+  // Generate more realistic timing intervals (12-25 seconds minimum)
   const getRandomInterval = () => {
-    return Math.floor(Math.random() * 9000) + 3000; // 3-12 seconds for demo (3000-12000ms)
+    return Math.floor(Math.random() * 13000) + 12000; // 12-25 seconds (12000-25000ms)
   };
 
   useEffect(() => {

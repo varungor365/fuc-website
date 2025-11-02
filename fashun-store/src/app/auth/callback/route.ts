@@ -27,9 +27,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    // Create response object first
     const response = NextResponse.redirect(`${origin}${redirect}`);
 
-    // Create Supabase client with cookie support
+    // Create Supabase client with proper cookie handling
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         flowType: 'pkce',
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
               maxAge: 60 * 60 * 24 * 7, // 7 days
               sameSite: 'lax',
               secure: process.env.NODE_ENV === 'production',
-              httpOnly: false, // Needs to be accessible by client-side JavaScript
+              httpOnly: false, // Must be accessible by client-side JavaScript
             });
           },
           removeItem: (key) => {
@@ -73,8 +74,24 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Cookies are already set by the storage adapter above
-    return response;
+    console.log('Session exchanged successfully for user:', data.user?.email);
+
+    // Set additional cookies for better client-side detection
+    response.cookies.set({
+      name: 'sb-authenticated',
+      value: 'true',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: false,
+    });
+
+    // Add success parameter to redirect URL to trigger client-side session refresh
+    const redirectUrl = new URL(`${origin}${redirect}`);
+    redirectUrl.searchParams.set('auth_success', 'true');
+    
+    return NextResponse.redirect(redirectUrl.toString());
   } catch (err) {
     console.error('Callback error:', err);
     return NextResponse.redirect(

@@ -86,10 +86,10 @@ export default function NewArrivals() {
           <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full mb-4">
             <span className="text-sm font-medium text-purple-700">✨ Fresh Drops</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-4">
             New Arrivals
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Be the first to get your hands on our latest streetwear pieces
           </p>
         </motion.div>
@@ -204,11 +204,11 @@ export default function NewArrivals() {
                             </svg>
                           ))}
                         </div>
-                        <span className="ml-2 text-sm text-gray-600">({product.reviews})</span>
+                        <span className="ml-2 text-sm text-gray-400">({product.reviews})</span>
                       </div>
 
                       {/* Product Name */}
-                      <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
+                      <h3 className="font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors">
                         {product.name}
                       </h3>
 
@@ -217,18 +217,18 @@ export default function NewArrivals() {
                         {product.colors.map((color, colorIndex) => (
                           <div
                             key={colorIndex}
-                            className="w-5 h-5 rounded-full border-2 border-gray-200 hover:border-gray-400 cursor-pointer transition-colors"
+                            className="w-5 h-5 rounded-full border-2 border-gray-400 hover:border-gray-200 cursor-pointer transition-colors"
                             style={{ backgroundColor: color }}
                           />
                         ))}
-                        <span className="text-xs text-gray-500 ml-2">+{product.colors.length} colors</span>
+                        <span className="text-xs text-gray-400 ml-2">+{product.colors.length} colors</span>
                       </div>
 
                       {/* Price */}
                       <div className="flex items-center space-x-2">
-                        <span className="text-xl font-bold text-gray-900">₹{product.price.toLocaleString()}</span>
+                        <span className="text-xl font-bold text-white">₹{product.price.toLocaleString()}</span>
                         {product.originalPrice > product.price && (
-                          <span className="text-sm text-gray-500 line-through">₹{product.originalPrice.toLocaleString()}</span>
+                          <span className="text-sm text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
                         )}
                         {product.originalPrice > product.price && (
                           <span className="text-sm font-medium text-green-600">

@@ -1,21 +1,47 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/auth-context';
 import { supabase } from '@/lib/supabase-client';
 import { CustomerAnalytics } from '@/components/ui/customer-analytics';
+import toast from 'react-hot-toast';
 
 export default function AccountPage() {
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Redirect to login if not authenticated
-    if (!loading && !user) {
-      router.push('/login');
+    // Check for successful authentication redirect
+    if (searchParams?.get('auth_success') === 'true') {
+      // Force refresh the session to ensure proper state sync
+      const refreshSession = async () => {
+        try {
+          const { data, error } = await supabase.auth.refreshSession();
+          if (data?.session) {
+            console.log('Session refreshed successfully');
+            toast.success('Welcome! You are now signed in.');
+            // Clean up the URL
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, '', newUrl);
+          }
+        } catch (error) {
+          console.error('Session refresh error:', error);
+        }
+      };
+      refreshSession();
     }
-  }, [user, loading, router]);
+
+    // Redirect to login if not authenticated (with a small delay to allow session refresh)
+    const checkAuth = setTimeout(() => {
+      if (!loading && !user) {
+        router.push('/login');
+      }
+    }, 1000);
+
+    return () => clearTimeout(checkAuth);
+  }, [user, loading, router, searchParams]);
 
   if (loading) {
     return (
@@ -26,7 +52,14 @@ export default function AccountPage() {
   }
 
   if (!user) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Signing you in...</p>
+        </div>
+      </div>
+    );
   }
 
   const handleSignOut = async () => {

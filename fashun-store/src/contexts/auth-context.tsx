@@ -28,11 +28,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check active session
     const checkSession = async () => {
       try {
+        // First try to get session from Supabase
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           setUser(session.user);
-          // Check if user is anonymous (no email)
           setIsAnonymous(!session.user.email);
+        } else {
+          // If no session but we have the authenticated cookie, try to refresh
+          const hasAuthCookie = document.cookie.includes('sb-authenticated=true');
+          if (hasAuthCookie) {
+            console.log('Found auth cookie, attempting session refresh...');
+            const { data: refreshData } = await supabase.auth.refreshSession();
+            if (refreshData?.session?.user) {
+              setUser(refreshData.session.user);
+              setIsAnonymous(!refreshData.session.user.email);
+            }
+          }
         }
       } catch (error) {
         console.error('Error checking session:', error);
@@ -45,14 +56,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.email);
+        
         if (session?.user) {
           setUser(session.user);
-          // Check if user is anonymous (no email)
           setIsAnonymous(!session.user.email);
+          
+          // Set auth cookie for persistence
+          document.cookie = `sb-authenticated=true; path=/; max-age=${60 * 60 * 24 * 7}; samesite=lax`;
         } else {
           setUser(null);
           setIsAnonymous(false);
+          
+          // Remove auth cookie
+          document.cookie = 'sb-authenticated=; path=/; max-age=0';
         }
         setLoading(false);
       }
@@ -71,6 +89,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     setIsAnonymous(false);
+    
+    // Clean up auth cookie
+    document.cookie = 'sb-authenticated=; path=/; max-age=0';
   };
 
   const signUp = async (email: string, password: string) => {
